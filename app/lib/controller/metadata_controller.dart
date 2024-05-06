@@ -2,11 +2,9 @@ import 'dart:async';
 
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/controller/files_controller.dart';
 import 'package:nc_photos/controller/pref_controller.dart';
 import 'package:nc_photos/db/entity_converter.dart';
 import 'package:nc_photos/di_container.dart';
-import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/service.dart' as service;
 import 'package:np_codegen/np_codegen.dart';
@@ -18,10 +16,8 @@ class MetadataController {
   MetadataController(
     this._c, {
     required this.account,
-    required this.filesController,
     required this.prefController,
   }) {
-    _subscriptions.add(filesController.stream.listen(_onFilesEvent));
     _subscriptions
         .add(prefController.isEnableExifChange.listen(_onSetEnableExif));
   }
@@ -38,40 +34,39 @@ class MetadataController {
     _hasStarted = false;
   }
 
-  Future<void> _onFilesEvent(FilesStreamEvent ev) async {
-    _log.info("[_onFilesEvent]");
-    if (!prefController.isEnableExifValue) {
-      // disabled
-      return;
-    }
-    if (ev.data.isNotEmpty && !ev.hasNext) {
-      // finished querying
-      if (!_hasStarted) {
-        await _startMetadataTask(ev.data);
-      }
+  /// Kickstart the metadata task, if applicable.
+  ///
+  /// Running the metadata task during startup may degrade the startup time, so
+  /// we are not doing so. Instead, UI code should call this function to start
+  /// the task whenever it sees fit
+  ///
+  /// Calling this function are NOT guaranteed to actually start the task
+  void kickstart() {
+    _log.info("[kickstart] Metadata controller enabled");
+    _isEnable = true;
+    if (prefController.isEnableExifValue && !_hasStarted) {
+      _startMetadataTask();
     }
   }
 
   void _onSetEnableExif(bool value) {
     _log.info("[_onSetEnableExif]");
     if (value) {
-      final filesState = filesController.stream.value;
-      if (filesState.hasNext || filesState.data.isEmpty) {
-        _log.info("[_onSetEnableExif] Ignored as data not ready");
+      if (!_isEnable) {
+        _log.info("[_onSetEnableExif] Ignored as not enabled");
         return;
       }
-      _startMetadataTask(filesState.data);
+      _startMetadataTask();
     } else {
       _stopMetadataTask();
     }
   }
 
-  Future<void> _startMetadataTask(List<FileDescriptor> data) async {
+  Future<void> _startMetadataTask() async {
     _hasStarted = true;
     try {
-      final missingCount = await _c.npDb.countFilesByFileIdsMissingMetadata(
+      final missingCount = await _c.npDb.countFilesByMissingMetadata(
         account: account.toDb(),
-        fileIds: data.map((e) => e.fdId).toList(),
         mimes: file_util.supportedImageFormatMimes,
       );
       _log.info("[_startMetadataTask] Missing count: $missingCount");
@@ -90,9 +85,9 @@ class MetadataController {
 
   final DiContainer _c;
   final Account account;
-  final FilesController filesController;
   final PrefController prefController;
 
   final _subscriptions = <StreamSubscription>[];
+  var _isEnable = false;
   var _hasStarted = false;
 }

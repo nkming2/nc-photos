@@ -1,5 +1,6 @@
 import 'dart:io' as io;
 
+import 'package:copy_with/copy_with.dart';
 import 'package:equatable/equatable.dart';
 import 'package:logging/logging.dart';
 import 'package:np_codegen/np_codegen.dart';
@@ -52,6 +53,7 @@ class DbSyncResult {
 /// Sync results with ids
 ///
 /// The meaning of the ids returned depends on the specific call
+@toString
 class DbSyncIdResult {
   const DbSyncIdResult({
     required this.insert,
@@ -73,6 +75,9 @@ class DbSyncIdResult {
 
   bool get isEmpty => insert.isEmpty && delete.isEmpty && update.isEmpty;
   bool get isNotEmpty => !isEmpty;
+
+  @override
+  String toString() => _$toString();
 
   final List<int> insert;
   final List<int> delete;
@@ -126,6 +131,7 @@ class DbLocationGroupResult {
   final List<DbLocationGroup> countryCode;
 }
 
+@genCopyWith
 @toString
 class DbFilesSummaryItem {
   const DbFilesSummaryItem({
@@ -138,6 +144,7 @@ class DbFilesSummaryItem {
   final int count;
 }
 
+@genCopyWith
 @toString
 class DbFilesSummary {
   const DbFilesSummary({
@@ -147,6 +154,7 @@ class DbFilesSummary {
   @override
   String toString() => _$toString();
 
+  // sorted by date in descending order
   @Format(r"{length: ${$?.length}}")
   final Map<Date, DbFilesSummaryItem> items;
 }
@@ -298,9 +306,8 @@ abstract class NpDb {
   });
 
   /// Return number of files without metadata
-  Future<int> countFilesByFileIdsMissingMetadata({
+  Future<int> countFilesByMissingMetadata({
     required DbAccount account,
-    required List<int> fileIds,
     required List<String> mimes,
   });
 

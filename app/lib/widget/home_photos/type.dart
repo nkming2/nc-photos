@@ -3,6 +3,9 @@ part of '../home_photos2.dart';
 abstract class _Item implements SelectableItemMetadata {
   const _Item();
 
+  /// Unique id used to identify this item
+  String get id;
+
   StaggeredTile get staggeredTile;
 
   Widget buildWidget(BuildContext context);
@@ -12,6 +15,9 @@ abstract class _FileItem extends _Item {
   const _FileItem({
     required this.file,
   });
+
+  @override
+  String get id => "file-${file.fdId}";
 
   @override
   bool get isSelectable => true;
@@ -80,6 +86,9 @@ class _DateItem extends _Item {
   });
 
   @override
+  String get id => "date-$date";
+
+  @override
   bool get isSelectable => false;
 
   @override
@@ -103,6 +112,9 @@ class _ItemTransformerArgument {
   const _ItemTransformerArgument({
     required this.account,
     required this.files,
+    this.summary,
+    this.itemPerRow,
+    this.itemSize,
     required this.sort,
     required this.isGroupByDay,
     required this.memoriesDayRange,
@@ -111,6 +123,9 @@ class _ItemTransformerArgument {
 
   final Account account;
   final List<FileDescriptor> files;
+  final DbFilesSummary? summary;
+  final int? itemPerRow;
+  final double? itemSize;
   final _ItemSort sort;
   final bool isGroupByDay;
   final int memoriesDayRange;
@@ -121,10 +136,12 @@ class _ItemTransformerResult {
   const _ItemTransformerResult({
     required this.items,
     required this.memoryCollections,
+    required this.dates,
   });
 
   final List<_Item> items;
   final List<Collection> memoryCollections;
+  final Set<Date> dates;
 }
 
 class _MemoryCollectionItem {
@@ -132,21 +149,24 @@ class _MemoryCollectionItem {
   static const height = width * 1.15;
 }
 
-class _VisibleItem implements Comparable<_VisibleItem> {
-  const _VisibleItem(this.index, this.item);
+@toString
+class _VisibleDate implements Comparable<_VisibleDate> {
+  const _VisibleDate(this.id, this.date);
 
   @override
-  bool operator ==(Object? other) =>
-      other is _VisibleItem && index == other.index;
+  bool operator ==(Object? other) => other is _VisibleDate && id == other.id;
 
   @override
-  int compareTo(_VisibleItem other) => index.compareTo(other.index);
+  int compareTo(_VisibleDate other) => id.compareTo(other.id);
 
   @override
-  int get hashCode => index.hashCode;
+  int get hashCode => id.hashCode;
 
-  final int index;
-  final _Item item;
+  @override
+  String toString() => _$toString();
+
+  final String id;
+  final Date date;
 }
 
 enum _SelectionMenuOption {
@@ -173,4 +193,37 @@ class _RemoveFailedError implements Exception {
   String toString() => _$toString();
 
   final int count;
+}
+
+class _SummaryFileItem extends _Item {
+  const _SummaryFileItem({
+    required this.date,
+    required this.index,
+  });
+
+  @override
+  String get id => "summary-file-$date-$index";
+
+  @override
+  bool get isSelectable => false;
+
+  @override
+  StaggeredTile get staggeredTile => const StaggeredTile.count(1, 1);
+
+  @override
+  Widget buildWidget(BuildContext context) {
+    return ShimmerLoading(
+      isLoading: true,
+      child: Container(
+        margin: const EdgeInsets.all(2),
+        decoration: BoxDecoration(
+          color: Theme.of(context).listPlaceholderBackgroundColor,
+          borderRadius: BorderRadius.circular(4),
+        ),
+      ),
+    );
+  }
+
+  final Date date;
+  final int index;
 }

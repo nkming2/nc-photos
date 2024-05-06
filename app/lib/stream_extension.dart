@@ -25,4 +25,7 @@ extension StreamExtension<T> on Stream<T> {
       }
     }
   }
+
+  Stream<T> distinctBy<U>(U Function(T element) keyOf) =>
+      distinct((previous, next) => keyOf(previous) == keyOf(next));
 }

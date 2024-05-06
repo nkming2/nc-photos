@@ -86,6 +86,25 @@ extension IterableExtension<T> on Iterable<T> {
     return -1;
   }
 
+  /// The first index in the list that satisfies the provided [test].
+  ///
+  /// Searches the list from index [start] to the end of the list.
+  /// The first time an object `o` is encountered so that `test(o)` is true,
+  /// the index of `o` is returned. Returns -1 if [element] is not found.
+  int indexWhere(bool Function(T element) test, [int start = 0]) {
+    var i = 0;
+    for (final e in this) {
+      final j = i++;
+      if (j < start) {
+        continue;
+      }
+      if (test(e)) {
+        return j;
+      }
+    }
+    return -1;
+  }
+
   Future<List<U>> withPartition<U>(
       FutureOr<Iterable<U>> Function(Iterable<T> sublist) fn, int size) async {
     final products = <U>[];

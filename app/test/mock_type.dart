@@ -307,10 +307,11 @@ class MockFileMemoryRepo extends FileRepo {
 
 class MockFileDataSource2 implements FileDataSource2 {
   @override
-  Stream<List<FileDescriptor>> getFileDescriptors(
+  Future<List<FileDescriptor>> getFileDescriptors(
     Account account,
     String shareDirPath, {
     TimeRange? timeRange,
+    bool? isArchived,
     int? offset,
     int? limit,
   }) {
@@ -342,14 +343,15 @@ class MockFileMemoryDataSource2 extends MockFileDataSource2 {
   ]) : files = initialData.map((f) => f.copyWith()).toList();
 
   @override
-  Stream<List<FileDescriptor>> getFileDescriptors(
+  Future<List<FileDescriptor>> getFileDescriptors(
     Account account,
     String shareDirPath, {
     TimeRange? timeRange,
+    bool? isArchived,
     int? offset,
     int? limit,
-  }) async* {
-    yield files.where((f) {
+  }) async {
+    return files.where((f) {
       if (account.roots.any((r) => file_util.isOrUnderDirPath(
           f.fdPath, file_util.unstripPath(account, r)))) {
         return true;

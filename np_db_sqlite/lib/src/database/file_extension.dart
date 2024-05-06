@@ -336,60 +336,51 @@ extension SqliteDbFileExtension on SqliteDb {
     }
   }
 
-  Future<int> countFilesByFileIds({
+  Future<int> countFiles({
     required ByAccount account,
-    required List<int> fileIds,
     bool? isMissingMetadata,
     List<String>? mimes,
   }) async {
     _log.info(
-        "[countFilesByFileIdsMissingMetadata] isMissingMetadata: $isMissingMetadata, mimes: $mimes");
-    if (fileIds.isEmpty) {
-      return 0;
+        "[countFiles] isMissingMetadata: $isMissingMetadata, mimes: $mimes");
+    Expression<bool>? filter;
+    if (isMissingMetadata != null) {
+      if (isMissingMetadata) {
+        filter = images.lastUpdated.isNull() | imageLocations.version.isNull();
+      } else {
+        filter =
+            images.lastUpdated.isNotNull() & imageLocations.version.isNotNull();
+      }
     }
-    final counts = await fileIds.withPartition((sublist) async {
-      Expression<bool>? filter;
-      if (isMissingMetadata != null) {
-        if (isMissingMetadata) {
-          filter =
-              images.lastUpdated.isNull() | imageLocations.version.isNull();
-        } else {
-          filter = images.lastUpdated.isNotNull() &
-              imageLocations.version.isNotNull();
-        }
-      }
-      final count = countAll(filter: filter);
-      final query = selectOnly(files).join([
-        innerJoin(accountFiles, accountFiles.file.equalsExp(files.rowId),
+    final count = countAll(filter: filter);
+    final query = selectOnly(files).join([
+      innerJoin(accountFiles, accountFiles.file.equalsExp(files.rowId),
+          useColumns: false),
+      if (account.dbAccount != null) ...[
+        innerJoin(accounts, accounts.rowId.equalsExp(accountFiles.account),
             useColumns: false),
-        if (account.dbAccount != null) ...[
-          innerJoin(accounts, accounts.rowId.equalsExp(accountFiles.account),
-              useColumns: false),
-          innerJoin(servers, servers.rowId.equalsExp(accounts.server),
-              useColumns: false),
-        ],
-        leftOuterJoin(images, images.accountFile.equalsExp(accountFiles.rowId),
+        innerJoin(servers, servers.rowId.equalsExp(accounts.server),
             useColumns: false),
-        leftOuterJoin(imageLocations,
-            imageLocations.accountFile.equalsExp(accountFiles.rowId),
-            useColumns: false),
-      ]);
-      query.addColumns([count]);
-      if (account.sqlAccount != null) {
-        query.where(accountFiles.account.equals(account.sqlAccount!.rowId));
-      } else if (account.dbAccount != null) {
-        query
-          ..where(servers.address.equals(account.dbAccount!.serverAddress))
-          ..where(accounts.userId
-              .equals(account.dbAccount!.userId.toCaseInsensitiveString()));
-      }
-      query.where(files.fileId.isIn(sublist));
-      if (mimes != null) {
-        query.where(files.contentType.isIn(mimes));
-      }
-      return [await query.map((r) => r.read(count)!).getSingle()];
-    }, _maxByFileIdsSize);
-    return counts.reduce((value, element) => value + element);
+      ],
+      leftOuterJoin(images, images.accountFile.equalsExp(accountFiles.rowId),
+          useColumns: false),
+      leftOuterJoin(imageLocations,
+          imageLocations.accountFile.equalsExp(accountFiles.rowId),
+          useColumns: false),
+    ]);
+    query.addColumns([count]);
+    if (account.sqlAccount != null) {
+      query.where(accountFiles.account.equals(account.sqlAccount!.rowId));
+    } else if (account.dbAccount != null) {
+      query
+        ..where(servers.address.equals(account.dbAccount!.serverAddress))
+        ..where(accounts.userId
+            .equals(account.dbAccount!.userId.toCaseInsensitiveString()));
+    }
+    if (mimes != null) {
+      query.where(files.contentType.isIn(mimes));
+    }
+    return await query.map((r) => r.read(count)!).getSingle();
   }
 
   Future<List<FileDescriptor>> queryFileDescriptors({

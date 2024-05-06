@@ -14,6 +14,7 @@ import 'package:np_async/np_async.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/object_util.dart';
 import 'package:np_common/or_null.dart';
+import 'package:np_datetime/np_datetime.dart';
 import 'package:np_db/np_db.dart';
 
 part 'data_source2.g.dart';
@@ -23,8 +24,14 @@ class FileRemoteDataSource implements FileDataSource2 {
   const FileRemoteDataSource();
 
   @override
-  Stream<List<FileDescriptor>> getFileDescriptors(
-      Account account, String shareDirPath) {
+  Future<List<FileDescriptor>> getFileDescriptors(
+    Account account,
+    String shareDirPath, {
+    TimeRange? timeRange,
+    bool? isArchived,
+    int? offset,
+    int? limit,
+  }) {
     throw UnsupportedError("getFileDescriptors not supported");
   }
 
@@ -100,14 +107,23 @@ class FileNpDbDataSource implements FileDataSource2 {
   const FileNpDbDataSource(this.db);
 
   @override
-  Stream<List<FileDescriptor>> getFileDescriptors(
-      Account account, String shareDirPath) async* {
+  Future<List<FileDescriptor>> getFileDescriptors(
+    Account account,
+    String shareDirPath, {
+    TimeRange? timeRange,
+    bool? isArchived,
+    int? offset,
+    int? limit,
+  }) {
     _log.info("[getFileDescriptors] $account");
-    final stopwatch = Stopwatch()..start();
-    yield await _getPartialFileDescriptors(account, shareDirPath);
-    yield await _getCompleteFileDescriptors(account, shareDirPath);
-    _log.info(
-        "[getFileDescriptors] Elapsed time: ${stopwatch.elapsedMilliseconds}ms");
+    return _getFileDescriptors(
+      account,
+      shareDirPath,
+      timeRange: timeRange,
+      isArchived: isArchived,
+      offset: offset,
+      limit: limit,
+    );
   }
 
   @override
@@ -161,9 +177,16 @@ class FileNpDbDataSource implements FileDataSource2 {
     );
   }
 
-  Future<List<FileDescriptor>> _getPartialFileDescriptors(
-      Account account, String shareDirPath) async {
-    _log.info("[_getPartialFileDescriptors] $account");
+  Future<List<FileDescriptor>> _getFileDescriptors(
+    Account account,
+    String shareDirPath, {
+    TimeRange? timeRange,
+    bool? isArchived,
+    int? offset,
+    int? limit,
+  }) async {
+    _log.info(
+        "[_getFileDescriptors] $account, timeRange: $timeRange, offset: $offset, limit: $limit");
     final results = await db.getFileDescriptors(
       account: account.toDb(),
       // need this because this arg expect empty string for root instead of "."
@@ -174,7 +197,10 @@ class FileNpDbDataSource implements FileDataSource2 {
       includeRelativeDirs: [File(path: shareDirPath).strippedPathWithEmpty],
       excludeRelativeRoots: [remote_storage_util.remoteStorageDirRelativePath],
       mimes: file_util.supportedFormatMimes,
-      limit: _partialCount,
+      timeRange: timeRange,
+      isArchived: isArchived,
+      offset: offset,
+      limit: limit,
     );
     return results
         .map((e) =>
@@ -182,27 +208,5 @@ class FileNpDbDataSource implements FileDataSource2 {
         .toList();
   }
 
-  Future<List<FileDescriptor>> _getCompleteFileDescriptors(
-      Account account, String shareDirPath) async {
-    _log.info("[_getCompleteFileDescriptors] $account");
-    final dbResults = await db.getFileDescriptors(
-      account: account.toDb(),
-      includeRelativeRoots: account.roots
-          .map((e) => File(path: file_util.unstripPath(account, e))
-              .strippedPathWithEmpty)
-          .toList(),
-      includeRelativeDirs: [File(path: shareDirPath).strippedPathWithEmpty],
-      excludeRelativeRoots: [remote_storage_util.remoteStorageDirRelativePath],
-      mimes: file_util.supportedFormatMimes,
-    );
-    final results = dbResults
-        .map((e) => DbFileDescriptorConverter.fromDb(
-            account.userId.toCaseInsensitiveString(), e))
-        .toList();
-    return results;
-  }
-
   final NpDb db;
-
-  static const _partialCount = 100;
 }

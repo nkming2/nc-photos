@@ -8,13 +8,23 @@ class _State {
     required this.isLoading,
     required this.transformedItems,
     required this.selectedItems,
-    required this.visibleItems,
+    required this.visibleDates,
+    required this.queriedDates,
     required this.isEnableMemoryCollection,
     required this.memoryCollections,
     this.contentListMaxExtent,
     this.syncProgress,
     required this.zoom,
     this.scale,
+    this.viewWidth,
+    this.viewHeight,
+    this.itemPerRow,
+    this.itemSize,
+    required this.isScrolling,
+    required this.filesSummary,
+    this.minimapItems,
+    required this.minimapYRatio,
+    this.scrollDate,
     this.error,
   });
 
@@ -27,10 +37,14 @@ class _State {
         isLoading: false,
         transformedItems: const [],
         selectedItems: const {},
-        visibleItems: const {},
+        visibleDates: const {},
+        queriedDates: const {},
         isEnableMemoryCollection: isEnableMemoryCollection,
         memoryCollections: const [],
         zoom: zoom,
+        isScrolling: false,
+        filesSummary: const DbFilesSummary(items: {}),
+        minimapYRatio: 1,
       );
 
   @override
@@ -40,7 +54,9 @@ class _State {
   final bool isLoading;
   final List<_Item> transformedItems;
   final Set<_Item> selectedItems;
-  final Set<_VisibleItem> visibleItems;
+  final DbFilesSummary filesSummary;
+  final Set<_VisibleDate> visibleDates;
+  final Set<Date> queriedDates;
 
   final bool isEnableMemoryCollection;
   final List<Collection> memoryCollections;
@@ -50,6 +66,15 @@ class _State {
 
   final int zoom;
   final double? scale;
+
+  final double? viewWidth;
+  final double? viewHeight;
+  final int? itemPerRow;
+  final double? itemSize;
+  final bool isScrolling;
+  final List<_MinimapItem>? minimapItems;
+  final double minimapYRatio;
+  final Date? scrollDate;
 
   final ExceptionEvent? error;
 }
@@ -78,23 +103,25 @@ class _RequestRefresh implements _Event {
 /// Transform the file list (e.g., filtering, sorting, etc)
 @toString
 class _TransformItems implements _Event {
-  const _TransformItems(this.items);
+  const _TransformItems(this.files, this.summary);
 
   @override
   String toString() => _$toString();
 
-  final List<FileDescriptor> items;
+  final List<FileDescriptor> files;
+  final DbFilesSummary summary;
 }
 
 @toString
 class _OnItemTransformed implements _Event {
-  const _OnItemTransformed(this.items, this.memoryCollections);
+  const _OnItemTransformed(this.items, this.memoryCollections, this.dates);
 
   @override
   String toString() => _$toString();
 
   final List<_Item> items;
   final List<Collection> memoryCollections;
+  final Set<Date> dates;
 }
 
 /// Set the currently selected items
@@ -145,23 +172,23 @@ class _DownloadSelectedItems implements _Event {
 }
 
 @toString
-class _AddVisibleItem implements _Event {
-  const _AddVisibleItem(this.item);
+class _AddVisibleDate implements _Event {
+  const _AddVisibleDate(this.date);
 
   @override
   String toString() => _$toString();
 
-  final _VisibleItem item;
+  final _VisibleDate date;
 }
 
 @toString
-class _RemoveVisibleItem implements _Event {
-  const _RemoveVisibleItem(this.item);
+class _RemoveVisibleDate implements _Event {
+  const _RemoveVisibleDate(this.date);
 
   @override
   String toString() => _$toString();
 
-  final _VisibleItem item;
+  final _VisibleDate date;
 }
 
 @toString
@@ -208,6 +235,49 @@ class _SetScale implements _Event {
   String toString() => _$toString();
 
   final double scale;
+}
+
+@toString
+class _StartScrolling implements _Event {
+  const _StartScrolling();
+
+  @override
+  String toString() => _$toString();
+}
+
+@toString
+class _EndScrolling implements _Event {
+  const _EndScrolling();
+
+  @override
+  String toString() => _$toString();
+}
+
+@toString
+class _SetLayoutConstraint implements _Event {
+  const _SetLayoutConstraint(this.viewWidth, this.viewHeight);
+
+  @override
+  String toString() => _$toString();
+
+  final double viewWidth;
+  final double viewHeight;
+}
+
+@toString
+class _TransformMinimap implements _Event {
+  const _TransformMinimap();
+
+  @override
+  String toString() => _$toString();
+}
+
+@toString
+class _UpdateScrollDate implements _Event {
+  const _UpdateScrollDate();
+
+  @override
+  String toString() => _$toString();
 }
 
 @toString

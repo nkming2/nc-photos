@@ -18,13 +18,23 @@ abstract class $_StateCopyWithWorker {
       bool? isLoading,
       List<_Item>? transformedItems,
       Set<_Item>? selectedItems,
-      Set<_VisibleItem>? visibleItems,
+      DbFilesSummary? filesSummary,
+      Set<_VisibleDate>? visibleDates,
+      Set<Date>? queriedDates,
       bool? isEnableMemoryCollection,
       List<Collection>? memoryCollections,
       double? contentListMaxExtent,
       Progress? syncProgress,
       int? zoom,
       double? scale,
+      double? viewWidth,
+      double? viewHeight,
+      int? itemPerRow,
+      double? itemSize,
+      bool? isScrolling,
+      List<_MinimapItem>? minimapItems,
+      double? minimapYRatio,
+      Date? scrollDate,
       ExceptionEvent? error});
 }
 
@@ -37,13 +47,23 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
       dynamic isLoading,
       dynamic transformedItems,
       dynamic selectedItems,
-      dynamic visibleItems,
+      dynamic filesSummary,
+      dynamic visibleDates,
+      dynamic queriedDates,
       dynamic isEnableMemoryCollection,
       dynamic memoryCollections,
       dynamic contentListMaxExtent = copyWithNull,
       dynamic syncProgress = copyWithNull,
       dynamic zoom,
       dynamic scale = copyWithNull,
+      dynamic viewWidth = copyWithNull,
+      dynamic viewHeight = copyWithNull,
+      dynamic itemPerRow = copyWithNull,
+      dynamic itemSize = copyWithNull,
+      dynamic isScrolling,
+      dynamic minimapItems = copyWithNull,
+      dynamic minimapYRatio,
+      dynamic scrollDate = copyWithNull,
       dynamic error = copyWithNull}) {
     return _State(
         files: files as List<FileDescriptor>? ?? that.files,
@@ -51,7 +71,9 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
         transformedItems:
             transformedItems as List<_Item>? ?? that.transformedItems,
         selectedItems: selectedItems as Set<_Item>? ?? that.selectedItems,
-        visibleItems: visibleItems as Set<_VisibleItem>? ?? that.visibleItems,
+        filesSummary: filesSummary as DbFilesSummary? ?? that.filesSummary,
+        visibleDates: visibleDates as Set<_VisibleDate>? ?? that.visibleDates,
+        queriedDates: queriedDates as Set<Date>? ?? that.queriedDates,
         isEnableMemoryCollection:
             isEnableMemoryCollection as bool? ?? that.isEnableMemoryCollection,
         memoryCollections:
@@ -64,6 +86,22 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
             : syncProgress as Progress?,
         zoom: zoom as int? ?? that.zoom,
         scale: scale == copyWithNull ? that.scale : scale as double?,
+        viewWidth:
+            viewWidth == copyWithNull ? that.viewWidth : viewWidth as double?,
+        viewHeight: viewHeight == copyWithNull
+            ? that.viewHeight
+            : viewHeight as double?,
+        itemPerRow:
+            itemPerRow == copyWithNull ? that.itemPerRow : itemPerRow as int?,
+        itemSize:
+            itemSize == copyWithNull ? that.itemSize : itemSize as double?,
+        isScrolling: isScrolling as bool? ?? that.isScrolling,
+        minimapItems: minimapItems == copyWithNull
+            ? that.minimapItems
+            : minimapItems as List<_MinimapItem>?,
+        minimapYRatio: minimapYRatio as double? ?? that.minimapYRatio,
+        scrollDate:
+            scrollDate == copyWithNull ? that.scrollDate : scrollDate as Date?,
         error: error == copyWithNull ? that.error : error as ExceptionEvent?);
   }
 
@@ -121,6 +159,13 @@ extension _$_BlocNpLog on _Bloc {
   static final log = Logger("widget.home_photos2._Bloc");
 }
 
+extension _$_MinimapViewNpLog on _MinimapView {
+  // ignore: unused_element
+  Logger get _log => log;
+
+  static final log = Logger("widget.home_photos2._MinimapView");
+}
+
 extension _$_ContentListBodyNpLog on _ContentListBody {
   // ignore: unused_element
   Logger get _log => log;
@@ -135,7 +180,7 @@ extension _$_ContentListBodyNpLog on _ContentListBody {
 extension _$_StateToString on _State {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_State {files: [length: ${files.length}], isLoading: $isLoading, transformedItems: [length: ${transformedItems.length}], selectedItems: {length: ${selectedItems.length}}, visibleItems: {length: ${visibleItems.length}}, isEnableMemoryCollection: $isEnableMemoryCollection, memoryCollections: [length: ${memoryCollections.length}], contentListMaxExtent: ${contentListMaxExtent == null ? null : "${contentListMaxExtent!.toStringAsFixed(3)}"}, syncProgress: $syncProgress, zoom: $zoom, scale: ${scale == null ? null : "${scale!.toStringAsFixed(3)}"}, error: $error}";
+    return "_State {files: [length: ${files.length}], isLoading: $isLoading, transformedItems: [length: ${transformedItems.length}], selectedItems: {length: ${selectedItems.length}}, filesSummary: $filesSummary, visibleDates: {length: ${visibleDates.length}}, queriedDates: {length: ${queriedDates.length}}, isEnableMemoryCollection: $isEnableMemoryCollection, memoryCollections: [length: ${memoryCollections.length}], contentListMaxExtent: ${contentListMaxExtent == null ? null : "${contentListMaxExtent!.toStringAsFixed(3)}"}, syncProgress: $syncProgress, zoom: $zoom, scale: ${scale == null ? null : "${scale!.toStringAsFixed(3)}"}, viewWidth: ${viewWidth == null ? null : "${viewWidth!.toStringAsFixed(3)}"}, viewHeight: ${viewHeight == null ? null : "${viewHeight!.toStringAsFixed(3)}"}, itemPerRow: $itemPerRow, itemSize: ${itemSize == null ? null : "${itemSize!.toStringAsFixed(3)}"}, isScrolling: $isScrolling, minimapItems: ${minimapItems == null ? null : "[length: ${minimapItems!.length}]"}, minimapYRatio: ${minimapYRatio.toStringAsFixed(3)}, scrollDate: $scrollDate, error: $error}";
   }
 }
 
@@ -156,14 +201,14 @@ extension _$_RequestRefreshToString on _RequestRefresh {
 extension _$_TransformItemsToString on _TransformItems {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_TransformItems {items: [length: ${items.length}]}";
+    return "_TransformItems {files: [length: ${files.length}], summary: $summary}";
   }
 }
 
 extension _$_OnItemTransformedToString on _OnItemTransformed {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_OnItemTransformed {items: [length: ${items.length}], memoryCollections: [length: ${memoryCollections.length}]}";
+    return "_OnItemTransformed {items: [length: ${items.length}], memoryCollections: [length: ${memoryCollections.length}], dates: {length: ${dates.length}}}";
   }
 }
 
@@ -203,17 +248,17 @@ extension _$_DownloadSelectedItemsToString on _DownloadSelectedItems {
   }
 }
 
-extension _$_AddVisibleItemToString on _AddVisibleItem {
+extension _$_AddVisibleDateToString on _AddVisibleDate {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_AddVisibleItem {item: $item}";
+    return "_AddVisibleDate {date: $date}";
   }
 }
 
-extension _$_RemoveVisibleItemToString on _RemoveVisibleItem {
+extension _$_RemoveVisibleDateToString on _RemoveVisibleDate {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_RemoveVisibleItem {item: $item}";
+    return "_RemoveVisibleDate {date: $date}";
   }
 }
 
@@ -252,6 +297,41 @@ extension _$_SetScaleToString on _SetScale {
   }
 }
 
+extension _$_StartScrollingToString on _StartScrolling {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_StartScrolling {}";
+  }
+}
+
+extension _$_EndScrollingToString on _EndScrolling {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_EndScrolling {}";
+  }
+}
+
+extension _$_SetLayoutConstraintToString on _SetLayoutConstraint {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_SetLayoutConstraint {viewWidth: ${viewWidth.toStringAsFixed(3)}, viewHeight: ${viewHeight.toStringAsFixed(3)}}";
+  }
+}
+
+extension _$_TransformMinimapToString on _TransformMinimap {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_TransformMinimap {}";
+  }
+}
+
+extension _$_UpdateScrollDateToString on _UpdateScrollDate {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_UpdateScrollDate {}";
+  }
+}
+
 extension _$_SetEnableMemoryCollectionToString on _SetEnableMemoryCollection {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
@@ -284,6 +364,13 @@ extension _$_SetErrorToString on _SetError {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
     return "_SetError {error: $error, stackTrace: $stackTrace}";
+  }
+}
+
+extension _$_VisibleDateToString on _VisibleDate {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_VisibleDate {id: $id, date: $date}";
   }
 }
 

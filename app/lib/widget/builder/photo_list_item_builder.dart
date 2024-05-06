@@ -72,7 +72,7 @@ class PhotoListFileDateGrouper implements PhotoListItemGrouper {
 
   @override
   onFile(FileDescriptor file) => helper
-      .onFile(file)
+      .onDate(file.fdDateTime.toLocal().toDate())
       ?.run((date) => PhotoListDateItem(date: date, isMonthOnly: isMonthOnly));
 
   final bool isMonthOnly;

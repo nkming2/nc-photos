@@ -4,6 +4,7 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/or_null.dart';
+import 'package:np_datetime/np_datetime.dart';
 
 part 'repo.g.dart';
 
@@ -16,8 +17,12 @@ abstract class FileRepo2 {
   /// implementation might want to return multiple set of values, say one set of
   /// cached value and later another set of updated value from a remote source.
   /// In any case, each event is guaranteed to be one complete set of data
-  Stream<List<FileDescriptor>> getFileDescriptors(
-      Account account, String shareDirPath);
+  Future<List<FileDescriptor>> getFileDescriptors(
+    Account account,
+    String shareDirPath, {
+    TimeRange? timeRange,
+    bool? isArchived,
+  });
 
   Future<void> updateProperty(
     Account account,
@@ -38,9 +43,14 @@ class BasicFileRepo implements FileRepo2 {
   const BasicFileRepo(this.dataSrc);
 
   @override
-  Stream<List<FileDescriptor>> getFileDescriptors(
-          Account account, String shareDirPath) =>
-      dataSrc.getFileDescriptors(account, shareDirPath);
+  Future<List<FileDescriptor>> getFileDescriptors(
+    Account account,
+    String shareDirPath, {
+    TimeRange? timeRange,
+    bool? isArchived,
+  }) =>
+      dataSrc.getFileDescriptors(account, shareDirPath,
+          timeRange: timeRange, isArchived: isArchived);
 
   @override
   Future<void> updateProperty(
@@ -75,9 +85,14 @@ class CachedFileRepo implements FileRepo2 {
   const CachedFileRepo(this.remoteDataSrc, this.cacheDataSrc);
 
   @override
-  Stream<List<FileDescriptor>> getFileDescriptors(
-          Account account, String shareDirPath) =>
-      cacheDataSrc.getFileDescriptors(account, shareDirPath);
+  Future<List<FileDescriptor>> getFileDescriptors(
+    Account account,
+    String shareDirPath, {
+    TimeRange? timeRange,
+    bool? isArchived,
+  }) =>
+      cacheDataSrc.getFileDescriptors(account, shareDirPath,
+          timeRange: timeRange, isArchived: isArchived);
 
   @override
   Future<void> updateProperty(
@@ -131,8 +146,12 @@ abstract class FileDataSource2 {
   /// Query all files belonging to [account]
   ///
   /// Returned files are sorted by time in descending order
-  Stream<List<FileDescriptor>> getFileDescriptors(
-      Account account, String shareDirPath);
+  Future<List<FileDescriptor>> getFileDescriptors(
+    Account account,
+    String shareDirPath, {
+    TimeRange? timeRange,
+    bool? isArchived,
+  });
 
   Future<void> updateProperty(
     Account account,

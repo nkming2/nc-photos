@@ -16,20 +16,14 @@ part 'photo_list_util.g.dart';
 class DateGroupHelper {
   DateGroupHelper({
     required this.isMonthOnly,
-  }) : _tzOffset = clock.now().timeZoneOffset;
+  });
 
-  Date? onFile(
-    FileDescriptor file, {
-    Date? localDate,
-  }) {
-    // toLocal is way too slow
-    // final localDate = file.fdDateTime.toLocal();
-    localDate ??= file.fdDateTime.add(_tzOffset).toDate();
-    if (localDate.year != _currentDate?.year ||
-        localDate.month != _currentDate?.month ||
-        (!isMonthOnly && localDate.day != _currentDate?.day)) {
-      _currentDate = localDate;
-      return localDate;
+  Date? onDate(Date date) {
+    if (date.year != _currentDate?.year ||
+        date.month != _currentDate?.month ||
+        (!isMonthOnly && date.day != _currentDate?.day)) {
+      _currentDate = date;
+      return date;
     } else {
       return null;
     }
@@ -37,7 +31,6 @@ class DateGroupHelper {
 
   final bool isMonthOnly;
   Date? _currentDate;
-  final Duration _tzOffset;
 }
 
 /// Build memory collection from files

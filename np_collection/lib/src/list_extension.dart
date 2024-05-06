@@ -53,4 +53,33 @@ extension ListExtension<T> on List<T> {
   Future<List<U>> asyncMap<U>(Future<U> Function(T element) fn) {
     return Stream.fromIterable(this).asyncMap(fn).toList();
   }
+
+  /// [map] with access to nearby elements
+  ///
+  /// Does not work well with nullable elements as prev and next return null for
+  /// the first and last element
+  Iterable<U> map3<U>(U Function(T e, T? prev, T? next) toElement) sync* {
+    for (var i = 0; i < length; ++i) {
+      yield toElement(
+        this[i],
+        i == 0 ? null : this[i - 1],
+        i == length - 1 ? null : this[i + 1],
+      );
+    }
+  }
+
+  /// [expand] with access to nearby elements
+  ///
+  /// Does not work well with nullable elements as prev and next return null for
+  /// the first and last element
+  Iterable<U> expand3<U>(
+      Iterable<U> Function(T e, T? prev, T? next) toElements) sync* {
+    for (var i = 0; i < length; ++i) {
+      yield* toElements(
+        this[i],
+        i == 0 ? null : this[i - 1],
+        i == length - 1 ? null : this[i + 1],
+      );
+    }
+  }
 }

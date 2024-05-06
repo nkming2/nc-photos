@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flex_seed_scheme/flex_seed_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nc_photos/controller/pref_controller.dart';
@@ -33,6 +34,26 @@ extension ThemeExtension on ThemeData {
       );
 
   Color get nextcloudBlue => const Color(0xFF0082C9);
+
+  LinearGradient get photoGridShimmerGradient {
+    final Color color;
+    if (brightness == Brightness.light) {
+      color = Colors.white.withOpacity(.85);
+    } else {
+      color = Colors.white.withOpacity(.25);
+    }
+    return LinearGradient(
+      colors: [
+        listPlaceholderBackgroundColor.withOpacity(0),
+        color,
+        listPlaceholderBackgroundColor.withOpacity(0),
+      ],
+      stops: const [0.1, 0.3, 0.4],
+      begin: const Alignment(-1.0, -0.3),
+      end: const Alignment(1.0, 0.3),
+      tileMode: TileMode.clamp,
+    );
+  }
 
   /// Apply surface tint to [color] based on the [elevation] level
   ///

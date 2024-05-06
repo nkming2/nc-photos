@@ -66,6 +66,16 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     } else {
       _log.info("[_Bloc] Ad hoc collection");
     }
+
+    _subscriptions.add(itemsController.stream.listen((event) {
+      if (!event.hasNext && _isInitialLoad) {
+        _isInitialLoad = false;
+        filesController.queryByFileId(event.items
+            .whereType<CollectionFileItem>()
+            .map((e) => e.file.fdId)
+            .toList());
+      }
+    }));
   }
 
   @override
@@ -454,7 +464,8 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
       if (item is CollectionFileItem) {
         if (sorter is CollectionTimeSorter &&
             _c.pref.isAlbumBrowserShowDateOr()) {
-          final date = dateHelper.onFile(item.file);
+          final date =
+              dateHelper.onDate(item.file.fdDateTime.toLocal().toDate());
           if (date != null) {
             transformed.add(_DateItem(date: date));
           }
@@ -563,6 +574,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   /// Specify if the supplied [collection] is an "inline" one, which means it's
   /// not returned from the collection controller but rather created temporarily
   final bool _isAdHocCollection;
+  var _isInitialLoad = true;
 
   final _subscriptions = <StreamSubscription>[];
   var _isHandlingError = false;

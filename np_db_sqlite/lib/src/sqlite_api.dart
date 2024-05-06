@@ -379,15 +379,13 @@ class NpDbSqlite implements NpDb {
   }
 
   @override
-  Future<int> countFilesByFileIdsMissingMetadata({
+  Future<int> countFilesByMissingMetadata({
     required DbAccount account,
-    required List<int> fileIds,
     required List<String> mimes,
   }) async {
     return _db.use((db) async {
-      return await db.countFilesByFileIds(
+      return await db.countFiles(
         account: ByAccount.db(account),
-        fileIds: fileIds,
         isMissingMetadata: true,
         mimes: mimes,
       );

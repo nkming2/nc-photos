@@ -106,7 +106,6 @@ class AccountController {
       _metadataController ??= MetadataController(
         KiwiContainer().resolve(),
         account: account,
-        filesController: filesController,
         prefController: prefController,
       );
 

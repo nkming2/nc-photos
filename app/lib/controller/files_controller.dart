@@ -1,26 +1,31 @@
 import 'dart:async';
-import 'dart:collection';
 
+import 'package:copy_with/copy_with.dart';
 import 'package:logging/logging.dart';
 import 'package:mutex/mutex.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/controller/account_pref_controller.dart';
+import 'package:nc_photos/db/entity_converter.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/progress_util.dart';
+import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/rx_extension.dart';
 import 'package:nc_photos/use_case/file/list_file.dart';
 import 'package:nc_photos/use_case/find_file_descriptor.dart';
+import 'package:nc_photos/use_case/list_archived_file.dart';
 import 'package:nc_photos/use_case/remove.dart';
 import 'package:nc_photos/use_case/sync_dir.dart';
 import 'package:nc_photos/use_case/update_property.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_collection/np_collection.dart';
 import 'package:np_common/lazy.dart';
 import 'package:np_common/object_util.dart';
 import 'package:np_common/or_null.dart';
+import 'package:np_datetime/np_datetime.dart';
 import 'package:np_db/np_db.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:to_string/to_string.dart';
@@ -36,6 +41,26 @@ abstract class FilesStreamEvent {
   bool get hasNext;
 }
 
+@genCopyWith
+class FilesSummaryStreamEvent {
+  const FilesSummaryStreamEvent({
+    required this.summary,
+  });
+
+  final DbFilesSummary summary;
+}
+
+@genCopyWith
+class TimelineStreamEvent {
+  const TimelineStreamEvent({
+    required this.data,
+    required this.isDummy,
+  });
+
+  final Map<int, FileDescriptor> data;
+  final bool isDummy;
+}
+
 @npLog
 class FilesController {
   FilesController(
@@ -45,9 +70,7 @@ class FilesController {
   }) {
     _subscriptions.add(accountPrefController.shareFolderChange.listen((event) {
       // sync remote if share folder is modified
-      if (_isDataStreamInited) {
-        syncRemote();
-      }
+      syncRemote();
     }));
   }
 
@@ -65,13 +88,24 @@ class FilesController {
   ///
   /// There's no guarantee that the returned list is always sorted in some ways,
   /// callers must sort it by themselves if the ordering is important
-  ValueStream<FilesStreamEvent> get stream {
-    if (!_isDataStreamInited) {
-      _isDataStreamInited = true;
-      _load();
+  ValueStream<FilesStreamEvent> get stream => _dataStreamController.stream;
+
+  /// Return a stream of file summaries associated with [account]
+  ///
+  /// File summary contains the number of files grouped by their dates
+  ValueStream<FilesSummaryStreamEvent> get summaryStream {
+    if (!_isSummaryStreamInited) {
+      _isSummaryStreamInited = true;
+      _reloadSummary();
     }
-    return _dataStreamController.stream;
+    return _summaryStreamController.stream;
   }
+
+  /// Return a stream of timeline files associated with [account]
+  ///
+  /// This stream is typically used for the photo timeline
+  ValueStream<TimelineStreamEvent> get timelineStream =>
+      _timelineStreamController.stream;
 
   Future<void> syncRemote({
     void Function(Progress progress)? onProgressUpdate,
@@ -131,43 +165,82 @@ class FilesController {
     Exception? Function(List<int> fileIds) errorBuilder =
         UpdatePropertyFailureError.new,
   }) async {
-    final backups = <int, FileDescriptor>{};
+    final dataBackups = <int, FileDescriptor>{};
     // file ids that need to be queried again to get the correct
     // FileDescriptor.fdDateTime
-    final outdated = <int>[];
+    final dataOutdated = <int>[];
+    final timelineBackups = <int, FileDescriptor>{};
+    final timelineOutdated = <int>[];
+    var isSummaryOutdated = false;
     await _mutex.protect(() async {
-      final next = Map.of(_dataStreamController.value.files);
-      for (final f in files) {
-        final original = next[f.fdId];
-        if (original == null) {
-          _log.warning("[updateProperty] File not found: $f");
-          continue;
-        }
-        backups[f.fdId] = original;
-        if (original is File) {
-          next[f.fdId] = original.copyWith(
-            metadata: metadata,
-            isArchived: isArchived,
-            overrideDateTime: overrideDateTime,
-            isFavorite: isFavorite,
-            location: location,
-          );
-        } else {
-          next[f.fdId] = original.copyWith(
-            fdIsArchived: isArchived == null ? null : (isArchived.obj ?? false),
-            // in case of unsetting, we can't work out the new value here
-            fdDateTime: overrideDateTime?.obj,
-            fdIsFavorite: isFavorite,
-          );
-          if (OrNull.isSetNull(overrideDateTime)) {
-            outdated.add(f.fdId);
+      _dataStreamController.addWithValue((value) {
+        final result = _mockUpdateProperty(
+          src: _dataStreamController.value.files,
+          files: files,
+          metadata: metadata,
+          isArchived: isArchived,
+          overrideDateTime: overrideDateTime,
+          isFavorite: isFavorite,
+          location: location,
+        );
+        dataBackups.addAll(result.backup);
+        dataOutdated.addAll(result.outdated);
+        return value.copyWith(files: result.result);
+      });
+      if (overrideDateTime != null || isArchived != null) {
+        _summaryStreamController.addWithValue((value) {
+          final next = Map.of(value.summary.items);
+          for (final f in files) {
+            final key = f.fdDateTime.toLocal().toDate();
+            final dstKey =
+                overrideDateTime == null ? key : overrideDateTime.obj?.toDate();
+            final original = next[key];
+            if (original == null) {
+              continue;
+            }
+            if (!f.fdIsArchived) {
+              final nextCount = original.count - 1;
+              if (nextCount == 0) {
+                next.remove(key);
+              } else {
+                next[key] = original.copyWith(count: nextCount);
+              }
+            }
+            if (dstKey != null) {
+              if (isArchived?.obj == false ||
+                  (!f.fdIsArchived && isArchived == null)) {
+                /// file not archived or to be set false
+                if (next.containsKey(dstKey)) {
+                  next[dstKey] = const DbFilesSummaryItem(count: 1);
+                } else {
+                  next[dstKey] = original.copyWith(count: original.count + 1);
+                }
+              }
+            } else {
+              // unset, need to query again
+              isSummaryOutdated = true;
+            }
           }
-        }
+          return value.copyWith(summary: value.summary.copyWith(items: next));
+        });
       }
-      _dataStreamController
-          .addWithValue((value) => value.copyWith(files: next));
+      _timelineStreamController.addWithValue((value) {
+        final result = _mockUpdateProperty(
+          src: _timelineStreamController.value.data,
+          files: files,
+          metadata: metadata,
+          isArchived: isArchived,
+          overrideDateTime: overrideDateTime,
+          isFavorite: isFavorite,
+          location: location,
+        );
+        timelineBackups.addAll(result.backup);
+        timelineOutdated.addAll(result.outdated);
+        return value.copyWith(data: result.result);
+      });
     });
-    final failures = <int>[];
+
+    final failures = <FileDescriptor>[];
     for (final f in files) {
       try {
         await UpdateProperty(_c)(
@@ -184,23 +257,40 @@ class FilesController {
             "[updateProperty] Failed while UpdateProperty: ${logFilename(f.fdPath)}",
             e,
             stackTrace);
-        failures.add(f.fdId);
-        outdated.remove(f.fdId);
+        failures.add(f);
+        dataOutdated.remove(f.fdId);
+        timelineOutdated.remove(f.fdId);
       }
     }
+
     if (failures.isNotEmpty) {
       // restore
-      final next = Map.of(_dataStreamController.value.files);
-      for (final f in failures) {
-        if (backups.containsKey(f)) {
-          next[f] = backups[f]!;
+      _dataStreamController.addWithValue((value) {
+        final next = Map.of(_dataStreamController.value.files);
+        for (final f in failures) {
+          if (dataBackups.containsKey(f.fdId)) {
+            next[f.fdId] = dataBackups[f.fdId]!;
+          }
         }
-      }
-      _dataStreamController
-          .addWithValue((value) => value.copyWith(files: next));
-      errorBuilder(failures)?.let(_dataStreamController.addError);
+        return value.copyWith(files: next);
+      });
+      _timelineStreamController.addWithValue((value) {
+        final next = Map.of(_timelineStreamController.value.data);
+        for (final f in failures) {
+          if (timelineBackups.containsKey(f.fdId)) {
+            next[f.fdId] = timelineBackups[f.fdId]!;
+          }
+        }
+        return value.copyWith(data: next);
+      });
+      errorBuilder(failures.map((e) => e.fdId).toList())
+          ?.let(_dataStreamController.addError);
     }
+
     // TODO query outdated
+    if (isSummaryOutdated) {
+      unawaited(_reloadSummary());
+    }
   }
 
   Future<void> remove(
@@ -208,21 +298,45 @@ class FilesController {
     Exception? Function(List<int> fileIds) errorBuilder =
         RemoveFailureError.new,
   }) async {
-    final backups = <int, FileDescriptor>{};
+    final dataBackups = <int, FileDescriptor>{};
+    final timelineBackups = <int, FileDescriptor>{};
     await _mutex.protect(() async {
-      final next = Map.of(_dataStreamController.value.files);
-      for (final f in files) {
-        final original = next.remove(f.fdId);
-        if (original == null) {
-          _log.warning("[remove] File not found: $f");
-          continue;
+      _dataStreamController.addWithValue((value) {
+        final result = _mockRemove(
+          src: _dataStreamController.value.files,
+          files: files,
+        );
+        dataBackups.addAll(result.backup);
+        return value.copyWith(files: result.result);
+      });
+      _summaryStreamController.addWithValue((value) {
+        final next = Map.of(value.summary.items);
+        for (final f in files) {
+          final key = f.fdDateTime.toDate();
+          final original = next[key];
+          if (original == null) {
+            continue;
+          }
+          final count = original.count - 1;
+          if (count == 0) {
+            next.remove(key);
+          } else {
+            next[key] = original.copyWith(count: count);
+          }
         }
-        backups[f.fdId] = original;
-      }
-      _dataStreamController
-          .addWithValue((value) => value.copyWith(files: next));
+        return value.copyWith(summary: value.summary.copyWith(items: next));
+      });
+      _timelineStreamController.addWithValue((value) {
+        final result = _mockRemove(
+          src: _timelineStreamController.value.data,
+          files: files,
+        );
+        timelineBackups.addAll(result.backup);
+        return value.copyWith(data: result.result);
+      });
     });
-    final failures = <int>[];
+
+    final failures = <FileDescriptor>[];
     try {
       await Remove(_c)(
         account,
@@ -232,24 +346,49 @@ class FilesController {
               "[remove] Failed while Remove: ${logFilename(value.fdPath)}",
               error,
               stackTrace);
-          failures.add(value.fdId);
+          failures.add(value);
         },
       );
     } catch (e, stackTrace) {
       _log.severe("[remove] Failed while Remove", e, stackTrace);
-      failures.addAll(files.map((e) => e.fdId));
+      failures.addAll(files);
     }
+
     if (failures.isNotEmpty) {
       // restore
-      final next = LinkedHashMap.of(_dataStreamController.value.files);
-      for (final f in failures) {
-        if (backups.containsKey(f)) {
-          next[f] = backups[f]!;
+      _dataStreamController.addWithValue((value) {
+        final next = Map.of(_dataStreamController.value.files);
+        for (final f in failures) {
+          if (dataBackups.containsKey(f.fdId)) {
+            next[f.fdId] = dataBackups[f.fdId]!;
+          }
         }
-      }
-      _dataStreamController
-          .addWithValue((value) => value.copyWith(files: next));
-      errorBuilder(failures)?.let(_dataStreamController.addError);
+        return value.copyWith(files: next);
+      });
+      _summaryStreamController.addWithValue((value) {
+        final next = Map.of(value.summary.items);
+        for (final f in files) {
+          final key = f.fdDateTime.toDate();
+          final original = next[key];
+          if (original == null) {
+            next[key] = const DbFilesSummaryItem(count: 1);
+          } else {
+            next[key] = original.copyWith(count: original.count + 1);
+          }
+        }
+        return value.copyWith(summary: value.summary.copyWith(items: next));
+      });
+      _timelineStreamController.addWithValue((value) {
+        final next = Map.of(_timelineStreamController.value.data);
+        for (final f in failures) {
+          if (timelineBackups.containsKey(f.fdId)) {
+            next[f.fdId] = timelineBackups[f.fdId]!;
+          }
+        }
+        return value.copyWith(data: next);
+      });
+      errorBuilder(failures.map((e) => e.fdId).toList())
+          ?.let(_dataStreamController.addError);
     }
   }
 
@@ -271,14 +410,77 @@ class FilesController {
               },
             ));
 
-    final next = LinkedHashMap.of(_dataStreamController.value.files);
+    final dataNext = Map.of(_dataStreamController.value.files);
+    final timelineNext = Map.of(_dataStreamController.value.files);
     if (favorites != null && favorites.isNotEmpty) {
-      _applySyncFavoriteResult(next, favorites);
+      _applySyncFavoriteResult(dataNext, favorites);
+      _applySyncFavoriteResult(timelineNext, favorites);
     }
     if (fileExifFiles != null && fileExifFiles.isNotEmpty) {
-      _applySyncFileExifResult(next, fileExifFiles);
+      _applySyncFileExifResult(dataNext, fileExifFiles);
+      _applySyncFileExifResult(timelineNext, fileExifFiles);
+      unawaited(_reloadSummary());
     }
-    _dataStreamController.addWithValue((value) => value.copyWith(files: next));
+    _dataStreamController.addWithValue((v) => v.copyWith(files: dataNext));
+    _timelineStreamController
+        .addWithValue((v) => v.copyWith(data: timelineNext));
+  }
+
+  Future<void> queryByFileId(List<int> fileIds) async {
+    try {
+      final interests = fileIds
+          .where((e) => !_dataStreamController.value.files.containsKey(e))
+          .toList();
+      final files = await FindFileDescriptor(_c)(
+        account,
+        interests,
+        onFileNotFound: (fileId) {
+          _log.warning("[queryByFileId] File missing: $fileId");
+        },
+      );
+      final data = _toFileMap(files);
+      _dataStreamController.addWithValue((v) => v.copyWith(
+            files: v.files.addedAll(data),
+          ));
+    } catch (e, stackTrace) {
+      _dataStreamController.addError(e, stackTrace);
+    }
+  }
+
+  Future<void> queryByArchived() async {
+    try {
+      final files = await ListArchivedFile(_c)(
+        account,
+        file_util.unstripPath(account, accountPrefController.shareFolderValue),
+      );
+      final data = _toFileMap(files);
+      _dataStreamController.addWithValue((v) => v.copyWith(
+            files: v.files.addedAll(data),
+          ));
+    } catch (e, stackTrace) {
+      _dataStreamController.addError(e, stackTrace);
+    }
+  }
+
+  Future<void> queryTimelineByDateRange(DateRange dateRange) async {
+    try {
+      final files = await ListFile(_c)(
+        account,
+        file_util.unstripPath(account, accountPrefController.shareFolderValue),
+        timeRange: dateRange.toLocalTimeRange(),
+      );
+      final data = _toFileMap(files);
+      _timelineStreamController.addWithValue((v) => v.copyWith(
+            data: v.data.addedAll(data),
+            isDummy: false,
+          ));
+      _dataStreamController.addWithValue((v) => v.copyWith(
+            files: v.files.addedAll(data),
+          ));
+      _addTimelineDateRange(dateRange);
+    } catch (e, stackTrace) {
+      _timelineStreamController.addError(e, stackTrace);
+    }
   }
 
   void _applySyncFavoriteResult(
@@ -286,7 +488,6 @@ class FilesController {
     for (final id in result.insert) {
       final f = next[id];
       if (f == null) {
-        _log.warning("[_applySyncFavoriteResult] File id not found: $id");
         continue;
       }
       if (f is File) {
@@ -298,7 +499,6 @@ class FilesController {
     for (final id in result.delete) {
       final f = next[id];
       if (f == null) {
-        _log.warning("[_applySyncFavoriteResult] File id not found: $id");
         continue;
       }
       if (f is File) {
@@ -316,68 +516,146 @@ class FilesController {
     }
   }
 
-  Future<void> _load() async {
-    var lastData = _FilesStreamEvent(
-      files: const {},
-      hasNext: false,
-    );
-    final completer = Completer();
-    ListFile(_c)(
-      account,
-      file_util.unstripPath(account, accountPrefController.shareFolderValue),
-    ).listen(
-      (ev) {
-        lastData = _convertListResultsToEvent(ev, hasNext: true);
-        _dataStreamController.add(lastData);
-      },
-      onError: _dataStreamController.addError,
-      onDone: () => completer.complete(),
-    );
-    await completer.future;
-    _dataStreamController.add(lastData.copyWith(hasNext: false));
-  }
-
   Future<void> _reload() async {
-    var results = <FileDescriptor>[];
-    final completer = Completer();
-    ListFile(_c)(
+    // Take the ids of loaded files
+    final ids = _dataStreamController.value.data.map((e) => e.fdId).toList();
+    final newFiles = await FindFileDescriptor(_c)(
       account,
-      file_util.unstripPath(account, accountPrefController.shareFolderValue),
-    ).listen(
-      (ev) {
-        results = ev;
+      ids,
+      onFileNotFound: (_) {
+        // file removed, can be ignored
       },
-      onError: _dataStreamController.addError,
-      onDone: () => completer.complete(),
     );
-    await completer.future;
-    _dataStreamController
-        .add(_convertListResultsToEvent(results, hasNext: false));
+    _dataStreamController.add(_FilesStreamEvent(
+      files: _toFileMap(newFiles),
+      hasNext: false,
+    ));
+    await _reloadSummary();
+    _timelineStreamController
+        .addWithValue((value) => value.copyWith(data: const {}));
   }
 
-  _FilesStreamEvent _convertListResultsToEvent(
-    List<FileDescriptor> results, {
-    required bool hasNext,
-  }) {
-    return _FilesStreamEvent(
-      files: {
-        for (final f in results) f.fdId: f,
-      },
-      hasNext: hasNext,
+  Map<int, FileDescriptor> _toFileMap(List<FileDescriptor> results) {
+    return {
+      for (final f in results) f.fdId: f,
+    };
+  }
+
+  Future<void> _reloadSummary() async {
+    final results = await _c.npDb.getFilesSummary(
+      account: account.toDb(),
+      includeRelativeRoots: account.roots
+          .map((e) => File(path: file_util.unstripPath(account, e))
+              .strippedPathWithEmpty)
+          .toList(),
+      excludeRelativeRoots: [remote_storage_util.remoteStorageDirRelativePath],
+      mimes: file_util.supportedFormatMimes,
     );
+    _summaryStreamController.addWithValue((value) => value.copyWith(
+          summary: results,
+        ));
+  }
+
+  _MockResult _mockRemove({
+    required Map<int, FileDescriptor> src,
+    required List<FileDescriptor> files,
+  }) {
+    final backups = <int, FileDescriptor>{};
+    final next = Map.of(src);
+    for (final f in files) {
+      final original = next.remove(f.fdId);
+      if (original == null) {
+        continue;
+      }
+      backups[f.fdId] = original;
+    }
+    return _MockResult(result: next, backup: backups);
+  }
+
+  _MockResult _mockUpdateProperty({
+    required Map<int, FileDescriptor> src,
+    required List<FileDescriptor> files,
+    OrNull<Metadata>? metadata,
+    OrNull<bool>? isArchived,
+    OrNull<DateTime>? overrideDateTime,
+    bool? isFavorite,
+    OrNull<ImageLocation>? location,
+  }) {
+    final backups = <int, FileDescriptor>{};
+    final outdated = <int>[];
+    final next = Map.of(src);
+    for (final f in files) {
+      final original = next[f.fdId];
+      if (original == null) {
+        continue;
+      }
+      backups[f.fdId] = original;
+      if (original is File) {
+        next[f.fdId] = original.copyWith(
+          metadata: metadata,
+          isArchived: isArchived,
+          overrideDateTime: overrideDateTime,
+          isFavorite: isFavorite,
+          location: location,
+        );
+      } else {
+        next[f.fdId] = original.copyWith(
+          fdIsArchived: isArchived == null ? null : (isArchived.obj ?? false),
+          // in case of unsetting, we can't work out the new value here
+          fdDateTime: overrideDateTime?.obj,
+          fdIsFavorite: isFavorite,
+        );
+        if (OrNull.isSetNull(overrideDateTime)) {
+          outdated.add(f.fdId);
+        }
+      }
+    }
+    return _MockResult(result: next, backup: backups, outdated: outdated);
+  }
+
+  void _addTimelineDateRange(DateRange dateRange) {
+    // merge and sort the ranges
+    final sorted = List.of(_timelineQueriedRanges)
+      ..add(dateRange)
+      ..sort((a, b) => b.to!.compareTo(a.to!));
+    final results = <DateRange>[];
+    for (final d in sorted) {
+      if (results.isEmpty) {
+        results.add(d);
+        continue;
+      }
+      if (d.isOverlapped(results.last)) {
+        results[results.length - 1] = results.last.union(d);
+      } else {
+        results.add(d);
+      }
+    }
+    _timelineQueriedRanges = results;
   }
 
   final DiContainer _c;
   final Account account;
   final AccountPrefController accountPrefController;
 
-  var _isDataStreamInited = false;
   final _dataStreamController = BehaviorSubject.seeded(
     _FilesStreamEvent(
       files: const {},
       hasNext: true,
     ),
   );
+
+  var _isSummaryStreamInited = false;
+  final _summaryStreamController = BehaviorSubject.seeded(
+    const FilesSummaryStreamEvent(
+      summary: DbFilesSummary(items: {}),
+    ),
+  );
+
+  final _timelineStreamController = BehaviorSubject.seeded(
+    const TimelineStreamEvent(data: {}, isDummy: true),
+  );
+  // sorted in descending order
+  var _timelineQueriedRanges = <DateRange>[];
 
   final _mutex = Mutex();
   var _isSyncing = false;
@@ -402,6 +680,18 @@ class RemoveFailureError implements Exception {
   String toString() => _$toString();
 
   final List<int> fileIds;
+}
+
+class _MockResult {
+  const _MockResult({
+    required this.result,
+    required this.backup,
+    this.outdated = const [],
+  });
+
+  final Map<int, FileDescriptor> result;
+  final Map<int, FileDescriptor> backup;
+  final List<int> outdated;
 }
 
 class _FilesStreamEvent implements FilesStreamEvent {

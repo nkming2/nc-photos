@@ -62,15 +62,23 @@ class _ContentListBody extends StatelessWidget {
           final w = item.buildWidget(context);
           if (isNeedVisibilityInfo) {
             return VisibilityDetector(
-              key: Key("${_log.fullName}.$index"),
+              key: Key("${_log.fullName}.${item.id}"),
               onVisibilityChanged: (info) {
                 if (context.mounted) {
-                  if (info.visibleFraction >= 0.2) {
-                    context
-                        .addEvent(_AddVisibleItem(_VisibleItem(index, item)));
-                  } else {
-                    context.addEvent(
-                        _RemoveVisibleItem(_VisibleItem(index, item)));
+                  Date? date;
+                  if (item is _FileItem) {
+                    date = item.file.fdDateTime.toLocal().toDate();
+                  } else if (item is _SummaryFileItem) {
+                    date = item.date;
+                  }
+                  if (date != null) {
+                    if (info.visibleFraction >= 0.2) {
+                      context.addEvent(
+                          _AddVisibleDate(_VisibleDate(item.id, date)));
+                    } else {
+                      context.addEvent(
+                          _RemoveVisibleDate(_VisibleDate(item.id, date)));
+                    }
                   }
                 }
               },
@@ -234,18 +242,15 @@ class _ScrollLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _BlocSelector<Set<_VisibleItem>>(
-      selector: (state) => state.visibleItems,
-      builder: (context, visibleItems) {
-        final firstVisibleItem =
-            visibleItems.sorted().firstWhereOrNull((e) => e.item is _FileItem);
-        final date = firstVisibleItem?.item.as<_FileItem>()?.file.fdDateTime;
-        if (date == null) {
+    return _BlocSelector<Date?>(
+      selector: (state) => state.scrollDate,
+      builder: (context, scrollDate) {
+        if (scrollDate == null) {
           return const SizedBox.shrink();
         }
         final text = DateFormat(DateFormat.YEAR_ABBR_MONTH,
                 Localizations.localeOf(context).languageCode)
-            .format(date.toLocal());
+            .format(scrollDate.toUtcDateTime());
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: DefaultTextStyle(

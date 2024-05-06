@@ -32,10 +32,12 @@ part 'collection_items_controller.g.dart';
 class CollectionItemStreamData {
   const CollectionItemStreamData({
     required this.items,
+    required this.rawItems,
     required this.hasNext,
   });
 
   final List<CollectionItem> items;
+  final List<CollectionItem> rawItems;
 
   /// If true, the results are intermediate values and may not represent the
   /// latest state
@@ -300,12 +302,14 @@ class CollectionItemsController {
         items = r;
         _dataStreamController.add(CollectionItemStreamData(
           items: r,
+          rawItems: r,
           hasNext: true,
         ));
       }
       if (items != null) {
         _dataStreamController.add(CollectionItemStreamData(
           items: items,
+          rawItems: items,
           hasNext: false,
         ));
         final newCollection =
@@ -327,7 +331,7 @@ class CollectionItemsController {
       return;
     }
     await _mutex.protect(() async {
-      final newItems = _dataStreamController.value.items
+      final newItems = _dataStreamController.value.rawItems
           .map((e) {
             if (e is CollectionFileItem) {
               final file = ev.dataMap[e.file.fdId];
@@ -359,6 +363,7 @@ class CollectionItemsController {
   final _dataStreamController = BehaviorSubject.seeded(
     const CollectionItemStreamData(
       items: [],
+      rawItems: [],
       hasNext: true,
     ),
   );

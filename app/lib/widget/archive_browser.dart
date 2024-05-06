@@ -56,7 +56,7 @@ class ArchiveBrowser extends StatelessWidget {
     return BlocProvider(
       create: (_) => _Bloc(
         account: accountController.account,
-        controller: accountController.filesController,
+        filesController: accountController.filesController,
         prefController: context.read(),
       ),
       child: const _WrappedArchiveBrowser(),

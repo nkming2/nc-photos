@@ -13,7 +13,10 @@ part of 'collection_items_controller.dart';
 // **************************************************************************
 
 abstract class $CollectionItemStreamDataCopyWithWorker {
-  CollectionItemStreamData call({List<CollectionItem>? items, bool? hasNext});
+  CollectionItemStreamData call(
+      {List<CollectionItem>? items,
+      List<CollectionItem>? rawItems,
+      bool? hasNext});
 }
 
 class _$CollectionItemStreamDataCopyWithWorkerImpl
@@ -21,9 +24,11 @@ class _$CollectionItemStreamDataCopyWithWorkerImpl
   _$CollectionItemStreamDataCopyWithWorkerImpl(this.that);
 
   @override
-  CollectionItemStreamData call({dynamic items, dynamic hasNext}) {
+  CollectionItemStreamData call(
+      {dynamic items, dynamic rawItems, dynamic hasNext}) {
     return CollectionItemStreamData(
         items: items as List<CollectionItem>? ?? that.items,
+        rawItems: rawItems as List<CollectionItem>? ?? that.rawItems,
         hasNext: hasNext as bool? ?? that.hasNext);
   }
 

@@ -59,9 +59,7 @@ Future<void> _getFileDescriptors() async {
 
   final src = FileNpDbDataSource(c.npDb);
   expect(
-    await src
-        .getFileDescriptors(account, file_util.unstripPath(account, ""))
-        .last,
+    await src.getFileDescriptors(account, file_util.unstripPath(account, "")),
     [files[3].toDescriptor(), files[1].toDescriptor()],
   );
 }
@@ -101,16 +99,12 @@ Future<void> _getFileDescriptorsMultipleAccount() async {
 
   final src = FileNpDbDataSource(c.npDb);
   expect(
-    await src
-        .getFileDescriptors(account, file_util.unstripPath(account, ""))
-        .last,
+    await src.getFileDescriptors(account, file_util.unstripPath(account, "")),
     [files[3].toDescriptor(), files[1].toDescriptor()],
   );
   expect(
-    await src
-        .getFileDescriptors(
-            user1Account, file_util.unstripPath(user1Account, ""))
-        .last,
+    await src.getFileDescriptors(
+        user1Account, file_util.unstripPath(user1Account, "")),
     [user1Files[1].toDescriptor()],
   );
 }
@@ -143,9 +137,8 @@ Future<void> _getFileDescriptorsShareFolder() async {
 
   final src = FileNpDbDataSource(c.npDb);
   expect(
-    await src
-        .getFileDescriptors(account, file_util.unstripPath(account, "test1"))
-        .last,
+    await src.getFileDescriptors(
+        account, file_util.unstripPath(account, "test1")),
     [files[2].toDescriptor()],
   );
 }
@@ -178,9 +171,8 @@ Future<void> _getFileDescriptorsExtraShareFolder() async {
 
   final src = FileNpDbDataSource(c.npDb);
   expect(
-    await src
-        .getFileDescriptors(account, file_util.unstripPath(account, "test2"))
-        .last,
+    await src.getFileDescriptors(
+        account, file_util.unstripPath(account, "test2")),
     [files[2].toDescriptor(), files[4].toDescriptor()],
   );
 }

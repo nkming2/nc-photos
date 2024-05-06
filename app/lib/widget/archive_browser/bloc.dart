@@ -4,7 +4,7 @@ part of '../archive_browser.dart';
 class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   _Bloc({
     required this.account,
-    required this.controller,
+    required this.filesController,
     required this.prefController,
   }) : super(_State.init(
           zoom: prefController.albumBrowserZoomLevelValue,
@@ -57,8 +57,9 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
 
   Future<void> _onLoad(_LoadItems ev, Emitter<_State> emit) {
     _log.info(ev);
+    unawaited(filesController.queryByArchived());
     return emit.forEach<FilesStreamEvent>(
-      controller.stream,
+      filesController.stream,
       onData: (data) => state.copyWith(
         files: data.data,
         isLoading: data.hasNext || _itemTransformerQueue.isProcessing,
@@ -100,7 +101,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     final selectedFiles =
         selected.whereType<_FileItem>().map((e) => e.file).toList();
     if (selectedFiles.isNotEmpty) {
-      controller.updateProperty(
+      filesController.updateProperty(
         selectedFiles,
         isArchived: const OrNull(false),
         errorBuilder: (fileIds) => _UnarchiveFailedError(fileIds.length),
@@ -162,7 +163,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   }
 
   final Account account;
-  final FilesController controller;
+  final FilesController filesController;
   final PrefController prefController;
 
   final _itemTransformerQueue =
