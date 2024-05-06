@@ -61,27 +61,9 @@ class _ContentListBody extends StatelessWidget {
         itemBuilder: (context, index, item) {
           final w = item.buildWidget(context);
           if (isNeedVisibilityInfo) {
-            return VisibilityDetector(
+            return _ContentListItemView(
               key: Key("${_log.fullName}.${item.id}"),
-              onVisibilityChanged: (info) {
-                if (context.mounted) {
-                  Date? date;
-                  if (item is _FileItem) {
-                    date = item.file.fdDateTime.toLocal().toDate();
-                  } else if (item is _SummaryFileItem) {
-                    date = item.date;
-                  }
-                  if (date != null) {
-                    if (info.visibleFraction >= 0.2) {
-                      context.addEvent(
-                          _AddVisibleDate(_VisibleDate(item.id, date)));
-                    } else {
-                      context.addEvent(
-                          _RemoveVisibleDate(_VisibleDate(item.id, date)));
-                    }
-                  }
-                }
-              },
+              item: item,
               child: w,
             );
           } else {
@@ -123,6 +105,72 @@ class _ContentListBody extends StatelessWidget {
 
   final double maxCrossAxisExtent;
   final bool isNeedVisibilityInfo;
+}
+
+class _ContentListItemView extends StatefulWidget {
+  const _ContentListItemView({
+    required super.key,
+    required this.item,
+    required this.child,
+  });
+
+  @override
+  State<StatefulWidget> createState() => _ContentListItemViewState();
+
+  final _Item item;
+  final Widget child;
+}
+
+class _ContentListItemViewState extends State<_ContentListItemView> {
+  @override
+  void initState() {
+    super.initState();
+    bloc = context.bloc;
+  }
+
+  @override
+  void dispose() {
+    final date = _getDate();
+    if (date != null) {
+      bloc.add(_RemoveVisibleDate(_VisibleDate(widget.item.id, date)));
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return VisibilityDetector(
+      key: Key("${widget.key}.detector"),
+      onVisibilityChanged: (info) {
+        if (context.mounted) {
+          final date = _getDate();
+          if (date != null) {
+            if (info.visibleFraction >= 0.2) {
+              context.addEvent(
+                  _AddVisibleDate(_VisibleDate(widget.item.id, date)));
+            } else {
+              context.addEvent(
+                  _RemoveVisibleDate(_VisibleDate(widget.item.id, date)));
+            }
+          }
+        }
+      },
+      child: widget.child,
+    );
+  }
+
+  Date? _getDate() {
+    final item = widget.item;
+    Date? date;
+    if (item is _FileItem) {
+      date = item.file.fdDateTime.toLocal().toDate();
+    } else if (item is _SummaryFileItem) {
+      date = item.date;
+    }
+    return date;
+  }
+
+  late final _Bloc bloc;
 }
 
 class _MemoryCollectionList extends StatelessWidget {
