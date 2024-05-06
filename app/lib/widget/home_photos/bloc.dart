@@ -381,8 +381,14 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
         .map((e) => e.date)
         .sortedBySelf()
         .reversed
-        .groupBy(key: (e) => e)
-        .map((key, value) =>
+        .groupBy(key: (e) {
+      if (prefController.homePhotosZoomLevelValue >= 0) {
+        return e;
+      } else {
+        // month
+        return Date(e.year, e.month);
+      }
+    }).map((key, value) =>
             MapEntry(key, (value.length / state.itemPerRow!).ceil()));
     final totalRows = dateRows.values.sum;
     final midRow = totalRows / 2;
