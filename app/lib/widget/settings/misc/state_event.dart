@@ -4,7 +4,6 @@ part of '../misc_settings.dart';
 @toString
 class _State {
   const _State({
-    required this.isPhotosTabSortByName,
     required this.isDoubleTapExit,
     this.error,
   });
@@ -12,7 +11,6 @@ class _State {
   @override
   String toString() => _$toString();
 
-  final bool isPhotosTabSortByName;
   final bool isDoubleTapExit;
 
   final ExceptionEvent? error;
@@ -28,16 +26,6 @@ class _Init implements _Event {
 
   @override
   String toString() => _$toString();
-}
-
-@toString
-class _SetPhotosTabSortByName implements _Event {
-  const _SetPhotosTabSortByName(this.value);
-
-  @override
-  String toString() => _$toString();
-
-  final bool value;
 }
 
 @toString

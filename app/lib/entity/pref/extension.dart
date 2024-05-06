@@ -205,15 +205,6 @@ extension PrefExtension on Pref {
   Future<bool> setFirstRunTime(int value) => _set<int>(
       PrefKey.firstRunTime, value, (key, value) => provider.setInt(key, value));
 
-  bool? isPhotosTabSortByName() =>
-      provider.getBool(PrefKey.isPhotosTabSortByName);
-  bool isPhotosTabSortByNameOr([bool def = false]) =>
-      isPhotosTabSortByName() ?? def;
-  Future<bool> setPhotosTabSortByName(bool value) => _set<bool>(
-      PrefKey.isPhotosTabSortByName,
-      value,
-      (key, value) => provider.setBool(key, value));
-
   bool? shouldProcessExifWifiOnly() =>
       provider.getBool(PrefKey.shouldProcessExifWifiOnly);
   bool shouldProcessExifWifiOnlyOr([bool def = true]) =>

@@ -60,12 +60,6 @@ class PrefController {
         value: value,
       );
 
-  Future<void> setPhotosTabSortByName(bool value) => _set<bool>(
-        controller: _isPhotosTabSortByNameController,
-        setter: (pref, value) => pref.setPhotosTabSortByName(value),
-        value: value,
-      );
-
   Future<void> setViewerScreenBrightness(int value) => _set<int>(
         controller: _viewerScreenBrightnessController,
         setter: (pref, value) => pref.setViewerScreenBrightness(value),
@@ -215,9 +209,6 @@ class PrefController {
   @npSubjectAccessor
   late final _memoriesRangeController =
       BehaviorSubject.seeded(_c.pref.getMemoriesRangeOr(2));
-  @npSubjectAccessor
-  late final _isPhotosTabSortByNameController =
-      BehaviorSubject.seeded(_c.pref.isPhotosTabSortByNameOr(false));
   @npSubjectAccessor
   late final _viewerScreenBrightnessController =
       BehaviorSubject.seeded(_c.pref.getViewerScreenBrightnessOr(-1));

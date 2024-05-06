@@ -106,8 +106,6 @@ class _DateItem extends _Item {
   final bool isMonthOnly;
 }
 
-enum _ItemSort { dateTime, filename }
-
 class _ItemTransformerArgument {
   const _ItemTransformerArgument({
     required this.account,
@@ -115,7 +113,6 @@ class _ItemTransformerArgument {
     this.summary,
     this.itemPerRow,
     this.itemSize,
-    required this.sort,
     required this.isGroupByDay,
     required this.memoriesDayRange,
     required this.locale,
@@ -126,7 +123,6 @@ class _ItemTransformerArgument {
   final DbFilesSummary? summary;
   final int? itemPerRow;
   final double? itemSize;
-  final _ItemSort sort;
   final bool isGroupByDay;
   final int memoriesDayRange;
   final Locale locale;

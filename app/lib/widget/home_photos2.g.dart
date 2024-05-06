@@ -339,13 +339,6 @@ extension _$_SetEnableMemoryCollectionToString on _SetEnableMemoryCollection {
   }
 }
 
-extension _$_SetSortByNameToString on _SetSortByName {
-  String _$toString() {
-    // ignore: unnecessary_string_interpolations
-    return "_SetSortByName {value: $value}";
-  }
-}
-
 extension _$_SetMemoriesRangeToString on _SetMemoriesRange {
   String _$toString() {
     // ignore: unnecessary_string_interpolations

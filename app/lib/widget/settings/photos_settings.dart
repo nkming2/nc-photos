@@ -83,28 +83,22 @@ class _WrappedPhotosSettingsState extends State<_WrappedPhotosSettings>
                 [
                   _BlocBuilder(
                     buildWhen: (previous, current) =>
-                        previous.isEnableMemories != current.isEnableMemories ||
-                        previous.isPhotosTabSortByName !=
-                            current.isPhotosTabSortByName,
+                        previous.isEnableMemories != current.isEnableMemories,
                     builder: (context, state) {
                       return SwitchListTile(
                         title: Text(L10n.global().settingsMemoriesTitle),
                         subtitle: Text(L10n.global().settingsMemoriesSubtitle),
                         value: state.isEnableMemories,
-                        onChanged: state.isPhotosTabSortByName
-                            ? null
-                            : (value) {
-                                _bloc.add(_SetEnableMemories(value));
-                              },
+                        onChanged: (value) {
+                          _bloc.add(_SetEnableMemories(value));
+                        },
                       );
                     },
                   ),
                   _BlocBuilder(
                     buildWhen: (previous, current) =>
                         previous.memoriesRange != current.memoriesRange ||
-                        previous.isEnableMemories != current.isEnableMemories ||
-                        previous.isPhotosTabSortByName !=
-                            current.isPhotosTabSortByName,
+                        previous.isEnableMemories != current.isEnableMemories,
                     builder: (context, state) {
                       return ListTile(
                         title: Text(L10n.global().settingsMemoriesRangeTitle),
@@ -112,8 +106,7 @@ class _WrappedPhotosSettingsState extends State<_WrappedPhotosSettings>
                             .settingsMemoriesRangeValueText(
                                 state.memoriesRange)),
                         onTap: () => _onMemoriesRangeTap(context),
-                        enabled: !state.isPhotosTabSortByName &&
-                            state.isEnableMemories,
+                        enabled: state.isEnableMemories,
                       );
                     },
                   ),

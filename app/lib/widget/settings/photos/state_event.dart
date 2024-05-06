@@ -5,7 +5,6 @@ part of '../photos_settings.dart';
 class _State {
   const _State({
     required this.isEnableMemories,
-    required this.isPhotosTabSortByName,
     required this.memoriesRange,
     this.error,
   });
@@ -14,7 +13,6 @@ class _State {
   String toString() => _$toString();
 
   final bool isEnableMemories;
-  final bool isPhotosTabSortByName;
   final int memoriesRange;
 
   final ExceptionEvent? error;

@@ -14,10 +14,7 @@ part of 'photos_settings.dart';
 
 abstract class $_StateCopyWithWorker {
   _State call(
-      {bool? isEnableMemories,
-      bool? isPhotosTabSortByName,
-      int? memoriesRange,
-      ExceptionEvent? error});
+      {bool? isEnableMemories, int? memoriesRange, ExceptionEvent? error});
 }
 
 class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
@@ -26,13 +23,10 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
   @override
   _State call(
       {dynamic isEnableMemories,
-      dynamic isPhotosTabSortByName,
       dynamic memoriesRange,
       dynamic error = copyWithNull}) {
     return _State(
         isEnableMemories: isEnableMemories as bool? ?? that.isEnableMemories,
-        isPhotosTabSortByName:
-            isPhotosTabSortByName as bool? ?? that.isPhotosTabSortByName,
         memoriesRange: memoriesRange as int? ?? that.memoriesRange,
         error: error == copyWithNull ? that.error : error as ExceptionEvent?);
   }
@@ -63,7 +57,7 @@ extension _$_BlocNpLog on _Bloc {
 extension _$_StateToString on _State {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_State {isEnableMemories: $isEnableMemories, isPhotosTabSortByName: $isPhotosTabSortByName, memoriesRange: $memoriesRange, error: $error}";
+    return "_State {isEnableMemories: $isEnableMemories, memoriesRange: $memoriesRange, error: $error}";
   }
 }
 

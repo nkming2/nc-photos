@@ -61,13 +61,6 @@ extension $PrefControllerNpSubjectAccessor on PrefController {
   Stream<int> get memoriesRangeNew => memoriesRange.skip(1);
   Stream<int> get memoriesRangeChange => memoriesRange.distinct().skip(1);
   int get memoriesRangeValue => _memoriesRangeController.value;
-// _isPhotosTabSortByNameController
-  ValueStream<bool> get isPhotosTabSortByName =>
-      _isPhotosTabSortByNameController.stream;
-  Stream<bool> get isPhotosTabSortByNameNew => isPhotosTabSortByName.skip(1);
-  Stream<bool> get isPhotosTabSortByNameChange =>
-      isPhotosTabSortByName.distinct().skip(1);
-  bool get isPhotosTabSortByNameValue => _isPhotosTabSortByNameController.value;
 // _viewerScreenBrightnessController
   ValueStream<int> get viewerScreenBrightness =>
       _viewerScreenBrightnessController.stream;

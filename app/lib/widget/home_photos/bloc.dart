@@ -45,7 +45,6 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     on<_UpdateScrollDate>(_onUpdateScrollDate);
 
     on<_SetEnableMemoryCollection>(_onSetEnableMemoryCollection);
-    on<_SetSortByName>(_onSetSortByName);
     on<_SetMemoriesRange>(_onSetMemoriesRange);
     on<_UpdateDateTimeGroup>(_onUpdateDateTimeGroup);
 
@@ -54,10 +53,6 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     _subscriptions
         .add(accountPrefController.isEnableMemoryAlbumChange.listen((event) {
       add(_SetEnableMemoryCollection(event));
-    }));
-    _subscriptions
-        .add(prefController.isPhotosTabSortByNameChange.listen((event) {
-      add(_SetSortByName(event));
     }));
     _subscriptions.add(prefController.memoriesRangeChange.listen((event) {
       add(_SetMemoriesRange(event));
@@ -410,11 +405,6 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     emit(state.copyWith(isEnableMemoryCollection: ev.value));
   }
 
-  void _onSetSortByName(_SetSortByName ev, Emitter<_State> emit) {
-    _log.info(ev);
-    _transformItems(state.files, state.filesSummary);
-  }
-
   void _onSetMemoriesRange(_SetMemoriesRange ev, Emitter<_State> emit) {
     _log.info(ev);
     _transformItems(state.files, state.filesSummary);
@@ -449,9 +439,6 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
         summary: summary,
         itemPerRow: state.itemPerRow,
         itemSize: state.itemSize,
-        sort: prefController.isPhotosTabSortByNameValue
-            ? _ItemSort.filename
-            : _ItemSort.dateTime,
         isGroupByDay: prefController.homePhotosZoomLevelValue >= 0,
         memoriesDayRange: prefController.memoriesRangeValue,
         locale: language_util.getSelectedLocale() ??

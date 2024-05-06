@@ -89,19 +89,6 @@ class _WrappedMiscSettingsState extends State<_WrappedMiscSettings>
                       );
                     },
                   ),
-                  _BlocSelector<bool>(
-                    selector: (state) => state.isPhotosTabSortByName,
-                    builder: (_, state) {
-                      return SwitchListTile(
-                        title: Text(
-                            L10n.global().settingsPhotosTabSortByNameTitle),
-                        value: state,
-                        onChanged: (value) {
-                          _bloc.add(_SetPhotosTabSortByName(value));
-                        },
-                      );
-                    },
-                  ),
                 ],
               ),
             ),

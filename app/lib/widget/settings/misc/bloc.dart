@@ -5,11 +5,9 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   _Bloc({
     required this.prefController,
   }) : super(_State(
-          isPhotosTabSortByName: prefController.isPhotosTabSortByNameValue,
           isDoubleTapExit: prefController.isDoubleTapExitValue,
         )) {
     on<_Init>(_onInit);
-    on<_SetPhotosTabSortByName>(_onSetPhotosTabSortByName);
     on<_SetDoubleTapExit>(_onSetDoubleTapExit);
   }
 
@@ -20,14 +18,6 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     _log.info(ev);
     await Future.wait([
       emit.forEach<bool>(
-        prefController.isPhotosTabSortByNameChange,
-        onData: (data) => state.copyWith(isPhotosTabSortByName: data),
-        onError: (e, stackTrace) {
-          _log.severe("[_onInit] Uncaught exception", e, stackTrace);
-          return state.copyWith(error: ExceptionEvent(e, stackTrace));
-        },
-      ),
-      emit.forEach<bool>(
         prefController.isDoubleTapExitChange,
         onData: (data) => state.copyWith(isDoubleTapExit: data),
         onError: (e, stackTrace) {
@@ -36,12 +26,6 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
         },
       ),
     ]);
-  }
-
-  void _onSetPhotosTabSortByName(
-      _SetPhotosTabSortByName ev, Emitter<_State> emit) {
-    _log.info(ev);
-    prefController.setPhotosTabSortByName(ev.value);
   }
 
   void _onSetDoubleTapExit(_SetDoubleTapExit ev, Emitter<_State> emit) {

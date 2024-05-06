@@ -100,6 +100,7 @@ enum PrefKey implements PrefKeyInterface {
   enhanceMaxHeight,
   hasShownEnhanceInfo,
   firstRunTime,
+  @Deprecated("unused")
   isPhotosTabSortByName,
   shouldProcessExifWifiOnly,
   doubleTapExit,
@@ -164,6 +165,7 @@ enum PrefKey implements PrefKeyInterface {
         return "hasShownEnhanceInfo";
       case PrefKey.firstRunTime:
         return "firstRunTime";
+      // ignore: deprecated_member_use_from_same_package
       case PrefKey.isPhotosTabSortByName:
         return "isPhotosTabSortByName";
       case PrefKey.shouldProcessExifWifiOnly:

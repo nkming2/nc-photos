@@ -7,7 +7,6 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     required this.accountPrefController,
   }) : super(_State(
           isEnableMemories: accountPrefController.isEnableMemoryAlbumValue,
-          isPhotosTabSortByName: prefController.isPhotosTabSortByNameValue,
           memoriesRange: prefController.memoriesRangeValue,
         )) {
     on<_Init>(_onInit);
@@ -24,14 +23,6 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
       emit.forEach<bool>(
         accountPrefController.isEnableMemoryAlbumChange,
         onData: (data) => state.copyWith(isEnableMemories: data),
-        onError: (e, stackTrace) {
-          _log.severe("[_onInit] Uncaught exception", e, stackTrace);
-          return state.copyWith(error: ExceptionEvent(e, stackTrace));
-        },
-      ),
-      emit.forEach<bool>(
-        prefController.isPhotosTabSortByNameChange,
-        onData: (data) => state.copyWith(isPhotosTabSortByName: data),
         onError: (e, stackTrace) {
           _log.severe("[_onInit] Uncaught exception", e, stackTrace);
           return state.copyWith(error: ExceptionEvent(e, stackTrace));

@@ -13,23 +13,15 @@ part of 'misc_settings.dart';
 // **************************************************************************
 
 abstract class $_StateCopyWithWorker {
-  _State call(
-      {bool? isPhotosTabSortByName,
-      bool? isDoubleTapExit,
-      ExceptionEvent? error});
+  _State call({bool? isDoubleTapExit, ExceptionEvent? error});
 }
 
 class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
   _$_StateCopyWithWorkerImpl(this.that);
 
   @override
-  _State call(
-      {dynamic isPhotosTabSortByName,
-      dynamic isDoubleTapExit,
-      dynamic error = copyWithNull}) {
+  _State call({dynamic isDoubleTapExit, dynamic error = copyWithNull}) {
     return _State(
-        isPhotosTabSortByName:
-            isPhotosTabSortByName as bool? ?? that.isPhotosTabSortByName,
         isDoubleTapExit: isDoubleTapExit as bool? ?? that.isDoubleTapExit,
         error: error == copyWithNull ? that.error : error as ExceptionEvent?);
   }
@@ -60,7 +52,7 @@ extension _$_BlocNpLog on _Bloc {
 extension _$_StateToString on _State {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_State {isPhotosTabSortByName: $isPhotosTabSortByName, isDoubleTapExit: $isDoubleTapExit, error: $error}";
+    return "_State {isDoubleTapExit: $isDoubleTapExit, error: $error}";
   }
 }
 
@@ -68,13 +60,6 @@ extension _$_InitToString on _Init {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
     return "_Init {}";
-  }
-}
-
-extension _$_SetPhotosTabSortByNameToString on _SetPhotosTabSortByName {
-  String _$toString() {
-    // ignore: unnecessary_string_interpolations
-    return "_SetPhotosTabSortByName {value: $value}";
   }
 }
 
