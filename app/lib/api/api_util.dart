@@ -46,7 +46,7 @@ String getFilePreviewUrlRelative(
     // We can't use the generic file preview url because collaborative albums do
     // not create a file share for photos not belonging to you, that means you
     // can only access the file view the Photos API
-    url = "apps/photos/api/v1/preview/${file.fdId}?x=$width&y=$height";
+    url = "index.php/apps/photos/api/v1/preview/${file.fdId}?x=$width&y=$height";
   } else {
     if (file_util.isTrash(account, file)) {
       // trashbin does not support preview.png endpoint
@@ -90,7 +90,7 @@ String getPhotosApiFilePreviewUrlByFileId(
   required int width,
   required int height,
 }) =>
-    "${account.url}/apps/photos/api/v1/preview/$fileId?x=$width&y=$height";
+    "${account.url}/index.php/apps/photos/api/v1/preview/$fileId?x=$width&y=$height";
 
 String getFileUrl(Account account, FileDescriptor file) {
   return "${account.url}/${getFileUrlRelative(file)}";
