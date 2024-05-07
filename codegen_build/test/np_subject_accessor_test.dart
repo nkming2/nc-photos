@@ -7,8 +7,8 @@ import 'package:path/path.dart' as p;
 import 'package:source_gen/source_gen.dart';
 import 'package:test/test.dart';
 
-void main() {
-  _resolveCompilationUnit("test/src/np_subject_accessor.dart");
+Future<void> main() async {
+  await _resolveCompilationUnit("test/src/np_subject_accessor.dart");
   tearDown(() {
     // Increment this after each test so the next test has it's own package
     _pkgCacheCount++;

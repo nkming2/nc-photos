@@ -173,7 +173,7 @@ Future<void> _getFileDescriptorsExtraShareFolder() async {
   expect(
     await src.getFileDescriptors(
         account, file_util.unstripPath(account, "test2")),
-    [files[2].toDescriptor(), files[4].toDescriptor()],
+    [files[4].toDescriptor(), files[2].toDescriptor()],
   );
 }
 

@@ -1,4 +1,5 @@
 import 'package:np_common/object_util.dart';
+import 'package:np_datetime/np_datetime.dart';
 import 'package:np_db_sqlite/src/database.dart';
 import 'package:np_db_sqlite/src/database_extension.dart';
 import 'package:test/test.dart';
@@ -76,8 +77,8 @@ Future<void> _countFileGroupsByDate() async {
   expect(
     result.dateCount,
     {
-      DateTime(2024, 1, 2): 2,
-      DateTime(2024, 1, 3): 1,
+      Date(2024, 1, 2): 2,
+      Date(2024, 1, 3): 1,
     },
   );
 }
