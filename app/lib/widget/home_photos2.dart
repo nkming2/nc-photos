@@ -43,6 +43,7 @@ import 'package:nc_photos/widget/collection_browser.dart';
 import 'package:nc_photos/widget/collection_picker.dart';
 import 'package:nc_photos/widget/file_sharer_dialog.dart';
 import 'package:nc_photos/widget/finger_listener.dart';
+import 'package:nc_photos/widget/handler/double_tap_exit_handler.dart';
 import 'package:nc_photos/widget/home_app_bar.dart';
 import 'package:nc_photos/widget/navigation_bar_blur_filter.dart';
 import 'package:nc_photos/widget/network_thumbnail.dart';
@@ -59,6 +60,7 @@ import 'package:np_common/object_util.dart';
 import 'package:np_common/or_null.dart';
 import 'package:np_datetime/np_datetime.dart';
 import 'package:np_db/np_db.dart';
+import 'package:np_platform_util/np_platform_util.dart';
 import 'package:np_ui/np_ui.dart';
 import 'package:to_string/to_string.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -115,7 +117,7 @@ class _WrappedHomePhotosState extends State<_WrappedHomePhotos> {
 
   @override
   Widget build(BuildContext context) {
-    return VisibilityDetector(
+    final content = VisibilityDetector(
       key: _key,
       onVisibilityChanged: (info) {
         final isVisible = info.visibleFraction >= 0.2;
@@ -167,6 +169,23 @@ class _WrappedHomePhotosState extends State<_WrappedHomePhotos> {
         ),
       ),
     );
+    if (getRawPlatform() == NpPlatform.android) {
+      return WillPopScope(
+        onWillPop: () => _onBackButtonPressed(context),
+        child: content,
+      );
+    } else {
+      return content;
+    }
+  }
+
+  Future<bool> _onBackButtonPressed(BuildContext context) async {
+    if (context.state.selectedItems.isEmpty) {
+      return DoubleTapExitHandler()();
+    } else {
+      context.addEvent(const _SetSelectedItems(items: {}));
+      return false;
+    }
   }
 
   late final _bloc = context.bloc;
@@ -473,7 +492,7 @@ typedef _BlocSelector<T> = BlocSelector<_Bloc, _State, T>;
 
 extension on BuildContext {
   _Bloc get bloc => read<_Bloc>();
-  // _State get state => bloc.state;
+  _State get state => bloc.state;
   void addEvent(_Event event) => bloc.add(event);
 }
 

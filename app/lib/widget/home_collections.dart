@@ -33,6 +33,7 @@ import 'package:nc_photos/widget/archive_browser.dart';
 import 'package:nc_photos/widget/collection_browser.dart';
 import 'package:nc_photos/widget/collection_grid_item.dart';
 import 'package:nc_photos/widget/enhanced_photo_browser.dart';
+import 'package:nc_photos/widget/handler/double_tap_exit_handler.dart';
 import 'package:nc_photos/widget/home_app_bar.dart';
 import 'package:nc_photos/widget/navigation_bar_blur_filter.dart';
 import 'package:nc_photos/widget/new_collection_dialog.dart';
@@ -42,6 +43,7 @@ import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos/widget/sharing_browser.dart';
 import 'package:nc_photos/widget/trashbin_browser.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_platform_util/np_platform_util.dart';
 import 'package:np_ui/np_ui.dart';
 import 'package:to_string/to_string.dart';
 
@@ -89,7 +91,7 @@ class _WrappedHomeCollectionsState extends State<_WrappedHomeCollections>
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocListener(
+    final content = MultiBlocListener(
       listeners: [
         _BlocListener(
           listenWhen: (previous, current) =>
@@ -235,6 +237,14 @@ class _WrappedHomeCollectionsState extends State<_WrappedHomeCollections>
         ],
       ),
     );
+    if (getRawPlatform() == NpPlatform.android) {
+      return WillPopScope(
+        onWillPop: () => _onBackButtonPressed(context),
+        child: content,
+      );
+    } else {
+      return content;
+    }
   }
 
   Future<void> _onNewCollectionPressed(BuildContext context) async {
@@ -264,6 +274,15 @@ class _WrappedHomeCollectionsState extends State<_WrappedHomeCollections>
         content: Text(L10n.global().createCollectionFailureNotification),
         duration: k.snackBarDurationNormal,
       ));
+    }
+  }
+
+  Future<bool> _onBackButtonPressed(BuildContext context) async {
+    if (context.state.selectedItems.isEmpty) {
+      return DoubleTapExitHandler()();
+    } else {
+      context.addEvent(const _SetSelectedItems(items: {}));
+      return false;
     }
   }
 
