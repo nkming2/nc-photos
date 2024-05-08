@@ -46,7 +46,6 @@ import 'package:nc_photos/widget/album_share_outlier_browser.dart';
 import 'package:nc_photos/widget/collection_picker.dart';
 import 'package:nc_photos/widget/draggable_item_list.dart';
 import 'package:nc_photos/widget/export_collection_dialog.dart';
-import 'package:nc_photos/widget/fancy_option_picker.dart';
 import 'package:nc_photos/widget/file_sharer_dialog.dart';
 import 'package:nc_photos/widget/finger_listener.dart';
 import 'package:nc_photos/widget/network_thumbnail.dart';

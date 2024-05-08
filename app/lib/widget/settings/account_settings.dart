@@ -19,7 +19,6 @@ import 'package:nc_photos/help_utils.dart' as help_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/url_launcher_util.dart';
-import 'package:nc_photos/widget/fancy_option_picker.dart';
 import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
 import 'package:nc_photos/widget/root_picker.dart';
@@ -27,6 +26,7 @@ import 'package:nc_photos/widget/settings/settings_list_caption.dart';
 import 'package:nc_photos/widget/share_folder_picker.dart';
 import 'package:nc_photos/widget/simple_input_dialog.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_ui/np_ui.dart';
 import 'package:to_string/to_string.dart';
 
 part 'account/bloc.dart';

@@ -10,7 +10,6 @@ import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/gps_map_util.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
-import 'package:nc_photos/widget/fancy_option_picker.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_gps_map/np_gps_map.dart';

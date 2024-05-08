@@ -10,6 +10,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  np_common:
+    path: ../np_common
 
 dev_dependencies:
   np_lints:

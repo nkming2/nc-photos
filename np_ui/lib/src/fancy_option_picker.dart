@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nc_photos/object_extension.dart';
+import 'package:np_common/object_util.dart';
 
 class FancyOptionPickerItem {
   const FancyOptionPickerItem({
@@ -22,10 +22,10 @@ class FancyOptionPickerItem {
 /// A fancy looking dialog to pick an option
 class FancyOptionPicker extends StatelessWidget {
   const FancyOptionPicker({
-    Key? key,
+    super.key,
     this.title,
     required this.items,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +76,7 @@ class FancyOptionPickerItemView extends StatelessWidget {
               )
             : null,
       ),
-      subtitle: description?.run(Text.new),
+      subtitle: description?.let(Text.new),
       onTap: isSelected ? onUnselect : onSelect,
       dense: dense,
     );
