@@ -28,9 +28,7 @@ import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/disposable.dart';
-import 'package:nc_photos/widget/handler/archive_selection_handler.dart';
 import 'package:nc_photos/widget/handler/remove_selection_handler.dart';
-import 'package:nc_photos/widget/handler/unarchive_selection_handler.dart';
 import 'package:nc_photos/widget/horizontal_page_viewer.dart';
 import 'package:nc_photos/widget/image_editor.dart';
 import 'package:nc_photos/widget/image_enhancer.dart';
@@ -42,6 +40,7 @@ import 'package:nc_photos/widget/viewer_bottom_app_bar.dart';
 import 'package:nc_photos/widget/viewer_detail_pane.dart';
 import 'package:nc_photos/widget/viewer_mixin.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_common/or_null.dart';
 
 part 'viewer.g.dart';
 
@@ -661,27 +660,42 @@ class _ViewerState extends State<Viewer>
 
   void _onArchivePressed(BuildContext context) {
     final index = _viewerController.currentPage;
-    final c = KiwiContainer().resolve<DiContainer>();
     final file = _streamFilesView[index];
     _log.info("[_onArchivePressed] Archive file: ${file.fdPath}");
-    unawaited(ArchiveSelectionHandler(c)(
-      account: widget.account,
-      selection: [file],
-      shouldShowProcessingText: false,
-    ));
+    context.read<AccountController>().filesController.updateProperty(
+      [file],
+      isArchived: const OrNull(true),
+      errorBuilder: (fileIds) {
+        if (mounted) {
+          SnackBarManager().showSnackBar(SnackBar(
+            content: Text(L10n.global().archiveSelectedFailureNotification(1)),
+            duration: k.snackBarDurationNormal,
+          ));
+        }
+        return null;
+      },
+    );
     _removeCurrentItemFromStream(context, index);
   }
 
   void _onUnarchivePressed(BuildContext context) {
     final index = _viewerController.currentPage;
-    final c = KiwiContainer().resolve<DiContainer>();
     final file = _streamFilesView[index];
     _log.info("[_onUnarchivePressed] Unarchive file: ${file.fdPath}");
-    unawaited(UnarchiveSelectionHandler(c)(
-      account: widget.account,
-      selection: [file],
-      shouldShowProcessingText: false,
-    ));
+    context.read<AccountController>().filesController.updateProperty(
+      [file],
+      isArchived: const OrNull(false),
+      errorBuilder: (fileIds) {
+        if (mounted) {
+          SnackBarManager().showSnackBar(SnackBar(
+            content:
+                Text(L10n.global().unarchiveSelectedFailureNotification(1)),
+            duration: k.snackBarDurationNormal,
+          ));
+        }
+        return null;
+      },
+    );
     _removeCurrentItemFromStream(context, index);
   }
 

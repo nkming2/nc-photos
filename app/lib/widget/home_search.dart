@@ -25,7 +25,6 @@ import 'package:nc_photos/theme/dimension.dart';
 import 'package:nc_photos/throttler.dart';
 import 'package:nc_photos/widget/builder/photo_list_item_builder.dart';
 import 'package:nc_photos/widget/handler/add_selection_to_collection_handler.dart';
-import 'package:nc_photos/widget/handler/archive_selection_handler.dart';
 import 'package:nc_photos/widget/handler/remove_selection_handler.dart';
 import 'package:nc_photos/widget/home_search_suggestion.dart';
 import 'package:nc_photos/widget/navigation_bar_blur_filter.dart';
@@ -39,6 +38,7 @@ import 'package:nc_photos/widget/viewer.dart';
 import 'package:np_async/np_async.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/object_util.dart';
+import 'package:np_common/or_null.dart';
 import 'package:np_ui/np_ui.dart';
 
 part 'home_search.g.dart';
@@ -478,7 +478,6 @@ class _HomeSearchState extends State<HomeSearch>
   }
 
   Future<void> _onSelectionArchivePressed(BuildContext context) async {
-    final c = KiwiContainer().resolve<DiContainer>();
     final selectedFiles = selectedListItems
         .whereType<PhotoListFileItem>()
         .map((e) => e.file)
@@ -486,9 +485,19 @@ class _HomeSearchState extends State<HomeSearch>
     setState(() {
       clearSelectedItems();
     });
-    await ArchiveSelectionHandler(c)(
-      account: widget.account,
-      selection: selectedFiles,
+    await context.read<AccountController>().filesController.updateProperty(
+      selectedFiles,
+      isArchived: const OrNull(true),
+      errorBuilder: (fileIds) {
+        if (mounted) {
+          SnackBarManager().showSnackBar(SnackBar(
+            content: Text(L10n.global()
+                .archiveSelectedFailureNotification(fileIds.length)),
+            duration: k.snackBarDurationNormal,
+          ));
+        }
+        return null;
+      },
     );
   }
 
