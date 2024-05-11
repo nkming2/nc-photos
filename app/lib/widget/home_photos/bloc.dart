@@ -130,9 +130,16 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     await Future.wait([
       emit.forEach<FilesSummaryStreamEvent>(
         filesController.summaryStream,
-        onData: (data) => state.copyWith(
-          filesSummary: data.summary,
-        ),
+        onData: (data) {
+          if (data.summary.items.isEmpty && _isInitialLoad) {
+            // no data, initial sync
+            _isInitialLoad = false;
+            _syncRemote();
+          }
+          return state.copyWith(
+            filesSummary: data.summary,
+          );
+        },
         onError: (e, stackTrace) {
           _log.severe("[_onLoad] Uncaught exception", e, stackTrace);
           return state.copyWith(

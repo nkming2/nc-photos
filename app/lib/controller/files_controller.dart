@@ -551,9 +551,7 @@ class FilesController {
       excludeRelativeRoots: [remote_storage_util.remoteStorageDirRelativePath],
       mimes: file_util.supportedFormatMimes,
     );
-    _summaryStreamController.addWithValue((value) => value.copyWith(
-          summary: results,
-        ));
+    _summaryStreamController.add(FilesSummaryStreamEvent(summary: results));
   }
 
   _MockResult _mockRemove({
@@ -645,11 +643,7 @@ class FilesController {
   );
 
   var _isSummaryStreamInited = false;
-  final _summaryStreamController = BehaviorSubject.seeded(
-    const FilesSummaryStreamEvent(
-      summary: DbFilesSummary(items: {}),
-    ),
-  );
+  final _summaryStreamController = BehaviorSubject<FilesSummaryStreamEvent>();
 
   final _timelineStreamController = BehaviorSubject.seeded(
     const TimelineStreamEvent(data: {}, isDummy: true),
