@@ -59,12 +59,14 @@ class VideoViewer extends StatefulWidget {
 class _VideoViewerState extends State<VideoViewer>
     with DisposableManagerMixin<VideoViewer> {
   @override
-  initState() {
+  void initState() {
     super.initState();
     _getVideoUrl().then((url) {
-      setState(() {
-        _initController(url);
-      });
+      if (mounted) {
+        setState(() {
+          _initController(url);
+        });
+      }
     }).onError((e, stacktrace) {
       _log.shout("[initState] Failed while _getVideoUrl", e, stacktrace);
       SnackBarManager().showSnackBar(SnackBar(
@@ -73,6 +75,12 @@ class _VideoViewerState extends State<VideoViewer>
       ));
       widget.onLoadFailure?.call();
     });
+  }
+
+  @override
+  void dispose() {
+    _controllerValue?.dispose();
+    super.dispose();
   }
 
   @override
@@ -100,15 +108,9 @@ class _VideoViewerState extends State<VideoViewer>
     );
   }
 
-  @override
-  dispose() {
-    super.dispose();
-    _controller.dispose();
-  }
-
   Future<void> _initController(String url) async {
     try {
-      _controller = VideoPlayerController.network(
+      _controllerValue = VideoPlayerController.network(
         url,
         httpHeaders: {
           "Authorization": AuthUtil.fromAccount(widget.account).toHeaderValue(),
@@ -293,9 +295,11 @@ class _VideoViewerState extends State<VideoViewer>
     }
   }
 
+  VideoPlayerController get _controller => _controllerValue!;
+
   final _key = GlobalKey();
   bool _isControllerInitialized = false;
-  late VideoPlayerController _controller;
+  VideoPlayerController? _controllerValue;
   var _isFinished = false;
 }
 
