@@ -15,7 +15,6 @@ import 'package:nc_photos/help_utils.dart' as help_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/np_api_util.dart';
 import 'package:nc_photos/object_extension.dart';
-import 'package:nc_photos/pixel_image_provider.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/widget/handler/permission_handler.dart';

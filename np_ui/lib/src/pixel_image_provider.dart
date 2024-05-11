@@ -5,7 +5,7 @@ import 'package:flutter/rendering.dart';
 
 /// ImageProvider for raw RGBA pixels
 class PixelImage extends ImageProvider<PixelImage> {
-  PixelImage(
+  const PixelImage(
     this.rgba,
     this.width,
     this.height, {
@@ -13,7 +13,7 @@ class PixelImage extends ImageProvider<PixelImage> {
   });
 
   @override
-  obtainKey(ImageConfiguration configuration) =>
+  Future<PixelImage> obtainKey(ImageConfiguration configuration) =>
       SynchronousFuture<PixelImage>(this);
 
   @override
