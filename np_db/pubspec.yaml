@@ -20,6 +20,8 @@ dependencies:
   logging: ^1.1.1
   np_codegen:
     path: ../codegen
+  np_collection:
+    path: ../np_collection
   np_common:
     path: ../np_common
   np_datetime:

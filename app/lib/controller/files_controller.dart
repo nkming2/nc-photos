@@ -530,9 +530,23 @@ class FilesController {
       files: _toFileMap(newFiles),
       hasNext: false,
     ));
-    await _reloadSummary();
-    _timelineStreamController
-        .addWithValue((value) => value.copyWith(data: const {}));
+    final diff = await _reloadSummary();
+    final dropDates = [
+      ...diff.onlyInThis.keys,
+      ...diff.onlyInOther.keys,
+      ...diff.updated.keys,
+    ];
+    if (dropDates.isNotEmpty) {
+      _timelineStreamController.addWithValue((value) {
+        final next = <int, FileDescriptor>{};
+        for (final e in value.data.entries) {
+          if (!dropDates.contains(e.value.fdDateTime.toLocal().toDate())) {
+            next[e.key] = e.value;
+          }
+        }
+        return value.copyWith(data: next);
+      });
+    }
   }
 
   Map<int, FileDescriptor> _toFileMap(List<FileDescriptor> results) {
@@ -541,7 +555,9 @@ class FilesController {
     };
   }
 
-  Future<void> _reloadSummary() async {
+  Future<DbFilesSummaryDiff> _reloadSummary() async {
+    final original = _summaryStreamController.valueOrNull?.summary ??
+        const DbFilesSummary(items: {});
     final results = await _c.npDb.getFilesSummary(
       account: account.toDb(),
       includeRelativeRoots: account.roots
@@ -551,7 +567,9 @@ class FilesController {
       excludeRelativeRoots: [remote_storage_util.remoteStorageDirRelativePath],
       mimes: file_util.supportedFormatMimes,
     );
+    final diff = original.diff(results);
     _summaryStreamController.add(FilesSummaryStreamEvent(summary: results));
+    return diff;
   }
 
   _MockResult _mockRemove({

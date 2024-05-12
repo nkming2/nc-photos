@@ -133,13 +133,18 @@ class DbLocationGroupResult {
 
 @genCopyWith
 @toString
-class DbFilesSummaryItem {
+class DbFilesSummaryItem with EquatableMixin {
   const DbFilesSummaryItem({
     required this.count,
   });
 
   @override
   String toString() => _$toString();
+
+  @override
+  List<Object?> get props => [
+        count,
+      ];
 
   final int count;
 }
