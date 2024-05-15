@@ -677,6 +677,87 @@ extension SqliteDbFileExtension on SqliteDb {
     return CountFileGroupsByDateResult(dateCount: results.toMap());
   }
 
+  /// Query files descriptors whose date is lying in a specific month and day
+  /// range
+  Future<List<FileDescriptor>> queryFileDescriptorMemories({
+    required ByAccount account,
+    required Date at,
+    required int radius,
+    List<String>? includeRelativeRoots,
+    List<String>? excludeRelativeRoots,
+    List<String>? mimes,
+  }) async {
+    _log.info(
+      "[queryFileDescriptorMemoryGroups] "
+      "at: $at, "
+      "radius: $radius, "
+      "includeRelativeRoots: $includeRelativeRoots, "
+      "excludeRelativeRoots: $excludeRelativeRoots, "
+      "mimes: $mimes",
+    );
+
+    final dates =
+        List.generate(radius * 2 + 1, (index) => at.add(day: -radius + index));
+    final localTimeColumn =
+        accountFiles.bestDateTime.modify(const DateTimeModifier.localTime());
+    final query = _queryFiles().let((q) {
+      q
+        ..setQueryMode(
+          FilesQueryMode.expression,
+          expressions: [
+            accountFiles.relativePath,
+            files.fileId,
+            files.contentType,
+            accountFiles.isArchived,
+            accountFiles.isFavorite,
+            accountFiles.bestDateTime,
+          ],
+        )
+        ..setAccount(account)
+        ..byArchived(false);
+      if (includeRelativeRoots != null) {
+        if (includeRelativeRoots.none((p) => p.isEmpty)) {
+          for (final r in includeRelativeRoots) {
+            q.byOrRelativePathPattern("$r/%");
+          }
+        }
+      }
+      return q.build();
+    });
+    if (excludeRelativeRoots != null) {
+      for (final r in excludeRelativeRoots) {
+        query.where(accountFiles.relativePath.like("$r/%").not());
+      }
+    }
+    if (mimes != null) {
+      query.where(files.contentType.isIn(mimes));
+    } else {
+      query.where(files.isCollection.isNotValue(true));
+    }
+    Expression<bool>? dateExp;
+    for (final d in dates) {
+      final thisExp = localTimeColumn.month.equals(d.month) &
+          localTimeColumn.day.equals(d.day);
+      if (dateExp == null) {
+        dateExp = thisExp;
+      } else {
+        dateExp |= thisExp;
+      }
+    }
+    query.where(dateExp!.isValue(true));
+    final results = await query
+        .map((r) => FileDescriptor(
+              relativePath: r.read(accountFiles.relativePath)!,
+              fileId: r.read(files.fileId)!,
+              contentType: r.read(files.contentType),
+              isArchived: r.read(accountFiles.isArchived),
+              isFavorite: r.read(accountFiles.isFavorite),
+              bestDateTime: r.read(accountFiles.bestDateTime)!.toUtc(),
+            ))
+        .get();
+    return results;
+  }
+
   /// Update Db files
   ///
   /// Return a list of files that are not yet inserted to the DB (thus not

@@ -164,6 +164,20 @@ class DbFilesSummary {
   final Map<Date, DbFilesSummaryItem> items;
 }
 
+@genCopyWith
+@toString
+class DbFilesMemory {
+  const DbFilesMemory({
+    required this.memories,
+  });
+
+  @override
+  String toString() => _$toString();
+
+  /// Mapping year to files
+  final Map<int, List<DbFileDescriptor>> memories;
+}
+
 @npLog
 abstract class NpDb {
   factory NpDb() => NpDbSqlite();
@@ -373,6 +387,17 @@ abstract class NpDb {
   /// order
   Future<DbFilesSummary> getFilesSummary({
     required DbAccount account,
+    List<String>? includeRelativeRoots,
+    List<String>? excludeRelativeRoots,
+    List<String>? mimes,
+  });
+
+  /// Return [DbFileDescriptor]s whose date is lying in a specific month and day
+  /// range
+  Future<DbFilesMemory> getFilesMemories({
+    required DbAccount account,
+    required Date at,
+    required int radius,
     List<String>? includeRelativeRoots,
     List<String>? excludeRelativeRoots,
     List<String>? mimes,

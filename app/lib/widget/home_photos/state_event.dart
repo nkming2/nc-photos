@@ -114,13 +114,12 @@ class _TransformItems implements _Event {
 
 @toString
 class _OnItemTransformed implements _Event {
-  const _OnItemTransformed(this.items, this.memoryCollections, this.dates);
+  const _OnItemTransformed(this.items, this.dates);
 
   @override
   String toString() => _$toString();
 
   final List<_Item> items;
-  final List<Collection> memoryCollections;
   final Set<Date> dates;
 }
 
@@ -303,6 +302,14 @@ class _SetMemoriesRange implements _Event {
 @toString
 class _UpdateDateTimeGroup implements _Event {
   const _UpdateDateTimeGroup();
+
+  @override
+  String toString() => _$toString();
+}
+
+@toString
+class _UpdateMemories implements _Event {
+  const _UpdateMemories();
 
   @override
   String toString() => _$toString();

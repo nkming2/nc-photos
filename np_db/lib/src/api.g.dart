@@ -57,6 +57,30 @@ extension $DbFilesSummaryCopyWith on DbFilesSummary {
       _$DbFilesSummaryCopyWithWorkerImpl(this);
 }
 
+abstract class $DbFilesMemoryCopyWithWorker {
+  DbFilesMemory call({Map<int, List<DbFileDescriptor>>? memories});
+}
+
+class _$DbFilesMemoryCopyWithWorkerImpl
+    implements $DbFilesMemoryCopyWithWorker {
+  _$DbFilesMemoryCopyWithWorkerImpl(this.that);
+
+  @override
+  DbFilesMemory call({dynamic memories}) {
+    return DbFilesMemory(
+        memories:
+            memories as Map<int, List<DbFileDescriptor>>? ?? that.memories);
+  }
+
+  final DbFilesMemory that;
+}
+
+extension $DbFilesMemoryCopyWith on DbFilesMemory {
+  $DbFilesMemoryCopyWithWorker get copyWith => _$copyWith;
+  $DbFilesMemoryCopyWithWorker get _$copyWith =>
+      _$DbFilesMemoryCopyWithWorkerImpl(this);
+}
+
 // **************************************************************************
 // NpLogGenerator
 // **************************************************************************
@@ -111,5 +135,12 @@ extension _$DbFilesSummaryToString on DbFilesSummary {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
     return "DbFilesSummary {items: {length: ${items.length}}}";
+  }
+}
+
+extension _$DbFilesMemoryToString on DbFilesMemory {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "DbFilesMemory {memories: $memories}";
   }
 }

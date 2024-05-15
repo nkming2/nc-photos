@@ -114,8 +114,6 @@ class _ItemTransformerArgument {
     this.itemPerRow,
     this.itemSize,
     required this.isGroupByDay,
-    required this.memoriesDayRange,
-    required this.locale,
   });
 
   final Account account;
@@ -124,19 +122,15 @@ class _ItemTransformerArgument {
   final int? itemPerRow;
   final double? itemSize;
   final bool isGroupByDay;
-  final int memoriesDayRange;
-  final Locale locale;
 }
 
 class _ItemTransformerResult {
   const _ItemTransformerResult({
     required this.items,
-    required this.memoryCollections,
     required this.dates,
   });
 
   final List<_Item> items;
-  final List<Collection> memoryCollections;
   final Set<Date> dates;
 }
 

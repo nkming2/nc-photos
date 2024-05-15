@@ -490,6 +490,32 @@ class NpDbSqlite implements NpDb {
   }
 
   @override
+  Future<DbFilesMemory> getFilesMemories({
+    required DbAccount account,
+    required Date at,
+    required int radius,
+    List<String>? includeRelativeRoots,
+    List<String>? excludeRelativeRoots,
+    List<String>? mimes,
+  }) async {
+    final result = await _db.use((db) async {
+      return await db.queryFileDescriptorMemories(
+        account: ByAccount.db(account),
+        at: at,
+        radius: radius,
+        includeRelativeRoots: includeRelativeRoots,
+        excludeRelativeRoots: excludeRelativeRoots,
+        mimes: mimes,
+      );
+    });
+    final memories = <int, List<DbFileDescriptor>>{};
+    for (final r in result.map(FileDescriptorConverter.fromSql)) {
+      (memories[r.bestDateTime.year] ??= <DbFileDescriptor>[]).add(r);
+    }
+    return DbFilesMemory(memories: memories);
+  }
+
+  @override
   Future<DbLocationGroupResult> groupLocations({
     required DbAccount account,
     List<String>? includeRelativeRoots,

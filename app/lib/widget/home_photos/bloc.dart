@@ -47,6 +47,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     on<_SetEnableMemoryCollection>(_onSetEnableMemoryCollection);
     on<_SetMemoriesRange>(_onSetMemoriesRange);
     on<_UpdateDateTimeGroup>(_onUpdateDateTimeGroup);
+    on<_UpdateMemories>(_onUpdateMemories);
 
     on<_SetError>(_onSetError);
 
@@ -87,6 +88,15 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     )
         .listen((event) {
       add(const _UpdateScrollDate());
+    }));
+    _subscriptions.add(stream
+        .distinct(
+            (previous, next) => previous.filesSummary == next.filesSummary)
+        .listen((_) {
+      add(const _UpdateMemories());
+    }));
+    _subscriptions.add(prefController.memoriesRangeChange.listen((_) {
+      add(const _UpdateMemories());
     }));
   }
 
@@ -185,7 +195,6 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     _log.info(ev);
     emit(state.copyWith(
       transformedItems: ev.items,
-      memoryCollections: ev.memoryCollections,
       isLoading: _itemTransformerQueue.isProcessing,
       queriedDates: ev.dates,
     ));
@@ -431,6 +440,49 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     add(const _TransformMinimap());
   }
 
+  Future<void> _onUpdateMemories(
+      _UpdateMemories ev, Emitter<_State> emit) async {
+    _log.info(ev);
+    final localToday = clock.now().toLocal().toDate();
+    final dbMemories = await _c.npDb.getFilesMemories(
+      account: account.toDb(),
+      at: localToday,
+      radius: prefController.memoriesRangeValue,
+      includeRelativeRoots: account.roots
+          .map((e) => File(path: file_util.unstripPath(account, e))
+              .strippedPathWithEmpty)
+          .toList(),
+      excludeRelativeRoots: [remote_storage_util.remoteStorageDirRelativePath],
+      mimes: file_util.supportedFormatMimes,
+    );
+    emit(state.copyWith(
+      memoryCollections: dbMemories.memories.entries
+          .sorted((a, b) => a.key.compareTo(b.key))
+          .reversed
+          .map((e) {
+        final center = localToday
+            .copyWith(year: e.key)
+            .toLocalDateTime()
+            .copyWith(hour: 12);
+        return Collection(
+          name: L10n.global().memoryAlbumName(localToday.year - e.key),
+          contentProvider: CollectionMemoryProvider(
+            account: account,
+            year: e.key,
+            month: localToday.month,
+            day: localToday.day,
+            cover: e.value
+                .map((e) => Tuple2(e.bestDateTime.difference(center), e))
+                .sorted((a, b) => a.item1.compareTo(b.item1))
+                .firstOrNull
+                ?.let((e) => DbFileDescriptorConverter.fromDb(
+                    account.userId.toString(), e.item2)),
+          ),
+        );
+      }).toList(),
+    ));
+  }
+
   void _onSetError(_SetError ev, Emitter<_State> emit) {
     _log.info(ev);
     emit(state.copyWith(error: ExceptionEvent(ev.error, ev.stackTrace)));
@@ -447,15 +499,11 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
         itemPerRow: state.itemPerRow,
         itemSize: state.itemSize,
         isGroupByDay: prefController.homePhotosZoomLevelValue >= 0,
-        memoriesDayRange: prefController.memoriesRangeValue,
-        locale: language_util.getSelectedLocale() ??
-            PlatformDispatcher.instance.locale,
       ),
       _buildItem,
       (result) {
         if (!isClosed) {
-          add(_OnItemTransformed(
-              result.items, result.memoryCollections, result.dates));
+          add(_OnItemTransformed(result.items, result.dates));
         }
       },
     );
@@ -694,13 +742,6 @@ _ItemTransformerResult _buildItem(_ItemTransformerArgument arg) {
 
   final dateHelper =
       photo_list_util.DateGroupHelper(isMonthOnly: !arg.isGroupByDay);
-  final today = Date.today();
-  final memoryCollectionHelper = photo_list_util.MemoryCollectionHelper(
-    arg.account,
-    today: today,
-    dayRange: arg.memoriesDayRange,
-  );
-
   final dateTimeSet = SplayTreeSet<Date>.of([
     ...fileGroups.keys,
     if (arg.summary != null) ...arg.summary!.items.keys,
@@ -724,7 +765,6 @@ _ItemTransformerResult _buildItem(_ItemTransformerArgument arg) {
           continue;
         }
         transformed.add(item);
-        memoryCollectionHelper.addFile(f, localDate: d);
       }
     } else if (arg.summary != null) {
       // summary
@@ -740,12 +780,8 @@ _ItemTransformerResult _buildItem(_ItemTransformerArgument arg) {
       }
     }
   }
-
-  final memoryCollections = memoryCollectionHelper
-      .build((year) => L10n.of(arg.locale).memoryAlbumName(today.year - year));
   return _ItemTransformerResult(
     items: transformed,
-    memoryCollections: memoryCollections,
     dates: dates,
   );
 }

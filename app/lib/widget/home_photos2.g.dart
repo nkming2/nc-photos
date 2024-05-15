@@ -208,7 +208,7 @@ extension _$_TransformItemsToString on _TransformItems {
 extension _$_OnItemTransformedToString on _OnItemTransformed {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_OnItemTransformed {items: [length: ${items.length}], memoryCollections: [length: ${memoryCollections.length}], dates: {length: ${dates.length}}}";
+    return "_OnItemTransformed {items: [length: ${items.length}], dates: {length: ${dates.length}}}";
   }
 }
 
@@ -350,6 +350,13 @@ extension _$_UpdateDateTimeGroupToString on _UpdateDateTimeGroup {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
     return "_UpdateDateTimeGroup {}";
+  }
+}
+
+extension _$_UpdateMemoriesToString on _UpdateMemories {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_UpdateMemories {}";
   }
 }
 
