@@ -66,13 +66,13 @@ class FancyOptionPickerItemView extends StatelessWidget {
     return ListTile(
       leading: Icon(
         isSelected ? Icons.check : null,
-        color: Theme.of(context).colorScheme.primary,
+        color: Theme.of(context).colorScheme.secondary,
       ),
       title: Text(
         label,
         style: isSelected
             ? TextStyle(
-                color: Theme.of(context).colorScheme.primary,
+                color: Theme.of(context).colorScheme.secondary,
               )
             : null,
       ),

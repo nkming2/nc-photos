@@ -256,8 +256,6 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
                       showCheckmark: false,
                       visualDensity: VisualDensity.compact,
                       selected: true,
-                      selectedColor: Theme.of(context)
-                          .elevate(Theme.of(context).colorScheme.surface, 5),
                       label: Text(_tags[index]),
                       onSelected: (_) {},
                     ),

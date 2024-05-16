@@ -13,10 +13,10 @@ extension ThemeExtension on ThemeData {
   double get widthLimitedContentMaxWidth => 550.0;
 
   Color get listPlaceholderBackgroundColor =>
-      colorScheme.secondaryContainer.withOpacity(.6);
+      colorScheme.primaryContainer.withOpacity(.6);
 
   Color get listPlaceholderForegroundColor =>
-      colorScheme.onSecondaryContainer.withOpacity(.7);
+      colorScheme.onPrimaryContainer.withOpacity(.7);
 
   Color get homeNavigationBarBackgroundColor =>
       elevate(colorScheme.surface, 2).withOpacity(.55);
@@ -148,8 +148,8 @@ ColorScheme _getColorScheme(
   }
   return SeedColorScheme.fromSeeds(
     brightness: brightness,
-    primaryKey: seedColor,
     tones: FlexTones.oneHue(brightness),
+    primaryKey: seedColor,
   );
 }
 
@@ -188,7 +188,7 @@ ThemeData _applyColorScheme(ColorScheme colorScheme) {
           return colorScheme.onSurface;
         } else {
           if (states.contains(MaterialState.selected)) {
-            return colorScheme.primary;
+            return colorScheme.secondary;
           } else {
             return Colors.transparent;
           }
@@ -210,7 +210,7 @@ ThemeData _applyColorScheme(ColorScheme colorScheme) {
         } else {
           if (states.contains(MaterialState.selected)) {
             // return colorScheme.primary;
-            return colorScheme.primaryContainer;
+            return colorScheme.secondary;
           } else {
             return colorScheme.surfaceVariant;
           }
@@ -227,7 +227,7 @@ ThemeData _applyColorScheme(ColorScheme colorScheme) {
         } else {
           if (states.contains(MaterialState.selected)) {
             // return colorScheme.onPrimary;
-            return colorScheme.primary;
+            return colorScheme.onSecondary;
           } else {
             return colorScheme.outline;
           }
@@ -242,6 +242,46 @@ ThemeData _applyColorScheme(ColorScheme colorScheme) {
       actionTextColor: colorScheme.inversePrimary,
       behavior: SnackBarBehavior.floating,
     ),
+    sliderTheme: SliderThemeData(
+      activeTrackColor: colorScheme.secondary,
+      inactiveTrackColor: colorScheme.secondaryContainer,
+      thumbColor: colorScheme.secondary,
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ButtonStyle(
+        backgroundColor:
+            MaterialStateProperty.all(colorScheme.secondaryContainer),
+        foregroundColor: MaterialStateProperty.all(colorScheme.secondary),
+        overlayColor:
+            MaterialStateProperty.all(colorScheme.secondary.withOpacity(.1)),
+      ),
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: ButtonStyle(
+        foregroundColor: MaterialStateProperty.all(colorScheme.secondary),
+        overlayColor:
+            MaterialStateProperty.all(colorScheme.secondary.withOpacity(.1)),
+      ),
+    ),
+    textSelectionTheme: TextSelectionThemeData(
+      cursorColor: colorScheme.secondary,
+      selectionHandleColor: colorScheme.secondary,
+      selectionColor: colorScheme.secondary.withOpacity(.4),
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      focusedBorder: UnderlineInputBorder(
+        borderSide: BorderSide(color: colorScheme.secondary, width: 2),
+      ),
+    ),
+    chipTheme: ChipThemeData(
+      selectedColor: Color.lerp(
+          colorScheme.secondaryContainer, colorScheme.surfaceTint, .14),
+      iconTheme: IconThemeData(
+        color: colorScheme.secondary,
+      ),
+    ),
+    progressIndicatorTheme:
+        ProgressIndicatorThemeData(color: colorScheme.secondary),
     extensions: [
       M3(
         checkbox: M3Checkbox(

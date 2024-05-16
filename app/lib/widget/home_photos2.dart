@@ -322,8 +322,10 @@ class _BodyState extends State<_Body> {
                           AppDimension.of(context).homeBottomAppBarHeight,
                       labelTextBuilder: (_) => const _ScrollLabel(),
                       labelPadding: const EdgeInsets.symmetric(horizontal: 40),
-                      backgroundColor: Theme.of(context).elevate(
-                          Theme.of(context).colorScheme.inverseSurface, 3),
+                      backgroundColor:
+                          Theme.of(context).colorScheme.secondaryContainer,
+                      foregroundColor:
+                          Theme.of(context).colorScheme.onSecondaryContainer,
                       heightScrollThumb: 60,
                       onScrollBegin: () {
                         _bloc.add(const _StartScrolling());
@@ -335,6 +337,9 @@ class _BodyState extends State<_Body> {
                         behavior: ScrollConfiguration.of(context)
                             .copyWith(scrollbars: false),
                         child: RefreshIndicator(
+                          color: Theme.of(context).colorScheme.secondary,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.secondaryContainer,
                           onRefresh: () async {
                             _bloc.add(const _RequestRefresh());
                             var hasNotNull = false;

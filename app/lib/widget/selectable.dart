@@ -25,7 +25,7 @@ class Selectable extends StatelessWidget {
           Positioned.fill(
             child: Container(
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primaryContainer,
+                color: Theme.of(context).colorScheme.secondaryContainer,
                 borderRadius: borderRadius,
               ),
             ),
@@ -41,10 +41,10 @@ class Selectable extends StatelessWidget {
                       isSelected ? childBorderRadius : BorderRadius.zero,
                   side: BorderSide(
                     color: isSelected
-                        ? Theme.of(context).colorScheme.primaryContainer
+                        ? Theme.of(context).colorScheme.secondaryContainer
                         : Theme.of(context)
                             .colorScheme
-                            .primaryContainer
+                            .secondaryContainer
                             .withOpacity(0),
                     width: isSelected ? 4 : 0,
                   ),
@@ -65,12 +65,12 @@ class Selectable extends StatelessWidget {
                 Icon(
                   Icons.circle,
                   size: iconSize - 2,
-                  color: Theme.of(context).colorScheme.primary,
+                  color: Theme.of(context).colorScheme.secondary,
                 ),
                 Icon(
                   Icons.check_circle_outlined,
                   size: iconSize,
-                  color: Theme.of(context).colorScheme.primaryContainer,
+                  color: Theme.of(context).colorScheme.secondaryContainer,
                 ),
               ],
             ),

@@ -653,8 +653,6 @@ class _FilterBubbleList extends StatelessWidget {
         showCheckmark: false,
         visualDensity: VisualDensity.compact,
         selected: true,
-        selectedColor:
-            Theme.of(context).elevate(Theme.of(context).colorScheme.surface, 5),
         label: Text(label),
         onSelected: (_) {},
       ),

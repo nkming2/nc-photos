@@ -376,8 +376,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "v0.1.0-nc-photos-7"
-      resolved-ref: c2e009d371950322f67ff7ce18a67881000629ce
+      ref: "v0.1.0-nc-photos-8"
+      resolved-ref: "4fa2ca0f8bbab5c4300b242c63865e0530a173c8"
       url: "https://gitlab.com/nc-photos/flutter-draggable-scrollbar"
     source: git
     version: "0.1.0+7"
