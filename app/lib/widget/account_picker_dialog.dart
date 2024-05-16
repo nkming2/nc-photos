@@ -483,10 +483,14 @@ class _AboutChin extends StatelessWidget {
         "\u2b50",
         // rainbow
         "\u{1f308}",
-        // globe
-        "\u{1f310}",
         // clover
         "\u{1f340}",
+        // watermelon
+        "\u{1f349}",
+        // beach
+        "\u{1f3d6}",
+        // robot
+        "\u{1f916}",
       ];
       return symbols[Random(_seed).nextInt(symbols.length)];
     }
