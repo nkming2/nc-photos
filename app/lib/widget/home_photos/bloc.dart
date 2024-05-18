@@ -561,7 +561,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
 
   /// Query a set number of files taken on or before [at]
   void _requestFilesFrom(Date at) {
-    const targetFileCount = 50;
+    const targetFileCount = 100;
 
     _log.info("[_requestFilesFrom] $at");
     _isQueryingFiles = true;
