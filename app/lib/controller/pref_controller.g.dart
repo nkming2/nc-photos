@@ -134,4 +134,11 @@ extension $PrefControllerNpSubjectAccessor on PrefController {
   Stream<Color?> get seedColorNew => seedColor.skip(1);
   Stream<Color?> get seedColorChange => seedColor.distinct().skip(1);
   Color? get seedColorValue => _seedColorController.value;
+// _secondarySeedColorController
+  ValueStream<Color?> get secondarySeedColor =>
+      _secondarySeedColorController.stream;
+  Stream<Color?> get secondarySeedColorNew => secondarySeedColor.skip(1);
+  Stream<Color?> get secondarySeedColorChange =>
+      secondarySeedColor.distinct().skip(1);
+  Color? get secondarySeedColorValue => _secondarySeedColorController.value;
 }

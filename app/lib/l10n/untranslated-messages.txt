@@ -23,6 +23,9 @@
     "settingsImageEditSaveResultsToServerTitle",
     "settingsImageEditSaveResultsToServerTrueDescription",
     "settingsSeedColorSystemColorDescription",
+    "settingsThemePrimaryColor",
+    "settingsThemeSecondaryColor",
+    "settingsThemePresets",
     "settingsSeedColorPickerSystemColorButtonLabel",
     "settingsAboutSectionTitle",
     "settingsVersionTitle",
@@ -234,11 +237,20 @@
     "errorNoStoragePermission"
   ],
 
+  "cs": [
+    "settingsThemePrimaryColor",
+    "settingsThemeSecondaryColor",
+    "settingsThemePresets"
+  ],
+
   "de": [
     "settingsShareFolderDialogTitle",
     "settingsShareFolderDialogDescription",
     "settingsShareFolderPickerDescription",
     "settingsPersonProviderTitle",
+    "settingsThemePrimaryColor",
+    "settingsThemeSecondaryColor",
+    "settingsThemePresets",
     "settingsSeedColorPickerSystemColorButtonLabel",
     "fileLastSharedByOthersDescription",
     "multipleFilesLinkShareDialogContent",
@@ -288,6 +300,9 @@
     "settingsSeedColorDescription",
     "settingsSeedColorSystemColorDescription",
     "settingsSeedColorPickerTitle",
+    "settingsThemePrimaryColor",
+    "settingsThemeSecondaryColor",
+    "settingsThemePresets",
     "settingsSeedColorPickerSystemColorButtonLabel",
     "settingsDoubleTapExitTitle",
     "settingsExpertTitle",
@@ -375,9 +390,30 @@
     "deleteAccountConfirmDialogText"
   ],
 
+  "es": [
+    "settingsThemePrimaryColor",
+    "settingsThemeSecondaryColor",
+    "settingsThemePresets"
+  ],
+
+  "fi": [
+    "settingsThemePrimaryColor",
+    "settingsThemeSecondaryColor",
+    "settingsThemePresets"
+  ],
+
+  "fr": [
+    "settingsThemePrimaryColor",
+    "settingsThemeSecondaryColor",
+    "settingsThemePresets"
+  ],
+
   "it": [
     "settingsPersonProviderTitle",
     "settingsImageEditTitle",
+    "settingsThemePrimaryColor",
+    "settingsThemeSecondaryColor",
+    "settingsThemePresets",
     "unmuteTooltip",
     "slideshowTooltip",
     "enhanceColorPopTitle"
@@ -453,6 +489,9 @@
     "settingsSeedColorDescription",
     "settingsSeedColorSystemColorDescription",
     "settingsSeedColorPickerTitle",
+    "settingsThemePrimaryColor",
+    "settingsThemeSecondaryColor",
+    "settingsThemePresets",
     "settingsSeedColorPickerSystemColorButtonLabel",
     "settingsUseBlackInDarkThemeTitle",
     "settingsUseBlackInDarkThemeTrueDescription",
@@ -737,6 +776,9 @@
 
   "pl": [
     "settingsMemoriesRangeValueText",
+    "settingsThemePrimaryColor",
+    "settingsThemeSecondaryColor",
+    "settingsThemePresets",
     "enhanceColorPopTitle",
     "imageEditTransformOrientationClockwise",
     "imageEditTransformOrientationCounterclockwise"
@@ -747,6 +789,9 @@
     "settingsMetadataTitle",
     "settingsPersonProviderTitle",
     "settingsSeedColorSystemColorDescription",
+    "settingsThemePrimaryColor",
+    "settingsThemeSecondaryColor",
+    "settingsThemePresets",
     "settingsSeedColorPickerSystemColorButtonLabel",
     "settingsServerVersionTitle",
     "searchLandingPeopleListEmptyText2",
@@ -763,6 +808,18 @@
     "contributorsTooltip",
     "setAsTooltip",
     "deleteAccountConfirmDialogText"
+  ],
+
+  "ru": [
+    "settingsThemePrimaryColor",
+    "settingsThemeSecondaryColor",
+    "settingsThemePresets"
+  ],
+
+  "tr": [
+    "settingsThemePrimaryColor",
+    "settingsThemeSecondaryColor",
+    "settingsThemePresets"
   ],
 
   "zh": [
@@ -791,6 +848,9 @@
     "settingsSeedColorDescription",
     "settingsSeedColorSystemColorDescription",
     "settingsSeedColorPickerTitle",
+    "settingsThemePrimaryColor",
+    "settingsThemeSecondaryColor",
+    "settingsThemePresets",
     "settingsSeedColorPickerSystemColorButtonLabel",
     "settingsMiscellaneousTitle",
     "settingsDoubleTapExitTitle",
@@ -919,6 +979,9 @@
     "settingsSeedColorDescription",
     "settingsSeedColorSystemColorDescription",
     "settingsSeedColorPickerTitle",
+    "settingsThemePrimaryColor",
+    "settingsThemeSecondaryColor",
+    "settingsThemePresets",
     "settingsSeedColorPickerSystemColorButtonLabel",
     "settingsMiscellaneousTitle",
     "settingsDoubleTapExitTitle",

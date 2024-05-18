@@ -133,6 +133,14 @@ class PrefController {
         value: value,
       );
 
+  Future<void> setSecondarySeedColor(Color? value) => _setOrRemove<Color>(
+        controller: _secondarySeedColorController,
+        setter: (pref, value) =>
+            pref.setSecondarySeedColor(value.withAlpha(0xFF).value),
+        remover: (pref) => pref.setSecondarySeedColor(null),
+        value: value,
+      );
+
   Future<void> _set<T>({
     required BehaviorSubject<T> controller,
     required Future<bool> Function(Pref pref, T value) setter,
@@ -242,4 +250,7 @@ class PrefController {
   @NpSubjectAccessor(type: "Color?")
   late final _seedColorController =
       BehaviorSubject<Color?>.seeded(_c.pref.getSeedColor()?.run(Color.new));
+  @NpSubjectAccessor(type: "Color?")
+  late final _secondarySeedColorController = BehaviorSubject<Color?>.seeded(
+      _c.pref.getSecondarySeedColor()?.run(Color.new));
 }

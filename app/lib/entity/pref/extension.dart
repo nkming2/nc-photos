@@ -276,6 +276,20 @@ extension PrefExtension on Pref {
       PrefKey.isVideoPlayerLoop,
       value,
       (key, value) => provider.setBool(key, value));
+
+  @Deprecated("Use PrefController")
+  int? getSecondarySeedColor() => provider.getInt(PrefKey.secondarySeedColor);
+  @Deprecated("Use PrefController")
+  int getSecondarySeedColorOr(int def) => getSecondarySeedColor() ?? def;
+  @Deprecated("Use PrefController")
+  Future<bool> setSecondarySeedColor(int? value) {
+    if (value == null) {
+      return _remove(PrefKey.secondarySeedColor);
+    } else {
+      return _set<int>(PrefKey.secondarySeedColor, value,
+          (key, value) => provider.setInt(key, value));
+    }
+  }
 }
 
 extension AccountPrefExtension on AccountPref {
@@ -296,8 +310,7 @@ extension AccountPrefExtension on AccountPref {
 
   bool? isEnableMemoryAlbum() =>
       provider.getBool(AccountPrefKey.isEnableMemoryAlbum);
-  bool isEnableMemoryAlbumOr([bool def = true]) =>
-      isEnableMemoryAlbum() ?? def;
+  bool isEnableMemoryAlbumOr([bool def = true]) => isEnableMemoryAlbum() ?? def;
   Future<bool> setEnableMemoryAlbum(bool value) => _set<bool>(
       AccountPrefKey.isEnableMemoryAlbum,
       value,

@@ -17,6 +17,7 @@ abstract class $_StateCopyWithWorker {
       {bool? isFollowSystemTheme,
       bool? isUseBlackInDarkTheme,
       int? seedColor,
+      int? secondarySeedColor,
       ExceptionEvent? error});
 }
 
@@ -28,6 +29,7 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
       {dynamic isFollowSystemTheme,
       dynamic isUseBlackInDarkTheme,
       dynamic seedColor = copyWithNull,
+      dynamic secondarySeedColor = copyWithNull,
       dynamic error = copyWithNull}) {
     return _State(
         isFollowSystemTheme:
@@ -36,6 +38,9 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
             isUseBlackInDarkTheme as bool? ?? that.isUseBlackInDarkTheme,
         seedColor:
             seedColor == copyWithNull ? that.seedColor : seedColor as int?,
+        secondarySeedColor: secondarySeedColor == copyWithNull
+            ? that.secondarySeedColor
+            : secondarySeedColor as int?,
         error: error == copyWithNull ? that.error : error as ExceptionEvent?);
   }
 
@@ -73,7 +78,7 @@ extension _$_BlocNpLog on _Bloc {
 extension _$_StateToString on _State {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_State {isFollowSystemTheme: $isFollowSystemTheme, isUseBlackInDarkTheme: $isUseBlackInDarkTheme, seedColor: $seedColor, error: $error}";
+    return "_State {isFollowSystemTheme: $isFollowSystemTheme, isUseBlackInDarkTheme: $isUseBlackInDarkTheme, seedColor: $seedColor, secondarySeedColor: $secondarySeedColor, error: $error}";
   }
 }
 
@@ -98,9 +103,9 @@ extension _$_SetUseBlackInDarkThemeToString on _SetUseBlackInDarkTheme {
   }
 }
 
-extension _$_SetSeedColorToString on _SetSeedColor {
+extension _$_SetThemeColorToString on _SetThemeColor {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_SetSeedColor {value: $value}";
+    return "_SetThemeColor {primary: $primary, secondary: $secondary}";
   }
 }

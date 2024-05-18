@@ -125,7 +125,8 @@ class _WrappedAppState extends State<_WrappedApp>
           previous.isDarkTheme != current.isDarkTheme ||
           previous.isFollowSystemTheme != current.isFollowSystemTheme ||
           previous.isUseBlackInDarkTheme != current.isUseBlackInDarkTheme ||
-          previous.seedColor != current.seedColor,
+          previous.seedColor != current.seedColor ||
+          previous.secondarySeedColor != current.secondarySeedColor,
       builder: (context, state) => DynamicColorBuilder(
         builder: (lightDynamic, darkDynamic) {
           if (lightDynamic != null) {

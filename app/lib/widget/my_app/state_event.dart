@@ -9,6 +9,7 @@ class _State {
     required this.isFollowSystemTheme,
     required this.isUseBlackInDarkTheme,
     required this.seedColor,
+    required this.secondarySeedColor,
   });
 
   @override
@@ -19,6 +20,7 @@ class _State {
   final bool isFollowSystemTheme;
   final bool isUseBlackInDarkTheme;
   final int? seedColor;
+  final int? secondarySeedColor;
 }
 
 abstract class _Event {}

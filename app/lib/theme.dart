@@ -132,24 +132,24 @@ ThemeData buildDarkTheme(BuildContext context, [ColorScheme? dynamicScheme]) {
   }
 }
 
-Color? getSeedColor(BuildContext context) {
-  return context.read<PrefController>().seedColorValue;
-}
-
 ColorScheme _getColorScheme(
     BuildContext context, ColorScheme? dynamicScheme, Brightness brightness) {
-  var seedColor = getSeedColor(context);
-  if (seedColor == null) {
+  var primary = context.read<PrefController>().seedColorValue;
+  Color? secondary;
+  if (primary == null) {
     if (dynamicScheme != null) {
       return dynamicScheme;
     } else {
-      seedColor = defaultSeedColor;
+      primary = defaultSeedColor;
     }
+  } else {
+    secondary = context.read<PrefController>().secondarySeedColorValue;
   }
   return SeedColorScheme.fromSeeds(
     brightness: brightness,
     tones: FlexTones.oneHue(brightness),
-    primaryKey: seedColor,
+    primaryKey: primary,
+    secondaryKey: secondary,
   );
 }
 

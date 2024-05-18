@@ -7,6 +7,7 @@ class _State {
     required this.isFollowSystemTheme,
     required this.isUseBlackInDarkTheme,
     required this.seedColor,
+    required this.secondarySeedColor,
     this.error,
   });
 
@@ -17,6 +18,7 @@ class _State {
   final bool isUseBlackInDarkTheme;
   // workaround analyzer bug where Color type can't be recognized
   final int? seedColor;
+  final int? secondarySeedColor;
 
   final ExceptionEvent? error;
 }
@@ -55,11 +57,12 @@ class _SetUseBlackInDarkTheme extends _Event {
 }
 
 @toString
-class _SetSeedColor extends _Event {
-  const _SetSeedColor(this.value);
+class _SetThemeColor extends _Event {
+  const _SetThemeColor(this.primary, this.secondary);
 
   @override
   String toString() => _$toString();
 
-  final Color? value;
+  final Color? primary;
+  final Color? secondary;
 }
