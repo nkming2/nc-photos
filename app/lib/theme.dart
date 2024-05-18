@@ -190,7 +190,7 @@ ThemeData _applyColorScheme(ColorScheme colorScheme) {
           if (states.contains(MaterialState.selected)) {
             return colorScheme.secondary;
           } else {
-            return Colors.transparent;
+            return colorScheme.onSurfaceVariant;
           }
         }
       }),
