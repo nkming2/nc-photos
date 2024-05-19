@@ -551,6 +551,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     final missingDates = state.visibleDates
         .map((e) => e.date)
         .whereNot((d) => queriedDates!.contains(d))
+        .where((d) => state.filesSummary.items.containsKey(d))
         .toSet();
     if (missingDates.isNotEmpty) {
       _requestFilesFrom(missingDates.sortedBySelf().last);
