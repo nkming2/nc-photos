@@ -1,26 +1,63 @@
-import 'package:code_gen_tester/code_gen_tester.dart';
 import 'package:np_codegen_build/src/np_log_generator.dart';
 import 'package:test/test.dart';
+
+import 'util.dart';
 
 // dummy class to free us from importing the actual logger library
 class Logger {
   Logger(String name);
 }
 
-void main() {
-  final tester = SourceGenTester.fromPath("test/src/np_log.dart");
-  const generator = NpLogGenerator();
-  Future<void> expectGen(String name, Matcher matcher) async =>
-      expectGenerateNamed(await tester, name, generator, matcher);
+void main() async {
+  await resolveCompilationUnit("test/src/np_log.dart");
+  tearDown(() {
+    // Increment this after each test so the next test has it's own package
+    _pkgCacheCount++;
+  });
 
   test("NpLog", () async {
-    await expectGen("Test", completion("""
-extension _\$TestNpLog on Test {
+    final src = _genSrc("""
+@npLog
+class Foo {}
+""");
+    final expected = _genExpected(r"""
+extension _$FooNpLog on Foo {
   // ignore: unused_element
   Logger get _log => log;
 
-  static final log = Logger("np_log.Test");
+  static final log = Logger("test.Foo");
 }
-"""));
+""");
+    return _buildTest(src, expected);
   });
 }
+
+String _genSrc(String src) {
+  return """
+import 'package:np_codegen/np_codegen.dart';
+part 'test.g.dart';
+$src
+""";
+}
+
+String _genExpected(String src) {
+  return """// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'test.dart';
+
+// **************************************************************************
+// NpLogGenerator
+// **************************************************************************
+
+$src""";
+}
+
+Future _buildTest(String src, String expected) => buildTest(
+      generators: [const NpLogGenerator()],
+      pkgName: _pkgName,
+      src: src,
+      expected: expected,
+    );
+
+String get _pkgName => 'pkg$_pkgCacheCount';
+int _pkgCacheCount = 1;

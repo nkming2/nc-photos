@@ -16,11 +16,6 @@ dependencies:
 
 dev_dependencies:
   build_test: ^2.1.5
-  code_gen_tester:
-    git:
-      url: https://github.com/rrousselGit/functional_widget
-      ref: v0.10.0
-      path: packages/code_gen_tester
   np_lints:
     path: ../np_lints
   path: any
