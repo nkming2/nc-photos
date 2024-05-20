@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use, unnecessary_null_comparison, curly_braces_in_flow_control_structures, deprecated_member_use_from_same_package
 
 import 'dart:math' as math;
+import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -27,11 +28,11 @@ class TranslucentSliverAppBar extends StatefulWidget {
     this.flexibleSpace,
     this.bottom,
     this.elevation,
-    this.scrolledUnderElevation,
     this.shadowColor,
     this.surfaceTintColor,
     this.forceElevated = false,
     this.backgroundColor,
+    this.scrolledUnderBackgroundColor,
     this.foregroundColor,
     this.iconTheme,
     this.actionsIconTheme,
@@ -55,7 +56,8 @@ class TranslucentSliverAppBar extends StatefulWidget {
     this.systemOverlayStyle,
     this.forceMaterialTransparency = false,
     this.clipBehavior,
-  }) : assert(floating || !snap, 'The "snap" argument only makes sense for floating app bars.'),
+    this.blurFilter,
+  })  : assert(floating || !snap, 'The "snap" argument only makes sense for floating app bars.'),
        assert(stretchTriggerOffset > 0.0),
        assert(
         collapsedHeight == null || collapsedHeight >= toolbarHeight,
@@ -95,11 +97,11 @@ class TranslucentSliverAppBar extends StatefulWidget {
     this.flexibleSpace,
     this.bottom,
     this.elevation,
-    this.scrolledUnderElevation,
     this.shadowColor,
     this.surfaceTintColor,
     this.forceElevated = false,
     this.backgroundColor,
+    this.scrolledUnderBackgroundColor,
     this.foregroundColor,
     this.iconTheme,
     this.actionsIconTheme,
@@ -123,7 +125,8 @@ class TranslucentSliverAppBar extends StatefulWidget {
     this.systemOverlayStyle,
     this.forceMaterialTransparency = false,
     this.clipBehavior,
- }) : assert(floating || !snap, 'The "snap" argument only makes sense for floating app bars.'),
+    this.blurFilter,
+  })  : assert(floating || !snap, 'The "snap" argument only makes sense for floating app bars.'),
        assert(stretchTriggerOffset > 0.0),
        assert(
         collapsedHeight == null || collapsedHeight >= toolbarHeight,
@@ -163,11 +166,11 @@ class TranslucentSliverAppBar extends StatefulWidget {
     this.flexibleSpace,
     this.bottom,
     this.elevation,
-    this.scrolledUnderElevation,
     this.shadowColor,
     this.surfaceTintColor,
     this.forceElevated = false,
     this.backgroundColor,
+    this.scrolledUnderBackgroundColor,
     this.foregroundColor,
     this.iconTheme,
     this.actionsIconTheme,
@@ -191,7 +194,8 @@ class TranslucentSliverAppBar extends StatefulWidget {
     this.systemOverlayStyle,
     this.forceMaterialTransparency = false,
     this.clipBehavior,
-  }) : assert(floating || !snap, 'The "snap" argument only makes sense for floating app bars.'),
+    this.blurFilter,
+  })  : assert(floating || !snap, 'The "snap" argument only makes sense for floating app bars.'),
        assert(stretchTriggerOffset > 0.0),
        assert(
         collapsedHeight == null || collapsedHeight >= toolbarHeight,
@@ -234,11 +238,6 @@ class TranslucentSliverAppBar extends StatefulWidget {
   /// This property is used to configure an [AppBar].
   final double? elevation;
 
-  /// {@macro flutter.material.appbar.scrolledUnderElevation}
-  ///
-  /// This property is used to configure an [AppBar].
-  final double? scrolledUnderElevation;
-
   /// {@macro flutter.material.appbar.shadowColor}
   ///
   /// This property is used to configure an [AppBar].
@@ -264,6 +263,8 @@ class TranslucentSliverAppBar extends StatefulWidget {
   ///
   /// This property is used to configure an [AppBar].
   final Color? backgroundColor;
+
+  final Color? scrolledUnderBackgroundColor;
 
   /// {@macro flutter.material.appbar.foregroundColor}
   ///
@@ -456,6 +457,8 @@ class TranslucentSliverAppBar extends StatefulWidget {
 
   final _SliverAppVariant _variant;
 
+  final ImageFilter? blurFilter;
+
   @override
   State<TranslucentSliverAppBar> createState() => _SliverAppBarState();
 }
@@ -569,11 +572,11 @@ class _SliverAppBarState extends State<TranslucentSliverAppBar>
           flexibleSpace: effectiveFlexibleSpace,
           bottom: widget.bottom,
           elevation: widget.elevation,
-          scrolledUnderElevation: widget.scrolledUnderElevation,
           shadowColor: widget.shadowColor,
           surfaceTintColor: widget.surfaceTintColor,
           forceElevated: widget.forceElevated,
           backgroundColor: widget.backgroundColor,
+          scrolledUnderBackgroundColor: widget.scrolledUnderBackgroundColor,
           foregroundColor: widget.foregroundColor,
           iconTheme: widget.iconTheme,
           actionsIconTheme: widget.actionsIconTheme,
@@ -598,6 +601,7 @@ class _SliverAppBarState extends State<TranslucentSliverAppBar>
           forceMaterialTransparency: widget.forceMaterialTransparency,
           clipBehavior: widget.clipBehavior,
           variant: widget._variant,
+          blurFilter: widget.blurFilter,
         ),
       ),
     );
@@ -650,7 +654,6 @@ class _ScrollUnderFlexibleSpace extends StatelessWidget {
     // title to keep the visual hierarchy the same even with larger font
     // sizes. To opt out, wrap the [title] widget in a [MediaQuery] widget
     // with a different TextScaler.
-    // TODO(tahatesser): Add link to Material spec when available, https://github.com/flutter/flutter/issues/58769.
     return MediaQuery.withClampedTextScaling(
       maxScaleFactor: _kMaxTitleTextScaleFactor,
       // This column will assume the full height of the parent Stack.
@@ -684,11 +687,11 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
     required this.flexibleSpace,
     required this.bottom,
     required this.elevation,
-    required this.scrolledUnderElevation,
     required this.shadowColor,
     required this.surfaceTintColor,
     required this.forceElevated,
     required this.backgroundColor,
+    required this.scrolledUnderBackgroundColor,
     required this.foregroundColor,
     required this.iconTheme,
     required this.actionsIconTheme,
@@ -714,7 +717,8 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
     required this.forceMaterialTransparency,
     required this.clipBehavior,
     required this.variant,
-  }) : assert(primary || topPadding == 0.0),
+    required this.blurFilter,
+  })  : assert(primary || topPadding == 0.0),
        _bottomHeight = bottom?.preferredSize.height ?? 0.0;
 
   final Widget? leading;
@@ -724,11 +728,11 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   final Widget? flexibleSpace;
   final PreferredSizeWidget? bottom;
   final double? elevation;
-  final double? scrolledUnderElevation;
   final Color? shadowColor;
   final Color? surfaceTintColor;
   final bool forceElevated;
   final Color? backgroundColor;
+  final Color? scrolledUnderBackgroundColor;
   final Color? foregroundColor;
   final IconThemeData? iconTheme;
   final IconThemeData? actionsIconTheme;
@@ -751,6 +755,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   final bool forceMaterialTransparency;
   final Clip? clipBehavior;
   final _SliverAppVariant variant;
+  final ImageFilter? blurFilter;
 
   @override
   double get minExtent => collapsedHeight;
@@ -798,40 +803,56 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
       toolbarOpacity: toolbarOpacity,
       isScrolledUnder: isScrolledUnder,
       hasLeading: leading != null || automaticallyImplyLeading,
-      child: AppBar(
-        clipBehavior: clipBehavior,
-        leading: leading,
-        automaticallyImplyLeading: automaticallyImplyLeading,
-        title: effectiveTitle,
-        actions: actions,
-        flexibleSpace: (title == null && flexibleSpace != null && !excludeHeaderSemantics)
-          ? Semantics(
-              header: true,
-              child: flexibleSpace,
-            )
-          : flexibleSpace,
-        bottom: bottom,
-        elevation: isScrolledUnder ? elevation : 0.0,
-        scrolledUnderElevation: scrolledUnderElevation,
-        shadowColor: shadowColor,
-        surfaceTintColor: surfaceTintColor,
-        backgroundColor: backgroundColor,
-        foregroundColor: foregroundColor,
-        iconTheme: iconTheme,
-        actionsIconTheme: actionsIconTheme,
-        primary: primary,
-        centerTitle: centerTitle,
-        excludeHeaderSemantics: excludeHeaderSemantics,
-        titleSpacing: titleSpacing,
-        shape: shape,
-        toolbarOpacity: toolbarOpacity,
-        bottomOpacity: pinned ? 1.0 : clampDouble(visibleMainHeight / _bottomHeight, 0.0, 1.0),
-        toolbarHeight: toolbarHeight,
-        leadingWidth: leadingWidth,
-        toolbarTextStyle: toolbarTextStyle,
-        titleTextStyle: titleTextStyle,
-        systemOverlayStyle: systemOverlayStyle,
-        forceMaterialTransparency: forceMaterialTransparency,
+      child: Stack(
+        children: [
+          SizedBox(
+            width: double.infinity,
+            height: math.max(minExtent, maxExtent - shrinkOffset),
+            child: ClipRect(
+              child: BackdropFilter(
+                filter: blurFilter ?? ImageFilter.blur(),
+                child: const ColoredBox(
+                  color: Colors.transparent,
+                ),
+              ),
+            ),
+          ),
+          AppBar(
+            clipBehavior: clipBehavior,
+            leading: leading,
+            automaticallyImplyLeading: automaticallyImplyLeading,
+            title: effectiveTitle,
+            actions: actions,
+            flexibleSpace: (title == null && flexibleSpace != null && !excludeHeaderSemantics)
+                ? Semantics(
+                    header: true,
+                    child: flexibleSpace,
+                  )
+                : flexibleSpace,
+            bottom: bottom,
+            elevation: isScrolledUnder ? elevation : 0.0,
+            scrolledUnderElevation: 0,
+            shadowColor: shadowColor,
+            surfaceTintColor: surfaceTintColor,
+            backgroundColor: isScrolledUnder ? scrolledUnderBackgroundColor : backgroundColor,
+            foregroundColor: foregroundColor,
+            iconTheme: iconTheme,
+            actionsIconTheme: actionsIconTheme,
+            primary: primary,
+            centerTitle: centerTitle,
+            excludeHeaderSemantics: excludeHeaderSemantics,
+            titleSpacing: titleSpacing,
+            shape: shape,
+            toolbarOpacity: toolbarOpacity,
+            bottomOpacity: pinned ? 1.0 : clampDouble(visibleMainHeight / _bottomHeight, 0.0, 1.0),
+            toolbarHeight: toolbarHeight,
+            leadingWidth: leadingWidth,
+            toolbarTextStyle: toolbarTextStyle,
+            titleTextStyle: titleTextStyle,
+            systemOverlayStyle: systemOverlayStyle,
+            forceMaterialTransparency: forceMaterialTransparency,
+          ),
+        ],
       ),
     );
     return appBar;
@@ -849,6 +870,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
         || elevation != oldDelegate.elevation
         || shadowColor != oldDelegate.shadowColor
         || backgroundColor != oldDelegate.backgroundColor
+        || scrolledUnderBackgroundColor != oldDelegate.scrolledUnderBackgroundColor
         || foregroundColor != oldDelegate.foregroundColor
         || iconTheme != oldDelegate.iconTheme
         || actionsIconTheme != oldDelegate.actionsIconTheme
