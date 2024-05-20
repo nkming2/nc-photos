@@ -186,7 +186,7 @@ class ShareHandler {
         file,
         password: password,
       );
-      await Clipboard.setData(ClipboardData(text: share.url));
+      await Clipboard.setData(ClipboardData(text: share.url!));
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(L10n.global().linkCopiedNotification),
         duration: k.snackBarDurationNormal,
