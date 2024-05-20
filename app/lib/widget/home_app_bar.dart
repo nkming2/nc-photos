@@ -8,7 +8,6 @@ import 'package:nc_photos/controller/account_pref_controller.dart';
 import 'package:nc_photos/stream_util.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/account_picker_dialog.dart';
-import 'package:nc_photos/widget/translucent_sliver_app_bar.dart';
 import 'package:np_ui/np_ui.dart';
 
 /// AppBar for home screens
@@ -36,6 +35,7 @@ class HomeSliverAppBar extends StatelessWidget {
       ),
       scrolledUnderBackgroundColor:
           Theme.of(context).homeNavigationBarBackgroundColor,
+      blurFilter: Theme.of(context).appBarBlurFilter,
       floating: true,
       automaticallyImplyLeading: false,
       actions: [
