@@ -25,7 +25,6 @@ import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/set_as_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/stream_util.dart';
-import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
 import 'package:nc_photos/use_case/list_file_tag.dart';
 import 'package:nc_photos/use_case/update_property.dart';
