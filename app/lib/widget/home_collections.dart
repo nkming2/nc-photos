@@ -191,8 +191,7 @@ class _WrappedHomeCollectionsState extends State<_WrappedHomeCollections>
                       childBorderRadius: BorderRadius.zero,
                       indicatorAlignment: const Alignment(-.92, -.92),
                       items: state.transformedItems,
-                      itemBuilder: (_, __, metadata) {
-                        final item = metadata as _Item;
+                      itemBuilder: (_, __, item) {
                         return _BlocSelector<int?>(
                           selector: (state) =>
                               state.itemCounts[item.collection.id],
@@ -209,8 +208,7 @@ class _WrappedHomeCollectionsState extends State<_WrappedHomeCollections>
                       onSelectionChange: (_, selected) {
                         _bloc.add(_SetSelectedItems(items: selected.cast()));
                       },
-                      onItemTap: (context, _, metadata) {
-                        final item = metadata as _Item;
+                      onItemTap: (context, _, item) {
                         Navigator.of(context).pushNamed(
                           CollectionBrowser.routeName,
                           arguments:

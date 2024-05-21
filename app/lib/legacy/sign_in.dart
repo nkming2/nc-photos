@@ -44,8 +44,8 @@ class _SignInState extends State<SignIn> {
 
   Widget _buildContent(BuildContext context) {
     if (_isConnecting) {
-      return Stack(
-        children: const [
+      return const Stack(
+        children: [
           Positioned(
             left: 0,
             right: 0,

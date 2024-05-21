@@ -117,10 +117,10 @@ class _WrappedNewCollectionDialogState
               key: _formKey,
               child: Container(
                 constraints: const BoxConstraints.tightFor(width: 280),
-                child: Column(
+                child: const Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     _NameTextField(),
                     _ProviderDropdown(),
                     SizedBox(height: 8),
