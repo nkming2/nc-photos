@@ -28,9 +28,10 @@ class $ServersTable extends Servers with TableInfo<$ServersTable, Server> {
   @override
   List<GeneratedColumn> get $columns => [rowId, address];
   @override
-  String get aliasedName => _alias ?? 'servers';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'servers';
+  String get actualTableName => $name;
+  static const String $name = 'servers';
   @override
   VerificationContext validateIntegrity(Insertable<Server> instance,
       {bool isInserting = false}) {
@@ -207,9 +208,10 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
   @override
   List<GeneratedColumn> get $columns => [rowId, server, userId];
   @override
-  String get aliasedName => _alias ?? 'accounts';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'accounts';
+  String get actualTableName => $name;
+  static const String $name = 'accounts';
   @override
   VerificationContext validateIntegrity(Insertable<Account> instance,
       {bool isInserting = false}) {
@@ -444,15 +446,12 @@ class $FilesTable extends Files with TableInfo<$FilesTable, File> {
   static const VerificationMeta _isCollectionMeta =
       const VerificationMeta('isCollection');
   @override
-  late final GeneratedColumn<bool> isCollection =
-      GeneratedColumn<bool>('is_collection', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("is_collection" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> isCollection = GeneratedColumn<bool>(
+      'is_collection', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("is_collection" IN (0, 1))'));
   static const VerificationMeta _usedBytesMeta =
       const VerificationMeta('usedBytes');
   @override
@@ -462,15 +461,12 @@ class $FilesTable extends Files with TableInfo<$FilesTable, File> {
   static const VerificationMeta _hasPreviewMeta =
       const VerificationMeta('hasPreview');
   @override
-  late final GeneratedColumn<bool> hasPreview =
-      GeneratedColumn<bool>('has_preview', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("has_preview" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> hasPreview = GeneratedColumn<bool>(
+      'has_preview', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("has_preview" IN (0, 1))'));
   static const VerificationMeta _ownerIdMeta =
       const VerificationMeta('ownerId');
   @override
@@ -499,9 +495,10 @@ class $FilesTable extends Files with TableInfo<$FilesTable, File> {
         ownerDisplayName
       ];
   @override
-  String get aliasedName => _alias ?? 'files';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'files';
+  String get actualTableName => $name;
+  static const String $name = 'files';
   @override
   VerificationContext validateIntegrity(Insertable<File> instance,
       {bool isInserting = false}) {
@@ -660,8 +657,8 @@ class File extends DataClass implements Insertable<File> {
       map['etag'] = Variable<String>(etag);
     }
     if (!nullToAbsent || lastModified != null) {
-      final converter = $FilesTable.$converterlastModifiedn;
-      map['last_modified'] = Variable<DateTime>(converter.toSql(lastModified));
+      map['last_modified'] = Variable<DateTime>(
+          $FilesTable.$converterlastModifiedn.toSql(lastModified));
     }
     if (!nullToAbsent || isCollection != null) {
       map['is_collection'] = Variable<bool>(isCollection);
@@ -957,9 +954,8 @@ class FilesCompanion extends UpdateCompanion<File> {
       map['etag'] = Variable<String>(etag.value);
     }
     if (lastModified.present) {
-      final converter = $FilesTable.$converterlastModifiedn;
-      map['last_modified'] =
-          Variable<DateTime>(converter.toSql(lastModified.value));
+      map['last_modified'] = Variable<DateTime>(
+          $FilesTable.$converterlastModifiedn.toSql(lastModified.value));
     }
     if (isCollection.present) {
       map['is_collection'] = Variable<bool>(isCollection.value);
@@ -1040,27 +1036,21 @@ class $AccountFilesTable extends AccountFiles
   static const VerificationMeta _isFavoriteMeta =
       const VerificationMeta('isFavorite');
   @override
-  late final GeneratedColumn<bool> isFavorite =
-      GeneratedColumn<bool>('is_favorite', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("is_favorite" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> isFavorite = GeneratedColumn<bool>(
+      'is_favorite', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("is_favorite" IN (0, 1))'));
   static const VerificationMeta _isArchivedMeta =
       const VerificationMeta('isArchived');
   @override
-  late final GeneratedColumn<bool> isArchived =
-      GeneratedColumn<bool>('is_archived', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("is_archived" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> isArchived = GeneratedColumn<bool>(
+      'is_archived', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("is_archived" IN (0, 1))'));
   static const VerificationMeta _overrideDateTimeMeta =
       const VerificationMeta('overrideDateTime');
   @override
@@ -1089,9 +1079,10 @@ class $AccountFilesTable extends AccountFiles
         bestDateTime
       ];
   @override
-  String get aliasedName => _alias ?? 'account_files';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'account_files';
+  String get actualTableName => $name;
+  static const String $name = 'account_files';
   @override
   VerificationContext validateIntegrity(Insertable<AccountFile> instance,
       {bool isInserting = false}) {
@@ -1214,13 +1205,13 @@ class AccountFile extends DataClass implements Insertable<AccountFile> {
       map['is_archived'] = Variable<bool>(isArchived);
     }
     if (!nullToAbsent || overrideDateTime != null) {
-      final converter = $AccountFilesTable.$converteroverrideDateTimen;
-      map['override_date_time'] =
-          Variable<DateTime>(converter.toSql(overrideDateTime));
+      map['override_date_time'] = Variable<DateTime>($AccountFilesTable
+          .$converteroverrideDateTimen
+          .toSql(overrideDateTime));
     }
     {
-      final converter = $AccountFilesTable.$converterbestDateTime;
-      map['best_date_time'] = Variable<DateTime>(converter.toSql(bestDateTime));
+      map['best_date_time'] = Variable<DateTime>(
+          $AccountFilesTable.$converterbestDateTime.toSql(bestDateTime));
     }
     return map;
   }
@@ -1424,14 +1415,13 @@ class AccountFilesCompanion extends UpdateCompanion<AccountFile> {
       map['is_archived'] = Variable<bool>(isArchived.value);
     }
     if (overrideDateTime.present) {
-      final converter = $AccountFilesTable.$converteroverrideDateTimen;
-      map['override_date_time'] =
-          Variable<DateTime>(converter.toSql(overrideDateTime.value));
+      map['override_date_time'] = Variable<DateTime>($AccountFilesTable
+          .$converteroverrideDateTimen
+          .toSql(overrideDateTime.value));
     }
     if (bestDateTime.present) {
-      final converter = $AccountFilesTable.$converterbestDateTime;
-      map['best_date_time'] =
-          Variable<DateTime>(converter.toSql(bestDateTime.value));
+      map['best_date_time'] = Variable<DateTime>(
+          $AccountFilesTable.$converterbestDateTime.toSql(bestDateTime.value));
     }
     return map;
   }
@@ -1514,9 +1504,10 @@ class $ImagesTable extends Images with TableInfo<$ImagesTable, Image> {
         dateTimeOriginal
       ];
   @override
-  String get aliasedName => _alias ?? 'images';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'images';
+  String get actualTableName => $name;
+  static const String $name = 'images';
   @override
   VerificationContext validateIntegrity(Insertable<Image> instance,
       {bool isInserting = false}) {
@@ -1608,8 +1599,8 @@ class Image extends DataClass implements Insertable<Image> {
     final map = <String, Expression>{};
     map['account_file'] = Variable<int>(accountFile);
     {
-      final converter = $ImagesTable.$converterlastUpdated;
-      map['last_updated'] = Variable<DateTime>(converter.toSql(lastUpdated));
+      map['last_updated'] = Variable<DateTime>(
+          $ImagesTable.$converterlastUpdated.toSql(lastUpdated));
     }
     if (!nullToAbsent || fileEtag != null) {
       map['file_etag'] = Variable<String>(fileEtag);
@@ -1624,9 +1615,8 @@ class Image extends DataClass implements Insertable<Image> {
       map['exif_raw'] = Variable<String>(exifRaw);
     }
     if (!nullToAbsent || dateTimeOriginal != null) {
-      final converter = $ImagesTable.$converterdateTimeOriginaln;
-      map['date_time_original'] =
-          Variable<DateTime>(converter.toSql(dateTimeOriginal));
+      map['date_time_original'] = Variable<DateTime>(
+          $ImagesTable.$converterdateTimeOriginaln.toSql(dateTimeOriginal));
     }
     return map;
   }
@@ -1800,9 +1790,8 @@ class ImagesCompanion extends UpdateCompanion<Image> {
       map['account_file'] = Variable<int>(accountFile.value);
     }
     if (lastUpdated.present) {
-      final converter = $ImagesTable.$converterlastUpdated;
-      map['last_updated'] =
-          Variable<DateTime>(converter.toSql(lastUpdated.value));
+      map['last_updated'] = Variable<DateTime>(
+          $ImagesTable.$converterlastUpdated.toSql(lastUpdated.value));
     }
     if (fileEtag.present) {
       map['file_etag'] = Variable<String>(fileEtag.value);
@@ -1817,9 +1806,9 @@ class ImagesCompanion extends UpdateCompanion<Image> {
       map['exif_raw'] = Variable<String>(exifRaw.value);
     }
     if (dateTimeOriginal.present) {
-      final converter = $ImagesTable.$converterdateTimeOriginaln;
-      map['date_time_original'] =
-          Variable<DateTime>(converter.toSql(dateTimeOriginal.value));
+      map['date_time_original'] = Variable<DateTime>($ImagesTable
+          .$converterdateTimeOriginaln
+          .toSql(dateTimeOriginal.value));
     }
     return map;
   }
@@ -1905,9 +1894,10 @@ class $ImageLocationsTable extends ImageLocations
         admin2
       ];
   @override
-  String get aliasedName => _alias ?? 'image_locations';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'image_locations';
+  String get actualTableName => $name;
+  static const String $name = 'image_locations';
   @override
   VerificationContext validateIntegrity(Insertable<ImageLocation> instance,
       {bool isInserting = false}) {
@@ -2284,9 +2274,10 @@ class $TrashesTable extends Trashes with TableInfo<$TrashesTable, Trash> {
   List<GeneratedColumn> get $columns =>
       [file, filename, originalLocation, deletionTime];
   @override
-  String get aliasedName => _alias ?? 'trashes';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'trashes';
+  String get actualTableName => $name;
+  static const String $name = 'trashes';
   @override
   VerificationContext validateIntegrity(Insertable<Trash> instance,
       {bool isInserting = false}) {
@@ -2358,8 +2349,8 @@ class Trash extends DataClass implements Insertable<Trash> {
     map['filename'] = Variable<String>(filename);
     map['original_location'] = Variable<String>(originalLocation);
     {
-      final converter = $TrashesTable.$converterdeletionTime;
-      map['deletion_time'] = Variable<DateTime>(converter.toSql(deletionTime));
+      map['deletion_time'] = Variable<DateTime>(
+          $TrashesTable.$converterdeletionTime.toSql(deletionTime));
     }
     return map;
   }
@@ -2488,9 +2479,8 @@ class TrashesCompanion extends UpdateCompanion<Trash> {
       map['original_location'] = Variable<String>(originalLocation.value);
     }
     if (deletionTime.present) {
-      final converter = $TrashesTable.$converterdeletionTime;
-      map['deletion_time'] =
-          Variable<DateTime>(converter.toSql(deletionTime.value));
+      map['deletion_time'] = Variable<DateTime>(
+          $TrashesTable.$converterdeletionTime.toSql(deletionTime.value));
     }
     return map;
   }
@@ -2531,9 +2521,10 @@ class $DirFilesTable extends DirFiles with TableInfo<$DirFilesTable, DirFile> {
   @override
   List<GeneratedColumn> get $columns => [dir, child];
   @override
-  String get aliasedName => _alias ?? 'dir_files';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'dir_files';
+  String get actualTableName => $name;
+  static const String $name = 'dir_files';
   @override
   VerificationContext validateIntegrity(Insertable<DirFile> instance,
       {bool isInserting = false}) {
@@ -2790,9 +2781,10 @@ class $AlbumsTable extends Albums with TableInfo<$AlbumsTable, Album> {
         sortProviderContent
       ];
   @override
-  String get aliasedName => _alias ?? 'albums';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'albums';
+  String get actualTableName => $name;
+  static const String $name = 'albums';
   @override
   VerificationContext validateIntegrity(Insertable<Album> instance,
       {bool isInserting = false}) {
@@ -2957,8 +2949,8 @@ class Album extends DataClass implements Insertable<Album> {
     }
     map['version'] = Variable<int>(version);
     {
-      final converter = $AlbumsTable.$converterlastUpdated;
-      map['last_updated'] = Variable<DateTime>(converter.toSql(lastUpdated));
+      map['last_updated'] = Variable<DateTime>(
+          $AlbumsTable.$converterlastUpdated.toSql(lastUpdated));
     }
     map['name'] = Variable<String>(name);
     map['provider_type'] = Variable<String>(providerType);
@@ -3233,9 +3225,8 @@ class AlbumsCompanion extends UpdateCompanion<Album> {
       map['version'] = Variable<int>(version.value);
     }
     if (lastUpdated.present) {
-      final converter = $AlbumsTable.$converterlastUpdated;
-      map['last_updated'] =
-          Variable<DateTime>(converter.toSql(lastUpdated.value));
+      map['last_updated'] = Variable<DateTime>(
+          $AlbumsTable.$converterlastUpdated.toSql(lastUpdated.value));
     }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
@@ -3318,9 +3309,10 @@ class $AlbumSharesTable extends AlbumShares
   @override
   List<GeneratedColumn> get $columns => [album, userId, displayName, sharedAt];
   @override
-  String get aliasedName => _alias ?? 'album_shares';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'album_shares';
+  String get actualTableName => $name;
+  static const String $name = 'album_shares';
   @override
   VerificationContext validateIntegrity(Insertable<AlbumShare> instance,
       {bool isInserting = false}) {
@@ -3394,8 +3386,8 @@ class AlbumShare extends DataClass implements Insertable<AlbumShare> {
       map['display_name'] = Variable<String>(displayName);
     }
     {
-      final converter = $AlbumSharesTable.$convertersharedAt;
-      map['shared_at'] = Variable<DateTime>(converter.toSql(sharedAt));
+      map['shared_at'] = Variable<DateTime>(
+          $AlbumSharesTable.$convertersharedAt.toSql(sharedAt));
     }
     return map;
   }
@@ -3532,8 +3524,8 @@ class AlbumSharesCompanion extends UpdateCompanion<AlbumShare> {
       map['display_name'] = Variable<String>(displayName.value);
     }
     if (sharedAt.present) {
-      final converter = $AlbumSharesTable.$convertersharedAt;
-      map['shared_at'] = Variable<DateTime>(converter.toSql(sharedAt.value));
+      map['shared_at'] = Variable<DateTime>(
+          $AlbumSharesTable.$convertersharedAt.toSql(sharedAt.value));
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -3590,34 +3582,29 @@ class $TagsTable extends Tags with TableInfo<$TagsTable, Tag> {
   static const VerificationMeta _userVisibleMeta =
       const VerificationMeta('userVisible');
   @override
-  late final GeneratedColumn<bool> userVisible =
-      GeneratedColumn<bool>('user_visible', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("user_visible" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> userVisible = GeneratedColumn<bool>(
+      'user_visible', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("user_visible" IN (0, 1))'));
   static const VerificationMeta _userAssignableMeta =
       const VerificationMeta('userAssignable');
   @override
-  late final GeneratedColumn<bool> userAssignable =
-      GeneratedColumn<bool>('user_assignable', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("user_assignable" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> userAssignable = GeneratedColumn<bool>(
+      'user_assignable', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("user_assignable" IN (0, 1))'));
   @override
   List<GeneratedColumn> get $columns =>
       [rowId, server, tagId, displayName, userVisible, userAssignable];
   @override
-  String get aliasedName => _alias ?? 'tags';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'tags';
+  String get actualTableName => $name;
+  static const String $name = 'tags';
   @override
   VerificationContext validateIntegrity(Insertable<Tag> instance,
       {bool isInserting = false}) {
@@ -3949,9 +3936,10 @@ class $FaceRecognitionPersonsTable extends FaceRecognitionPersons
   List<GeneratedColumn> get $columns =>
       [rowId, account, name, thumbFaceId, count];
   @override
-  String get aliasedName => _alias ?? 'face_recognition_persons';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'face_recognition_persons';
+  String get actualTableName => $name;
+  static const String $name = 'face_recognition_persons';
   @override
   VerificationContext validateIntegrity(
       Insertable<FaceRecognitionPerson> instance,
@@ -4274,15 +4262,12 @@ class $NcAlbumsTable extends NcAlbums with TableInfo<$NcAlbumsTable, NcAlbum> {
   static const VerificationMeta _isOwnedMeta =
       const VerificationMeta('isOwned');
   @override
-  late final GeneratedColumn<bool> isOwned =
-      GeneratedColumn<bool>('is_owned', aliasedName, false,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: true,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("is_owned" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> isOwned = GeneratedColumn<bool>(
+      'is_owned', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: true,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_owned" IN (0, 1))'));
   @override
   List<GeneratedColumn> get $columns => [
         rowId,
@@ -4297,9 +4282,10 @@ class $NcAlbumsTable extends NcAlbums with TableInfo<$NcAlbumsTable, NcAlbum> {
         isOwned
       ];
   @override
-  String get aliasedName => _alias ?? 'nc_albums';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'nc_albums';
+  String get actualTableName => $name;
+  static const String $name = 'nc_albums';
   @override
   VerificationContext validateIntegrity(Insertable<NcAlbum> instance,
       {bool isInserting = false}) {
@@ -4442,12 +4428,12 @@ class NcAlbum extends DataClass implements Insertable<NcAlbum> {
       map['location'] = Variable<String>(location);
     }
     if (!nullToAbsent || dateStart != null) {
-      final converter = $NcAlbumsTable.$converterdateStartn;
-      map['date_start'] = Variable<DateTime>(converter.toSql(dateStart));
+      map['date_start'] = Variable<DateTime>(
+          $NcAlbumsTable.$converterdateStartn.toSql(dateStart));
     }
     if (!nullToAbsent || dateEnd != null) {
-      final converter = $NcAlbumsTable.$converterdateEndn;
-      map['date_end'] = Variable<DateTime>(converter.toSql(dateEnd));
+      map['date_end'] =
+          Variable<DateTime>($NcAlbumsTable.$converterdateEndn.toSql(dateEnd));
     }
     map['collaborators'] = Variable<String>(collaborators);
     map['is_owned'] = Variable<bool>(isOwned);
@@ -4681,12 +4667,12 @@ class NcAlbumsCompanion extends UpdateCompanion<NcAlbum> {
       map['location'] = Variable<String>(location.value);
     }
     if (dateStart.present) {
-      final converter = $NcAlbumsTable.$converterdateStartn;
-      map['date_start'] = Variable<DateTime>(converter.toSql(dateStart.value));
+      map['date_start'] = Variable<DateTime>(
+          $NcAlbumsTable.$converterdateStartn.toSql(dateStart.value));
     }
     if (dateEnd.present) {
-      final converter = $NcAlbumsTable.$converterdateEndn;
-      map['date_end'] = Variable<DateTime>(converter.toSql(dateEnd.value));
+      map['date_end'] = Variable<DateTime>(
+          $NcAlbumsTable.$converterdateEndn.toSql(dateEnd.value));
     }
     if (collaborators.present) {
       map['collaborators'] = Variable<String>(collaborators.value);
@@ -4777,27 +4763,21 @@ class $NcAlbumItemsTable extends NcAlbumItems
   static const VerificationMeta _hasPreviewMeta =
       const VerificationMeta('hasPreview');
   @override
-  late final GeneratedColumn<bool> hasPreview =
-      GeneratedColumn<bool>('has_preview', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("has_preview" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> hasPreview = GeneratedColumn<bool>(
+      'has_preview', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("has_preview" IN (0, 1))'));
   static const VerificationMeta _isFavoriteMeta =
       const VerificationMeta('isFavorite');
   @override
-  late final GeneratedColumn<bool> isFavorite =
-      GeneratedColumn<bool>('is_favorite', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("is_favorite" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> isFavorite = GeneratedColumn<bool>(
+      'is_favorite', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("is_favorite" IN (0, 1))'));
   static const VerificationMeta _fileMetadataWidthMeta =
       const VerificationMeta('fileMetadataWidth');
   @override
@@ -4826,9 +4806,10 @@ class $NcAlbumItemsTable extends NcAlbumItems
         fileMetadataHeight
       ];
   @override
-  String get aliasedName => _alias ?? 'nc_album_items';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'nc_album_items';
+  String get actualTableName => $name;
+  static const String $name = 'nc_album_items';
   @override
   VerificationContext validateIntegrity(Insertable<NcAlbumItem> instance,
       {bool isInserting = false}) {
@@ -4994,8 +4975,8 @@ class NcAlbumItem extends DataClass implements Insertable<NcAlbumItem> {
       map['etag'] = Variable<String>(etag);
     }
     if (!nullToAbsent || lastModified != null) {
-      final converter = $NcAlbumItemsTable.$converterlastModifiedn;
-      map['last_modified'] = Variable<DateTime>(converter.toSql(lastModified));
+      map['last_modified'] = Variable<DateTime>(
+          $NcAlbumItemsTable.$converterlastModifiedn.toSql(lastModified));
     }
     if (!nullToAbsent || hasPreview != null) {
       map['has_preview'] = Variable<bool>(hasPreview);
@@ -5292,9 +5273,8 @@ class NcAlbumItemsCompanion extends UpdateCompanion<NcAlbumItem> {
       map['etag'] = Variable<String>(etag.value);
     }
     if (lastModified.present) {
-      final converter = $NcAlbumItemsTable.$converterlastModifiedn;
-      map['last_modified'] =
-          Variable<DateTime>(converter.toSql(lastModified.value));
+      map['last_modified'] = Variable<DateTime>(
+          $NcAlbumItemsTable.$converterlastModifiedn.toSql(lastModified.value));
     }
     if (hasPreview.present) {
       map['has_preview'] = Variable<bool>(hasPreview.value);
@@ -5363,9 +5343,10 @@ class $RecognizeFacesTable extends RecognizeFaces
   @override
   List<GeneratedColumn> get $columns => [rowId, account, label];
   @override
-  String get aliasedName => _alias ?? 'recognize_faces';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'recognize_faces';
+  String get actualTableName => $name;
+  static const String $name = 'recognize_faces';
   @override
   VerificationContext validateIntegrity(Insertable<RecognizeFace> instance,
       {bool isInserting = false}) {
@@ -5609,15 +5590,12 @@ class $RecognizeFaceItemsTable extends RecognizeFaceItems
   static const VerificationMeta _hasPreviewMeta =
       const VerificationMeta('hasPreview');
   @override
-  late final GeneratedColumn<bool> hasPreview =
-      GeneratedColumn<bool>('has_preview', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("has_preview" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> hasPreview = GeneratedColumn<bool>(
+      'has_preview', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("has_preview" IN (0, 1))'));
   static const VerificationMeta _realPathMeta =
       const VerificationMeta('realPath');
   @override
@@ -5627,15 +5605,12 @@ class $RecognizeFaceItemsTable extends RecognizeFaceItems
   static const VerificationMeta _isFavoriteMeta =
       const VerificationMeta('isFavorite');
   @override
-  late final GeneratedColumn<bool> isFavorite =
-      GeneratedColumn<bool>('is_favorite', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("is_favorite" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> isFavorite = GeneratedColumn<bool>(
+      'is_favorite', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("is_favorite" IN (0, 1))'));
   static const VerificationMeta _fileMetadataWidthMeta =
       const VerificationMeta('fileMetadataWidth');
   @override
@@ -5672,9 +5647,10 @@ class $RecognizeFaceItemsTable extends RecognizeFaceItems
         faceDetections
       ];
   @override
-  String get aliasedName => _alias ?? 'recognize_face_items';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'recognize_face_items';
+  String get actualTableName => $name;
+  static const String $name = 'recognize_face_items';
   @override
   VerificationContext validateIntegrity(Insertable<RecognizeFaceItem> instance,
       {bool isInserting = false}) {
@@ -5859,8 +5835,8 @@ class RecognizeFaceItem extends DataClass
       map['etag'] = Variable<String>(etag);
     }
     if (!nullToAbsent || lastModified != null) {
-      final converter = $RecognizeFaceItemsTable.$converterlastModifiedn;
-      map['last_modified'] = Variable<DateTime>(converter.toSql(lastModified));
+      map['last_modified'] = Variable<DateTime>(
+          $RecognizeFaceItemsTable.$converterlastModifiedn.toSql(lastModified));
     }
     if (!nullToAbsent || hasPreview != null) {
       map['has_preview'] = Variable<bool>(hasPreview);
@@ -6198,9 +6174,9 @@ class RecognizeFaceItemsCompanion extends UpdateCompanion<RecognizeFaceItem> {
       map['etag'] = Variable<String>(etag.value);
     }
     if (lastModified.present) {
-      final converter = $RecognizeFaceItemsTable.$converterlastModifiedn;
-      map['last_modified'] =
-          Variable<DateTime>(converter.toSql(lastModified.value));
+      map['last_modified'] = Variable<DateTime>($RecognizeFaceItemsTable
+          .$converterlastModifiedn
+          .toSql(lastModified.value));
     }
     if (hasPreview.present) {
       map['has_preview'] = Variable<bool>(hasPreview.value);

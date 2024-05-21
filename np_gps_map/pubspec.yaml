@@ -11,14 +11,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_map: ^2.2.0
+  flutter_map: ^6.1.0
   google_maps_flutter: ^2.2.8
   latlong2: any
   np_async:
     path: ../np_async
   np_platform_util:
     path: ../np_platform_util
-  tuple: ^2.0.1
+  tuple: ^2.0.2
   url_launcher: ^6.1.11
 
 dev_dependencies:
