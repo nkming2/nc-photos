@@ -128,10 +128,12 @@ class _ImageEditorState extends State<ImageEditor> {
   }
 
   Widget _buildContent(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        unawaited(_onBackButton(context));
-        return false;
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        if (!didPop) {
+          _onBackButton(context);
+        }
       },
       child: ColoredBox(
         color: Colors.black,
