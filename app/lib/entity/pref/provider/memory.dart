@@ -42,8 +42,6 @@ class PrefMemoryProvider extends PrefProvider {
     _data.clear();
     return true;
   }
-  @override
-  Future<JsonObj> toJson() async => Map.of(_data);
 
   T? _get<T>(PrefKeyInterface key) => _data[key.toStringKey()];
 

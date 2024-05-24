@@ -21,6 +21,7 @@ import 'package:nc_photos/entity/local_file/data_source.dart';
 import 'package:nc_photos/entity/nc_album/data_source.dart';
 import 'package:nc_photos/entity/nc_album/repo.dart';
 import 'package:nc_photos/entity/pref.dart';
+import 'package:nc_photos/entity/pref/provider/secure_storage.dart';
 import 'package:nc_photos/entity/pref/provider/shared_preferences.dart';
 import 'package:nc_photos/entity/pref_util.dart' as pref_util;
 import 'package:nc_photos/entity/recognize_face/data_source.dart';
@@ -137,6 +138,7 @@ void _initSelfSignedCertManager() {
 Future<void> _initDiContainer(InitIsolateType isolateType) async {
   final c = DiContainer.late();
   c.pref = Pref();
+  c.securePref = await _createSecurePref();
   c.npDb = await _createDb(isolateType);
 
   c.albumRepo = AlbumRepo(AlbumCachedDataSource(c));
@@ -202,6 +204,12 @@ Future<NpDb> _createDb(InitIsolateType isolateType) async {
     await npDb.initBackgroundIsolate(androidSdk: androidSdk);
   }
   return npDb;
+}
+
+Future<Pref> _createSecurePref() async {
+  final provider = PrefSecureStorageProvider();
+  await provider.init();
+  return Pref.scoped(provider);
 }
 
 final _log = Logger("app_init");

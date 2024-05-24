@@ -6,14 +6,16 @@ import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/language_util.dart';
 import 'package:nc_photos/object_extension.dart';
+import 'package:nc_photos/protected_page_handler.dart';
 import 'package:nc_photos/size.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_common/object_util.dart';
 import 'package:np_gps_map/np_gps_map.dart';
+import 'package:np_string/np_string.dart';
 import 'package:rxdart/rxdart.dart';
 
 part 'pref_controller.g.dart';
 
-@npLog
 @npSubjectAccessor
 class PrefController {
   PrefController(this._c);
@@ -145,20 +147,13 @@ class PrefController {
     required BehaviorSubject<T> controller,
     required Future<bool> Function(Pref pref, T value) setter,
     required T value,
-  }) async {
-    final backup = controller.value;
-    controller.add(value);
-    try {
-      if (!await setter(_c.pref, value)) {
-        throw StateError("Unknown error");
-      }
-    } catch (e, stackTrace) {
-      _log.severe("[_set] Failed setting preference", e, stackTrace);
-      controller
-        ..addError(e, stackTrace)
-        ..add(backup);
-    }
-  }
+  }) =>
+      _doSet(
+        pref: _c.pref,
+        controller: controller,
+        setter: setter,
+        value: value,
+      );
 
   Future<void> _setOrRemove<T>({
     required BehaviorSubject<T?> controller,
@@ -166,26 +161,15 @@ class PrefController {
     required Future<bool> Function(Pref pref) remover,
     required T? value,
     T? defaultValue,
-  }) async {
-    final backup = controller.value;
-    controller.add(value ?? defaultValue);
-    try {
-      if (value == null) {
-        if (!await remover(_c.pref)) {
-          throw StateError("Unknown error");
-        }
-      } else {
-        if (!await setter(_c.pref, value)) {
-          throw StateError("Unknown error");
-        }
-      }
-    } catch (e, stackTrace) {
-      _log.severe("[_set] Failed setting preference", e, stackTrace);
-      controller
-        ..addError(e, stackTrace)
-        ..add(backup);
-    }
-  }
+  }) =>
+      _doSetOrRemove(
+        pref: _c.pref,
+        controller: controller,
+        setter: setter,
+        remover: remover,
+        value: value,
+        defaultValue: defaultValue,
+      );
 
   static AppLanguage _langIdToAppLanguage(int langId) {
     try {
@@ -254,3 +238,92 @@ class PrefController {
   late final _secondarySeedColorController = BehaviorSubject<Color?>.seeded(
       _c.pref.getSecondarySeedColor()?.run(Color.new));
 }
+
+class SecurePrefController {
+  SecurePrefController(this._c);
+
+  // ignore: unused_element
+  Future<void> _set<T>({
+    required BehaviorSubject<T> controller,
+    required Future<bool> Function(Pref pref, T value) setter,
+    required T value,
+  }) =>
+      _doSet(
+        pref: _c.securePref,
+        controller: controller,
+        setter: setter,
+        value: value,
+      );
+
+  // ignore: unused_element
+  Future<void> _setOrRemove<T>({
+    required BehaviorSubject<T?> controller,
+    required Future<bool> Function(Pref pref, T value) setter,
+    required Future<bool> Function(Pref pref) remover,
+    required T? value,
+    T? defaultValue,
+  }) =>
+      _doSetOrRemove(
+        pref: _c.securePref,
+        controller: controller,
+        setter: setter,
+        remover: remover,
+        value: value,
+        defaultValue: defaultValue,
+      );
+
+  final DiContainer _c;
+}
+
+Future<void> _doSet<T>({
+  required Pref pref,
+  required BehaviorSubject<T> controller,
+  required Future<bool> Function(Pref pref, T value) setter,
+  required T value,
+}) async {
+  final backup = controller.value;
+  controller.add(value);
+  try {
+    if (!await setter(pref, value)) {
+      throw StateError("Unknown error");
+    }
+  } catch (e, stackTrace) {
+    _$__NpLog.log.severe("[_doSet] Failed setting preference", e, stackTrace);
+    controller
+      ..addError(e, stackTrace)
+      ..add(backup);
+  }
+}
+
+Future<void> _doSetOrRemove<T>({
+  required Pref pref,
+  required BehaviorSubject<T?> controller,
+  required Future<bool> Function(Pref pref, T value) setter,
+  required Future<bool> Function(Pref pref) remover,
+  required T? value,
+  T? defaultValue,
+}) async {
+  final backup = controller.value;
+  controller.add(value ?? defaultValue);
+  try {
+    if (value == null) {
+      if (!await remover(pref)) {
+        throw StateError("Unknown error");
+      }
+    } else {
+      if (!await setter(pref, value)) {
+        throw StateError("Unknown error");
+      }
+    }
+  } catch (e, stackTrace) {
+    _$__NpLog.log
+        .severe("[_doSetOrRemove] Failed setting preference", e, stackTrace);
+    controller
+      ..addError(e, stackTrace)
+      ..add(backup);
+  }
+}
+
+@npLog
+// ignore: camel_case_types
+class __ {}

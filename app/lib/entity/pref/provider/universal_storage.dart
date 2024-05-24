@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:nc_photos/entity/pref.dart';
-import 'package:np_common/type.dart';
 import 'package:np_universal_storage/np_universal_storage.dart';
 
 /// [Pref] backed by [UniversalStorage]
@@ -51,9 +50,6 @@ class PrefUniversalStorageProvider extends PrefProvider {
     _data.clear();
     return true;
   }
-
-  @override
-  Future<JsonObj> toJson() async => Map.of(_data);
 
   T? _get<T>(PrefKeyInterface key) => _data[key.toStringKey()];
 

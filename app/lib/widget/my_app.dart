@@ -73,6 +73,9 @@ class MyApp extends StatelessWidget {
           create: (_) => PrefController(_c),
         ),
         RepositoryProvider(
+          create: (_) => SecurePrefController(_c),
+        ),
+        RepositoryProvider(
           create: (context) => AccountController(
             prefController: context.read(),
           ),

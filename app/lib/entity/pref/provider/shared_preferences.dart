@@ -1,9 +1,7 @@
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/use_case/compat/v34.dart';
-import 'package:np_common/type.dart';
 import 'package:np_universal_storage/np_universal_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shared_preferences_platform_interface/shared_preferences_platform_interface.dart';
 
 /// [Pref] stored with [SharedPreferences] lib
 class PrefSharedPreferencesProvider extends PrefProvider {
@@ -54,9 +52,6 @@ class PrefSharedPreferencesProvider extends PrefProvider {
 
   @override
   Future<bool> clear() => _pref.clear();
-
-  @override
-  Future<JsonObj> toJson() => SharedPreferencesStorePlatform.instance.getAll();
 
   late SharedPreferences _pref;
 }

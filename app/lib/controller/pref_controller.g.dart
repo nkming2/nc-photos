@@ -6,11 +6,11 @@ part of 'pref_controller.dart';
 // NpLogGenerator
 // **************************************************************************
 
-extension _$PrefControllerNpLog on PrefController {
+extension _$__NpLog on __ {
   // ignore: unused_element
   Logger get _log => log;
 
-  static final log = Logger("controller.pref_controller.PrefController");
+  static final log = Logger("controller.pref_controller.__");
 }
 
 // **************************************************************************

@@ -69,6 +69,7 @@ dependencies:
   flutter_cache_manager: any
   flutter_colorpicker: ^1.0.3
   flutter_isolate: ^2.0.4
+  flutter_secure_storage: ^9.2.2
   flutter_staggered_grid_view:
     git:
       url: https://gitlab.com/nc-photos/flutter_staggered_grid_view

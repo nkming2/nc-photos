@@ -51,6 +51,7 @@ enum DiType {
   pref,
   touchManager,
   npDb,
+  securePref,
 }
 
 class DiContainer {
@@ -88,6 +89,7 @@ class DiContainer {
     Pref? pref,
     TouchManager? touchManager,
     NpDb? npDb,
+    Pref? securePref,
   })  : _albumRepo = albumRepo,
         _albumRepoRemote = albumRepoRemote,
         _albumRepoLocal = albumRepoLocal,
@@ -120,7 +122,8 @@ class DiContainer {
         _recognizeFaceRepoLocal = recognizeFaceRepoLocal,
         _pref = pref,
         _touchManager = touchManager,
-        _npDb = npDb;
+        _npDb = npDb,
+        _securePref = securePref;
 
   DiContainer.late();
 
@@ -192,6 +195,8 @@ class DiContainer {
         return contianer._touchManager != null;
       case DiType.npDb:
         return contianer._npDb != null;
+      case DiType.securePref:
+        return contianer._securePref != null;
     }
   }
 
@@ -213,6 +218,7 @@ class DiContainer {
     OrNull<Pref>? pref,
     OrNull<TouchManager>? touchManager,
     OrNull<NpDb>? npDb,
+    OrNull<Pref>? securePref,
   }) {
     return DiContainer(
       albumRepo: albumRepo == null ? _albumRepo : albumRepo.obj,
@@ -237,6 +243,7 @@ class DiContainer {
       pref: pref == null ? _pref : pref.obj,
       touchManager: touchManager == null ? _touchManager : touchManager.obj,
       npDb: npDb == null ? _npDb : npDb.obj,
+      securePref: securePref == null ? _securePref : securePref.obj,
     );
   }
 
@@ -277,6 +284,7 @@ class DiContainer {
   Pref get pref => _pref!;
   TouchManager get touchManager => _touchManager!;
   NpDb get npDb => _npDb!;
+  Pref get securePref => _securePref!;
 
   set albumRepo(AlbumRepo v) {
     assert(_albumRepo == null);
@@ -443,6 +451,11 @@ class DiContainer {
     _npDb = v;
   }
 
+  set securePref(Pref v) {
+    assert(_securePref == null);
+    _securePref = v;
+  }
+
   AlbumRepo? _albumRepo;
   AlbumRepo? _albumRepoRemote;
   // Explicitly request a AlbumRepo backed by local source
@@ -480,6 +493,7 @@ class DiContainer {
   Pref? _pref;
   TouchManager? _touchManager;
   NpDb? _npDb;
+  Pref? _securePref;
 }
 
 extension DiContainerExtension on DiContainer {
