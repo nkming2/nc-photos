@@ -290,6 +290,44 @@ extension PrefExtension on Pref {
           (key, value) => provider.setInt(key, value));
     }
   }
+
+  int? getProtectedPageAuthType() =>
+      provider.getInt(PrefKey.protectedPageAuthType);
+  int getProtectedPageAuthTypeOr(int def) => getProtectedPageAuthType() ?? def;
+  Future<bool> setProtectedPageAuthType(int? value) {
+    if (value == null) {
+      return _remove(PrefKey.protectedPageAuthType);
+    } else {
+      return _set<int>(PrefKey.protectedPageAuthType, value,
+          (key, value) => provider.setInt(key, value));
+    }
+  }
+
+  String? getProtectedPageAuthPin() =>
+      provider.getString(PrefKey.protectedPageAuthPin);
+  String getProtectedPageAuthPinOr(String def) =>
+      getProtectedPageAuthPin() ?? def;
+  Future<bool> setProtectedPageAuthPin(String? value) {
+    if (value == null) {
+      return _remove(PrefKey.protectedPageAuthPin);
+    } else {
+      return _set<String>(PrefKey.protectedPageAuthPin, value,
+          (key, value) => provider.setString(key, value));
+    }
+  }
+
+  String? getProtectedPageAuthPassword() =>
+      provider.getString(PrefKey.protectedPageAuthPassword);
+  String getProtectedPageAuthPasswordOr(String def) =>
+      getProtectedPageAuthPassword() ?? def;
+  Future<bool> setProtectedPageAuthPassword(String? value) {
+    if (value == null) {
+      return _remove(PrefKey.protectedPageAuthPassword);
+    } else {
+      return _set<String>(PrefKey.protectedPageAuthPassword, value,
+          (key, value) => provider.setString(key, value));
+    }
+  }
 }
 
 extension AccountPrefExtension on AccountPref {

@@ -227,6 +227,8 @@
     "contributorsTooltip",
     "setAsTooltip",
     "deleteAccountConfirmDialogText",
+    "appLockUnlockHint",
+    "appLockUnlockWrongPassword",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -240,7 +242,9 @@
   "cs": [
     "settingsThemePrimaryColor",
     "settingsThemeSecondaryColor",
-    "settingsThemePresets"
+    "settingsThemePresets",
+    "appLockUnlockHint",
+    "appLockUnlockWrongPassword"
   ],
 
   "de": [
@@ -272,7 +276,9 @@
     "searchFilterBubbleTypeImageText",
     "imageSaveOptionDialogTitle",
     "imageSaveOptionDialogContent",
-    "loopTooltip"
+    "loopTooltip",
+    "appLockUnlockHint",
+    "appLockUnlockWrongPassword"
   ],
 
   "el": [
@@ -387,25 +393,33 @@
     "accountSettingsTooltip",
     "contributorsTooltip",
     "setAsTooltip",
-    "deleteAccountConfirmDialogText"
+    "deleteAccountConfirmDialogText",
+    "appLockUnlockHint",
+    "appLockUnlockWrongPassword"
   ],
 
   "es": [
     "settingsThemePrimaryColor",
     "settingsThemeSecondaryColor",
-    "settingsThemePresets"
+    "settingsThemePresets",
+    "appLockUnlockHint",
+    "appLockUnlockWrongPassword"
   ],
 
   "fi": [
     "settingsThemePrimaryColor",
     "settingsThemeSecondaryColor",
-    "settingsThemePresets"
+    "settingsThemePresets",
+    "appLockUnlockHint",
+    "appLockUnlockWrongPassword"
   ],
 
   "fr": [
     "settingsThemePrimaryColor",
     "settingsThemeSecondaryColor",
-    "settingsThemePresets"
+    "settingsThemePresets",
+    "appLockUnlockHint",
+    "appLockUnlockWrongPassword"
   ],
 
   "it": [
@@ -416,7 +430,9 @@
     "settingsThemePresets",
     "unmuteTooltip",
     "slideshowTooltip",
-    "enhanceColorPopTitle"
+    "enhanceColorPopTitle",
+    "appLockUnlockHint",
+    "appLockUnlockWrongPassword"
   ],
 
   "nl": [
@@ -764,6 +780,8 @@
     "contributorsTooltip",
     "setAsTooltip",
     "deleteAccountConfirmDialogText",
+    "appLockUnlockHint",
+    "appLockUnlockWrongPassword",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -781,7 +799,9 @@
     "settingsThemePresets",
     "enhanceColorPopTitle",
     "imageEditTransformOrientationClockwise",
-    "imageEditTransformOrientationCounterclockwise"
+    "imageEditTransformOrientationCounterclockwise",
+    "appLockUnlockHint",
+    "appLockUnlockWrongPassword"
   ],
 
   "pt": [
@@ -807,19 +827,25 @@
     "accountSettingsTooltip",
     "contributorsTooltip",
     "setAsTooltip",
-    "deleteAccountConfirmDialogText"
+    "deleteAccountConfirmDialogText",
+    "appLockUnlockHint",
+    "appLockUnlockWrongPassword"
   ],
 
   "ru": [
     "settingsThemePrimaryColor",
     "settingsThemeSecondaryColor",
-    "settingsThemePresets"
+    "settingsThemePresets",
+    "appLockUnlockHint",
+    "appLockUnlockWrongPassword"
   ],
 
   "tr": [
     "settingsThemePrimaryColor",
     "settingsThemeSecondaryColor",
-    "settingsThemePresets"
+    "settingsThemePresets",
+    "appLockUnlockHint",
+    "appLockUnlockWrongPassword"
   ],
 
   "zh": [
@@ -950,7 +976,9 @@
     "accountSettingsTooltip",
     "contributorsTooltip",
     "setAsTooltip",
-    "deleteAccountConfirmDialogText"
+    "deleteAccountConfirmDialogText",
+    "appLockUnlockHint",
+    "appLockUnlockWrongPassword"
   ],
 
   "zh_Hant": [
@@ -1081,6 +1109,8 @@
     "accountSettingsTooltip",
     "contributorsTooltip",
     "setAsTooltip",
-    "deleteAccountConfirmDialogText"
+    "deleteAccountConfirmDialogText",
+    "appLockUnlockHint",
+    "appLockUnlockWrongPassword"
   ]
 }

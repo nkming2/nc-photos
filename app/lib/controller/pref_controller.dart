@@ -239,8 +239,35 @@ class PrefController {
       _c.pref.getSecondarySeedColor()?.run(Color.new));
 }
 
+@npSubjectAccessor
 class SecurePrefController {
   SecurePrefController(this._c);
+
+  Future<void> setProtectedPageAuthType(ProtectedPageAuthType? value) =>
+      _setOrRemove<ProtectedPageAuthType>(
+        controller: _protectedPageAuthTypeController,
+        setter: (pref, value) => pref.setProtectedPageAuthType(value.index),
+        remover: (pref) => pref.setProtectedPageAuthType(null),
+        value: value,
+      );
+
+  Future<void> setProtectedPageAuthPin(CiString? value) =>
+      _setOrRemove<CiString>(
+        controller: _protectedPageAuthPinController,
+        setter: (pref, value) =>
+            pref.setProtectedPageAuthPin(value.toCaseInsensitiveString()),
+        remover: (pref) => pref.setProtectedPageAuthPin(null),
+        value: value,
+      );
+
+  Future<void> setProtectedPageAuthPassword(CiString? value) =>
+      _setOrRemove<CiString>(
+        controller: _protectedPageAuthPasswordController,
+        setter: (pref, value) =>
+            pref.setProtectedPageAuthPassword(value.toCaseInsensitiveString()),
+        remover: (pref) => pref.setProtectedPageAuthPassword(null),
+        value: value,
+      );
 
   // ignore: unused_element
   Future<void> _set<T>({
@@ -273,6 +300,17 @@ class SecurePrefController {
       );
 
   final DiContainer _c;
+  @npSubjectAccessor
+  late final _protectedPageAuthTypeController = BehaviorSubject.seeded(_c
+      .securePref
+      .getProtectedPageAuthType()
+      ?.let((e) => ProtectedPageAuthType.values[e]));
+  @npSubjectAccessor
+  late final _protectedPageAuthPinController =
+      BehaviorSubject.seeded(_c.securePref.getProtectedPageAuthPin()?.toCi());
+  @npSubjectAccessor
+  late final _protectedPageAuthPasswordController = BehaviorSubject.seeded(
+      _c.securePref.getProtectedPageAuthPassword()?.toCi());
 }
 
 Future<void> _doSet<T>({

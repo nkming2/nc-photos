@@ -1435,6 +1435,14 @@
 			}
 		}
 	},
+	"appLockUnlockHint": "Unlock the app",
+	"@appLockUnlockHint": {
+		"description": "Unlock app via selected means (e.g., password) in case app lock is enabled by user"
+	},
+	"appLockUnlockWrongPassword": "Incorrect password",
+	"@appLockUnlockWrongPassword": {
+		"description": "Unlock app via selected means (e.g., password) in case app lock is enabled by user"
+	},
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {

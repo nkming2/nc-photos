@@ -82,4 +82,6 @@ extension ListExtension<T> on List<T> {
       );
     }
   }
+
+  List<T> added(T value) => toList()..add(value);
 }

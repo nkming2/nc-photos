@@ -12,6 +12,7 @@ class BlocListenerT<B extends StateStreamable<S>, S, T>
     extends SingleChildStatelessWidget {
   const BlocListenerT({
     super.key,
+    super.child,
     required this.selector,
     required this.listener,
   });

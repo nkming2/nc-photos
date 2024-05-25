@@ -142,3 +142,32 @@ extension $PrefControllerNpSubjectAccessor on PrefController {
       secondarySeedColor.distinct().skip(1);
   Color? get secondarySeedColorValue => _secondarySeedColorController.value;
 }
+
+extension $SecurePrefControllerNpSubjectAccessor on SecurePrefController {
+  // _protectedPageAuthTypeController
+  ValueStream<ProtectedPageAuthType?> get protectedPageAuthType =>
+      _protectedPageAuthTypeController.stream;
+  Stream<ProtectedPageAuthType?> get protectedPageAuthTypeNew =>
+      protectedPageAuthType.skip(1);
+  Stream<ProtectedPageAuthType?> get protectedPageAuthTypeChange =>
+      protectedPageAuthType.distinct().skip(1);
+  ProtectedPageAuthType? get protectedPageAuthTypeValue =>
+      _protectedPageAuthTypeController.value;
+// _protectedPageAuthPinController
+  ValueStream<CiString?> get protectedPageAuthPin =>
+      _protectedPageAuthPinController.stream;
+  Stream<CiString?> get protectedPageAuthPinNew => protectedPageAuthPin.skip(1);
+  Stream<CiString?> get protectedPageAuthPinChange =>
+      protectedPageAuthPin.distinct().skip(1);
+  CiString? get protectedPageAuthPinValue =>
+      _protectedPageAuthPinController.value;
+// _protectedPageAuthPasswordController
+  ValueStream<CiString?> get protectedPageAuthPassword =>
+      _protectedPageAuthPasswordController.stream;
+  Stream<CiString?> get protectedPageAuthPasswordNew =>
+      protectedPageAuthPassword.skip(1);
+  Stream<CiString?> get protectedPageAuthPasswordChange =>
+      protectedPageAuthPassword.distinct().skip(1);
+  CiString? get protectedPageAuthPasswordValue =>
+      _protectedPageAuthPasswordController.value;
+}

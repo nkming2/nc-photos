@@ -12,6 +12,7 @@ import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/activity.dart';
 import 'package:nc_photos/mobile/android/permission_util.dart';
+import 'package:nc_photos/protected_page_handler.dart';
 import 'package:nc_photos/use_case/compat/v29.dart';
 import 'package:nc_photos/use_case/compat/v46.dart';
 import 'package:nc_photos/use_case/compat/v55.dart';
@@ -64,7 +65,7 @@ class _SplashState extends State<Splash> {
         _isUpgrading = false;
       });
     }
-    unawaited(_exit());
+    _exit();
   }
 
   @override
@@ -135,24 +136,30 @@ class _SplashState extends State<Splash> {
     );
   }
 
-  Future<void> _exit() async {
+  void _exit() {
     _log.info("[_exit]");
     final account = Pref().getCurrentAccount();
     if (isNeedSetup()) {
-      unawaited(Navigator.pushReplacementNamed(context, Setup.routeName));
+      Navigator.pushReplacementNamed(context, Setup.routeName);
     } else if (account == null) {
-      unawaited(Navigator.pushReplacementNamed(context, SignIn.routeName));
+      Navigator.pushReplacementNamed(context, SignIn.routeName);
     } else {
-      unawaited(
-        Navigator.pushReplacementNamed(context, Home.routeName,
-            arguments: HomeArguments(account)),
-      );
-      if (getRawPlatform() == NpPlatform.android) {
-        final initialRoute = await Activity.consumeInitialRoute();
-        if (initialRoute != null) {
-          unawaited(Navigator.pushNamed(context, initialRoute));
+      Navigator.of(context)
+          .pushReplacementProtected(Home.routeName,
+              arguments: HomeArguments(account))
+          .then((value) async {
+        if (getRawPlatform() == NpPlatform.android) {
+          final initialRoute = await Activity.consumeInitialRoute();
+          if (initialRoute != null) {
+            unawaited(Navigator.pushNamed(context, initialRoute));
+          }
         }
-      }
+      }).onError<ProtectedPageAuthException>((_, __) async {
+        _log.warning("[_exit] Auth failed");
+        await Future.delayed(const Duration(seconds: 2));
+        _exit();
+        return null;
+      });
     }
   }
 

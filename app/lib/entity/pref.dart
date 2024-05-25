@@ -109,6 +109,9 @@ enum PrefKey implements PrefKeyInterface {
   isVideoPlayerMute,
   isVideoPlayerLoop,
   secondarySeedColor,
+  protectedPageAuthType,
+  protectedPageAuthPin,
+  protectedPageAuthPassword,
   ;
 
   @override
@@ -187,6 +190,12 @@ enum PrefKey implements PrefKeyInterface {
         return "isVideoPlayerLoop";
       case PrefKey.secondarySeedColor:
         return "secondarySeedColor";
+      case PrefKey.protectedPageAuthType:
+        return "protectedPageAuthType";
+      case PrefKey.protectedPageAuthPin:
+        return "protectedPageAuthPin";
+      case PrefKey.protectedPageAuthPassword:
+        return "protectedPageAuthPassword";
     }
   }
 }

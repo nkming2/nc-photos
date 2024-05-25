@@ -46,6 +46,7 @@ dependencies:
       url: https://gitlab.com/nkming2/dart-copy-with
       path: copy_with
       ref: copy_with-1.3.0
+  crypto: ^3.0.3
   devicelocale: ^0.6.0
   device_info_plus: ^9.0.1
   draggable_scrollbar:
@@ -83,6 +84,7 @@ dependencies:
       path: library
   intl: 0.18.1
   kiwi: ^4.1.0
+  local_auth: ^2.2.0
   logging: ^1.2.0
   memory_info: ^0.0.4
   mime: ^1.0.5
