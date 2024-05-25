@@ -18,8 +18,8 @@ class DialogScaffold extends StatelessWidget {
           Navigator.of(context).pop();
         }
       },
-      child: WillPopScope(
-        onWillPop: () => Future.value(canPop),
+      child: PopScope(
+        canPop: canPop,
         child: Scaffold(
           backgroundColor: Colors.transparent,
           body: GestureDetector(

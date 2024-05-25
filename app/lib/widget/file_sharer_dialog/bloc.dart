@@ -230,7 +230,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
       file,
       password: password,
     );
-    await Clipboard.setData(ClipboardData(text: share.url));
+    await Clipboard.setData(ClipboardData(text: share.url!));
 
     if (getRawPlatform() == NpPlatform.android) {
       final textShare = AndroidTextShare(share.url!);

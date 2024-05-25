@@ -10,4 +10,5 @@ export 'src/pixel_image_provider.dart';
 export 'src/shimmer.dart';
 export 'src/stateful_slider.dart';
 export 'src/switch_form_field.dart';
+export 'src/translucent_sliver_app_bar.dart';
 export 'src/unbounded_list_tile.dart';

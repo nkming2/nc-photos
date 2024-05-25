@@ -23,8 +23,8 @@ class ContentUriImage extends ImageProvider<ContentUriImage>
   }
 
   @override
-  ImageStreamCompleter loadBuffer(
-      ContentUriImage key, DecoderBufferCallback decode) {
+  ImageStreamCompleter loadImage(
+      ContentUriImage key, ImageDecoderCallback decode) {
     return MultiFrameImageStreamCompleter(
       codec: _loadAsync(key, decode),
       scale: key.scale,
@@ -36,7 +36,7 @@ class ContentUriImage extends ImageProvider<ContentUriImage>
   }
 
   Future<ui.Codec> _loadAsync(
-      ContentUriImage key, DecoderBufferCallback decode) async {
+      ContentUriImage key, ImageDecoderCallback decode) async {
     assert(key == this);
     final bytes = await ContentUri.readUri(uri);
     if (bytes.lengthInBytes == 0) {

@@ -21,7 +21,7 @@ class DriftTableSortGenerator extends GeneratorForAnnotation<DriftTableSort> {
     final driftTableSort =
         DriftTableSort(annotation.read("dbClass").stringValue);
     final clazz = element;
-    if (!clazz.allSupertypes.any((t) => t.element2.name == "Table")) {
+    if (!clazz.allSupertypes.any((t) => t.element.name == "Table")) {
       print("Not a drift table");
       return null;
     }
@@ -63,7 +63,7 @@ extension ${sortEnumName}IterableExtension on Iterable<$sortEnumName> {
       return false;
     }
     // it's a very rough way but well...
-    if (field.type.element2?.name?.endsWith("Column") ?? false) {
+    if (field.type.element?.name?.endsWith("Column") ?? false) {
       return true;
     }
     return false;

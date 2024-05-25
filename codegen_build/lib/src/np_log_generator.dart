@@ -29,7 +29,7 @@ extension _\$${clazz.name}NpLog on ${clazz.name} {
     } else if (element is ExtensionElement) {
       final extension = element;
       return """
-extension _\$${extension.name}NpLog on ${extension.extendedType.element2!.name} {
+extension _\$${extension.name}NpLog on ${extension.extendedType.element!.name} {
   // ignore: unused_element
   Logger get _log => log;
 

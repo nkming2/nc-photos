@@ -11,17 +11,17 @@ Future<Map<String, dynamic>> getSqliteConnectionArgs() async => {};
 QueryExecutor openSqliteConnectionWithArgs(Map<String, dynamic> args) =>
     openSqliteConnection();
 
+// Web is no longer supported. The code here has been updated to make it build
+// with the latest sqlite3 package, but they are untested
 QueryExecutor openSqliteConnection() {
   return LazyDatabase(() async {
     // Load wasm bundle
     final response = await http.get(Uri.parse("sqlite3.wasm"));
     // Create a virtual file system backed by IndexedDb with everything in
     // `/drift/my_app/` being persisted.
+    final sqlite3 = await WasmSqlite3.load(response.bodyBytes);
     final fs = await IndexedDbFileSystem.open(dbName: "nc-photos");
-    final sqlite3 = await WasmSqlite3.load(
-      response.bodyBytes,
-      SqliteEnvironment(fileSystem: fs),
-    );
+    sqlite3.registerVirtualFileSystem(fs, makeDefault: true);
 
     // Then, open a database inside that persisted folder.
     return WasmDatabase(

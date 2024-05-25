@@ -8,8 +8,8 @@ class ProcessingDialog extends StatelessWidget {
 
   @override
   build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () => Future.value(false),
+    return PopScope(
+      canPop: false,
       child: AlertDialog(
         content: Row(
           mainAxisSize: MainAxisSize.min,

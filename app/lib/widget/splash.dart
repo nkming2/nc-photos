@@ -70,8 +70,8 @@ class _SplashState extends State<Splash> {
   @override
   build(BuildContext context) {
     return Scaffold(
-      body: WillPopScope(
-        onWillPop: () => Future.value(false),
+      body: PopScope(
+        canPop: false,
         child: Builder(builder: (context) => _buildContent(context)),
       ),
     );

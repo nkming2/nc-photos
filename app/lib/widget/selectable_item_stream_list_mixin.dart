@@ -28,6 +28,7 @@ abstract class SelectableItem {
   StaggeredTile get staggeredTile => const StaggeredTile.count(1, 1);
 }
 
+@Deprecated("Use SelectableItemList widget")
 mixin SelectableItemStreamListMixin<T extends StatefulWidget> on State<T> {
   @override
   initState() {

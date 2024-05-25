@@ -29,34 +29,32 @@ class OsmGpsMap extends StatelessWidget {
       child: IgnorePointer(
         child: FlutterMap(
           options: MapOptions(
-            center: centerLl,
-            zoom: zoom,
-            allowPanning: false,
-            enableScrollWheel: false,
-            interactiveFlags: InteractiveFlag.none,
-          ),
-          nonRotatedChildren: [
-            AttributionWidget.defaultWidget(
-              source: "OpenStreetMap contributors",
+            initialCenter: centerLl,
+            initialZoom: zoom,
+            interactionOptions: const InteractionOptions(
+              flags: InteractiveFlag.none,
             ),
-          ],
-          layers: [
-            TileLayerOptions(
+          ),
+          children: [
+            TileLayer(
               urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
             ),
-            MarkerLayerOptions(
+            MarkerLayer(
               markers: [
                 Marker(
                   width: pinSize,
                   height: pinSize,
                   point: centerLl,
-                  anchorPos: AnchorPos.align(AnchorAlign.top),
-                  builder: (_) => const Image(
+                  alignment: Alignment.topCenter,
+                  child: const Image(
                     image: AssetImage(
                         "packages/np_gps_map/assets/gps_map_pin.png"),
                   ),
                 ),
               ],
+            ),
+            const SimpleAttributionWidget(
+              source: Text("OpenStreetMap contributors"),
             ),
           ],
         ),

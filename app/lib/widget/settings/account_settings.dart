@@ -146,80 +146,81 @@ class _WrappedAccountSettingsState extends State<_WrappedAccountSettings>
             },
           ),
         ],
-        child: WillPopScope(
-          onWillPop: () async => !_bloc.state.shouldReload,
-          child: CustomScrollView(
-            slivers: [
-              SliverAppBar(
-                pinned: true,
-                title: Text(L10n.global().settingsAccountTitle),
-                leading: _BlocSelector<bool>(
-                  selector: (state) => state.shouldReload,
-                  builder: (_, state) =>
-                      state ? const _DoneButton() : const BackButton(),
+        child: _BlocSelector<bool>(
+          selector: (state) => state.shouldReload,
+          builder: (_, shouldReload) => PopScope(
+            canPop: !shouldReload,
+            child: CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  pinned: true,
+                  title: Text(L10n.global().settingsAccountTitle),
+                  leading:
+                      shouldReload ? const _DoneButton() : const BackButton(),
                 ),
-              ),
-              SliverList(
-                delegate: SliverChildListDelegate(
-                  [
-                    _BlocSelector<String?>(
-                      selector: (state) => state.label,
-                      builder: (context, state) => ListTile(
-                        title: Text(L10n.global().settingsAccountLabelTitle),
-                        subtitle: Text(state ??
-                            L10n.global().settingsAccountLabelDescription),
-                        onTap: () => _onLabelPressed(context),
+                SliverList(
+                  delegate: SliverChildListDelegate(
+                    [
+                      _BlocSelector<String?>(
+                        selector: (state) => state.label,
+                        builder: (context, state) => ListTile(
+                          title: Text(L10n.global().settingsAccountLabelTitle),
+                          subtitle: Text(state ??
+                              L10n.global().settingsAccountLabelDescription),
+                          onTap: () => _onLabelPressed(context),
+                        ),
                       ),
-                    ),
-                    _BlocSelector<Account>(
-                      selector: (state) => state.account,
-                      builder: (context, state) => ListTile(
-                        title: Text(L10n.global().settingsIncludedFoldersTitle),
-                        subtitle:
-                            Text(state.roots.map((e) => "/$e").join("; ")),
-                        onTap: () => _onIncludedFoldersPressed(context),
+                      _BlocSelector<Account>(
+                        selector: (state) => state.account,
+                        builder: (context, state) => ListTile(
+                          title:
+                              Text(L10n.global().settingsIncludedFoldersTitle),
+                          subtitle:
+                              Text(state.roots.map((e) => "/$e").join("; ")),
+                          onTap: () => _onIncludedFoldersPressed(context),
+                        ),
                       ),
-                    ),
-                    _BlocSelector<String>(
-                      selector: (state) => state.shareFolder,
-                      builder: (context, state) => ListTile(
-                        title: Text(L10n.global().settingsShareFolderTitle),
-                        subtitle: Text("/$state"),
-                        onTap: () => _onShareFolderPressed(context),
+                      _BlocSelector<String>(
+                        selector: (state) => state.shareFolder,
+                        builder: (context, state) => ListTile(
+                          title: Text(L10n.global().settingsShareFolderTitle),
+                          subtitle: Text("/$state"),
+                          onTap: () => _onShareFolderPressed(context),
+                        ),
                       ),
-                    ),
-                    SettingsListCaption(
-                      label: L10n.global().settingsServerAppSectionTitle,
-                    ),
-                    _BlocSelector<PersonProvider>(
-                      selector: (state) => state.personProvider,
-                      builder: (context, state) {
-                        if (_bloc.highlight ==
-                            AccountSettingsOption.personProvider) {
-                          return AnimatedBuilder(
-                            animation: _highlightAnimation,
-                            builder: (context, child) => ListTile(
+                      SettingsListCaption(
+                        label: L10n.global().settingsServerAppSectionTitle,
+                      ),
+                      _BlocSelector<PersonProvider>(
+                        selector: (state) => state.personProvider,
+                        builder: (context, state) {
+                          if (_bloc.highlight ==
+                              AccountSettingsOption.personProvider) {
+                            return AnimatedBuilder(
+                              animation: _highlightAnimation,
+                              builder: (context, child) => ListTile(
+                                title: Text(
+                                    L10n.global().settingsPersonProviderTitle),
+                                subtitle: Text(state.toUserString()),
+                                onTap: () => _onPersonProviderPressed(context),
+                                tileColor: _highlightAnimation.value,
+                              ),
+                            );
+                          } else {
+                            return ListTile(
                               title: Text(
                                   L10n.global().settingsPersonProviderTitle),
                               subtitle: Text(state.toUserString()),
                               onTap: () => _onPersonProviderPressed(context),
-                              tileColor: _highlightAnimation.value,
-                            ),
-                          );
-                        } else {
-                          return ListTile(
-                            title:
-                                Text(L10n.global().settingsPersonProviderTitle),
-                            subtitle: Text(state.toUserString()),
-                            onTap: () => _onPersonProviderPressed(context),
-                          );
-                        }
-                      },
-                    ),
-                  ],
+                            );
+                          }
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
