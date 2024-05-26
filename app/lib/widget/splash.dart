@@ -145,7 +145,7 @@ class _SplashState extends State<Splash> {
       Navigator.pushReplacementNamed(context, SignIn.routeName);
     } else {
       Navigator.of(context)
-          .pushReplacementProtected(Home.routeName,
+          .pushReplacementNamedProtected(Home.routeName,
               arguments: HomeArguments(account))
           .then((value) async {
         if (getRawPlatform() == NpPlatform.android) {

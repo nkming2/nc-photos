@@ -28,7 +28,8 @@ class ProtectedPageAuthException implements Exception {
 }
 
 extension ProtectedPageBuildContextExtension on NavigatorState {
-  Future<T?> pushReplacementProtected<T extends Object?, U extends Object?>(
+  Future<T?>
+      pushReplacementNamedProtected<T extends Object?, U extends Object?>(
     String routeName, {
     U? result,
     Object? arguments,
@@ -41,12 +42,20 @@ extension ProtectedPageBuildContextExtension on NavigatorState {
     }
   }
 
-  Future<T?> pushProtected<T extends Object?>(
+  Future<T?> pushNamedProtected<T extends Object?>(
     String routeName, {
     Object? arguments,
   }) async {
     if (await _auth()) {
       return pushNamed(routeName, arguments: arguments);
+    } else {
+      throw const ProtectedPageAuthException();
+    }
+  }
+
+  Future<T?> pushProtected<T extends Object?>(Route<T> route) async {
+    if (await _auth()) {
+      return push(route);
     } else {
       throw const ProtectedPageAuthException();
     }
