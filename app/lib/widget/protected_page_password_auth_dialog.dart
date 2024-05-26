@@ -52,37 +52,43 @@ class _WrappedProtectedPagePasswordAuthDialog extends StatelessWidget {
       ],
       child: AlertDialog(
         title: Text(L10n.global().appLockUnlockHint),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextField(
-              keyboardType: TextInputType.text,
-              obscureText: true,
-              enableSuggestions: false,
-              autocorrect: false,
-              decoration: InputDecoration(
-                hintText: L10n.global().passwordInputHint,
-              ),
-              onSubmitted: (value) {
-                context.addEvent(_Submit(value));
-              },
-            ),
-            _BlocSelector(
-              selector: (state) => state.isAuthorized,
-              builder: (context, isAuthorized) {
-                if (isAuthorized.value == false) {
-                  return const Padding(
-                    padding: EdgeInsets.only(top: 8, bottom: 4),
-                    child: _ErrorNotice(),
-                  );
-                } else {
-                  return const SizedBox.shrink();
-                }
-              },
-            ),
-          ],
+        content: const _DialogBody(),
+      ),
+    );
+  }
+}
+
+class ProtectedPagePasswordSetupDialog extends StatelessWidget {
+  const ProtectedPagePasswordSetupDialog({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => _Bloc(
+        password: null,
+      ),
+      child: _WrappedProtectedPagePasswordSetupDialog(),
+    );
+  }
+}
+
+class _WrappedProtectedPagePasswordSetupDialog extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocListener(
+      listeners: [
+        _BlocListenerT(
+          selector: (state) => state.setupResult,
+          listener: (context, setupResult) {
+            if (setupResult != null) {
+              Navigator.of(context).pop(setupResult);
+            }
+          },
         ),
+      ],
+      child: AlertDialog(
+        title: Text(L10n.global().settingsAppLockSetupPasswordDialogTitle),
+        content: const _DialogBody(),
       ),
     );
   }

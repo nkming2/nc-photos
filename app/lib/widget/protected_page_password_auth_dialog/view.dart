@@ -1,10 +1,53 @@
 part of '../protected_page_password_auth_dialog.dart';
 
+class _DialogBody extends StatelessWidget {
+  const _DialogBody();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextField(
+          keyboardType: TextInputType.text,
+          obscureText: true,
+          enableSuggestions: false,
+          autocorrect: false,
+          decoration: InputDecoration(
+            hintText: L10n.global().passwordInputHint,
+          ),
+          onSubmitted: (value) {
+            if (value.isNotEmpty) {
+              context.addEvent(_Submit(value));
+            }
+          },
+        ),
+        _BlocSelector(
+          selector: (state) => state.isAuthorized,
+          builder: (context, isAuthorized) {
+            if (isAuthorized.value == false) {
+              return Padding(
+                padding: const EdgeInsets.only(top: 8, bottom: 4),
+                child: _ErrorNotice(L10n.global().appLockUnlockWrongPassword),
+              );
+            } else {
+              return const SizedBox.shrink();
+            }
+          },
+        ),
+      ],
+    );
+  }
+}
+
 class _ErrorNotice extends StatefulWidget {
-  const _ErrorNotice();
+  const _ErrorNotice(this.text);
 
   @override
   State<StatefulWidget> createState() => _ErrorNoticeState();
+
+  final String text;
 }
 
 class _ErrorNoticeState extends State<_ErrorNotice>
@@ -30,7 +73,7 @@ class _ErrorNoticeState extends State<_ErrorNotice>
         position: _controller.drive(Animatable<Offset>.fromCallback(
             (t) => Offset(tremblingTransform(3, t) * .05, 0))),
         child: Text(
-          L10n.global().appLockUnlockWrongPassword,
+          widget.text,
           style: Theme.of(context).textTheme.bodySmall!.copyWith(
                 color: Theme.of(context).colorScheme.error,
               ),

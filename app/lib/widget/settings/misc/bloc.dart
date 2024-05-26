@@ -4,8 +4,10 @@ part of '../misc_settings.dart';
 class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   _Bloc({
     required this.prefController,
+    required this.securePrefController,
   }) : super(_State(
           isDoubleTapExit: prefController.isDoubleTapExitValue,
+          appLockType: securePrefController.protectedPageAuthTypeValue,
         )) {
     on<_Init>(_onInit);
     on<_SetDoubleTapExit>(_onSetDoubleTapExit);
@@ -25,6 +27,14 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
           return state.copyWith(error: ExceptionEvent(e, stackTrace));
         },
       ),
+      emit.forEach<ProtectedPageAuthType?>(
+        securePrefController.protectedPageAuthTypeChange,
+        onData: (data) => state.copyWith(appLockType: data),
+        onError: (e, stackTrace) {
+          _log.severe("[_onInit] Uncaught exception", e, stackTrace);
+          return state.copyWith(error: ExceptionEvent(e, stackTrace));
+        },
+      ),
     ]);
   }
 
@@ -34,4 +44,5 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   }
 
   final PrefController prefController;
+  final SecurePrefController securePrefController;
 }

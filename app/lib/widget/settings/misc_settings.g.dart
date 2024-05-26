@@ -13,16 +13,25 @@ part of 'misc_settings.dart';
 // **************************************************************************
 
 abstract class $_StateCopyWithWorker {
-  _State call({bool? isDoubleTapExit, ExceptionEvent? error});
+  _State call(
+      {bool? isDoubleTapExit,
+      ProtectedPageAuthType? appLockType,
+      ExceptionEvent? error});
 }
 
 class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
   _$_StateCopyWithWorkerImpl(this.that);
 
   @override
-  _State call({dynamic isDoubleTapExit, dynamic error = copyWithNull}) {
+  _State call(
+      {dynamic isDoubleTapExit,
+      dynamic appLockType = copyWithNull,
+      dynamic error = copyWithNull}) {
     return _State(
         isDoubleTapExit: isDoubleTapExit as bool? ?? that.isDoubleTapExit,
+        appLockType: appLockType == copyWithNull
+            ? that.appLockType
+            : appLockType as ProtectedPageAuthType?,
         error: error == copyWithNull ? that.error : error as ExceptionEvent?);
   }
 
@@ -52,7 +61,7 @@ extension _$_BlocNpLog on _Bloc {
 extension _$_StateToString on _State {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_State {isDoubleTapExit: $isDoubleTapExit, error: $error}";
+    return "_State {isDoubleTapExit: $isDoubleTapExit, appLockType: ${appLockType == null ? null : "${appLockType!.name}"}, error: $error}";
   }
 }
 

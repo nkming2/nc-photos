@@ -421,6 +421,26 @@
 	"@settingsPhotosTabSortByNameTitle": {
 		"description": "Sort photos listed in the Photos tab by filename (descending)"
 	},
+	"settingsAppLock": "App lock",
+	"@settingsAppLock": {
+		"description": "If enabled, users need to authenticate themselves when opening the app"
+	},
+	"settingsAppLockTypeBiometric": "Biometric",
+	"@settingsAppLockTypeBiometric": {
+		"description": "Unlock app with fingerprint, face, etc"
+	},
+	"settingsAppLockTypePin": "Pin",
+	"@settingsAppLockTypePin": {
+		"description": "Unlock app with 4 to 6 digits pin"
+	},
+	"settingsAppLockTypePassword": "Password",
+	"@settingsAppLockTypePassword": {
+		"description": "Unlock app with password"
+	},
+	"settingsAppLockDescription": "If enabled, you will be asked to authenticate when you open the app",
+	"settingsAppLockSetupBiometricFallbackDialogTitle": "Pick the fallback when biometric is not available",
+	"settingsAppLockSetupPinDialogTitle": "Set the pin to unlock app",
+	"settingsAppLockSetupPasswordDialogTitle": "Set the password to unlock app",
 	"settingsExperimentalTitle": "Experimental",
 	"settingsExperimentalDescription": "Features that are not ready for everyday use",
 	"settingsExpertTitle": "Advanced",
@@ -1443,6 +1463,8 @@
 	"@appLockUnlockWrongPassword": {
 		"description": "Unlock app via selected means (e.g., password) in case app lock is enabled by user"
 	},
+	"enabledText": "Enabled",
+	"disabledText": "Disabled",
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {

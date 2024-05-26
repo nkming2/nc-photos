@@ -13,16 +13,19 @@ part of 'protected_page_password_auth_dialog.dart';
 // **************************************************************************
 
 abstract class $_StateCopyWithWorker {
-  _State call({Unique<bool?>? isAuthorized});
+  _State call({Unique<bool?>? isAuthorized, CiString? setupResult});
 }
 
 class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
   _$_StateCopyWithWorkerImpl(this.that);
 
   @override
-  _State call({dynamic isAuthorized}) {
+  _State call({dynamic isAuthorized, dynamic setupResult = copyWithNull}) {
     return _State(
-        isAuthorized: isAuthorized as Unique<bool?>? ?? that.isAuthorized);
+        isAuthorized: isAuthorized as Unique<bool?>? ?? that.isAuthorized,
+        setupResult: setupResult == copyWithNull
+            ? that.setupResult
+            : setupResult as CiString?);
   }
 
   final _State that;
@@ -51,7 +54,7 @@ extension _$_BlocNpLog on _Bloc {
 extension _$_StateToString on _State {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_State {isAuthorized: $isAuthorized}";
+    return "_State {isAuthorized: $isAuthorized, setupResult: $setupResult}";
   }
 }
 

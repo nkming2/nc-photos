@@ -31,9 +31,9 @@ class ProtectedPagePinAuthDialog extends StatelessWidget {
     return BlocProvider(
       create: (context) => _Bloc(
         pin: pin,
-        removeItemBuilder: (_, animation, value) => ScaleTransition(
-          scale: animation.drive(CurveTween(curve: Curves.linear)),
-          child: _ObsecuredDigitDisplay(randomInt: value),
+        removeItemBuilder: (_, animation, value) => _RemoveItem(
+          animation: animation,
+          value: value,
         ),
       ),
       child: _WrappedProtectedPagePinAuthDialog(),
@@ -60,83 +60,48 @@ class _WrappedProtectedPagePinAuthDialog extends StatelessWidget {
       child: AlertDialog(
         title: Text(L10n.global().appLockUnlockHint),
         scrollable: true,
-        content: SizedBox(
-          width: 280,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const SizedBox(
-                height: 64,
-                child: Align(
-                  alignment: Alignment(0, -0.5),
-                  child: _ObsecuredInputView(),
-                ),
-              ),
-              Table(
-                defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                children: [
-                  TableRow(
-                    children: [1, 2, 3]
-                        .map(
-                          (e) => _DigitButton(
-                            child: Text(e.toString()),
-                            onTap: () {
-                              context.addEvent(_PushDigit(e));
-                            },
-                          ),
-                        )
-                        .toList(),
-                  ),
-                  TableRow(
-                    children: [4, 5, 6]
-                        .map(
-                          (e) => _DigitButton(
-                            child: Text(e.toString()),
-                            onTap: () {
-                              context.addEvent(_PushDigit(e));
-                            },
-                          ),
-                        )
-                        .toList(),
-                  ),
-                  TableRow(
-                    children: [7, 8, 9]
-                        .map(
-                          (e) => _DigitButton(
-                            child: Text(e.toString()),
-                            onTap: () {
-                              context.addEvent(_PushDigit(e));
-                            },
-                          ),
-                        )
-                        .toList(),
-                  ),
-                  TableRow(
-                    children: [
-                      const SizedBox.shrink(),
-                      _DigitButton(
-                        child: const Text("0"),
-                        onTap: () {
-                          context.addEvent(const _PushDigit(0));
-                        },
-                      ),
-                      _BlocSelector(
-                        selector: (state) => state.obsecuredInput.isEmpty,
-                        builder: (context, isEmpty) => _BackspaceButton(
-                          onTap: isEmpty
-                              ? null
-                              : () {
-                                  context.addEvent(const _PopDigit());
-                                },
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
+        content: const _DialogBody(),
+      ),
+    );
+  }
+}
+
+class ProtectedPagePinSetupDialog extends StatelessWidget {
+  const ProtectedPagePinSetupDialog({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => _Bloc(
+        pin: null,
+        removeItemBuilder: (_, animation, value) => _RemoveItem(
+          animation: animation,
+          value: value,
         ),
+      ),
+      child: _WrappedProtectedPagePinSetupDialog(),
+    );
+  }
+}
+
+class _WrappedProtectedPagePinSetupDialog extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocListener(
+      listeners: [
+        _BlocListenerT(
+          selector: (state) => state.setupResult,
+          listener: (context, setupResult) {
+            if (setupResult != null) {
+              Navigator.of(context).pop(setupResult);
+            }
+          },
+        ),
+      ],
+      child: AlertDialog(
+        title: Text(L10n.global().settingsAppLockSetupPinDialogTitle),
+        scrollable: true,
+        content: const _DialogBody(),
       ),
     );
   }

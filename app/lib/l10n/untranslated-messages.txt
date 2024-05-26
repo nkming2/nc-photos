@@ -27,6 +27,14 @@
     "settingsThemeSecondaryColor",
     "settingsThemePresets",
     "settingsSeedColorPickerSystemColorButtonLabel",
+    "settingsAppLock",
+    "settingsAppLockTypeBiometric",
+    "settingsAppLockTypePin",
+    "settingsAppLockTypePassword",
+    "settingsAppLockDescription",
+    "settingsAppLockSetupBiometricFallbackDialogTitle",
+    "settingsAppLockSetupPinDialogTitle",
+    "settingsAppLockSetupPasswordDialogTitle",
     "settingsAboutSectionTitle",
     "settingsVersionTitle",
     "settingsServerVersionTitle",
@@ -229,6 +237,8 @@
     "deleteAccountConfirmDialogText",
     "appLockUnlockHint",
     "appLockUnlockWrongPassword",
+    "enabledText",
+    "disabledText",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -243,8 +253,18 @@
     "settingsThemePrimaryColor",
     "settingsThemeSecondaryColor",
     "settingsThemePresets",
+    "settingsAppLock",
+    "settingsAppLockTypeBiometric",
+    "settingsAppLockTypePin",
+    "settingsAppLockTypePassword",
+    "settingsAppLockDescription",
+    "settingsAppLockSetupBiometricFallbackDialogTitle",
+    "settingsAppLockSetupPinDialogTitle",
+    "settingsAppLockSetupPasswordDialogTitle",
     "appLockUnlockHint",
-    "appLockUnlockWrongPassword"
+    "appLockUnlockWrongPassword",
+    "enabledText",
+    "disabledText"
   ],
 
   "de": [
@@ -256,6 +276,14 @@
     "settingsThemeSecondaryColor",
     "settingsThemePresets",
     "settingsSeedColorPickerSystemColorButtonLabel",
+    "settingsAppLock",
+    "settingsAppLockTypeBiometric",
+    "settingsAppLockTypePin",
+    "settingsAppLockTypePassword",
+    "settingsAppLockDescription",
+    "settingsAppLockSetupBiometricFallbackDialogTitle",
+    "settingsAppLockSetupPinDialogTitle",
+    "settingsAppLockSetupPasswordDialogTitle",
     "fileLastSharedByOthersDescription",
     "multipleFilesLinkShareDialogContent",
     "createShareProgressText",
@@ -278,7 +306,9 @@
     "imageSaveOptionDialogContent",
     "loopTooltip",
     "appLockUnlockHint",
-    "appLockUnlockWrongPassword"
+    "appLockUnlockWrongPassword",
+    "enabledText",
+    "disabledText"
   ],
 
   "el": [
@@ -311,6 +341,14 @@
     "settingsThemePresets",
     "settingsSeedColorPickerSystemColorButtonLabel",
     "settingsDoubleTapExitTitle",
+    "settingsAppLock",
+    "settingsAppLockTypeBiometric",
+    "settingsAppLockTypePin",
+    "settingsAppLockTypePassword",
+    "settingsAppLockDescription",
+    "settingsAppLockSetupBiometricFallbackDialogTitle",
+    "settingsAppLockSetupPinDialogTitle",
+    "settingsAppLockSetupPasswordDialogTitle",
     "settingsExpertTitle",
     "settingsExpertWarningText",
     "settingsClearCacheDatabaseTitle",
@@ -395,31 +433,63 @@
     "setAsTooltip",
     "deleteAccountConfirmDialogText",
     "appLockUnlockHint",
-    "appLockUnlockWrongPassword"
+    "appLockUnlockWrongPassword",
+    "enabledText",
+    "disabledText"
   ],
 
   "es": [
     "settingsThemePrimaryColor",
     "settingsThemeSecondaryColor",
     "settingsThemePresets",
+    "settingsAppLock",
+    "settingsAppLockTypeBiometric",
+    "settingsAppLockTypePin",
+    "settingsAppLockTypePassword",
+    "settingsAppLockDescription",
+    "settingsAppLockSetupBiometricFallbackDialogTitle",
+    "settingsAppLockSetupPinDialogTitle",
+    "settingsAppLockSetupPasswordDialogTitle",
     "appLockUnlockHint",
-    "appLockUnlockWrongPassword"
+    "appLockUnlockWrongPassword",
+    "enabledText",
+    "disabledText"
   ],
 
   "fi": [
     "settingsThemePrimaryColor",
     "settingsThemeSecondaryColor",
     "settingsThemePresets",
+    "settingsAppLock",
+    "settingsAppLockTypeBiometric",
+    "settingsAppLockTypePin",
+    "settingsAppLockTypePassword",
+    "settingsAppLockDescription",
+    "settingsAppLockSetupBiometricFallbackDialogTitle",
+    "settingsAppLockSetupPinDialogTitle",
+    "settingsAppLockSetupPasswordDialogTitle",
     "appLockUnlockHint",
-    "appLockUnlockWrongPassword"
+    "appLockUnlockWrongPassword",
+    "enabledText",
+    "disabledText"
   ],
 
   "fr": [
     "settingsThemePrimaryColor",
     "settingsThemeSecondaryColor",
     "settingsThemePresets",
+    "settingsAppLock",
+    "settingsAppLockTypeBiometric",
+    "settingsAppLockTypePin",
+    "settingsAppLockTypePassword",
+    "settingsAppLockDescription",
+    "settingsAppLockSetupBiometricFallbackDialogTitle",
+    "settingsAppLockSetupPinDialogTitle",
+    "settingsAppLockSetupPasswordDialogTitle",
     "appLockUnlockHint",
-    "appLockUnlockWrongPassword"
+    "appLockUnlockWrongPassword",
+    "enabledText",
+    "disabledText"
   ],
 
   "it": [
@@ -428,11 +498,21 @@
     "settingsThemePrimaryColor",
     "settingsThemeSecondaryColor",
     "settingsThemePresets",
+    "settingsAppLock",
+    "settingsAppLockTypeBiometric",
+    "settingsAppLockTypePin",
+    "settingsAppLockTypePassword",
+    "settingsAppLockDescription",
+    "settingsAppLockSetupBiometricFallbackDialogTitle",
+    "settingsAppLockSetupPinDialogTitle",
+    "settingsAppLockSetupPasswordDialogTitle",
     "unmuteTooltip",
     "slideshowTooltip",
     "enhanceColorPopTitle",
     "appLockUnlockHint",
-    "appLockUnlockWrongPassword"
+    "appLockUnlockWrongPassword",
+    "enabledText",
+    "disabledText"
   ],
 
   "nl": [
@@ -515,6 +595,14 @@
     "settingsMiscellaneousTitle",
     "settingsDoubleTapExitTitle",
     "settingsPhotosTabSortByNameTitle",
+    "settingsAppLock",
+    "settingsAppLockTypeBiometric",
+    "settingsAppLockTypePin",
+    "settingsAppLockTypePassword",
+    "settingsAppLockDescription",
+    "settingsAppLockSetupBiometricFallbackDialogTitle",
+    "settingsAppLockSetupPinDialogTitle",
+    "settingsAppLockSetupPasswordDialogTitle",
     "settingsExperimentalTitle",
     "settingsExperimentalDescription",
     "settingsExpertTitle",
@@ -782,6 +870,8 @@
     "deleteAccountConfirmDialogText",
     "appLockUnlockHint",
     "appLockUnlockWrongPassword",
+    "enabledText",
+    "disabledText",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -797,11 +887,21 @@
     "settingsThemePrimaryColor",
     "settingsThemeSecondaryColor",
     "settingsThemePresets",
+    "settingsAppLock",
+    "settingsAppLockTypeBiometric",
+    "settingsAppLockTypePin",
+    "settingsAppLockTypePassword",
+    "settingsAppLockDescription",
+    "settingsAppLockSetupBiometricFallbackDialogTitle",
+    "settingsAppLockSetupPinDialogTitle",
+    "settingsAppLockSetupPasswordDialogTitle",
     "enhanceColorPopTitle",
     "imageEditTransformOrientationClockwise",
     "imageEditTransformOrientationCounterclockwise",
     "appLockUnlockHint",
-    "appLockUnlockWrongPassword"
+    "appLockUnlockWrongPassword",
+    "enabledText",
+    "disabledText"
   ],
 
   "pt": [
@@ -813,6 +913,14 @@
     "settingsThemeSecondaryColor",
     "settingsThemePresets",
     "settingsSeedColorPickerSystemColorButtonLabel",
+    "settingsAppLock",
+    "settingsAppLockTypeBiometric",
+    "settingsAppLockTypePin",
+    "settingsAppLockTypePassword",
+    "settingsAppLockDescription",
+    "settingsAppLockSetupBiometricFallbackDialogTitle",
+    "settingsAppLockSetupPinDialogTitle",
+    "settingsAppLockSetupPasswordDialogTitle",
     "settingsServerVersionTitle",
     "searchLandingPeopleListEmptyText2",
     "createCollectionFailureNotification",
@@ -829,23 +937,45 @@
     "setAsTooltip",
     "deleteAccountConfirmDialogText",
     "appLockUnlockHint",
-    "appLockUnlockWrongPassword"
+    "appLockUnlockWrongPassword",
+    "enabledText",
+    "disabledText"
   ],
 
   "ru": [
     "settingsThemePrimaryColor",
     "settingsThemeSecondaryColor",
     "settingsThemePresets",
+    "settingsAppLock",
+    "settingsAppLockTypeBiometric",
+    "settingsAppLockTypePin",
+    "settingsAppLockTypePassword",
+    "settingsAppLockDescription",
+    "settingsAppLockSetupBiometricFallbackDialogTitle",
+    "settingsAppLockSetupPinDialogTitle",
+    "settingsAppLockSetupPasswordDialogTitle",
     "appLockUnlockHint",
-    "appLockUnlockWrongPassword"
+    "appLockUnlockWrongPassword",
+    "enabledText",
+    "disabledText"
   ],
 
   "tr": [
     "settingsThemePrimaryColor",
     "settingsThemeSecondaryColor",
     "settingsThemePresets",
+    "settingsAppLock",
+    "settingsAppLockTypeBiometric",
+    "settingsAppLockTypePin",
+    "settingsAppLockTypePassword",
+    "settingsAppLockDescription",
+    "settingsAppLockSetupBiometricFallbackDialogTitle",
+    "settingsAppLockSetupPinDialogTitle",
+    "settingsAppLockSetupPasswordDialogTitle",
     "appLockUnlockHint",
-    "appLockUnlockWrongPassword"
+    "appLockUnlockWrongPassword",
+    "enabledText",
+    "disabledText"
   ],
 
   "zh": [
@@ -881,6 +1011,14 @@
     "settingsMiscellaneousTitle",
     "settingsDoubleTapExitTitle",
     "settingsPhotosTabSortByNameTitle",
+    "settingsAppLock",
+    "settingsAppLockTypeBiometric",
+    "settingsAppLockTypePin",
+    "settingsAppLockTypePassword",
+    "settingsAppLockDescription",
+    "settingsAppLockSetupBiometricFallbackDialogTitle",
+    "settingsAppLockSetupPinDialogTitle",
+    "settingsAppLockSetupPasswordDialogTitle",
     "settingsExpertTitle",
     "settingsExpertWarningText",
     "settingsClearCacheDatabaseTitle",
@@ -978,7 +1116,9 @@
     "setAsTooltip",
     "deleteAccountConfirmDialogText",
     "appLockUnlockHint",
-    "appLockUnlockWrongPassword"
+    "appLockUnlockWrongPassword",
+    "enabledText",
+    "disabledText"
   ],
 
   "zh_Hant": [
@@ -1014,6 +1154,14 @@
     "settingsMiscellaneousTitle",
     "settingsDoubleTapExitTitle",
     "settingsPhotosTabSortByNameTitle",
+    "settingsAppLock",
+    "settingsAppLockTypeBiometric",
+    "settingsAppLockTypePin",
+    "settingsAppLockTypePassword",
+    "settingsAppLockDescription",
+    "settingsAppLockSetupBiometricFallbackDialogTitle",
+    "settingsAppLockSetupPinDialogTitle",
+    "settingsAppLockSetupPasswordDialogTitle",
     "settingsExpertTitle",
     "settingsExpertWarningText",
     "settingsClearCacheDatabaseTitle",
@@ -1111,6 +1259,8 @@
     "setAsTooltip",
     "deleteAccountConfirmDialogText",
     "appLockUnlockHint",
-    "appLockUnlockWrongPassword"
+    "appLockUnlockWrongPassword",
+    "enabledText",
+    "disabledText"
   ]
 }

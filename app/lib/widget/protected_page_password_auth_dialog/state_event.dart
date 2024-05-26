@@ -5,16 +5,19 @@ part of '../protected_page_password_auth_dialog.dart';
 class _State {
   const _State({
     required this.isAuthorized,
+    required this.setupResult,
   });
 
   factory _State.init() => _State(
         isAuthorized: Unique(null),
+        setupResult: null,
       );
 
   @override
   String toString() => _$toString();
 
   final Unique<bool?> isAuthorized;
+  final CiString? setupResult;
 }
 
 abstract class _Event {

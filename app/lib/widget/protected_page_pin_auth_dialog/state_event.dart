@@ -8,6 +8,7 @@ class _State {
     required this.obsecuredInput,
     required this.isAuthorized,
     required this.isPinError,
+    required this.setupResult,
   });
 
   factory _State.init() => _State(
@@ -15,6 +16,7 @@ class _State {
         obsecuredInput: const [],
         isAuthorized: false,
         isPinError: Unique(null),
+        setupResult: null,
       );
 
   @override
@@ -24,6 +26,7 @@ class _State {
   final List<int> obsecuredInput;
   final bool isAuthorized;
   final Unique<bool?> isPinError;
+  final CiString? setupResult;
 }
 
 abstract class _Event {
@@ -43,6 +46,14 @@ class _PushDigit implements _Event {
 @toString
 class _PopDigit implements _Event {
   const _PopDigit();
+
+  @override
+  String toString() => _$toString();
+}
+
+@toString
+class _SetupConfirmPin implements _Event {
+  const _SetupConfirmPin();
 
   @override
   String toString() => _$toString();

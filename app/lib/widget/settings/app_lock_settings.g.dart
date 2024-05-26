@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'protected_page_pin_auth_dialog.dart';
+part of 'app_lock_settings.dart';
 
 // **************************************************************************
 // CopyWithLintRuleGenerator
@@ -13,32 +13,18 @@ part of 'protected_page_pin_auth_dialog.dart';
 // **************************************************************************
 
 abstract class $_StateCopyWithWorker {
-  _State call(
-      {String? input,
-      List<int>? obsecuredInput,
-      bool? isAuthorized,
-      Unique<bool?>? isPinError,
-      CiString? setupResult});
+  _State call({ProtectedPageAuthType? appLockType});
 }
 
 class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
   _$_StateCopyWithWorkerImpl(this.that);
 
   @override
-  _State call(
-      {dynamic input,
-      dynamic obsecuredInput,
-      dynamic isAuthorized,
-      dynamic isPinError,
-      dynamic setupResult = copyWithNull}) {
+  _State call({dynamic appLockType = copyWithNull}) {
     return _State(
-        input: input as String? ?? that.input,
-        obsecuredInput: obsecuredInput as List<int>? ?? that.obsecuredInput,
-        isAuthorized: isAuthorized as bool? ?? that.isAuthorized,
-        isPinError: isPinError as Unique<bool?>? ?? that.isPinError,
-        setupResult: setupResult == copyWithNull
-            ? that.setupResult
-            : setupResult as CiString?);
+        appLockType: appLockType == copyWithNull
+            ? that.appLockType
+            : appLockType as ProtectedPageAuthType?);
   }
 
   final _State that;
@@ -57,7 +43,7 @@ extension _$_BlocNpLog on _Bloc {
   // ignore: unused_element
   Logger get _log => log;
 
-  static final log = Logger("widget.protected_page_pin_auth_dialog._Bloc");
+  static final log = Logger("widget.settings.app_lock_settings._Bloc");
 }
 
 // **************************************************************************
@@ -67,27 +53,13 @@ extension _$_BlocNpLog on _Bloc {
 extension _$_StateToString on _State {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_State {input: $input, obsecuredInput: [length: ${obsecuredInput.length}], isAuthorized: $isAuthorized, isPinError: $isPinError, setupResult: $setupResult}";
+    return "_State {appLockType: ${appLockType == null ? null : "${appLockType!.name}"}}";
   }
 }
 
-extension _$_PushDigitToString on _PushDigit {
+extension _$_SetAppLockTypeToString on _SetAppLockType {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_PushDigit {digit: $digit}";
-  }
-}
-
-extension _$_PopDigitToString on _PopDigit {
-  String _$toString() {
-    // ignore: unnecessary_string_interpolations
-    return "_PopDigit {}";
-  }
-}
-
-extension _$_SetupConfirmPinToString on _SetupConfirmPin {
-  String _$toString() {
-    // ignore: unnecessary_string_interpolations
-    return "_SetupConfirmPin {}";
+    return "_SetAppLockType {value: ${value == null ? null : "${value!.name}"}}";
   }
 }

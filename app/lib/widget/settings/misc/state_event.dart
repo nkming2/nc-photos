@@ -5,6 +5,7 @@ part of '../misc_settings.dart';
 class _State {
   const _State({
     required this.isDoubleTapExit,
+    required this.appLockType,
     this.error,
   });
 
@@ -12,6 +13,7 @@ class _State {
   String toString() => _$toString();
 
   final bool isDoubleTapExit;
+  final ProtectedPageAuthType? appLockType;
 
   final ExceptionEvent? error;
 }

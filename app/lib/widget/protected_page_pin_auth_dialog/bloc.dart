@@ -10,6 +10,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
         super(_State.init()) {
     on<_PushDigit>(_onPushDigit);
     on<_PopDigit>(_onPopDigit);
+    on<_SetupConfirmPin>(_onSetupConfirmPin);
   }
 
   void _onPushDigit(_PushDigit ev, Emitter<_State> emit) {
@@ -29,7 +30,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
       duration: k.animationDurationLong,
     );
 
-    if (state.input.length >= 4) {
+    if (state.input.length >= 4 && pin != null) {
       // valid pin must contain at least 4 digits
       final hash = _hasher.convert(state.input.codeUnits);
       if (hash.toString().toCi() == pin) {
@@ -56,7 +57,13 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     );
   }
 
-  final CiString pin;
+  void _onSetupConfirmPin(_SetupConfirmPin ev, Emitter<_State> emit) {
+    _log.info(ev);
+    final hash = _hasher.convert(state.input.codeUnits);
+    emit(state.copyWith(setupResult: hash.toString().toCi()));
+  }
+
+  final CiString? pin;
   final Widget Function(
           BuildContext context, Animation<double> animation, int value)
       removeItemBuilder;
