@@ -20,85 +20,85 @@ part 'pref_controller.g.dart';
 class PrefController {
   PrefController(this._c);
 
-  Future<void> setAppLanguage(AppLanguage value) => _set<AppLanguage>(
+  Future<bool> setAppLanguage(AppLanguage value) => _set<AppLanguage>(
         controller: _languageController,
         setter: (pref, value) => pref.setLanguage(value.langId),
         value: value,
       );
 
-  Future<void> setHomePhotosZoomLevel(int value) => _set<int>(
+  Future<bool> setHomePhotosZoomLevel(int value) => _set<int>(
         controller: _homePhotosZoomLevelController,
         setter: (pref, value) => pref.setHomePhotosZoomLevel(value),
         value: value,
       );
 
-  Future<void> setAlbumBrowserZoomLevel(int value) => _set<int>(
+  Future<bool> setAlbumBrowserZoomLevel(int value) => _set<int>(
         controller: _albumBrowserZoomLevelController,
         setter: (pref, value) => pref.setAlbumBrowserZoomLevel(value),
         value: value,
       );
 
-  Future<void> setHomeAlbumsSort(int value) => _set<int>(
+  Future<bool> setHomeAlbumsSort(int value) => _set<int>(
         controller: _homeAlbumsSortController,
         setter: (pref, value) => pref.setHomeAlbumsSort(value),
         value: value,
       );
 
-  Future<void> setEnableExif(bool value) => _set<bool>(
+  Future<bool> setEnableExif(bool value) => _set<bool>(
         controller: _isEnableExifController,
         setter: (pref, value) => pref.setEnableExif(value),
         value: value,
       );
 
-  Future<void> setProcessExifWifiOnly(bool value) => _set<bool>(
+  Future<bool> setProcessExifWifiOnly(bool value) => _set<bool>(
         controller: _shouldProcessExifWifiOnlyController,
         setter: (pref, value) => pref.setProcessExifWifiOnly(value),
         value: value,
       );
 
-  Future<void> setMemoriesRange(int value) => _set<int>(
+  Future<bool> setMemoriesRange(int value) => _set<int>(
         controller: _memoriesRangeController,
         setter: (pref, value) => pref.setMemoriesRange(value),
         value: value,
       );
 
-  Future<void> setViewerScreenBrightness(int value) => _set<int>(
+  Future<bool> setViewerScreenBrightness(int value) => _set<int>(
         controller: _viewerScreenBrightnessController,
         setter: (pref, value) => pref.setViewerScreenBrightness(value),
         value: value,
       );
 
-  Future<void> setViewerForceRotation(bool value) => _set<bool>(
+  Future<bool> setViewerForceRotation(bool value) => _set<bool>(
         controller: _isViewerForceRotationController,
         setter: (pref, value) => pref.setViewerForceRotation(value),
         value: value,
       );
 
-  Future<void> setGpsMapProvider(GpsMapProvider value) => _set<GpsMapProvider>(
+  Future<bool> setGpsMapProvider(GpsMapProvider value) => _set<GpsMapProvider>(
         controller: _gpsMapProviderController,
         setter: (pref, value) => pref.setGpsMapProvider(value.index),
         value: value,
       );
 
-  Future<void> setAlbumBrowserShowDate(bool value) => _set<bool>(
+  Future<bool> setAlbumBrowserShowDate(bool value) => _set<bool>(
         controller: _isAlbumBrowserShowDateController,
         setter: (pref, value) => pref.setAlbumBrowserShowDate(value),
         value: value,
       );
 
-  Future<void> setDoubleTapExit(bool value) => _set<bool>(
+  Future<bool> setDoubleTapExit(bool value) => _set<bool>(
         controller: _isDoubleTapExitController,
         setter: (pref, value) => pref.setDoubleTapExit(value),
         value: value,
       );
 
-  Future<void> setSaveEditResultToServer(bool value) => _set<bool>(
+  Future<bool> setSaveEditResultToServer(bool value) => _set<bool>(
         controller: _isSaveEditResultToServerController,
         setter: (pref, value) => pref.setSaveEditResultToServer(value),
         value: value,
       );
 
-  Future<void> setEnhanceMaxSize(SizeInt value) => _set<SizeInt>(
+  Future<bool> setEnhanceMaxSize(SizeInt value) => _set<SizeInt>(
         controller: _enhanceMaxSizeController,
         setter: (pref, value) async {
           return (await Future.wait([
@@ -110,32 +110,32 @@ class PrefController {
         value: value,
       );
 
-  Future<void> setDarkTheme(bool value) => _set<bool>(
+  Future<bool> setDarkTheme(bool value) => _set<bool>(
         controller: _isDarkThemeController,
         setter: (pref, value) => pref.setDarkTheme(value),
         value: value,
       );
 
-  Future<void> setFollowSystemTheme(bool value) => _set<bool>(
+  Future<bool> setFollowSystemTheme(bool value) => _set<bool>(
         controller: _isFollowSystemThemeController,
         setter: (pref, value) => pref.setFollowSystemTheme(value),
         value: value,
       );
 
-  Future<void> setUseBlackInDarkTheme(bool value) => _set<bool>(
+  Future<bool> setUseBlackInDarkTheme(bool value) => _set<bool>(
         controller: _isUseBlackInDarkThemeController,
         setter: (pref, value) => pref.setUseBlackInDarkTheme(value),
         value: value,
       );
 
-  Future<void> setSeedColor(Color? value) => _setOrRemove<Color>(
+  Future<bool> setSeedColor(Color? value) => _setOrRemove<Color>(
         controller: _seedColorController,
         setter: (pref, value) => pref.setSeedColor(value.withAlpha(0xFF).value),
         remover: (pref) => pref.setSeedColor(null),
         value: value,
       );
 
-  Future<void> setSecondarySeedColor(Color? value) => _setOrRemove<Color>(
+  Future<bool> setSecondarySeedColor(Color? value) => _setOrRemove<Color>(
         controller: _secondarySeedColorController,
         setter: (pref, value) =>
             pref.setSecondarySeedColor(value.withAlpha(0xFF).value),
@@ -143,7 +143,7 @@ class PrefController {
         value: value,
       );
 
-  Future<void> _set<T>({
+  Future<bool> _set<T>({
     required BehaviorSubject<T> controller,
     required Future<bool> Function(Pref pref, T value) setter,
     required T value,
@@ -155,7 +155,7 @@ class PrefController {
         value: value,
       );
 
-  Future<void> _setOrRemove<T>({
+  Future<bool> _setOrRemove<T>({
     required BehaviorSubject<T?> controller,
     required Future<bool> Function(Pref pref, T value) setter,
     required Future<bool> Function(Pref pref) remover,
@@ -243,7 +243,7 @@ class PrefController {
 class SecurePrefController {
   SecurePrefController(this._c);
 
-  Future<void> setProtectedPageAuthType(ProtectedPageAuthType? value) =>
+  Future<bool> setProtectedPageAuthType(ProtectedPageAuthType? value) =>
       _setOrRemove<ProtectedPageAuthType>(
         controller: _protectedPageAuthTypeController,
         setter: (pref, value) => pref.setProtectedPageAuthType(value.index),
@@ -251,7 +251,7 @@ class SecurePrefController {
         value: value,
       );
 
-  Future<void> setProtectedPageAuthPin(CiString? value) =>
+  Future<bool> setProtectedPageAuthPin(CiString? value) =>
       _setOrRemove<CiString>(
         controller: _protectedPageAuthPinController,
         setter: (pref, value) =>
@@ -260,7 +260,7 @@ class SecurePrefController {
         value: value,
       );
 
-  Future<void> setProtectedPageAuthPassword(CiString? value) =>
+  Future<bool> setProtectedPageAuthPassword(CiString? value) =>
       _setOrRemove<CiString>(
         controller: _protectedPageAuthPasswordController,
         setter: (pref, value) =>
@@ -270,7 +270,7 @@ class SecurePrefController {
       );
 
   // ignore: unused_element
-  Future<void> _set<T>({
+  Future<bool> _set<T>({
     required BehaviorSubject<T> controller,
     required Future<bool> Function(Pref pref, T value) setter,
     required T value,
@@ -283,7 +283,7 @@ class SecurePrefController {
       );
 
   // ignore: unused_element
-  Future<void> _setOrRemove<T>({
+  Future<bool> _setOrRemove<T>({
     required BehaviorSubject<T?> controller,
     required Future<bool> Function(Pref pref, T value) setter,
     required Future<bool> Function(Pref pref) remover,
@@ -313,7 +313,7 @@ class SecurePrefController {
       _c.securePref.getProtectedPageAuthPassword()?.toCi());
 }
 
-Future<void> _doSet<T>({
+Future<bool> _doSet<T>({
   required Pref pref,
   required BehaviorSubject<T> controller,
   required Future<bool> Function(Pref pref, T value) setter,
@@ -325,15 +325,17 @@ Future<void> _doSet<T>({
     if (!await setter(pref, value)) {
       throw StateError("Unknown error");
     }
+    return true;
   } catch (e, stackTrace) {
     _$__NpLog.log.severe("[_doSet] Failed setting preference", e, stackTrace);
     controller
       ..addError(e, stackTrace)
       ..add(backup);
+    return false;
   }
 }
 
-Future<void> _doSetOrRemove<T>({
+Future<bool> _doSetOrRemove<T>({
   required Pref pref,
   required BehaviorSubject<T?> controller,
   required Future<bool> Function(Pref pref, T value) setter,
@@ -353,12 +355,14 @@ Future<void> _doSetOrRemove<T>({
         throw StateError("Unknown error");
       }
     }
+    return true;
   } catch (e, stackTrace) {
     _$__NpLog.log
         .severe("[_doSetOrRemove] Failed setting preference", e, stackTrace);
     controller
       ..addError(e, stackTrace)
       ..add(backup);
+    return false;
   }
 }
 
