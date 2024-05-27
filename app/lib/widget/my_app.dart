@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:clock/clock.dart';
 import 'package:copy_with/copy_with.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/gestures.dart';
@@ -15,6 +18,7 @@ import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/legacy/connect.dart' as legacy;
 import 'package:nc_photos/legacy/sign_in.dart' as legacy;
 import 'package:nc_photos/navigation_manager.dart';
+import 'package:nc_photos/protected_page_handler.dart';
 import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
@@ -54,6 +58,7 @@ import 'package:np_db/np_db.dart';
 import 'package:to_string/to_string.dart';
 
 part 'my_app.g.dart';
+part 'my_app/app_lock.dart';
 part 'my_app/bloc.dart';
 part 'my_app/state_event.dart';
 
@@ -171,9 +176,9 @@ class _WrappedAppState extends State<_WrappedApp>
 
   @override
   void dispose() {
-    super.dispose();
     SnackBarManager().unregisterHandler(this);
     NavigationManager().unsetHandler(this);
+    super.dispose();
   }
 
   @override
@@ -560,7 +565,7 @@ class _ThemedMyApp extends StatelessWidget {
         systemNavigationBarColor: theme.colorScheme.secondaryContainer,
         systemNavigationBarIconBrightness: theme.brightness.invert(),
       ),
-      child: child,
+      child: _AppLockMyApp(child: child),
     );
   }
 

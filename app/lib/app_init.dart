@@ -40,6 +40,7 @@ import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/android_info.dart';
 import 'package:nc_photos/mobile/self_signed_cert_manager.dart';
 import 'package:nc_photos/platform/features.dart' as features;
+import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/touch_manager.dart';
 import 'package:np_db/np_db.dart';
 import 'package:np_gps_map/np_gps_map.dart';
@@ -73,6 +74,8 @@ Future<void> init(InitIsolateType isolateType) async {
   await _initDiContainer(isolateType);
   _initVisibilityDetector();
   GpsMap.init();
+  // init session storage
+  SessionStorage();
 
   _hasInitedInThisIsolate = true;
 }

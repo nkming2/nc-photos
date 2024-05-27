@@ -66,6 +66,20 @@ extension _$_WrappedAppStateNpLog on _WrappedAppState {
   static final log = Logger("widget.my_app._WrappedAppState");
 }
 
+extension _$_AppLockMyAppStateNpLog on _AppLockMyAppState {
+  // ignore: unused_element
+  Logger get _log => log;
+
+  static final log = Logger("widget.my_app._AppLockMyAppState");
+}
+
+extension _$_AppLockOverlayPageStateNpLog on _AppLockOverlayPageState {
+  // ignore: unused_element
+  Logger get _log => log;
+
+  static final log = Logger("widget.my_app._AppLockOverlayPageState");
+}
+
 extension _$_BlocNpLog on _Bloc {
   // ignore: unused_element
   Logger get _log => log;

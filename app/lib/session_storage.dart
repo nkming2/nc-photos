@@ -1,3 +1,5 @@
+import 'package:clock/clock.dart';
+
 /// Hold non-persisted global variables
 class SessionStorage {
   factory SessionStorage() {
@@ -14,6 +16,8 @@ class SessionStorage {
 
   /// Whether the dynamic_color library is supported in this platform
   bool isSupportDynamicColor = false;
+
+  DateTime lastSuspendTime = clock.now();
 
   static final _inst = SessionStorage._();
 }

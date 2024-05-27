@@ -34,7 +34,7 @@ extension ProtectedPageBuildContextExtension on NavigatorState {
     U? result,
     Object? arguments,
   }) async {
-    if (await _auth()) {
+    if (await authProtectedPage()) {
       return pushReplacementNamed(routeName,
           arguments: arguments, result: result);
     } else {
@@ -46,7 +46,7 @@ extension ProtectedPageBuildContextExtension on NavigatorState {
     String routeName, {
     Object? arguments,
   }) async {
-    if (await _auth()) {
+    if (await authProtectedPage()) {
       return pushNamed(routeName, arguments: arguments);
     } else {
       throw const ProtectedPageAuthException();
@@ -54,14 +54,14 @@ extension ProtectedPageBuildContextExtension on NavigatorState {
   }
 
   Future<T?> pushProtected<T extends Object?>(Route<T> route) async {
-    if (await _auth()) {
+    if (await authProtectedPage()) {
       return push(route);
     } else {
       throw const ProtectedPageAuthException();
     }
   }
 
-  Future<bool> _auth() async {
+  Future<bool> authProtectedPage() async {
     final securePrefController = context.read<SecurePrefController>();
     switch (securePrefController.protectedPageAuthTypeValue) {
       case null:
