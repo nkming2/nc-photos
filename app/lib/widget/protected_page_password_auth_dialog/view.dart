@@ -9,20 +9,7 @@ class _DialogBody extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TextField(
-          keyboardType: TextInputType.text,
-          obscureText: true,
-          enableSuggestions: false,
-          autocorrect: false,
-          decoration: InputDecoration(
-            hintText: L10n.global().passwordInputHint,
-          ),
-          onSubmitted: (value) {
-            if (value.isNotEmpty) {
-              context.addEvent(_Submit(value));
-            }
-          },
-        ),
+        const _PasswordInput(),
         _BlocSelector(
           selector: (state) => state.isAuthorized,
           builder: (context, isAuthorized) {
@@ -39,6 +26,45 @@ class _DialogBody extends StatelessWidget {
       ],
     );
   }
+}
+
+class _PasswordInput extends StatefulWidget {
+  const _PasswordInput();
+
+  @override
+  State<StatefulWidget> createState() => _PasswordInputState();
+}
+
+class _PasswordInputState extends State<_PasswordInput> {
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      keyboardType: TextInputType.text,
+      obscureText: !_isVisible,
+      enableSuggestions: false,
+      autocorrect: false,
+      decoration: InputDecoration(
+        hintText: L10n.global().passwordInputHint,
+        suffixIcon: IconButton(
+          onPressed: () {
+            setState(() {
+              _isVisible = !_isVisible;
+            });
+          },
+          icon: _isVisible
+              ? const Icon(Icons.visibility_outlined)
+              : const Icon(Icons.visibility_off_outlined),
+        ),
+      ),
+      onSubmitted: (value) {
+        if (value.isNotEmpty) {
+          context.addEvent(_Submit(value));
+        }
+      },
+    );
+  }
+
+  var _isVisible = false;
 }
 
 class _ErrorNotice extends StatefulWidget {
