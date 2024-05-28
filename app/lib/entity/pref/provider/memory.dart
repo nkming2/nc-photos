@@ -33,7 +33,7 @@ class PrefMemoryProvider extends PrefProvider {
 
   @override
   Future<bool> remove(PrefKeyInterface key) async {
-    _data.remove(key);
+    _data.remove(key.toStringKey());
     return true;
   }
 
