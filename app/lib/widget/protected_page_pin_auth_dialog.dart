@@ -107,6 +107,52 @@ class _WrappedProtectedPagePinSetupDialog extends StatelessWidget {
   }
 }
 
+class ProtectedPagePinConfirmDialog extends StatelessWidget {
+  const ProtectedPagePinConfirmDialog({
+    super.key,
+    required this.pin,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => _Bloc(
+        pin: pin,
+        removeItemBuilder: (_, animation, value) => _RemoveItem(
+          animation: animation,
+          value: value,
+        ),
+      ),
+      child: _WrappedProtectedPagePinConfirmDialog(),
+    );
+  }
+
+  final CiString pin;
+}
+
+class _WrappedProtectedPagePinConfirmDialog extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocListener(
+      listeners: [
+        _BlocListenerT(
+          selector: (state) => state.isAuthorized,
+          listener: (context, isAuthorized) {
+            if (isAuthorized) {
+              Navigator.of(context).pop(true);
+            }
+          },
+        ),
+      ],
+      child: AlertDialog(
+        title: Text(L10n.global().settingsAppLockConfirmPinDialogTitle),
+        scrollable: true,
+        content: const _DialogBody(),
+      ),
+    );
+  }
+}
+
 // typedef _BlocBuilder = BlocBuilder<_Bloc, _State>;
 // typedef _BlocListener = BlocListener<_Bloc, _State>;
 typedef _BlocListenerT<T> = BlocListenerT<_Bloc, _State, T>;

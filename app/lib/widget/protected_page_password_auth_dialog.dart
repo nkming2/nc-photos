@@ -94,6 +94,47 @@ class _WrappedProtectedPagePasswordSetupDialog extends StatelessWidget {
   }
 }
 
+class ProtectedPagePasswordConfirmDialog extends StatelessWidget {
+  const ProtectedPagePasswordConfirmDialog({
+    super.key,
+    required this.password,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => _Bloc(
+        password: password,
+      ),
+      child: _WrappedProtectedPagePasswordConfirmDialog(),
+    );
+  }
+
+  final CiString password;
+}
+
+class _WrappedProtectedPagePasswordConfirmDialog extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocListener(
+      listeners: [
+        _BlocListenerT(
+          selector: (state) => state.isAuthorized,
+          listener: (context, isAuthorized) {
+            if (isAuthorized.value == true) {
+              Navigator.of(context).pop(true);
+            }
+          },
+        ),
+      ],
+      child: AlertDialog(
+        title: Text(L10n.global().settingsAppLockConfirmPasswordDialogTitle),
+        content: const _DialogBody(),
+      ),
+    );
+  }
+}
+
 // typedef _BlocBuilder = BlocBuilder<_Bloc, _State>;
 // typedef _BlocListener = BlocListener<_Bloc, _State>;
 typedef _BlocListenerT<T> = BlocListenerT<_Bloc, _State, T>;

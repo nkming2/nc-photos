@@ -258,6 +258,13 @@ class _WrappedAppLockSettings extends StatelessWidget {
     if (result == null) {
       return null;
     }
+    final isConfirmed = await showDialog<bool>(
+      context: context,
+      builder: (_) => ProtectedPagePinConfirmDialog(pin: result),
+    );
+    if (isConfirmed != true) {
+      return null;
+    }
     return context.bloc.securePrefController.setProtectedPageAuthPin(result);
   }
 
@@ -267,6 +274,13 @@ class _WrappedAppLockSettings extends StatelessWidget {
       builder: (_) => const ProtectedPagePasswordSetupDialog(),
     );
     if (result == null) {
+      return null;
+    }
+    final isConfirmed = await showDialog<bool>(
+      context: context,
+      builder: (_) => ProtectedPagePasswordConfirmDialog(password: result),
+    );
+    if (isConfirmed != true) {
       return null;
     }
     return context.bloc.securePrefController
