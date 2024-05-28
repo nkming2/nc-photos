@@ -429,9 +429,9 @@
 	"@settingsAppLockTypeBiometric": {
 		"description": "Unlock app with fingerprint, face, etc"
 	},
-	"settingsAppLockTypePin": "Pin",
+	"settingsAppLockTypePin": "PIN",
 	"@settingsAppLockTypePin": {
-		"description": "Unlock app with 4 to 6 digits pin"
+		"description": "Unlock app with 4 to 6 digits PIN"
 	},
 	"settingsAppLockTypePassword": "Password",
 	"@settingsAppLockTypePassword": {
@@ -439,7 +439,7 @@
 	},
 	"settingsAppLockDescription": "If enabled, you will be asked to authenticate when you open the app",
 	"settingsAppLockSetupBiometricFallbackDialogTitle": "Pick the fallback when biometric is not available",
-	"settingsAppLockSetupPinDialogTitle": "Set the pin to unlock app",
+	"settingsAppLockSetupPinDialogTitle": "Set the PIN to unlock app",
 	"settingsAppLockSetupPasswordDialogTitle": "Set the password to unlock app",
 	"settingsExperimentalTitle": "Experimental",
 	"settingsExperimentalDescription": "Features that are not ready for everyday use",
