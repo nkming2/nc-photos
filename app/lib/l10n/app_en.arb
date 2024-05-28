@@ -437,7 +437,7 @@
 	"@settingsAppLockTypePassword": {
 		"description": "Unlock app with password"
 	},
-	"settingsAppLockDescription": "If enabled, you will be asked to authenticate when you open the app",
+	"settingsAppLockDescription": "If enabled, you will be asked to authenticate when you open the app. This feature does NOT protect you against real-world attacks.",
 	"settingsAppLockSetupBiometricFallbackDialogTitle": "Pick the fallback when biometric is not available",
 	"settingsAppLockSetupPinDialogTitle": "Set the PIN to unlock app",
 	"settingsAppLockConfirmPinDialogTitle": "Input the same PIN again",
