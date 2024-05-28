@@ -220,7 +220,7 @@ extension on Rational {
 }
 
 class _Rational extends Rational with EquatableMixin {
-  _Rational(int numerator, int denominator) : super(numerator, denominator);
+  _Rational(super.numerator, super.denominator);
 
   factory _Rational.of(Rational r) {
     return _Rational(r.numerator, r.denominator);

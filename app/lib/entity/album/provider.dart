@@ -98,12 +98,9 @@ abstract class AlbumProviderBase extends AlbumProvider {
 @ToString(extraParams: r"{bool isDeep = false}")
 class AlbumStaticProvider extends AlbumProviderBase {
   AlbumStaticProvider({
-    DateTime? latestItemTime,
+    super.latestItemTime,
     required List<AlbumItem> items,
-  })  : items = UnmodifiableListView(items),
-        super(
-          latestItemTime: latestItemTime,
-        );
+  }) : items = UnmodifiableListView(items);
 
   factory AlbumStaticProvider.fromJson(JsonObj json) {
     return AlbumStaticProvider(
@@ -157,18 +154,16 @@ class AlbumStaticProvider extends AlbumProviderBase {
 
 abstract class AlbumDynamicProvider extends AlbumProviderBase {
   AlbumDynamicProvider({
-    DateTime? latestItemTime,
-  }) : super(latestItemTime: latestItemTime);
+    super.latestItemTime,
+  });
 }
 
 @ToString(extraParams: r"{bool isDeep = false}")
 class AlbumDirProvider extends AlbumDynamicProvider {
   AlbumDirProvider({
     required this.dirs,
-    DateTime? latestItemTime,
-  }) : super(
-          latestItemTime: latestItemTime,
-        );
+    super.latestItemTime,
+  });
 
   factory AlbumDirProvider.fromJson(JsonObj json) {
     return AlbumDirProvider(
@@ -220,8 +215,8 @@ class AlbumDirProvider extends AlbumDynamicProvider {
 class AlbumTagProvider extends AlbumDynamicProvider {
   AlbumTagProvider({
     required this.tags,
-    DateTime? latestItemTime,
-  }) : super(latestItemTime: latestItemTime);
+    super.latestItemTime,
+  });
 
   factory AlbumTagProvider.fromJson(JsonObj json) => AlbumTagProvider(
         latestItemTime: json["latestItemTime"] == null

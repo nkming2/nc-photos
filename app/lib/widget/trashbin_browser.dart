@@ -50,9 +50,9 @@ class TrashbinBrowser extends StatefulWidget {
       );
 
   const TrashbinBrowser({
-    Key? key,
+    super.key,
     required this.account,
-  }) : super(key: key);
+  });
 
   TrashbinBrowser.fromArgs(TrashbinBrowserArguments args, {Key? key})
       : this(

@@ -505,7 +505,6 @@ class _PresetItem {
 /// Based on the original HueRingPicker
 class _HueRingPicker extends StatefulWidget {
   const _HueRingPicker({
-    Key? key,
     required this.pickerColor,
     required this.onColorChanged,
     // ignore: unused_element
@@ -516,7 +515,7 @@ class _HueRingPicker extends StatefulWidget {
     this.displayThumbColor = true,
     // ignore: unused_element
     this.pickerAreaBorderRadius = const BorderRadius.all(Radius.zero),
-  }) : super(key: key);
+  });
 
   final Color pickerColor;
   final ValueChanged<Color> onColorChanged;

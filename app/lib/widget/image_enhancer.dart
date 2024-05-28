@@ -871,9 +871,7 @@ class _StylePickerResult {
 }
 
 class _StylePicker extends StatefulWidget {
-  const _StylePicker({
-    Key? key,
-  }) : super(key: key);
+  const _StylePicker();
 
   @override
   createState() => _StylePickerState();

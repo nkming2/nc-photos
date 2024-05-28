@@ -4,13 +4,13 @@ import 'package:np_ui/src/material3.dart';
 /// A [ListTile]-like widget with unbounded height
 class UnboundedListTile extends StatelessWidget {
   const UnboundedListTile({
-    Key? key,
+    super.key,
     this.leading,
     required this.title,
     this.subtitle,
     this.trailing,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -8,9 +8,9 @@ part 'photo_date_time_edit_dialog.g.dart';
 
 class PhotoDateTimeEditDialog extends StatefulWidget {
   const PhotoDateTimeEditDialog({
-    Key? key,
+    super.key,
     required this.initialDateTime,
-  }) : super(key: key);
+  });
 
   @override
   createState() => _PhotoDateTimeEditDialogState();

@@ -14,9 +14,9 @@ class ShareLinkMultipleFilesDialogResult {
 
 class ShareLinkMultipleFilesDialog extends StatefulWidget {
   const ShareLinkMultipleFilesDialog({
-    Key? key,
+    super.key,
     this.shouldAskPassword = false,
-  }) : super(key: key);
+  });
 
   @override
   createState() => _ShareLinkMultipleFilesDialogState();

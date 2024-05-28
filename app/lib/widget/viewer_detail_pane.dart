@@ -53,7 +53,7 @@ class ViewerSingleCollectionData {
 
 class ViewerDetailPane extends StatefulWidget {
   const ViewerDetailPane({
-    Key? key,
+    super.key,
     required this.account,
     required this.fd,
     this.fromCollection,
@@ -62,7 +62,7 @@ class ViewerDetailPane extends StatefulWidget {
     required this.onUnarchivePressed,
     required this.onDeletePressed,
     this.onSlideshowPressed,
-  }) : super(key: key);
+  });
 
   @override
   createState() => _ViewerDetailPaneState();
@@ -529,11 +529,10 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
 
 class _DetailPaneButton extends StatelessWidget {
   const _DetailPaneButton({
-    Key? key,
     required this.icon,
     required this.label,
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   build(BuildContext context) {

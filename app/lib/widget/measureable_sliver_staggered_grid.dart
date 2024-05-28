@@ -4,7 +4,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 // ignore: must_be_immutable
 class MeasurableSliverStaggeredGrid extends SliverStaggeredGrid {
   MeasurableSliverStaggeredGrid.extentBuilder({
-    Key? key,
+    super.key,
     required double maxCrossAxisExtent,
     required IndexedStaggeredTileBuilder staggeredTileBuilder,
     required IndexedWidgetBuilder itemBuilder,
@@ -12,7 +12,6 @@ class MeasurableSliverStaggeredGrid extends SliverStaggeredGrid {
     double mainAxisSpacing = 0,
     double crossAxisSpacing = 0,
   }) : super(
-          key: key,
           gridDelegate: SliverStaggeredGridDelegateWithMaxCrossAxisExtent(
             maxCrossAxisExtent: maxCrossAxisExtent,
             mainAxisSpacing: mainAxisSpacing,
@@ -42,9 +41,9 @@ class MeasurableSliverStaggeredGrid extends SliverStaggeredGrid {
 class RenderMeasurableSliverStaggeredGrid extends RenderSliverStaggeredGrid
     with WidgetsBindingObserver {
   RenderMeasurableSliverStaggeredGrid({
-    required RenderSliverVariableSizeBoxChildManager childManager,
-    required SliverStaggeredGridDelegate gridDelegate,
-  }) : super(childManager: childManager, gridDelegate: gridDelegate);
+    required super.childManager,
+    required super.gridDelegate,
+  });
 
   /// Calculate the height of this staggered grid view
   ///

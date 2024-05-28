@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nc_photos/app_localizations.dart';
 
 class AboutGeocodingDialog extends StatelessWidget {
-  const AboutGeocodingDialog({
-    Key? key,
-  }) : super(key: key);
+  const AboutGeocodingDialog({super.key});
 
   @override
   build(BuildContext context) {

@@ -51,11 +51,11 @@ class SearchSuggestionBlocInit<T> extends SearchSuggestionBlocState<T> {
 }
 
 class SearchSuggestionBlocLoading<T> extends SearchSuggestionBlocState<T> {
-  const SearchSuggestionBlocLoading(List<T> results) : super(results);
+  const SearchSuggestionBlocLoading(super.results);
 }
 
 class SearchSuggestionBlocSuccess<T> extends SearchSuggestionBlocState<T> {
-  const SearchSuggestionBlocSuccess(List<T> results) : super(results);
+  const SearchSuggestionBlocSuccess(super.results);
 }
 
 @npLog

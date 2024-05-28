@@ -30,17 +30,17 @@ abstract class CollectionAdapter {
   static CollectionAdapter of(
       DiContainer c, Account account, Collection collection) {
     switch (collection.contentProvider.runtimeType) {
-      case CollectionAlbumProvider:
+      case const (CollectionAlbumProvider):
         return CollectionAlbumAdapter(c, account, collection);
-      case CollectionLocationGroupProvider:
+      case const (CollectionLocationGroupProvider):
         return CollectionLocationGroupAdapter(c, account, collection);
-      case CollectionMemoryProvider:
+      case const (CollectionMemoryProvider):
         return CollectionMemoryAdapter(c, account, collection);
-      case CollectionNcAlbumProvider:
+      case const (CollectionNcAlbumProvider):
         return CollectionNcAlbumAdapter(c, account, collection);
-      case CollectionPersonProvider:
+      case const (CollectionPersonProvider):
         return CollectionPersonAdapter(c, account, collection);
-      case CollectionTagProvider:
+      case const (CollectionTagProvider):
         return CollectionTagAdapter(c, account, collection);
       default:
         throw UnsupportedError(

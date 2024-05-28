@@ -128,10 +128,10 @@ class AlbumFileItem extends AlbumItem {
 @toString
 class AlbumLabelItem extends AlbumItem {
   AlbumLabelItem({
-    required CiString addedBy,
-    required DateTime addedAt,
+    required super.addedBy,
+    required super.addedAt,
     required this.text,
-  }) : super(addedBy: addedBy, addedAt: addedAt);
+  });
 
   factory AlbumLabelItem.fromJson(
       JsonObj json, CiString addedBy, DateTime addedAt) {

@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 /// Buttons are spread evenly across the horizontal axis
 class ViewerBottomAppBar extends StatelessWidget {
   const ViewerBottomAppBar({
-    Key? key,
+    super.key,
     required this.children,
-  }) : super(key: key);
+  });
 
   @override
   build(BuildContext context) {

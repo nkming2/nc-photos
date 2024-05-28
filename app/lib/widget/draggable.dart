@@ -7,7 +7,7 @@ part 'draggable.g.dart';
 @npLog
 class Draggable<T extends Object> extends StatelessWidget {
   const Draggable({
-    Key? key,
+    super.key,
     required this.data,
     required this.child,
     this.feedback,
@@ -16,7 +16,7 @@ class Draggable<T extends Object> extends StatelessWidget {
     this.onDragStarted,
     this.onDragEndedAny,
     this.feedbackSize,
-  }) : super(key: key);
+  });
 
   @override
   build(BuildContext context) {

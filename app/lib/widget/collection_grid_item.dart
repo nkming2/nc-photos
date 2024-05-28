@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 class CollectionGridItem extends StatelessWidget {
   const CollectionGridItem({
-    Key? key,
+    super.key,
     required this.cover,
     required this.title,
     this.subtitle,
     this.subtitle2,
     this.icon,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

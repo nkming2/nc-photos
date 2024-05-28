@@ -11,9 +11,7 @@ bool isNeedSetup() => Pref().getSetupProgressOr() & _PageId.all != _PageId.all;
 class Setup extends StatefulWidget {
   static const routeName = "/setup";
 
-  const Setup({
-    Key? key,
-  }) : super(key: key);
+  const Setup({super.key});
 
   @override
   createState() => _SetupState();

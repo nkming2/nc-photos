@@ -10,9 +10,9 @@ import 'package:flutter/widgets.dart';
 /// than 1 line
 class ListTileCenterLeading extends StatelessWidget {
   const ListTileCenterLeading({
-    Key? key,
+    super.key,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
   build(BuildContext context) => SizedBox(

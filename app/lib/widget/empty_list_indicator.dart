@@ -3,10 +3,10 @@ import 'package:flutter/widgets.dart';
 
 class EmptyListIndicator extends StatelessWidget {
   const EmptyListIndicator({
-    Key? key,
+    super.key,
     required this.icon,
     required this.text,
-  }) : super(key: key);
+  });
 
   @override
   build(BuildContext context) {

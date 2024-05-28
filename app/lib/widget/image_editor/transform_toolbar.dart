@@ -16,12 +16,12 @@ abstract class TransformArguments {
 
 class TransformToolbar extends StatefulWidget {
   const TransformToolbar({
-    Key? key,
+    super.key,
     required this.initialState,
     required this.onActiveFiltersChanged,
     required this.isCropModeChanged,
     required this.onCropToolDeactivated,
-  }) : super(key: key);
+  });
 
   @override
   createState() => _TransformToolbarState();
@@ -243,11 +243,10 @@ class _OrientationArguments implements TransformArguments {
 
 class _OrientationButton extends StatelessWidget {
   const _OrientationButton({
-    Key? key,
     required this.label,
     required this.onPressed,
     this.isSelected = false,
-  }) : super(key: key);
+  });
 
   @override
   build(BuildContext context) {

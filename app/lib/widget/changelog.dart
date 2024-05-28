@@ -34,9 +34,9 @@ class Changelog extends StatelessWidget {
       _changelogs.keys.first > fromVersion;
 
   const Changelog({
-    Key? key,
+    super.key,
     this.fromVersion,
-  }) : super(key: key);
+  });
 
   Changelog.fromArgs(ChangelogArguments args, {Key? key})
       : this(

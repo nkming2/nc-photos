@@ -30,10 +30,10 @@ class LocalFileViewer extends StatefulWidget {
       );
 
   const LocalFileViewer({
-    Key? key,
+    super.key,
     required this.streamFiles,
     required this.startIndex,
-  }) : super(key: key);
+  });
 
   LocalFileViewer.fromArgs(LocalFileViewerArguments args, {Key? key})
       : this(

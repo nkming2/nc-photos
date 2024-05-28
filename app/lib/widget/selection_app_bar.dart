@@ -3,11 +3,11 @@ import 'package:nc_photos/app_localizations.dart';
 
 class SelectionAppBar extends StatelessWidget {
   const SelectionAppBar({
-    Key? key,
+    super.key,
     required this.count,
     this.onClosePressed,
     this.actions,
-  }) : super(key: key);
+  });
 
   @override
   build(BuildContext context) {

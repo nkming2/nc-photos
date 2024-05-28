@@ -44,11 +44,11 @@ class SharedFileViewer extends StatefulWidget {
       );
 
   const SharedFileViewer({
-    Key? key,
+    super.key,
     required this.account,
     required this.file,
     required this.shares,
-  }) : super(key: key);
+  });
 
   SharedFileViewer.fromArgs(SharedFileViewerArguments args, {Key? key})
       : this(

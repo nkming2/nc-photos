@@ -48,9 +48,9 @@ class EnhancedPhotoBrowser extends StatefulWidget {
       );
 
   const EnhancedPhotoBrowser({
-    Key? key,
+    super.key,
     required this.filename,
-  }) : super(key: key);
+  });
 
   EnhancedPhotoBrowser.fromArgs(EnhancedPhotoBrowserArguments args, {Key? key})
       : this(

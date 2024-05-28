@@ -58,20 +58,16 @@ class ListImportableAlbumBlocInit extends ListImportableAlbumBlocState {
 }
 
 class ListImportableAlbumBlocLoading extends ListImportableAlbumBlocState {
-  const ListImportableAlbumBlocLoading(List<ListImportableAlbumBlocItem> items)
-      : super(items);
+  const ListImportableAlbumBlocLoading(super.items);
 }
 
 class ListImportableAlbumBlocSuccess extends ListImportableAlbumBlocState {
-  const ListImportableAlbumBlocSuccess(List<ListImportableAlbumBlocItem> items)
-      : super(items);
+  const ListImportableAlbumBlocSuccess(super.items);
 }
 
 @toString
 class ListImportableAlbumBlocFailure extends ListImportableAlbumBlocState {
-  const ListImportableAlbumBlocFailure(
-      List<ListImportableAlbumBlocItem> items, this.exception)
-      : super(items);
+  const ListImportableAlbumBlocFailure(super.items, this.exception);
 
   @override
   String toString() => _$toString();

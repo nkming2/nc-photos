@@ -42,9 +42,9 @@ class AlbumImporter extends StatefulWidget {
       );
 
   const AlbumImporter({
-    Key? key,
+    super.key,
     required this.account,
-  }) : super(key: key);
+  });
 
   AlbumImporter.fromArgs(AlbumImporterArguments args, {Key? key})
       : this(

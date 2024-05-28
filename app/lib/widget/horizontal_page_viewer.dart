@@ -6,7 +6,7 @@ import 'package:np_platform_util/np_platform_util.dart';
 
 class HorizontalPageViewer extends StatefulWidget {
   HorizontalPageViewer({
-    Key? key,
+    super.key,
     this.pageCount,
     required this.pageBuilder,
     this.initialPage = 0,
@@ -14,8 +14,7 @@ class HorizontalPageViewer extends StatefulWidget {
     this.viewportFraction = 1,
     this.canSwitchPage = true,
     this.onPageChanged,
-  })  : controller = controller ?? HorizontalPageViewerController(),
-        super(key: key);
+  }) : controller = controller ?? HorizontalPageViewerController();
 
   @override
   createState() => _HorizontalPageViewerState();
@@ -91,10 +90,9 @@ class _HorizontalPageViewerState extends State<HorizontalPageViewer> {
           controller: widget.controller._pageController,
           itemCount: widget.pageCount,
           itemBuilder: widget.pageBuilder,
-          physics:
-              getRawPlatform() != NpPlatform.web && widget.canSwitchPage
-                  ? null
-                  : const NeverScrollableScrollPhysics(),
+          physics: getRawPlatform() != NpPlatform.web && widget.canSwitchPage
+              ? null
+              : const NeverScrollableScrollPhysics(),
         ),
         if (getRawPlatform() == NpPlatform.web)
           ..._buildNavigationButtons(context),

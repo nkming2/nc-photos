@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 /// Scaffold is needed for [SnackBar] to show correctly on top of a dialog
 class DialogScaffold extends StatelessWidget {
   const DialogScaffold({
-    Key? key,
+    super.key,
     required this.body,
     this.canPop = true,
-  }) : super(key: key);
+  });
 
   @override
   build(BuildContext context) {

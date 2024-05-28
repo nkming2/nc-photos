@@ -59,8 +59,7 @@ class BorderSideTween extends Tween<BorderSide?> {
   /// The [begin] and [end] properties must be non-null before the tween is
   /// first used, but the arguments can be null if the values are going to be
   /// filled in later.
-  BorderSideTween({BorderSide? begin, BorderSide? end})
-      : super(begin: begin, end: end);
+  BorderSideTween({super.begin, super.end});
 
   /// Returns the value this variable has at the given animation clock value.
   @override

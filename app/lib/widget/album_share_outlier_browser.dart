@@ -40,10 +40,10 @@ class AlbumShareOutlierBrowser extends StatefulWidget {
       );
 
   const AlbumShareOutlierBrowser({
-    Key? key,
+    super.key,
     required this.account,
     required this.album,
-  }) : super(key: key);
+  });
 
   AlbumShareOutlierBrowser.fromArgs(AlbumShareOutlierBrowserArguments args,
       {Key? key})

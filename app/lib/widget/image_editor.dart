@@ -41,10 +41,10 @@ class ImageEditor extends StatefulWidget {
       );
 
   const ImageEditor({
-    Key? key,
+    super.key,
     required this.account,
     required this.file,
-  }) : super(key: key);
+  });
 
   ImageEditor.fromArgs(ImageEditorArguments args, {Key? key})
       : this(
@@ -351,12 +351,11 @@ enum _ToolType {
 
 class _ToolButton extends StatelessWidget {
   const _ToolButton({
-    Key? key,
     required this.icon,
     required this.label,
     required this.onPressed,
     this.isSelected = false,
-  }) : super(key: key);
+  });
 
   @override
   build(BuildContext context) {

@@ -54,20 +54,16 @@ class LsTrashbinBlocInit extends LsTrashbinBlocState {
 }
 
 class LsTrashbinBlocLoading extends LsTrashbinBlocState {
-  const LsTrashbinBlocLoading(Account? account, List<File> items)
-      : super(account, items);
+  const LsTrashbinBlocLoading(super.account, super.items);
 }
 
 class LsTrashbinBlocSuccess extends LsTrashbinBlocState {
-  const LsTrashbinBlocSuccess(Account? account, List<File> items)
-      : super(account, items);
+  const LsTrashbinBlocSuccess(super.account, super.items);
 }
 
 @toString
 class LsTrashbinBlocFailure extends LsTrashbinBlocState {
-  const LsTrashbinBlocFailure(
-      Account? account, List<File> items, this.exception)
-      : super(account, items);
+  const LsTrashbinBlocFailure(super.account, super.items, this.exception);
 
   @override
   String toString() => _$toString();
@@ -78,8 +74,7 @@ class LsTrashbinBlocFailure extends LsTrashbinBlocState {
 /// The state of this bloc is inconsistent. This typically means that the data
 /// may have been changed externally
 class LsTrashbinBlocInconsistent extends LsTrashbinBlocState {
-  const LsTrashbinBlocInconsistent(Account? account, List<File> items)
-      : super(account, items);
+  const LsTrashbinBlocInconsistent(super.account, super.items);
 }
 
 @npLog

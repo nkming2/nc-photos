@@ -171,11 +171,10 @@ class _WrappedEnhancementSettingsState
 
 class _SizeSlider extends StatefulWidget {
   const _SizeSlider({
-    Key? key,
     required this.initialWidth,
     required this.initialHeight,
     this.onChanged,
-  }) : super(key: key);
+  });
 
   @override
   createState() => _SizeSliderState();

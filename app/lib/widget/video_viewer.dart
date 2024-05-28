@@ -25,7 +25,7 @@ part 'video_viewer.g.dart';
 
 class VideoViewer extends StatefulWidget {
   const VideoViewer({
-    Key? key,
+    super.key,
     required this.account,
     required this.file,
     this.onLoaded,
@@ -36,7 +36,7 @@ class VideoViewer extends StatefulWidget {
     this.isControlVisible = false,
     this.canPlay = true,
     this.canLoop = true,
-  }) : super(key: key);
+  });
 
   @override
   createState() => _VideoViewerState();

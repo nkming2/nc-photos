@@ -21,14 +21,14 @@ part 'dir_picker.g.dart';
 
 class DirPicker extends StatefulWidget {
   const DirPicker({
-    Key? key,
+    super.key,
     required this.account,
     required this.strippedRootDir,
     this.initialPicks,
     this.isMultipleSelections = true,
     this.validator,
     this.onConfirmed,
-  }) : super(key: key);
+  });
 
   @override
   createState() => DirPickerState();

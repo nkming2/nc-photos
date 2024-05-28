@@ -42,19 +42,16 @@ class ListTagBlocInit extends ListTagBlocState {
 }
 
 class ListTagBlocLoading extends ListTagBlocState {
-  const ListTagBlocLoading(Account? account, List<Tag> items)
-      : super(account, items);
+  const ListTagBlocLoading(super.account, super.items);
 }
 
 class ListTagBlocSuccess extends ListTagBlocState {
-  const ListTagBlocSuccess(Account? account, List<Tag> items)
-      : super(account, items);
+  const ListTagBlocSuccess(super.account, super.items);
 }
 
 @toString
 class ListTagBlocFailure extends ListTagBlocState {
-  const ListTagBlocFailure(Account? account, List<Tag> items, this.exception)
-      : super(account, items);
+  const ListTagBlocFailure(super.account, super.items, this.exception);
 
   @override
   String toString() => _$toString();

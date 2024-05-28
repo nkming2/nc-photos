@@ -1,4 +1,4 @@
-/// Helper functions working with remote Nextcloud server
+// Helper functions working with remote Nextcloud server
 import 'dart:convert';
 
 import 'package:clock/clock.dart';
@@ -131,7 +131,7 @@ String getAccountAvatarUrl(Account account, int size) =>
 String getAccountAvatarUrlRelative(Account account, int size) =>
     "avatar/${account.userId}/$size";
 
-/// Initiate a login with Nextclouds login flow v2: https://docs.nextcloud.com/server/latest/developer_manual/client_apis/LoginFlow/index.html#login-flow-v2
+/// Initiate a login with Nextcloud login flow v2: https://docs.nextcloud.com/server/latest/developer_manual/client_apis/LoginFlow/index.html#login-flow-v2
 Future<InitiateLoginResponse> initiateLogin(Uri uri) async {
   final response = await Api.fromBaseUrl(uri).request(
     "POST",
@@ -151,7 +151,7 @@ Future<InitiateLoginResponse> initiateLogin(Uri uri) async {
   }
 }
 
-/// Retrieve App Password after successful initiation of login with Nextclouds login flow v2: https://docs.nextcloud.com/server/latest/developer_manual/client_apis/LoginFlow/index.html#login-flow-v2
+/// Retrieve App Password after successful initiation of login with Nextcloud login flow v2: https://docs.nextcloud.com/server/latest/developer_manual/client_apis/LoginFlow/index.html#login-flow-v2
 Future<AppPasswordResponse> _getAppPassword(
     InitiateLoginPollOptions options) async {
   Uri baseUrl;

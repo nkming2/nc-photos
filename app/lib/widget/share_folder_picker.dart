@@ -29,10 +29,10 @@ class ShareFolderPicker extends StatefulWidget {
       );
 
   const ShareFolderPicker({
-    Key? key,
+    super.key,
     required this.account,
     required this.initialValue,
-  }) : super(key: key);
+  });
 
   ShareFolderPicker.fromArgs(ShareFolderPickerArguments args, {Key? key})
       : this(

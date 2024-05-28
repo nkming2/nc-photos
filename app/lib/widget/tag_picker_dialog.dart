@@ -15,9 +15,9 @@ import 'package:np_string/np_string.dart';
 
 class TagPickerDialog extends StatefulWidget {
   const TagPickerDialog({
-    Key? key,
+    super.key,
     required this.account,
-  }) : super(key: key);
+  });
 
   @override
   createState() => _TagPickerDialogState();

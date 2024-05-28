@@ -40,11 +40,11 @@ class TrashbinViewer extends StatefulWidget {
       );
 
   const TrashbinViewer({
-    Key? key,
+    super.key,
     required this.account,
     required this.streamFiles,
     required this.startIndex,
-  }) : super(key: key);
+  });
 
   TrashbinViewer.fromArgs(TrashbinViewerArguments args, {Key? key})
       : this(

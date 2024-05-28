@@ -20,14 +20,14 @@ part 'image_viewer.g.dart';
 
 class LocalImageViewer extends StatefulWidget {
   const LocalImageViewer({
-    Key? key,
+    super.key,
     required this.file,
     required this.canZoom,
     this.onLoaded,
     this.onHeightChanged,
     this.onZoomStarted,
     this.onZoomEnded,
-  }) : super(key: key);
+  });
 
   @override
   createState() => _LocalImageViewerState();
@@ -82,7 +82,7 @@ class _LocalImageViewerState extends State<LocalImageViewer> {
 
 class RemoteImageViewer extends StatefulWidget {
   const RemoteImageViewer({
-    Key? key,
+    super.key,
     required this.account,
     required this.file,
     required this.canZoom,
@@ -90,7 +90,7 @@ class RemoteImageViewer extends StatefulWidget {
     this.onHeightChanged,
     this.onZoomStarted,
     this.onZoomEnded,
-  }) : super(key: key);
+  });
 
   @override
   createState() => _RemoteImageViewerState();
@@ -214,13 +214,12 @@ class _RemoteImageViewerState extends State<RemoteImageViewer> {
 
 class _ImageViewer extends StatefulWidget {
   const _ImageViewer({
-    Key? key,
     required this.child,
     required this.canZoom,
     this.onHeightChanged,
     this.onZoomStarted,
     this.onZoomEnded,
-  }) : super(key: key);
+  });
 
   @override
   createState() => _ImageViewerState();

@@ -48,16 +48,12 @@ abstract class PhotoListFileItem extends SelectableItem {
 
 class PhotoListImageItem extends PhotoListFileItem {
   const PhotoListImageItem({
-    required int fileIndex,
-    required FileDescriptor file,
+    required super.fileIndex,
+    required super.file,
     required this.account,
     required this.previewUrl,
-    required bool shouldShowFavoriteBadge,
-  }) : super(
-          fileIndex: fileIndex,
-          file: file,
-          shouldShowFavoriteBadge: shouldShowFavoriteBadge,
-        );
+    required super.shouldShowFavoriteBadge,
+  });
 
   @override
   Widget buildWidget(BuildContext context) => PhotoListImage(
@@ -74,16 +70,12 @@ class PhotoListImageItem extends PhotoListFileItem {
 
 class PhotoListVideoItem extends PhotoListFileItem {
   const PhotoListVideoItem({
-    required int fileIndex,
-    required FileDescriptor file,
+    required super.fileIndex,
+    required super.file,
     required this.account,
     required this.previewUrl,
-    required bool shouldShowFavoriteBadge,
-  }) : super(
-          fileIndex: fileIndex,
-          file: file,
-          shouldShowFavoriteBadge: shouldShowFavoriteBadge,
-        );
+    required super.shouldShowFavoriteBadge,
+  });
 
   @override
   buildWidget(BuildContext context) => PhotoListVideo(
@@ -146,12 +138,9 @@ abstract class PhotoListLocalFileItem extends SelectableItem {
 
 class PhotoListLocalImageItem extends PhotoListLocalFileItem {
   const PhotoListLocalImageItem({
-    required int fileIndex,
-    required LocalFile file,
-  }) : super(
-          fileIndex: fileIndex,
-          file: file,
-        );
+    required super.fileIndex,
+    required super.file,
+  });
 
   @override
   buildWidget(BuildContext context) {
@@ -209,14 +198,14 @@ class PhotoListLocalImageItem extends PhotoListLocalFileItem {
 
 class PhotoListImage extends StatelessWidget {
   const PhotoListImage({
-    Key? key,
+    super.key,
     required this.account,
     required this.previewUrl,
     this.padding = const EdgeInsets.all(2),
     this.isGif = false,
     this.isFavorite = false,
     this.heroKey,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -285,11 +274,11 @@ class PhotoListImage extends StatelessWidget {
 
 class PhotoListVideo extends StatelessWidget {
   const PhotoListVideo({
-    Key? key,
+    super.key,
     required this.account,
     required this.previewUrl,
     this.isFavorite = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -337,9 +326,9 @@ class PhotoListVideo extends StatelessWidget {
 
 class PhotoListLabel extends StatelessWidget {
   const PhotoListLabel({
-    Key? key,
+    super.key,
     required this.text,
-  }) : super(key: key);
+  });
 
   @override
   build(BuildContext context) {
@@ -360,10 +349,10 @@ class PhotoListLabel extends StatelessWidget {
 
 class PhotoListLabelEdit extends PhotoListLabel {
   const PhotoListLabelEdit({
-    Key? key,
-    required String text,
+    super.key,
+    required super.text,
     required this.onEditPressed,
-  }) : super(key: key, text: text);
+  });
 
   @override
   build(BuildContext context) {

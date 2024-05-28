@@ -28,9 +28,9 @@ class AlbumDirPicker extends StatefulWidget {
       );
 
   const AlbumDirPicker({
-    Key? key,
+    super.key,
     required this.account,
-  }) : super(key: key);
+  });
 
   AlbumDirPicker.fromArgs(AlbumDirPickerArguments args, {Key? key})
       : this(

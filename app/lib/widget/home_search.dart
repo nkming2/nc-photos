@@ -44,9 +44,9 @@ part 'home_search.g.dart';
 
 class HomeSearch extends StatefulWidget {
   const HomeSearch({
-    Key? key,
+    super.key,
     required this.account,
-  }) : super(key: key);
+  });
 
   @override
   createState() => _HomeSearchState();
@@ -609,10 +609,9 @@ extension on SearchFileType {
 
 class _FilterBubbleList extends StatelessWidget {
   const _FilterBubbleList({
-    Key? key,
     required this.filters,
     this.onEditPressed,
-  }) : super(key: key);
+  });
 
   @override
   build(BuildContext context) {
@@ -681,9 +680,8 @@ class _FilterBubbleList extends StatelessWidget {
 
 class _FilterEditDialog extends StatefulWidget {
   const _FilterEditDialog({
-    Key? key,
     required this.searchState,
-  }) : super(key: key);
+  });
 
   @override
   createState() => _FilterEditDialogState();
@@ -763,14 +761,13 @@ class _FilterEditFormValue {
 
 class _FilterDropdown<T> extends StatefulWidget {
   const _FilterDropdown({
-    Key? key,
     required this.label,
     required this.items,
     required this.itemStringifier,
     this.initialValue,
     this.onValueChanged,
     this.onSaved,
-  }) : super(key: key);
+  });
 
   @override
   createState() => _FilterDropdownState<T>();

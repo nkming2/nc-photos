@@ -104,20 +104,17 @@ class HomeSearchSuggestionBlocInit extends HomeSearchSuggestionBlocState {
 }
 
 class HomeSearchSuggestionBlocLoading extends HomeSearchSuggestionBlocState {
-  const HomeSearchSuggestionBlocLoading(List<HomeSearchResult> results)
-      : super(results);
+  const HomeSearchSuggestionBlocLoading(super.results);
 }
 
 class HomeSearchSuggestionBlocSuccess extends HomeSearchSuggestionBlocState {
-  const HomeSearchSuggestionBlocSuccess(List<HomeSearchResult> results)
-      : super(results);
+  const HomeSearchSuggestionBlocSuccess(super.results);
 }
 
 @toString
 class HomeSearchSuggestionBlocFailure extends HomeSearchSuggestionBlocState {
   const HomeSearchSuggestionBlocFailure(
-      List<HomeSearchTagResult> results, this.exception)
-      : super(results);
+      List<HomeSearchTagResult> super.results, this.exception);
 
   @override
   String toString() => _$toString();

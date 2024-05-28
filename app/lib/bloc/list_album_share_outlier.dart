@@ -116,22 +116,17 @@ class ListAlbumShareOutlierBlocInit extends ListAlbumShareOutlierBlocState {
 }
 
 class ListAlbumShareOutlierBlocLoading extends ListAlbumShareOutlierBlocState {
-  const ListAlbumShareOutlierBlocLoading(
-      Account? account, List<ListAlbumShareOutlierItem> items)
-      : super(account, items);
+  const ListAlbumShareOutlierBlocLoading(super.account, super.items);
 }
 
 class ListAlbumShareOutlierBlocSuccess extends ListAlbumShareOutlierBlocState {
-  const ListAlbumShareOutlierBlocSuccess(
-      Account? account, List<ListAlbumShareOutlierItem> items)
-      : super(account, items);
+  const ListAlbumShareOutlierBlocSuccess(super.account, super.items);
 }
 
 @toString
 class ListAlbumShareOutlierBlocFailure extends ListAlbumShareOutlierBlocState {
   const ListAlbumShareOutlierBlocFailure(
-      Account? account, List<ListAlbumShareOutlierItem> items, this.exception)
-      : super(account, items);
+      super.account, super.items, this.exception);
 
   @override
   String toString() => _$toString();

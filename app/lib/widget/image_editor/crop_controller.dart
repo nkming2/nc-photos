@@ -15,11 +15,11 @@ part 'crop_controller.g.dart';
 /// This widget only work when width == device width!
 class CropController extends StatelessWidget {
   const CropController({
-    Key? key,
+    super.key,
     required this.image,
     required this.initialState,
     this.onCropChanged,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -41,11 +41,10 @@ class CropController extends StatelessWidget {
 
 class _WrappedCropController extends StatefulWidget {
   const _WrappedCropController({
-    Key? key,
     required this.image,
     required this.initialState,
     this.onCropChanged,
-  }) : super(key: key);
+  });
 
   @override
   State<StatefulWidget> createState() => _WrappedCropControllerState();
@@ -429,7 +428,7 @@ class _WrappedCropControllerState extends State<_WrappedCropController> {
 class _TouchDot extends StatelessWidget {
   static const double size = 24;
 
-  const _TouchDot({Key? key}) : super(key: key);
+  const _TouchDot();
 
   @override
   build(BuildContext context) {

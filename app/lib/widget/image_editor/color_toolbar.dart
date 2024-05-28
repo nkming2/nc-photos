@@ -25,10 +25,10 @@ abstract class ColorArguments {
 
 class ColorToolbar extends StatefulWidget {
   const ColorToolbar({
-    Key? key,
+    super.key,
     required this.initialState,
     required this.onActiveFiltersChanged,
-  }) : super(key: key);
+  });
 
   @override
   createState() => _ColorToolbarState();

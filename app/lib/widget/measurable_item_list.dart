@@ -13,14 +13,14 @@ abstract class MeasurableItemListState {
 
 class MeasurableItemList extends StatefulWidget {
   const MeasurableItemList({
-    Key? key,
+    super.key,
     required this.maxCrossAxisExtent,
     required this.itemCount,
     required this.itemBuilder,
     required this.staggeredTileBuilder,
     this.mainAxisSpacing = 0,
     this.onMaxExtentChanged,
-  }) : super(key: key);
+  });
 
   @override
   createState() => _MeasurableItemListState();
@@ -137,7 +137,7 @@ class _MeasurableItemListState extends State<MeasurableItemList>
 }
 
 class _GridKey extends GlobalObjectKey {
-  const _GridKey(Object value) : super(value);
+  const _GridKey(super.value);
 
   @override
   operator ==(Object other) {

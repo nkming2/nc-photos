@@ -31,7 +31,7 @@ void main() {
 }
 
 class _TestWidget extends StatefulWidget {
-  const _TestWidget(this.manager, {Key? key}) : super(key: key);
+  const _TestWidget(this.manager);
 
   @override
   createState() => _TestWidgetState();

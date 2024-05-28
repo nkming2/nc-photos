@@ -32,9 +32,9 @@ class RootPicker extends StatefulWidget {
       );
 
   const RootPicker({
-    Key? key,
+    super.key,
     required this.account,
-  }) : super(key: key);
+  });
 
   RootPicker.fromArgs(RootPickerArguments args, {Key? key})
       : this(

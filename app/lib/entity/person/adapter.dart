@@ -12,9 +12,9 @@ abstract class PersonAdapter {
 
   static PersonAdapter of(DiContainer c, Account account, Person person) {
     switch (person.contentProvider.runtimeType) {
-      case PersonFaceRecognitionProvider:
+      case const (PersonFaceRecognitionProvider):
         return PersonFaceRecognitionAdapter(c, account, person);
-      case PersonRecognizeProvider:
+      case const (PersonRecognizeProvider):
         return PersonRecognizeAdapter(c, account, person);
       default:
         throw UnsupportedError(

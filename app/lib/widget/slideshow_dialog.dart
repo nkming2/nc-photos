@@ -37,12 +37,12 @@ class SlideshowConfig {
 
 class SlideshowDialog extends StatefulWidget {
   const SlideshowDialog({
-    Key? key,
+    super.key,
     required this.duration,
     required this.isShuffle,
     required this.isRepeat,
     required this.isReverse,
-  }) : super(key: key);
+  });
 
   @override
   createState() => _SlideshowDialogState();

@@ -42,12 +42,12 @@ class SlideshowViewer extends StatefulWidget {
       );
 
   const SlideshowViewer({
-    Key? key,
+    super.key,
     required this.account,
     required this.streamFiles,
     required this.startIndex,
     required this.config,
-  }) : super(key: key);
+  });
 
   SlideshowViewer.fromArgs(SlideshowViewerArguments args, {Key? key})
       : this(

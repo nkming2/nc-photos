@@ -5,9 +5,7 @@ import 'package:nc_photos/help_utils.dart' as help_utils;
 import 'package:nc_photos/url_launcher_util.dart';
 
 class SharedAlbumInfoDialog extends StatefulWidget {
-  const SharedAlbumInfoDialog({
-    Key? key,
-  }) : super(key: key);
+  const SharedAlbumInfoDialog({super.key});
 
   @override
   createState() => _SharedAlbumInfoDialogState();

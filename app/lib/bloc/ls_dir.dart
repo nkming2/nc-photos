@@ -106,20 +106,17 @@ class LsDirBlocInit extends LsDirBlocState {
 }
 
 class LsDirBlocLoading extends LsDirBlocState {
-  const LsDirBlocLoading(Account? account, File root, List<LsDirBlocItem> items)
-      : super(account, root, items);
+  const LsDirBlocLoading(super.account, super.root, super.items);
 }
 
 class LsDirBlocSuccess extends LsDirBlocState {
-  const LsDirBlocSuccess(Account? account, File root, List<LsDirBlocItem> items)
-      : super(account, root, items);
+  const LsDirBlocSuccess(super.account, super.root, super.items);
 }
 
 @toString
 class LsDirBlocFailure extends LsDirBlocState {
   const LsDirBlocFailure(
-      Account? account, File root, List<LsDirBlocItem> items, this.exception)
-      : super(account, root, items);
+      super.account, super.root, super.items, this.exception);
 
   @override
   String toString() => _$toString();

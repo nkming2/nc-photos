@@ -76,12 +76,12 @@ class Viewer extends StatefulWidget {
       );
 
   const Viewer({
-    Key? key,
+    super.key,
     required this.account,
     required this.streamFiles,
     required this.startIndex,
     this.fromCollection,
-  }) : super(key: key);
+  });
 
   Viewer.fromArgs(ViewerArguments args, {Key? key})
       : this(

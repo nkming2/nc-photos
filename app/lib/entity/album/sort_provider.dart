@@ -145,8 +145,8 @@ abstract class AlbumReversibleSortProvider extends AlbumSortProvider {
 @toString
 class AlbumTimeSortProvider extends AlbumReversibleSortProvider {
   const AlbumTimeSortProvider({
-    required bool isAscending,
-  }) : super(isAscending: isAscending);
+    required super.isAscending,
+  });
 
   factory AlbumTimeSortProvider.fromJson(JsonObj json) {
     return AlbumTimeSortProvider(
@@ -164,8 +164,8 @@ class AlbumTimeSortProvider extends AlbumReversibleSortProvider {
 @toString
 class AlbumFilenameSortProvider extends AlbumReversibleSortProvider {
   const AlbumFilenameSortProvider({
-    required bool isAscending,
-  }) : super(isAscending: isAscending);
+    required super.isAscending,
+  });
 
   factory AlbumFilenameSortProvider.fromJson(JsonObj json) {
     return AlbumFilenameSortProvider(

@@ -9,13 +9,13 @@ import 'package:np_ui/np_ui.dart';
 /// current order.
 class ToolbarButton extends StatelessWidget {
   const ToolbarButton({
-    Key? key,
+    super.key,
     required this.icon,
     required this.label,
     required this.onPressed,
     this.isSelected = false,
     this.activationOrder,
-  }) : super(key: key);
+  });
 
   @override
   build(BuildContext context) {

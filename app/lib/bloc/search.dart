@@ -66,22 +66,17 @@ class SearchBlocInit extends SearchBlocState {
 }
 
 class SearchBlocLoading extends SearchBlocState {
-  const SearchBlocLoading(
-      Account? account, SearchCriteria criteria, List<FileDescriptor> items)
-      : super(account, criteria, items);
+  const SearchBlocLoading(super.account, super.criteria, super.items);
 }
 
 class SearchBlocSuccess extends SearchBlocState {
-  const SearchBlocSuccess(
-      Account? account, SearchCriteria criteria, List<FileDescriptor> items)
-      : super(account, criteria, items);
+  const SearchBlocSuccess(super.account, super.criteria, super.items);
 }
 
 @toString
 class SearchBlocFailure extends SearchBlocState {
-  const SearchBlocFailure(Account? account, SearchCriteria criteria,
-      List<FileDescriptor> items, this.exception)
-      : super(account, criteria, items);
+  const SearchBlocFailure(
+      super.account, super.criteria, super.items, this.exception);
 
   @override
   String toString() => _$toString();
@@ -92,9 +87,7 @@ class SearchBlocFailure extends SearchBlocState {
 /// The state of this bloc is inconsistent. This typically means that the data
 /// may have been changed externally
 class SearchBlocInconsistent extends SearchBlocState {
-  const SearchBlocInconsistent(
-      Account? account, SearchCriteria criteria, List<FileDescriptor> items)
-      : super(account, criteria, items);
+  const SearchBlocInconsistent(super.account, super.criteria, super.items);
 }
 
 @npLog

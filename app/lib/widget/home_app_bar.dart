@@ -13,13 +13,13 @@ import 'package:np_ui/np_ui.dart';
 /// AppBar for home screens
 class HomeSliverAppBar extends StatelessWidget {
   const HomeSliverAppBar({
-    Key? key,
+    super.key,
     required this.account,
     this.actions,
     this.menuActions,
     this.onSelectedMenuActions,
     this.isShowProgressIcon = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

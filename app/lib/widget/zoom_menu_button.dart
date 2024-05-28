@@ -3,12 +3,12 @@ import 'package:nc_photos/app_localizations.dart';
 
 class ZoomMenuButton extends StatelessWidget {
   const ZoomMenuButton({
-    Key? key,
+    super.key,
     required this.initialZoom,
     required this.minZoom,
     required this.maxZoom,
     this.onZoomChanged,
-  }) : super(key: key);
+  });
 
   @override
   build(BuildContext context) {
@@ -34,12 +34,11 @@ class ZoomMenuButton extends StatelessWidget {
 
 class _PopupMenuZoom extends PopupMenuEntry<void> {
   const _PopupMenuZoom({
-    Key? key,
     required this.initialValue,
     required this.minValue,
     required this.maxValue,
     this.onChanged,
-  }) : super(key: key);
+  });
 
   @override
   represents(void value) => false;

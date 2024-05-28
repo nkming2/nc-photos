@@ -31,9 +31,7 @@ part 'splash.g.dart';
 class Splash extends StatefulWidget {
   static const routeName = "/splash";
 
-  const Splash({
-    Key? key,
-  }) : super(key: key);
+  const Splash({super.key});
 
   @override
   createState() => _SplashState();

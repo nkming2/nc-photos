@@ -5,7 +5,7 @@ import 'package:nc_photos/widget/animated_smooth_clip_r_rect.dart';
 // Overlay a check mark if an item is selected
 class Selectable extends StatelessWidget {
   const Selectable({
-    Key? key,
+    super.key,
     required this.child,
     this.isSelected = false,
     required this.iconSize,
@@ -14,7 +14,7 @@ class Selectable extends StatelessWidget {
     this.indicatorAlignment = Alignment.topLeft,
     this.onTap,
     this.onLongPress,
-  }) : super(key: key);
+  });
 
   @override
   build(BuildContext context) {

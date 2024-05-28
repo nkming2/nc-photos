@@ -30,10 +30,10 @@ class HomeSearchSuggestionController {
 
 class HomeSearchSuggestion extends StatefulWidget {
   const HomeSearchSuggestion({
-    Key? key,
+    super.key,
     required this.account,
     required this.controller,
-  }) : super(key: key);
+  });
 
   @override
   createState() => _HomeSearchSuggestionState();

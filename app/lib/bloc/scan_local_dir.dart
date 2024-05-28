@@ -53,17 +53,16 @@ class ScanLocalDirBlocInit extends ScanLocalDirBlocState {
 }
 
 class ScanLocalDirBlocLoading extends ScanLocalDirBlocState {
-  const ScanLocalDirBlocLoading(List<LocalFile> files) : super(files);
+  const ScanLocalDirBlocLoading(super.files);
 }
 
 class ScanLocalDirBlocSuccess extends ScanLocalDirBlocState {
-  const ScanLocalDirBlocSuccess(List<LocalFile> files) : super(files);
+  const ScanLocalDirBlocSuccess(super.files);
 }
 
 @toString
 class ScanLocalDirBlocFailure extends ScanLocalDirBlocState {
-  const ScanLocalDirBlocFailure(List<LocalFile> files, this.exception)
-      : super(files);
+  const ScanLocalDirBlocFailure(super.files, this.exception);
 
   @override
   String toString() => _$toString();

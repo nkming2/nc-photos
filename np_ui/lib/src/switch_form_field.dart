@@ -2,24 +2,18 @@ import 'package:flutter/material.dart';
 
 class SwitchFormField extends FormField<bool> {
   SwitchFormField({
-    Key? key,
-    required bool initialValue,
+    super.key,
+    required bool super.initialValue,
     Widget? title,
     Widget? subtitle,
     Widget? subtitleTrue,
     Widget? subtitleFalse,
     bool? dense,
-    FormFieldSetter<bool>? onSaved,
-    FormFieldValidator<bool>? validator,
-    bool enabled = true,
-    AutovalidateMode? autovalidateMode,
+    super.onSaved,
+    super.validator,
+    super.enabled,
+    super.autovalidateMode,
   }) : super(
-          key: key,
-          onSaved: onSaved,
-          validator: validator,
-          initialValue: initialValue,
-          enabled: enabled,
-          autovalidateMode: autovalidateMode,
           builder: (field) {
             final value = field.value ?? initialValue;
             return SwitchListTile(

@@ -25,9 +25,7 @@ part 'sign_in.g.dart';
 class SignIn extends StatefulWidget {
   static const routeName = "/sign-in-legacy";
 
-  const SignIn({
-    Key? key,
-  }) : super(key: key);
+  const SignIn({super.key});
 
   @override
   createState() => _SignInState();

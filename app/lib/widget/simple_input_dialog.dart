@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 class SimpleInputDialog extends StatefulWidget {
   const SimpleInputDialog({
-    Key? key,
+    super.key,
     required this.buttonText,
     this.titleText,
     this.initialText,
     this.hintText,
     this.validator,
     this.obscureText = false,
-  }) : super(key: key);
+  });
 
   @override
   createState() => _SimpleInputDialogState();

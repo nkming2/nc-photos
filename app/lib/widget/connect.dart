@@ -39,9 +39,9 @@ class Connect extends StatefulWidget {
       );
 
   const Connect({
-    Key? key,
+    super.key,
     required this.uri,
-  }) : super(key: key);
+  });
 
   Connect.fromArgs(ConnectArguments args, {Key? key})
       : this(
@@ -303,9 +303,8 @@ class _ConnectState extends State<Connect> {
 
 class _WebDavUrlDialog extends StatefulWidget {
   const _WebDavUrlDialog({
-    Key? key,
     required this.account,
-  }) : super(key: key);
+  });
 
   @override
   createState() => _WebDavUrlDialogState();
