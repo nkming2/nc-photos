@@ -328,10 +328,10 @@ packages:
     dependency: "direct main"
     description:
       name: devicelocale
-      sha256: "09cc0bce937b34dafcaac0b2a9b350d763dd16770f15e59560b7abaaaad3d65b"
+      sha256: "0812b66f9eac57bc55c6ed4c178e0779440aa4e4e7c7e32fe1db02a758501d0e"
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.0"
+    version: "0.7.1"
   diff_match_patch:
     dependency: transitive
     description:
@@ -464,10 +464,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_colorpicker
-      sha256: "458a6ed8ea480eb16ff892aedb4b7092b2804affd7e046591fb03127e8d8ef8b"
+      sha256: "969de5f6f9e2a570ac660fb7b501551451ea2a1ab9e2097e89475f60e07816ea"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.3"
+    version: "1.1.0"
   flutter_isolate:
     dependency: "direct main"
     description:
@@ -946,10 +946,10 @@ packages:
     dependency: "direct main"
     description:
       name: native_device_orientation
-      sha256: "7d2fa1a1420b7b4ac3317760ffd063b86704679fb4f1796644581da4a6356ccc"
+      sha256: "0c330c068575e4be72cce5968ca479a3f8d5d1e5dfce7d89d5c13a1e943b338c"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.4"
+    version: "2.0.3"
   nc_photos_plugin:
     dependency: "direct main"
     description:
