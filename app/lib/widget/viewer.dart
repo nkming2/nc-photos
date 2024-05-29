@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
@@ -41,6 +42,7 @@ import 'package:nc_photos/widget/viewer_detail_pane.dart';
 import 'package:nc_photos/widget/viewer_mixin.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/or_null.dart';
+import 'package:np_platform_util/np_platform_util.dart';
 
 part 'viewer.g.dart';
 
@@ -190,9 +192,18 @@ class _ViewerState extends State<Viewer>
     final index =
         _isViewerLoaded ? _viewerController.currentPage : widget.startIndex;
     final file = _streamFilesView[index];
+    final isCentered = getRawPlatform() == NpPlatform.iOs;
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
+      title: _isDetailPaneActive
+          ? null
+          : _AppBarTitle(
+              file: file,
+              isCentered: isCentered,
+            ),
+      titleSpacing: 0,
+      centerTitle: isCentered,
       actions: [
         if (!_isDetailPaneActive && _canOpenDetailPane()) ...[
           (_pageStates[index]?.favoriteOverride ?? file.fdIsFavorite) == true
@@ -920,4 +931,38 @@ class _PageState {
 
   bool isProcessingFavorite = false;
   bool? favoriteOverride;
+}
+
+class _AppBarTitle extends StatelessWidget {
+  const _AppBarTitle({
+    required this.file,
+    required this.isCentered,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final locale = Localizations.localeOf(context).languageCode;
+    final localTime = file.fdDateTime.toLocal();
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment:
+          isCentered ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+      children: [
+        Text(
+          (localTime.year == DateTime.now().year
+                  ? DateFormat.MMMd(locale)
+                  : DateFormat.yMMMd(locale))
+              .format(localTime),
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        Text(
+          DateFormat.jm(locale).format(localTime),
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
+      ],
+    );
+  }
+
+  final FileDescriptor file;
+  final bool isCentered;
 }
