@@ -98,7 +98,7 @@ class _TitleView extends StatelessWidget {
                     size: 16,
                   )
                 : Icon(
-                    Icons.https,
+                    Icons.https_outlined,
                     color: Theme.of(context).colorScheme.primary,
                     size: 16,
                   ),

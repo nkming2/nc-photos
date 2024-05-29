@@ -34,7 +34,7 @@ class _AppBar extends StatelessWidget {
             if (canShare)
               IconButton(
                 onPressed: () => _onSharePressed(context),
-                icon: const Icon(Icons.share),
+                icon: const Icon(Icons.share_outlined),
                 tooltip: L10n.global().shareTooltip,
               ),
             if (state.collection.isPendingSharedAlbum)
@@ -349,7 +349,7 @@ class _EditAppBar extends StatelessWidget {
         ),
       ),
       leading: IconButton(
-        icon: const Icon(Icons.check),
+        icon: const Icon(Icons.check_outlined),
         color: Theme.of(context).colorScheme.primary,
         tooltip: L10n.global().doneButtonTooltip,
         onPressed: () {
@@ -359,13 +359,13 @@ class _EditAppBar extends StatelessWidget {
       actions: [
         if (capabilitiesAdapter.isPermitted(CollectionCapability.labelItem))
           IconButton(
-            icon: const Icon(Icons.text_fields),
+            icon: const Icon(Icons.text_fields_outlined),
             tooltip: L10n.global().albumAddTextTooltip,
             onPressed: () => _onAddTextPressed(context),
           ),
         if (capabilitiesAdapter.isPermitted(CollectionCapability.sort))
           IconButton(
-            icon: const Icon(Icons.sort_by_alpha),
+            icon: const Icon(Icons.sort_by_alpha_outlined),
             tooltip: L10n.global().sortTooltip,
             onPressed: () => _onSortPressed(context),
           ),

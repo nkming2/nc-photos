@@ -132,7 +132,7 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
           ),
           Expanded(
             child: EmptyListIndicator(
-              icon: Icons.delete_outline,
+              icon: Icons.delete_outlined,
               text: L10n.global().listEmptyText,
             ),
           ),

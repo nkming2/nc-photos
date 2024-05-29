@@ -228,12 +228,12 @@ class _HomeSearchState extends State<HomeSearch>
       },
       actions: [
         IconButton(
-          icon: const Icon(Icons.share),
+          icon: const Icon(Icons.share_outlined),
           tooltip: L10n.global().shareTooltip,
           onPressed: () => _onSelectionSharePressed(context),
         ),
         IconButton(
-          icon: const Icon(Icons.add),
+          icon: const Icon(Icons.add_outlined),
           tooltip: L10n.global().addItemToCollectionTooltip,
           onPressed: () => _onSelectionAddToAlbumPressed(context),
         ),
@@ -297,7 +297,7 @@ class _HomeSearchState extends State<HomeSearch>
         IconButton(
           onPressed: _onSearchPressed,
           tooltip: L10n.global().searchTooltip,
-          icon: const Icon(Icons.search),
+          icon: const Icon(Icons.search_outlined),
         ),
       ],
       bottom: _isShowLanding(state)

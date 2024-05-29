@@ -108,7 +108,7 @@ class _SelectionAppBar extends StatelessWidget {
         },
         actions: [
           IconButton(
-            icon: const Icon(Icons.delete),
+            icon: const Icon(Icons.delete_outlined),
             tooltip: L10n.global().deleteTooltip,
             onPressed: () {
               context.addEvent(const _RemoveSelectedItems());

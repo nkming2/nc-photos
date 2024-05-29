@@ -205,7 +205,7 @@ class _EnhancedPhotoBrowserState extends State<EnhancedPhotoBrowser>
       },
       actions: [
         IconButton(
-          icon: const Icon(Icons.share),
+          icon: const Icon(Icons.share_outlined),
           tooltip: L10n.global().shareTooltip,
           onPressed: () {
             _onSelectionSharePressed(context);

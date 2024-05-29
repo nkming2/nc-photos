@@ -376,7 +376,7 @@ class _AccountView extends StatelessWidget {
     return _AccountTile(
       account: account,
       trailing: IconButton(
-        icon: const Icon(Icons.logout),
+        icon: const Icon(Icons.logout_outlined),
         tooltip: L10n.global().deleteTooltip,
         onPressed: () async {
           final result = await showDialog<bool>(
@@ -423,7 +423,7 @@ class _NewAccountView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _IconTile(
-      icon: const Icon(Icons.add),
+      icon: const Icon(Icons.add_outlined),
       title: Text(L10n.global().addServerTooltip),
       onTap: () {
         Navigator.of(context)
