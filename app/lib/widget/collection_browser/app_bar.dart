@@ -23,6 +23,7 @@ class _AppBar extends StatelessWidget {
           expandedHeight: 160,
           flexibleSpace: FlexibleSpaceBar(
             background: const _AppBarCover(),
+            centerTitle: false,
             title: Text(
               state.collection.name,
               style: TextStyle(
