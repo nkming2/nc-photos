@@ -136,32 +136,35 @@ class _RemoteImageViewerState extends State<RemoteImageViewer> {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          Hero(
-            tag: flutter_util.getImageHeroTag(widget.file),
-            flightShuttleBuilder: (flightContext, animation, flightDirection,
-                fromHeroContext, toHeroContext) {
-              _isHeroDone = false;
-              animation.addStatusListener(_animationListener);
-              return flutter_util.defaultHeroFlightShuttleBuilder(
-                flightContext,
-                animation,
-                flightDirection,
-                fromHeroContext,
-                toHeroContext,
-              );
-            },
-            child: CachedNetworkImage(
-              fit: BoxFit.contain,
-              cacheManager: ThumbnailCacheManager.inst,
-              imageUrl: NetworkRectThumbnail.imageUrlForFile(
-                  widget.account, widget.file),
-              httpHeaders: {
-                "Authorization":
-                    AuthUtil.fromAccount(widget.account).toHeaderValue(),
+          Opacity(
+            opacity: !_isHeroDone || !_isLoaded ? 1 : 0,
+            child: Hero(
+              tag: flutter_util.getImageHeroTag(widget.file),
+              flightShuttleBuilder: (flightContext, animation, flightDirection,
+                  fromHeroContext, toHeroContext) {
+                _isHeroDone = false;
+                animation.addStatusListener(_animationListener);
+                return flutter_util.defaultHeroFlightShuttleBuilder(
+                  flightContext,
+                  animation,
+                  flightDirection,
+                  fromHeroContext,
+                  toHeroContext,
+                );
               },
-              fadeInDuration: const Duration(),
-              filterQuality: FilterQuality.high,
-              imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
+              child: CachedNetworkImage(
+                fit: BoxFit.contain,
+                cacheManager: ThumbnailCacheManager.inst,
+                imageUrl: NetworkRectThumbnail.imageUrlForFile(
+                    widget.account, widget.file),
+                httpHeaders: {
+                  "Authorization":
+                      AuthUtil.fromAccount(widget.account).toHeaderValue(),
+                },
+                fadeInDuration: const Duration(),
+                filterQuality: FilterQuality.high,
+                imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
+              ),
             ),
           ),
           if (_isHeroDone)
