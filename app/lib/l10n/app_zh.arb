@@ -1,6 +1,6 @@
 {
     "appTitle": "相册",
-    "translator": "zerolin",
+    "translator": "zerolin\n老兄",
     "@translator": {
         "description": "Name of the translator(s) for this language"
     },
@@ -166,9 +166,21 @@
             }
         }
     },
+    "connectingToServer2": "等待服务器授权",
+    "@connectingToServer2": {
+        "description": "Shown when the app is waiting for the user to sign in via an external browser"
+    },
+    "connectingToServerInstruction": "请在打开的浏览器窗口中登入",
+    "@connectingToServerInstruction": {
+        "description": "Shown when the app is waiting for the user to sign in via an external browser"
+    },
     "nameInputHint": "名称",
     "@nameInputHint": {
         "description": "Hint of the text field expecting name data"
+    },
+    "nameInputInvalidEmpty": "名字不能为空",
+    "@nameInputInvalidEmpty": {
+        "description": "Shown when a name input is required but value not given. This is intended to be a generic message and does not assume what this 'name' represents"
     },
     "skipButtonLabel": "跳过",
     "@skipButtonLabel": {
@@ -185,6 +197,10 @@
     "signIn2faHintText": "若你的服务器使用双重认证，请使用应用程式密码登录",
     "@signIn2faHintText": {
         "description": "(deprecated, may be removed in the future)"
+    },
+    "signInHeaderText2": "Nextcloud\n登入",
+    "@signInHeaderText2": {
+        "description": "Sign in to Nextcloud server"
     },
     "serverAddressInputHint": "服务器地址",
     "@serverAddressInputHint": {
@@ -250,6 +266,10 @@
     "@settingsLanguageTitle": {
         "description": "Set display language"
     },
+    "settingsLanguageOptionSystemDefaultLabel": "系统语言",
+    "@settingsLanguageOptionSystemDefaultLabel": {
+        "description": "Follow the Android system language"
+    },
     "settingsExifSupportTitle": "EXIF 支持",
     "@settingsExifSupportTitle": {
         "description": "Title of the EXIF support setting"
@@ -257,6 +277,14 @@
     "settingsExifSupportTrueSubtitle": "需要额外的网络流量",
     "@settingsExifSupportTrueSubtitle": {
         "description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
+    },
+    "settingsExifWifiOnlyTitle": "仅在WiFI网络下处理EXIF文件",
+    "@settingsExifWifiOnlyTitle": {
+        "description": "Whether to only process EXIF data when connected to a Wi-Fi network"
+    },
+    "settingsExifWifiOnlyFalseSubtitle": "可能会产生流量费用",
+    "@settingsExifWifiOnlyFalseSubtitle": {
+        "description": "Shown when users allow processing exif data over any network"
     },
     "settingsMemoriesTitle": "回忆",
     "@settingsMemoriesTitle": {
@@ -267,6 +295,11 @@
         "description": "Memory albums contain photos taken in a specific time range in the past"
     },
     "settingsAccountTitle": "帐号",
+    "settingsAccountLabelTitle": "标签",
+    "@settingsAccountLabelTitle": {
+        "description": "An account label is used to replace the server URL in the app bar, could be useful for privacy reason"
+    },
+    "settingsAccountLabelDescription": "设置一个标签以代替服务器URL显示",
     "settingsIncludedFoldersTitle": "已选取的文件夹",
     "@settingsIncludedFoldersTitle": {
         "description": "Change the included folders of an account"
@@ -291,6 +324,14 @@
     "@settingsServerAppSectionTitle": {
         "description": "Enable/disable various server apps"
     },
+    "settingsPhotosDescription": "自定义在图片页展示的内容",
+    "@settingsPhotosDescription": {
+        "description": "The 'Photos' here means the tab called 'Photos', not literally a photo. The title of this setting will also reuse the label of that tab"
+    },
+    "settingsMemoriesRangeTitle": "回忆天数",
+    "@settingsMemoriesRangeTitle": {
+        "description": "How many adjacent days to be inclded in memories for a particular year"
+    },
     "settingsViewerTitle": "查看器",
     "settingsViewerDescription": "设置照片和视频查看器",
     "settingsScreenBrightnessTitle": "屏幕亮度",
@@ -300,11 +341,32 @@
     "settingsMapProviderTitle": "地图供应商",
     "settingsShowDateInAlbumTitle": "显示日期分类",
     "settingsShowDateInAlbumDescription": "只应用于以日期排序的相册",
+    "settingsImageEditTitle": "编辑器",
+    "@settingsImageEditTitle": {
+        "description": "Include settings for image enhancements and the image editor"
+    },
+    "settingsImageEditDescription": "自定义图片增强与编辑器",
+    "settingsEnhanceMaxResolutionTitle2": "图片增强的分辨率",
+    "settingsEnhanceMaxResolutionDescription": "大于选定分辨率的图片会被缩小。\n\n高分辨率的图片需要更多的内存和时间进行处理。如果增强图片时应用发生了崩溃，请降低该数值。",
+    "settingsImageEditSaveResultsToServerTitle": "将编辑后的图片保存至服务器",
+    "@settingsImageEditSaveResultsToServerTitle": {
+        "description": "Whether to save the edit/enhance results to server instead of the current device"
+    },
+    "settingsImageEditSaveResultsToServerTrueDescription": "编辑后的图片会保存到服务器，出错仍会保存到本地",
+    "settingsImageEditSaveResultsToServerFalseDescription": "编辑后的图片已保存到设备",
     "settingsThemeTitle": "主题",
     "settingsThemeDescription": "设置 App 的外观",
     "settingsFollowSystemThemeTitle": "跟随系统主题",
     "@settingsFollowSystemThemeTitle": {
         "description": "Respect the system dark mode settings introduced on Android 10"
+    },
+    "settingsSeedColorTitle": "主题色",
+    "@settingsSeedColorTitle": {
+        "description": "Customize the colors used in app"
+    },
+    "settingsSeedColorPickerTitle": "选择颜色",
+    "@settingsSeedColorPickerTitle": {
+        "description": "Dialog to customize the colors used in app"
     },
     "settingsUseBlackInDarkThemeTitle": "黑色主题",
     "@settingsUseBlackInDarkThemeTitle": {
@@ -318,8 +380,24 @@
     "@settingsUseBlackInDarkThemeFalseDescription": {
         "description": "When black in dark theme is set to false"
     },
+    "settingsDoubleTapExitTitle": "双击退出",
+    "@settingsDoubleTapExitTitle": {
+        "description": "If enabled, users need to tap the back button twice to exit app"
+    },
+    "settingsPhotosTabSortByNameTitle": "通过文件名排列图片",
+    "@settingsPhotosTabSortByNameTitle": {
+        "description": "Sort photos listed in the Photos tab by filename (descending)"
+    },
     "settingsExperimentalTitle": "实验",
     "settingsExperimentalDescription": "可能不稳定的实验性功能",
+    "settingsExpertTitle": "高级",
+    "@settingsExpertTitle": {
+        "description": "Settings that must be tweaked with caution"
+    },
+    "settingsExpertWarningText": "在进行操作前请确保您完全理解每个选择的作用",
+    "settingsClearCacheDatabaseTitle": "清除文件数据库",
+    "settingsClearCacheDatabaseDescription": "清理缓存的文件信息并完全从服务器重新同步",
+    "settingsClearCacheDatabaseSuccessNotification": "存数据已清除，建议重启应用",
     "settingsAboutSectionTitle": "关于",
     "@settingsAboutSectionTitle": {
         "description": "Title of the about section in settings widget"
@@ -327,6 +405,10 @@
     "settingsVersionTitle": "版本",
     "@settingsVersionTitle": {
         "description": "Title of the version data item"
+    },
+    "settingsServerVersionTitle": "服务器",
+    "@settingsServerVersionTitle": {
+        "description": "This item will show the server software version, e.g., Nextcloud 25"
     },
     "settingsSourceCodeTitle": "源代码",
     "@settingsSourceCodeTitle": {
@@ -519,6 +601,14 @@
     "sortOptionTimeDescendingLabel": "由新到旧",
     "@sortOptionTimeDescendingLabel": {
         "description": "Sort by time, in descending order"
+    },
+    "sortOptionFilenameAscendingLabel": "文件名",
+    "@sortOptionFilenameAscendingLabel": {
+        "description": "Sort by filename, in ascending order"
+    },
+    "sortOptionFilenameDescendingLabel": "文件名（降序）",
+    "@sortOptionFilenameDescendingLabel": {
+        "description": "Sort by filename, in descending order"
     },
     "sortOptionAlbumNameLabel": "相册名称",
     "@sortOptionAlbumNameLabel": {
@@ -735,6 +825,16 @@
     "@shareMethodDialogTitle": {
         "description": "Let the user pick how they want to share"
     },
+    "shareMethodPreviewTitle": "预览",
+    "@shareMethodPreviewTitle": {
+        "description": "Share the preview of a file"
+    },
+    "shareMethodPreviewDescription": "将低质量的预览分享到其他应用（仅支持图片）",
+    "shareMethodOriginalFileTitle": "原始文件",
+    "@shareMethodOriginalFileTitle": {
+        "description": "Share the original file"
+    },
+    "shareMethodOriginalFileDescription": "下载并分享原始文件到其他应用",
     "shareMethodPublicLinkTitle": "公开链接",
     "@shareMethodPublicLinkTitle": {
         "description": "Create a share link on server and share it"
@@ -1006,6 +1106,196 @@
     "@metadataTaskPauseLowBatteryNotification": {
         "description": "Shown when the app has paused reading image metadata due to low battery"
     },
+    "enhanceTooltip": "增强",
+    "@enhanceTooltip": {
+        "description": "Enhance a photo"
+    },
+    "enhanceButtonLabel": "图片增强",
+    "enhanceIntroDialogTitle": "增强你的图片",
+    "enhanceIntroDialogDescription": "你的图片将会在本地处理，默认情况下会降低分辨率至2048x1536，你可以随时在设置的输出分辨率中调整",
+    "enhanceLowLightTitle": "弱光优化",
+    "@enhanceLowLightTitle": {
+        "description": "Enhance a photo taken in low-light environment"
+    },
+    "enhanceLowLightDescription": "在弱光环境下提亮您的照片",
+    "enhanceLowLightParamBrightnessLabel": "亮度",
+    "@enhanceLowLightParamBrightnessLabel": {
+        "description": "This parameter sets how much brighter the output will be"
+    },
+    "collectionEditedPhotosLabel": "本地编辑",
+    "@collectionEditedPhotosLabel": {
+        "description": "List photos on your device that were modified by the app, via image enhancements or the image editor"
+    },
+    "deletePermanentlyLocalConfirmationDialogContent": "被选择的项目将会被永久的从此设备中删除\n\n这个操作是不可逆的",
+    "@deletePermanentlyLocalConfirmationDialogContent": {
+        "description": "Make sure the user wants to delete the items from the current device"
+    },
+    "enhancePortraitBlurTitle": "背景虚化",
+    "@enhancePortraitBlurTitle": {
+        "description": "Blur the background of a photo"
+    },
+    "enhancePortraitBlurDescription": "虚化背景，最适用于肖像照片",
+    "enhancePortraitBlurParamBlurLabel": "模糊度",
+    "@enhancePortraitBlurParamBlurLabel": {
+        "description": "This parameter sets the radius of the blur filter"
+    },
+    "enhanceSuperResolution4xTitle": "超分辨率（4x）",
+    "@enhanceSuperResolution4xTitle": {
+        "description": "Upscale an image. The algorithm implemented in the app will upscale to 4x the original resolution (eg, 100x100 to 400x400)"
+    },
+    "enhanceSuperResolution4xDescription": "将您的照片放大到原始分辨率的4倍（有关最大分辨率如何作用的信息，请参阅帮助）",
+    "enhanceStyleTransferTitle": "风格转变",
+    "@enhanceStyleTransferTitle": {
+        "description": "Transfer the image style from a reference image to a photo"
+    },
+    "enhanceStyleTransferStyleDialogTitle": "选择风格",
+    "@enhanceStyleTransferStyleDialogTitle": {
+        "description": "Pick a reference image for the style transfer algorithm"
+    },
+    "enhanceStyleTransferStyleDialogDescription": "将您的照片转变为参考图片的风格",
+    "enhanceStyleTransferNoStyleSelectedNotification": "选择风格",
+    "@enhanceStyleTransferNoStyleSelectedNotification": {
+        "description": "Show this error if users did not pick a reference image"
+    },
+    "enhanceColorPopDescription": "模糊背景，最实用于肖像图",
+    "enhanceGenericParamWeightLabel": "宽度",
+    "@enhanceGenericParamWeightLabel": {
+        "description": "This generic parameter sets the weight of the applied effect. The effect will be more obvious when the weight is high."
+    },
+    "enhanceRetouchDescription": "自动修饰您的照片，提高整体色彩和生动感",
+    "doubleTapExitNotification": "再次点击以退出",
+    "@doubleTapExitNotification": {
+        "description": "If double tap to exit is enabled in settings, shown when users tap the back button"
+    },
+    "imageEditDiscardDialogTitle": "放弃更改？",
+    "@imageEditDiscardDialogTitle": {
+        "description": "Warn before dismissing image editor (e.g., user pressing back button)"
+    },
+    "imageEditDiscardDialogContent": "你的更改未被保存",
+    "discardButtonLabel": "放弃",
+    "@discardButtonLabel": {
+        "description": "Discard the current unsaved content"
+    },
+    "saveTooltip": "保存",
+    "@saveTooltip": {
+        "description": "Save the current content"
+    },
+    "imageEditColorBrightness": "亮度",
+    "@imageEditColorBrightness": {
+        "description": "Adjust the brightness of an image"
+    },
+    "categoriesLabel": "类别",
+    "searchLandingCategoryVideosLabel": "视频",
+    "@searchLandingCategoryVideosLabel": {
+        "description": "Search all videos"
+    },
+    "searchFilterButtonLabel": "过滤器",
+    "@searchFilterButtonLabel": {
+        "description": "Modify search filters"
+    },
+    "searchFilterDialogTitle": "搜索过滤器",
+    "@searchFilterDialogTitle": {
+        "description": "Dialog to modify search filters"
+    },
+    "applyButtonLabel": "应用",
+    "@applyButtonLabel": {
+        "description": "A confirmation button, typically in a dialog, that apply the current settings"
+    },
+    "searchFilterOptionAnyLabel": "任意",
+    "@searchFilterOptionAnyLabel": {
+        "description": "This is the default option for all search filters. Filters with this value will be ignored"
+    },
+    "searchFilterOptionTrueLabel": "是",
+    "@searchFilterOptionTrueLabel": {
+        "description": "Positive option for a boolean filter"
+    },
+    "searchFilterOptionFalseLabel": "否",
+    "@searchFilterOptionFalseLabel": {
+        "description": "Negative option for a boolean filter"
+    },
+    "searchFilterTypeLabel": "类别",
+    "@searchFilterTypeLabel": {
+        "description": "Filter search results by file type"
+    },
+    "searchFilterTypeOptionImageLabel": "图片",
+    "@searchFilterTypeOptionImageLabel": {
+        "description": "Filter search results by file type"
+    },
+    "searchFilterBubbleTypeImageText": "图片",
+    "@searchFilterBubbleTypeImageText": {
+        "description": "List of active search filters shown in the result page (by file type, image)"
+    },
+    "searchFilterTypeOptionVideoLabel": "视频",
+    "@searchFilterTypeOptionVideoLabel": {
+        "description": "Filter search results by file type"
+    },
+    "searchFilterBubbleTypeVideoText": "视频",
+    "@searchFilterBubbleTypeVideoText": {
+        "description": "List of active search filters shown in the result page (by file type, video)"
+    },
+    "searchFilterFavoriteLabel": "喜爱的",
+    "@searchFilterFavoriteLabel": {
+        "description": "Filter search results by whether it's in favorites"
+    },
+    "showAllButtonLabel": "展示全部",
+    "@showAllButtonLabel": {
+        "description": "A button to show all items of a certain item group (e.g., show all recognized faces)"
+    },
+    "gpsPlaceAboutDialogTitle": "关于地点",
+    "@gpsPlaceAboutDialogTitle": {
+        "description": "Warn about the inaccurate nature of our offline reverse geocoding feature (i.e., converting coordinates into addresses)"
+    },
+    "gpsPlaceAboutDialogContent": "展示的地点仅是一个粗略的估计值。它不代表我们对有争议地区的观点。",
+    "@gpsPlaceAboutDialogContent": {
+        "description": "Warn about the inaccurate nature of our offline reverse geocoding feature (i.e., converting coordinates into addresses)"
+    },
+    "collectionPlacesLabel": "地点",
+    "@collectionPlacesLabel": {
+        "description": "Browse photos grouped by place"
+    },
+    "imageSaveOptionDialogTitle": "保存结果",
+    "@imageSaveOptionDialogTitle": {
+        "description": "This dialog asks users to choose between saving the edited/enhanced result on the device or server"
+    },
+    "imageSaveOptionDialogDeviceButtonLabel": "设备",
+    "@imageSaveOptionDialogDeviceButtonLabel": {
+        "description": "Save the image on the current device"
+    },
+    "imageSaveOptionDialogServerButtonLabel": "服务器",
+    "@imageSaveOptionDialogServerButtonLabel": {
+        "description": "Save the image on your Nextcloud server"
+    },
+    "initialSyncMessage": "这是从服务器的第一次同步",
+    "@initialSyncMessage": {
+        "description": "After adding a new account, the app need to sync with the server before showing anything. This message will be shown on screen instead with a proper progress bar and the folder being synced."
+    },
+    "createCollectionFailureNotification": "创建影集失败",
+    "@createCollectionFailureNotification": {
+        "description": "Inform user that a collection cannot be created"
+    },
+    "addItemToCollectionTooltip": "添加到影集",
+    "@addItemToCollectionTooltip": {
+        "description": "Add one or more items to a collection"
+    },
+    "addItemToCollectionFailureNotification": "添加到影集失败",
+    "@addItemToCollectionFailureNotification": {
+        "description": "Inform user that the item cannot be added to a collection"
+    },
+    "setCollectionCoverFailureNotification": "设置影集封面失败",
+    "@setCollectionCoverFailureNotification": {
+        "description": "Cannot set the opened item as the collection cover"
+    },
+    "exportCollectionTooltip": "导出",
+    "@exportCollectionTooltip": {
+        "description": "Export an arbitrary Collection (typical one with generated contents) as a new static Collection"
+    },
+    "exportCollectionDialogTitle": "导出影集",
+    "createCollectionDialogNextcloudAlbumLabel": "Nextcloud影集",
+    "@createCollectionDialogNextcloudAlbumLabel": {
+        "description": "Server-side albums that are available in Nextcloud 25+"
+    },
+    "createCollectionDialogNextcloudAlbumDescription": "服务器侧影集，需要Nextcloud 25+",
+    "removeCollectionsFailedNotification": "删除影集失败",
     "errorUnauthenticated": "未授权的存取，若问题持续请重新登录",
     "@errorUnauthenticated": {
         "description": "Error message when server responds with HTTP401"
@@ -1037,5 +1327,7 @@
     "errorNoStoragePermission": "需要存取装置文件的权限",
     "@errorNoStoragePermission": {
         "description": "Missing permission on Android"
-    }
+    },
+    "accountSettingsTooltip": "账号设置",
+    "contributorsTooltip": "贡献者"
 }

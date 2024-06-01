@@ -226,7 +226,7 @@
     "@passwordInputInvalidEmpty": {
         "description": "Inform user that the password input field cannot be empty"
     },
-    "rootPickerHeaderText": "PVyberte složky, které mají být zahrnuty",
+    "rootPickerHeaderText": "Vyberte složky, které mají být zahrnuty",
     "@rootPickerHeaderText": {
         "description": "Inform user what to do in root picker widget"
     },
@@ -1064,7 +1064,7 @@
     "@createCollectionDialogAlbumDescription": {
         "description": "Describe how an album collection works"
     },
-    "createCollectionDialogFolderLabel": "Sloýka",
+    "createCollectionDialogFolderLabel": "Složka",
     "@createCollectionDialogFolderLabel": {
         "description": "Create a folder as collection"
     },

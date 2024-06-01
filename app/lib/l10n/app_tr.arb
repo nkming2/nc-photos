@@ -1451,7 +1451,7 @@
     },
     "accountSettingsTooltip": "Hesap Ayarları",
     "contributorsTooltip": "Katkıda bulunanlar",
-    "setAsTooltip": "Ayarla:",
+    "setAsTooltip": "Ayarla",
     "@setAsTooltip": {
         "description": "e.g., set as wallpaper"
     },
