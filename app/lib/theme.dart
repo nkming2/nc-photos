@@ -185,12 +185,12 @@ ThemeData _applyColorScheme(ColorScheme colorScheme) {
     checkboxTheme: CheckboxThemeData(
       fillColor: MaterialStateProperty.resolveWith((states) {
         if (states.contains(MaterialState.disabled)) {
-          return colorScheme.onSurface;
+          return Colors.transparent;
         } else {
           if (states.contains(MaterialState.selected)) {
             return colorScheme.secondary;
           } else {
-            return colorScheme.onSurfaceVariant;
+            return Colors.transparent;
           }
         }
       }),
