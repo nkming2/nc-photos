@@ -97,7 +97,7 @@ class _WrappedAccountSettingsState extends State<_WrappedAccountSettings>
   @override
   void initState() {
     super.initState();
-    _accountController = context.read<AccountController>();
+    _accountController = context.read();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _animationController.repeat(reverse: true);
@@ -111,8 +111,8 @@ class _WrappedAccountSettingsState extends State<_WrappedAccountSettings>
       _log.fine("[dispose] Requesting to resync account");
       _accountController.syncController.requestResync(
         account: _bloc.state.account,
-        filesController: context.read(),
-        personsController: context.read(),
+        filesController: _accountController.filesController,
+        personsController: _accountController.personsController,
         personProvider: _bloc.state.personProvider,
       );
     }
