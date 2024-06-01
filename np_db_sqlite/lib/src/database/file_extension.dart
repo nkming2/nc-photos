@@ -734,6 +734,8 @@ extension SqliteDbFileExtension on SqliteDb {
     } else {
       query.where(files.isCollection.isNotValue(true));
     }
+    query.where(accountFiles.bestDateTime
+        .isSmallerThanValue(at.add(month: -11).toLocalDateTime()));
     Expression<bool>? dateExp;
     for (final d in dates) {
       final thisExp = localTimeColumn.month.equals(d.month) &
