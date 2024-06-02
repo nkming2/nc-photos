@@ -236,12 +236,16 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     _log.info(ev);
     emit(state.copyWith(isEditBusy: true));
     try {
-      await collectionsController.edit(
-        state.collection,
-        name: state.editName,
-        items: state.editItems,
-        itemSort: state.editSort,
-      );
+      if (state.editName != null ||
+          state.editItems != null ||
+          state.editSort != null) {
+        await collectionsController.edit(
+          state.collection,
+          name: state.editName,
+          items: state.editItems,
+          itemSort: state.editSort,
+        );
+      }
       emit(state.copyWith(
         isEditMode: false,
         isEditBusy: false,
