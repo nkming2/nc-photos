@@ -346,6 +346,9 @@ class _ShareFolderDialogState extends State<_ShareFolderDialog> {
             InkWell(
               onTap: _onTextFieldPressed,
               child: TextFormField(
+                style: TextStyle(
+                  color: Theme.of(context).textTheme.bodyMedium!.color,
+                ),
                 enabled: false,
                 controller: _controller,
               ),
