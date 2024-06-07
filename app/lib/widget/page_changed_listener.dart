@@ -10,13 +10,13 @@ class PageChangedListener {
     if (pageController.hasClients) {
       final page = pageController.page!.round();
       if (page != _prevPage) {
-        onPageChanged?.call(page);
+        onPageChanged?.call(_prevPage, page);
         _prevPage = page;
       }
     }
   }
 
   final PageController pageController;
-  final ValueChanged<int>? onPageChanged;
+  final void Function(int from, int to)? onPageChanged;
   int _prevPage;
 }

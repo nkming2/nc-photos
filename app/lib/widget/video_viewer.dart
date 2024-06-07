@@ -110,8 +110,8 @@ class _VideoViewerState extends State<VideoViewer>
 
   Future<void> _initController(String url) async {
     try {
-      _controllerValue = VideoPlayerController.network(
-        url,
+      _controllerValue = VideoPlayerController.networkUrl(
+        Uri.parse(url),
         httpHeaders: {
           "Authorization": AuthUtil.fromAccount(widget.account).toHeaderValue(),
         },

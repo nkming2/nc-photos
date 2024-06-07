@@ -153,7 +153,8 @@ dependencies:
   tuple: ^2.0.2
   url_launcher: ^6.2.6
   uuid: ^3.0.7
-  video_player: 2.4.5
+  video_player:
+  video_player_platform_interface:
   visibility_detector: ^0.4.0+2
   wakelock_plus: ^1.1.1
   woozy_search: ^2.0.3
@@ -162,13 +163,18 @@ dependency_overrides:
   video_player:
     git:
       url: https://gitlab.com/nc-photos/flutter-plugins
-      ref: video_player-v2.4.5-nc-photos-2
+      ref: video_player-v2.8.6-nc-photos-1
       path: packages/video_player/video_player
   video_player_android:
     git:
       url: https://gitlab.com/nc-photos/flutter-plugins
-      ref: video_player-v2.4.5-nc-photos-2
+      ref: video_player-v2.8.6-nc-photos-1
       path: packages/video_player/video_player_android
+  video_player_platform_interface:
+    git:
+      url: https://gitlab.com/nc-photos/flutter-plugins
+      ref: video_player-v2.8.6-nc-photos-1
+      path: packages/video_player/video_player_platform_interface
 
 dev_dependencies:
   test: ^1.22.1

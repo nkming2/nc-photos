@@ -25,7 +25,7 @@ class HorizontalPageViewer extends StatefulWidget {
   final HorizontalPageViewerController controller;
   final double viewportFraction;
   final bool canSwitchPage;
-  final ValueChanged<int>? onPageChanged;
+  final void Function(int from, int to)? onPageChanged;
 }
 
 class _HorizontalPageViewerState extends State<HorizontalPageViewer> {

@@ -11,6 +11,7 @@ import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/asset.dart';
 import 'package:nc_photos/controller/account_controller.dart';
 import 'package:nc_photos/controller/collection_items_controller.dart';
 import 'package:nc_photos/di_container.dart';
@@ -23,6 +24,7 @@ import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/flutter_util.dart';
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/live_photo_util.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/share_handler.dart';
@@ -34,6 +36,8 @@ import 'package:nc_photos/widget/horizontal_page_viewer.dart';
 import 'package:nc_photos/widget/image_editor.dart';
 import 'package:nc_photos/widget/image_enhancer.dart';
 import 'package:nc_photos/widget/image_viewer.dart';
+import 'package:nc_photos/widget/live_photo_viewer.dart';
+import 'package:nc_photos/widget/png_icon.dart';
 import 'package:nc_photos/widget/slideshow_dialog.dart';
 import 'package:nc_photos/widget/slideshow_viewer.dart';
 import 'package:nc_photos/widget/video_viewer.dart';
@@ -43,6 +47,7 @@ import 'package:nc_photos/widget/viewer_mixin.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/or_null.dart';
 import 'package:np_platform_util/np_platform_util.dart';
+import 'package:video_player_platform_interface/video_player_platform_interface.dart';
 
 part 'viewer.g.dart';
 
@@ -164,8 +169,10 @@ class _ViewerState extends State<Viewer>
             controller: _viewerController,
             viewportFraction: _viewportFraction,
             canSwitchPage: _canSwitchPage(),
-            onPageChanged: (_) {
-              setState(() {});
+            onPageChanged: (from, to) {
+              setState(() {
+                _pageStates[from]?.shouldPlayLivePhoto = false;
+              });
             },
           ),
           if (_isShowAppBar)
@@ -206,6 +213,17 @@ class _ViewerState extends State<Viewer>
       centerTitle: isCentered,
       actions: [
         if (!_isDetailPaneActive && _canOpenDetailPane()) ...[
+          if (getLivePhotoTypeFromFile(file) != null)
+            if (_pageStates[index]?.shouldPlayLivePhoto ?? false)
+              IconButton(
+                icon: const Icon(Icons.motion_photos_pause_outlined),
+                onPressed: () => _onPauseMotionPhotosPressed(index),
+              )
+            else
+              IconButton(
+                icon: const PngIcon(icMotionPhotosPlay24dp),
+                onPressed: () => _onPlayMotionPhotosPressed(index),
+              ),
           (_pageStates[index]?.favoriteOverride ?? file.fdIsFavorite) == true
               ? IconButton(
                   icon: const Icon(Icons.star),
@@ -361,6 +379,15 @@ class _ViewerState extends State<Viewer>
   Widget _buildItemView(BuildContext context, int index) {
     final file = _streamFilesView[index];
     if (file_util.isSupportedImageFormat(file)) {
+      final shouldPlayLivePhoto = _pageStates[index]!.shouldPlayLivePhoto;
+      if (shouldPlayLivePhoto) {
+        final livePhotoType = getLivePhotoTypeFromFile(file);
+        if (livePhotoType != null) {
+          return _buildLivePhotoView(context, index, livePhotoType);
+        } else {
+          _log.warning("[_buildItemView] Not a live photo");
+        }
+      }
       return _buildImageView(context, index);
     } else if (file_util.isSupportedVideoFormat(file)) {
       return _buildVideoView(context, index);
@@ -401,6 +428,25 @@ class _ViewerState extends State<Viewer>
       onPause: _onVideoPause,
       isControlVisible: _isShowAppBar && !_isDetailPaneActive,
       canPlay: !_isDetailPaneActive,
+    );
+  }
+
+  Widget _buildLivePhotoView(
+      BuildContext context, int index, LivePhotoType livePhotoType) {
+    return LivePhotoViewer(
+      account: widget.account,
+      file: _streamFilesView[index],
+      onLoaded: () => _onVideoLoaded(index),
+      onHeightChanged: (height) => _updateItemHeight(index, height),
+      canPlay: !_isDetailPaneActive,
+      livePhotoType: livePhotoType,
+      onLoadFailure: () {
+        if (mounted) {
+          setState(() {
+            _pageStates[index]!.shouldPlayLivePhoto = false;
+          });
+        }
+      },
     );
   }
 
@@ -536,6 +582,18 @@ class _ViewerState extends State<Viewer>
         _pageStates[index]!.scrollController.jumpTo(0);
       });
     }
+  }
+
+  void _onPlayMotionPhotosPressed(int index) {
+    setState(() {
+      _pageStates[index]!.shouldPlayLivePhoto = true;
+    });
+  }
+
+  void _onPauseMotionPhotosPressed(int index) {
+    setState(() {
+      _pageStates[index]!.shouldPlayLivePhoto = false;
+    });
   }
 
   Future<void> _onFavoritePressed(int index) async {
@@ -931,6 +989,7 @@ class _PageState {
 
   bool isProcessingFavorite = false;
   bool? favoriteOverride;
+  bool shouldPlayLivePhoto = false;
 }
 
 class _AppBarTitle extends StatelessWidget {
