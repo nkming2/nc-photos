@@ -1,4 +1,5 @@
 import 'package:clock/clock.dart';
+import 'package:flutter/material.dart';
 
 /// Hold non-persisted global variables
 class SessionStorage {
@@ -16,6 +17,8 @@ class SessionStorage {
 
   /// Whether the dynamic_color library is supported in this platform
   bool isSupportDynamicColor = false;
+  ColorScheme? lightDynamicColorScheme;
+  ColorScheme? darkDynamicColorScheme;
 
   DateTime lastSuspendTime = clock.now();
 

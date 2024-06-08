@@ -137,9 +137,10 @@ class _WrappedAppState extends State<_WrappedApp>
           previous.secondarySeedColor != current.secondarySeedColor,
       builder: (context, state) => DynamicColorBuilder(
         builder: (lightDynamic, darkDynamic) {
-          if (lightDynamic != null) {
-            SessionStorage().isSupportDynamicColor = true;
-          }
+          SessionStorage()
+            ..lightDynamicColorScheme = lightDynamic
+            ..darkDynamicColorScheme = darkDynamic
+            ..isSupportDynamicColor = lightDynamic != null;
           final ThemeMode themeMode;
           if (state.isFollowSystemTheme) {
             themeMode = ThemeMode.system;

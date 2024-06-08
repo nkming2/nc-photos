@@ -4,6 +4,7 @@ import 'package:flex_seed_scheme/flex_seed_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nc_photos/controller/pref_controller.dart';
+import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/theme/dimension.dart';
 import 'package:np_ui/np_ui.dart';
 
@@ -116,12 +117,20 @@ ThemeData buildTheme(BuildContext context, Brightness brightness) {
 }
 
 ThemeData buildLightTheme(BuildContext context, [ColorScheme? dynamicScheme]) {
-  final colorScheme = _getColorScheme(context, dynamicScheme, Brightness.light);
+  final colorScheme = _getColorScheme(
+    context,
+    dynamicScheme ?? SessionStorage().lightDynamicColorScheme,
+    Brightness.light,
+  );
   return _applyColorScheme(colorScheme);
 }
 
 ThemeData buildDarkTheme(BuildContext context, [ColorScheme? dynamicScheme]) {
-  final colorScheme = _getColorScheme(context, dynamicScheme, Brightness.dark);
+  final colorScheme = _getColorScheme(
+    context,
+    dynamicScheme ?? SessionStorage().darkDynamicColorScheme,
+    Brightness.dark,
+  );
   if (context.read<PrefController>().isUseBlackInDarkTheme.value) {
     return _applyColorScheme(colorScheme.copyWith(
       background: Colors.black,
