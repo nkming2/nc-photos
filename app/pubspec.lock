@@ -1776,8 +1776,8 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/video_player/video_player"
-      ref: "video_player-v2.8.6-nc-photos-1"
-      resolved-ref: ea754fd61b8bb3c431bd33d1a07709b6f501345c
+      ref: "video_player-v2.8.6-nc-photos-2"
+      resolved-ref: "0df18c0a90238a11d23d766fb296916f4fc3cb5c"
       url: "https://gitlab.com/nc-photos/flutter-plugins"
     source: git
     version: "2.8.6"
@@ -1785,8 +1785,8 @@ packages:
     dependency: "direct overridden"
     description:
       path: "packages/video_player/video_player_android"
-      ref: "video_player-v2.8.6-nc-photos-1"
-      resolved-ref: ea754fd61b8bb3c431bd33d1a07709b6f501345c
+      ref: "video_player-v2.8.6-nc-photos-2"
+      resolved-ref: "0df18c0a90238a11d23d766fb296916f4fc3cb5c"
       url: "https://gitlab.com/nc-photos/flutter-plugins"
     source: git
     version: "2.4.12"
@@ -1802,8 +1802,8 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/video_player/video_player_platform_interface"
-      ref: "video_player-v2.8.6-nc-photos-1"
-      resolved-ref: ea754fd61b8bb3c431bd33d1a07709b6f501345c
+      ref: "video_player-v2.8.6-nc-photos-2"
+      resolved-ref: "0df18c0a90238a11d23d766fb296916f4fc3cb5c"
       url: "https://gitlab.com/nc-photos/flutter-plugins"
     source: git
     version: "6.2.2"
