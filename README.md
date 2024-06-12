@@ -53,6 +53,7 @@ Screenshots contain photos by:
 - Portuguese/Português (contributed by fernosan)
 - Russian/Русский (contributed by kvasenok, meixnt & eriane)
 - Spanish/Español (contributed by luckkmaxx)
+- Turkish/Türkçe (contributed by aliyasiny65)
 
 ## Contributions, troubleshooting and guides
 Please visit the [project wiki](https://gitlab.com/nkming2/nc-photos/-/wikis/home)

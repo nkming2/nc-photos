@@ -381,6 +381,13 @@
     "@settingsSeedColorPickerTitle": {
         "description": "Dialog to customize the colors used in app"
     },
+    "settingsThemePrimaryColor": "Birincil",
+	"settingsThemeSecondaryColor": "İkincil",
+	"settingsThemePresets": "Önayarlar",
+	"settingsSeedColorPickerSystemColorButtonLabel": "SİSTEM RENGİNİ KULLAN",
+	"@settingsSeedColorPickerSystemColorButtonLabel": {
+		"description": "Use color provided by the OS, i.e., Material You"
+	},
     "settingsUseBlackInDarkThemeTitle": "Koyu tema",
     "@settingsUseBlackInDarkThemeTitle": {
         "description": "Make the dark theme darker"
@@ -402,6 +409,28 @@
     "@settingsPhotosTabSortByNameTitle": {
         "description": "Sort photos listed in the Photos tab by filename (descending)"
     },
+    "settingsAppLock": "Uygulama Kilidi",
+	"@settingsAppLock": {
+		"description": "If enabled, users need to authenticate themselves when opening the app"
+	},
+	"settingsAppLockTypeBiometric": "Biyometrik",
+	"@settingsAppLockTypeBiometric": {
+		"description": "Unlock app with fingerprint, face, etc"
+	},
+	"settingsAppLockTypePin": "PIN",
+	"@settingsAppLockTypePin": {
+		"description": "Unlock app with 4 to 6 digits PIN"
+	},
+	"settingsAppLockTypePassword": "Şifre",
+	"@settingsAppLockTypePassword": {
+		"description": "Unlock app with password"
+	},
+	"settingsAppLockDescription": "Eğer etkinleştirilirse, uygulamayı açtığınızda kimlik doğrulamanız istenecektir. Bu özellik sizi gerçek dünyada gerçekleşen saldırılara karşı korumaz.",
+	"settingsAppLockSetupBiometricFallbackDialogTitle": "Biyometrik kullanılamıyorsa alternatif seçin",
+	"settingsAppLockSetupPinDialogTitle": "Uygulamanın kilidini açmak için PIN ayarlayın",
+	"settingsAppLockConfirmPinDialogTitle": "PIN'i tekrar girin",
+	"settingsAppLockSetupPasswordDialogTitle": "Uygulamanın kilidini açmak için şifre ayarlayın",
+	"settingsAppLockConfirmPasswordDialogTitle": "Şifreyi tekrar girin",
     "settingsExperimentalTitle": "Deneysel",
     "settingsExperimentalDescription": "Henüz geliştirme aşamasındaki özellikler",
     "settingsExpertTitle": "Gelişmiş",
@@ -1455,6 +1484,16 @@
     "@setAsTooltip": {
         "description": "e.g., set as wallpaper"
     },
+    "appLockUnlockHint": "Uygulamanın kilidini açın",
+	"@appLockUnlockHint": {
+		"description": "Unlock app via selected means (e.g., password) in case app lock is enabled by user"
+	},
+	"appLockUnlockWrongPassword": "Yanlış Şifre",
+	"@appLockUnlockWrongPassword": {
+		"description": "Unlock app via selected means (e.g., password) in case app lock is enabled by user"
+	},
+	"enabledText": "Etkin",
+	"disabledText": "Devre Dışı",
     "deleteAccountConfirmDialogText": "{server} oturumunuz kapatılıyor",
     "@deleteAccountConfirmDialogText": {
         "description": "Confirmation dialog when deleting an account (i.e., signing out)",
