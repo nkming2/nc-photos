@@ -206,7 +206,18 @@ class _WrappedAppLockSettings extends StatelessWidget {
             child: ListTile(
               title: Text(L10n.global().settingsAppLockTypePassword),
             ),
-            onPressed: () {},
+            onPressed: () async {
+              final result = await _enterPassword(context);
+              if (result == true) {
+                Navigator.of(context).pop(true);
+              } else if (result == false) {
+                SnackBarManager().showSnackBar(SnackBar(
+                  content:
+                      Text(L10n.global().writePreferenceFailureNotification),
+                  duration: k.snackBarDurationNormal,
+                ));
+              }
+            },
           ),
         ],
       ),
