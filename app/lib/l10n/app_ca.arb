@@ -1,583 +1,583 @@
 {
-    "appTitle": "Fotos",
-    "translator": "Arnau Mora",
-    "@translator": {
-        "description": "Name of the translator(s) for this language"
-    },
-    "photosTabLabel": "Fotos",
-    "@photosTabLabel": {
-        "description": "Label of the tab that lists user photos"
-    },
-    "collectionsTooltip": "Col·leccions",
-    "@collectionsTooltip": {
-        "description": "Groups of photos, e.g., albums, trash bin, etc"
-    },
-    "zoomTooltip": "Zoom",
-    "@zoomTooltip": {
-        "description": "Tooltip of the zoom button"
-    },
-    "refreshMenuLabel": "Refrescar",
-    "@refreshMenuLabel": {
-        "description": "Label of the refresh entry in menu"
-    },
-    "settingsMenuLabel": "Configuració",
-    "@settingsMenuLabel": {
-        "description": "Label of the settings entry in menu"
-    },
-    "selectionAppBarTitle": "{count, plural, other{{count} seleccionats}}",
-    "@selectionAppBarTitle": {
-        "description": "Title of the contextual app bar that shows number of selected items",
-        "placeholders": {
-            "count": {
-                "example": "1"
-            }
-        }
-    },
-    "deleteSelectedProcessingNotification": "{count, plural, one{Eliminant 1 element} other{Eliminant {count} elements}}",
-    "@deleteSelectedProcessingNotification": {
-        "description": "Inform user that the selected items are being deleted",
-        "placeholders": {
-            "count": {
-                "example": "1"
-            }
-        }
-    },
-    "deleteSelectedSuccessNotification": "Elements eliminats correctament",
-    "@deleteSelectedSuccessNotification": {
-        "description": "Inform user that the selected items are deleted successfully"
-    },
-    "deleteSelectedFailureNotification": "{count, plural, one{No s'ha pogut eliminar 1 element} other{No s'han pogut eliminar {count} elements}}",
-    "@deleteSelectedFailureNotification": {
-        "description": "Inform user that some/all the selected items cannot be deleted",
-        "placeholders": {
-            "count": {
-                "example": "1"
-            }
-        }
-    },
-    "archiveTooltip": "Arxivar",
-    "@archiveTooltip": {
-        "description": "Archive selected items"
-    },
-    "archiveSelectedProcessingNotification": "{count, plural, one{Arxivant 1 element} other{Arxivant {count} elements}}",
-    "@archiveSelectedProcessingNotification": {
-        "description": "Archiving the selected items",
-        "placeholders": {
-            "count": {
-                "example": "1"
-            }
-        }
-    },
-    "archiveSelectedSuccessNotification": "Elements arxivats correctament",
-    "@archiveSelectedSuccessNotification": {
-        "description": "Archived all selected items successfully"
-    },
-    "archiveSelectedFailureNotification": "{count, plural, one{No s'ha pogut arxivar 1 element} other{No s'han pogut arxivar {count} elements}}",
-    "@archiveSelectedFailureNotification": {
-        "description": "Cannot archive some of the selected items",
-        "placeholders": {
-            "count": {
-                "example": "1"
-            }
-        }
-    },
-    "unarchiveTooltip": "Desarxivar",
-    "@unarchiveTooltip": {
-        "description": "Unarchive selected items"
-    },
-    "unarchiveSelectedProcessingNotification": "{count, plural, one{Desarxivant 1 element} other{Desarxivant {count}  elements}}",
-    "@unarchiveSelectedProcessingNotification": {
-        "description": "Unarchiving selected items",
-        "placeholders": {
-            "count": {
-                "example": "1"
-            }
-        }
-    },
-    "unarchiveSelectedSuccessNotification": "Elements desarxivats correctament",
-    "@unarchiveSelectedSuccessNotification": {
-        "description": "Unarchived all selected items successfully"
-    },
-    "unarchiveSelectedFailureNotification": "{count, plural, one{No s'ha pogut arxivar 1 element} other{No s'han pogut arxivar {count} elements}}",
-    "@unarchiveSelectedFailureNotification": {
-        "description": "Cannot unarchive some of the selected items",
-        "placeholders": {
-            "count": {
-                "example": "1"
-            }
-        }
-    },
-    "deleteTooltip": "Eliminar",
-    "@deleteTooltip": {
-        "description": "Delete selected items"
-    },
-    "deleteProcessingNotification": "Eliminant element",
-    "@deleteProcessingNotification": {
-        "description": "Inform user that the item is being deleted"
-    },
-    "deleteSuccessNotification": "Element eliminat correctament",
-    "@deleteSuccessNotification": {
-        "description": "Inform user that the item is deleted successfully"
-    },
-    "deleteFailureNotification": "No s'ha pogut eliminar",
-    "@deleteFailureNotification": {
-        "description": "Inform user that the item cannot be deleted"
-    },
-    "removeSelectedFromAlbumFailureNotification": "No s'han pogut eliminar de l'àlbum",
-    "@removeSelectedFromAlbumFailureNotification": {
-        "description": "Inform user that the selected items cannot be removed from an album"
-    },
-    "addServerTooltip": "Afegir servidor",
-    "@addServerTooltip": {
-        "description": "Tooltip of the button that adds a new server"
-    },
-    "removeServerSuccessNotification": "{server} eliminat correctament",
-    "@removeServerSuccessNotification": {
-        "description": "Inform user that a server is removed successfully",
-        "placeholders": {
-            "server": {
-                "example": "http://www.example.com"
-            }
-        }
-    },
-    "createAlbumTooltip": "Nou àlbum",
-    "@createAlbumTooltip": {
-        "description": "Tooltip of the button that creates a new album"
-    },
-    "albumSize": "{count, plural, =0{Buit} one{1 element} other{{count} elements}}",
-    "@albumSize": {
-        "description": "Number of items inside an album",
-        "placeholders": {
-            "count": {
-                "example": "1"
-            }
-        }
-    },
-    "albumArchiveLabel": "Arxiu",
-    "@albumArchiveLabel": {
-        "description": "A collection containing all archived photos"
-    },
-    "connectingToServer": "Connectant amb\n{server}",
-    "@connectingToServer": {
-        "description": "(deprecated, may be removed in the future) Inform user that the app is connecting to a server",
-        "placeholders": {
-            "server": {
-                "example": "http://www.example.com"
-            }
-        }
-    },
-    "connectingToServer2": "Esperant a que el servidor ens autoritze",
-    "@connectingToServer2": {
-        "description": "Shown when the app is waiting for the user to sign in via an external browser"
-    },
-    "connectingToServerInstruction": "Per favor, inicia sessió amb el navegador obert",
-    "@connectingToServerInstruction": {
-        "description": "Shown when the app is waiting for the user to sign in via an external browser"
-    },
-    "nameInputHint": "Nom",
-    "@nameInputHint": {
-        "description": "Hint of the text field expecting name data"
-    },
-    "nameInputInvalidEmpty": "El nom és necessari",
-    "@nameInputInvalidEmpty": {
-        "description": "Shown when a name input is required but value not given. This is intended to be a generic message and does not assume what this 'name' represents"
-    },
-    "skipButtonLabel": "SALTAR",
-    "@skipButtonLabel": {
-        "description": "Label of the skip button"
-    },
-    "confirmButtonLabel": "CONFIRMAR",
-    "@confirmButtonLabel": {
-        "description": "Label of the confirm button"
-    },
-    "signInHeaderText": "Inicia sessió al servidor de Nextcloud",
-    "@signInHeaderText": {
-        "description": "(deprecated, may be removed in the future)"
-    },
-    "signIn2faHintText": "Fes servir una contrasenya d'aplicació si tens habilitada l'autentificació de dos passes al servidor",
-    "@signIn2faHintText": {
-        "description": "(deprecated, may be removed in the future)"
-    },
-    "signInHeaderText2": "Nextcloud\nIniciar sessió",
-    "@signInHeaderText2": {
-        "description": "Sign in to Nextcloud server"
-    },
-    "serverAddressInputHint": "Direcció del servidor",
-    "@serverAddressInputHint": {
-        "description": "Hint of the text field expecting server address data"
-    },
-    "serverAddressInputInvalidEmpty": "Per favor, introdueix la direcció del servidor",
-    "@serverAddressInputInvalidEmpty": {
-        "description": "Inform user that the server address input field cannot be empty"
-    },
-    "usernameInputHint": "Nom d'Usuari",
-    "@usernameInputHint": {
-        "description": "Hint of the text field expecting username data"
-    },
-    "usernameInputInvalidEmpty": "Per favor, introdueix el teu nom d'usuari",
-    "@usernameInputInvalidEmpty": {
-        "description": "Inform user that the username input field cannot be empty"
-    },
-    "passwordInputHint": "Contrasenya",
-    "@passwordInputHint": {
-        "description": "Hint of the text field expecting password data"
-    },
-    "passwordInputInvalidEmpty": "Per favor, introdueix la teva contrasenya",
-    "@passwordInputInvalidEmpty": {
-        "description": "Inform user that the password input field cannot be empty"
-    },
-    "rootPickerHeaderText": "Selecciona les carpetes a incloure",
-    "@rootPickerHeaderText": {
-        "description": "Inform user what to do in root picker widget"
-    },
-    "rootPickerSubHeaderText": "Només es mostraran les fotos a aquests directoris. Toca SALTAR per a incloure totes les carpetes",
-    "@rootPickerSubHeaderText": {
-        "description": "Inform user what to do in root picker widget"
-    },
-    "rootPickerNavigateUpItemText": "(ves enrere)",
-    "@rootPickerNavigateUpItemText": {
-        "description": "Text of the list item to navigate up the directory tree"
-    },
-    "rootPickerUnpickFailureNotification": "No s'ha pogut deseleccionar l'element",
-    "@rootPickerUnpickFailureNotification": {
-        "description": "Failed while unpicking an item in the root picker list"
-    },
-    "rootPickerListEmptyNotification": "Per favor, selecciona almenys una carpeta o prem saltar per a incloure-les totes",
-    "@rootPickerListEmptyNotification": {
-        "description": "Error when user pressing confirm without picking any folders"
-    },
-    "setupWidgetTitle": "Per a començar",
-    "@setupWidgetTitle": {
-        "description": "Title of the introductory widget"
-    },
-    "setupSettingsModifyLaterHint": "Pots canviar-ho més tard a la configuració",
-    "@setupSettingsModifyLaterHint": {
-        "description": "Inform user that they can modify this setting after the setup process"
-    },
-    "setupHiddenPrefDirNoticeDetail": "Aquesta aplicació crea una carpeta al servidor de Nextcloud per a desar fitxers de preferències. Per favor, no la modifiques o elimines si no tens pensat eliminar aquesta app",
-    "@setupHiddenPrefDirNoticeDetail": {
-        "description": "Inform user about the preference folder created by this app"
-    },
-    "settingsWidgetTitle": "Configuració",
-    "@settingsWidgetTitle": {
-        "description": "Title of the Settings widget"
-    },
-    "settingsLanguageTitle": "Idioma",
-    "@settingsLanguageTitle": {
-        "description": "Set display language"
-    },
-    "settingsLanguageOptionSystemDefaultLabel": "Per defecte",
-    "@settingsLanguageOptionSystemDefaultLabel": {
-        "description": "Follow the Android system language"
-    },
-    "settingsExifSupportTitle": "Suport EXIF",
-    "@settingsExifSupportTitle": {
-        "description": "Title of the EXIF support setting"
-    },
-    "settingsExifSupportTrueSubtitle": "Requereix un ús extra de la xarxa",
-    "@settingsExifSupportTrueSubtitle": {
-        "description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
-    },
-    "settingsExifWifiOnlyTitle": "Processa l'EXIF només a través de WiFi",
-    "@settingsExifWifiOnlyTitle": {
-        "description": "Whether to only process EXIF data when connected to a Wi-Fi network"
-    },
-    "settingsExifWifiOnlyFalseSubtitle": "Es poden aplicar càrrecs",
-    "@settingsExifWifiOnlyFalseSubtitle": {
-        "description": "Shown when users allow processing exif data over any network"
-    },
-    "settingsMemoriesTitle": "Memories",
-    "@settingsMemoriesTitle": {
-        "description": "Memory albums contain photos taken in a specific time range in the past"
-    },
-    "settingsMemoriesSubtitle": "Mostra fotos fetes al passat",
-    "@settingsMemoriesSubtitle": {
-        "description": "Memory albums contain photos taken in a specific time range in the past"
-    },
-    "settingsAccountTitle": "Compte",
-    "settingsAccountLabelTitle": "Etiqueta",
-    "@settingsAccountLabelTitle": {
-        "description": "An account label is used to replace the server URL in the app bar, could be useful for privacy reason"
-    },
-    "settingsAccountLabelDescription": "Estableix una etiqueta per a mostrar en comptes de l'URL del servidor",
-    "settingsIncludedFoldersTitle": "Carpetes incloses",
-    "@settingsIncludedFoldersTitle": {
-        "description": "Change the included folders of an account"
-    },
-    "settingsShareFolderTitle": "Compartir carpeta",
-    "@settingsShareFolderTitle": {
-        "description": "Set the share folder such that it matches the parameter in config.php"
-    },
-    "settingsShareFolderDialogTitle": "Troba la carpeta compartida",
-    "@settingsShareFolderDialogTitle": {
-        "description": "Set the share folder such that it matches the parameter in config.php"
-    },
-    "settingsShareFolderDialogDescription": "Aquest ajust correspon al paràmetre share_folder a config.php. Els dos valors han de ser idèntics.\n\nPer favor, troba la mateixa carpeta a la establerta en config.php.",
-    "@settingsShareFolderDialogDescription": {
-        "description": "Set the share folder such that it matches the parameter in config.php"
-    },
-    "settingsImageEditSaveResultsToServerFalseDescription": "Els resultats es desen al dispositiu",
-    "settingsThemeTitle": "Tema",
-    "settingsThemeDescription": "Personalitza l'apariència de l'app",
-    "settingsFollowSystemThemeTitle": "Segueix el tema del dispositiu",
-    "@settingsFollowSystemThemeTitle": {
-        "description": "Respect the system dark mode settings introduced on Android 10"
-    },
-    "settingsSeedColorTitle": "Color del tema",
-    "@settingsSeedColorTitle": {
-        "description": "Customize the colors used in app"
-    },
-    "settingsSeedColorDescription": "Utilitzat per a derivar tots els colors de l'app",
-    "@settingsSeedColorDescription": {
-        "description": "Customize the colors used in app"
-    },
-    "settingsSeedColorPickerTitle": "Selecciona un color",
-    "@settingsSeedColorPickerTitle": {
-        "description": "Dialog to customize the colors used in app"
-    },
-    "settingsUseBlackInDarkThemeTitle": "Tema més obscur",
-    "@settingsUseBlackInDarkThemeTitle": {
-        "description": "Make the dark theme darker"
-    },
-    "settingsUseBlackInDarkThemeTrueDescription": "Fes servir el negre al tema obscur",
-    "@settingsUseBlackInDarkThemeTrueDescription": {
-        "description": "When black in dark theme is set to true"
-    },
-    "settingsUseBlackInDarkThemeFalseDescription": "Fes servir el gris al tema obscur",
-    "@settingsUseBlackInDarkThemeFalseDescription": {
-        "description": "When black in dark theme is set to false"
-    },
-    "settingsMiscellaneousTitle": "Varis",
-    "settingsDoubleTapExitTitle": "Prem dos vegades per a sortir",
-    "@settingsDoubleTapExitTitle": {
-        "description": "If enabled, users need to tap the back button twice to exit app"
-    },
-    "settingsPhotosTabSortByNameTitle": "Ordena pel nom del fitxer a Fotos",
-    "@settingsPhotosTabSortByNameTitle": {
-        "description": "Sort photos listed in the Photos tab by filename (descending)"
-    },
-    "settingsExperimentalTitle": "Experimental",
-    "settingsExperimentalDescription": "Funcions que no estan llestes per a un ús diari",
-    "settingsExpertTitle": "Avançat",
-    "@settingsExpertTitle": {
-        "description": "Settings that must be tweaked with caution"
-    },
-    "settingsExpertWarningText": "Per favor estigues segur que entens totes les opcions abans de fer-les servir",
-    "settingsClearCacheDatabaseTitle": "Buida la base de dades de fitxers",
-    "settingsClearCacheDatabaseDescription": "Buida totes les dades desades sobre els arxius, i resincronitza amb el servidor",
-    "settingsClearCacheDatabaseSuccessNotification": "La base de dades s'ha buidat correctament. Es recomana reiniciar l'app",
-    "millimeterCountSymbol": "{count}mm",
-    "@millimeterCountSymbol": {
-        "description": "Number of millimeters",
-        "placeholders": {
-            "count": {
-                "example": "1"
-            }
-        }
-    },
-    "detailsTooltip": "Detalls",
-    "@detailsTooltip": {
-        "description": "Tooltip of the details button"
-    },
-    "downloadTooltip": "Descarrega",
-    "@downloadTooltip": {
-        "description": "Tooltip of the download button"
-    },
-    "downloadProcessingNotification": "Descarregant l'arxiu",
-    "@downloadProcessingNotification": {
-        "description": "Inform user that the file is being downloaded"
-    },
-    "downloadSuccessNotification": "S'ha descarregat correctament",
-    "@downloadSuccessNotification": {
-        "description": "Inform user that the file is downloaded successfully"
-    },
-    "downloadFailureNotification": "No s'ha pogut descarregar",
-    "@downloadFailureNotification": {
-        "description": "Inform user that the file cannot be downloaded"
-    },
-    "nextTooltip": "Següent",
-    "@nextTooltip": {
-        "description": "Tooltip of the next button"
-    },
-    "previousTooltip": "Anterior",
-    "@previousTooltip": {
-        "description": "Tooltip of the previous button"
-    },
-    "webSelectRangeNotification": "Mantè shift + clic per a seleccionar tots els d'enmig",
-    "@webSelectRangeNotification": {
-        "description": "Inform web user how to select items in range"
-    },
-    "mobileSelectRangeNotification": "Manté premut un altre element per a seleccionar tots els d'enmig",
-    "@mobileSelectRangeNotification": {
-        "description": "Inform mobile user how to select items in range"
-    },
-    "updateDateTimeDialogTitle": "Modifica la data i hora",
-    "@updateDateTimeDialogTitle": {
-        "description": "Dialog to modify the date & time of a file"
-    },
-    "dateSubtitle": "Data",
-    "timeSubtitle": "Hora",
-    "dateYearInputHint": "Any",
-    "dateMonthInputHint": "Mes",
-    "dateDayInputHint": "Dia",
-    "timeHourInputHint": "Hora",
-    "timeMinuteInputHint": "Minut",
-    "timeSecondInputHint": "Segon",
-    "dateTimeInputInvalid": "Valor invàlid",
-    "@dateTimeInputInvalid": {
-        "description": "Invalid date/time input (e.g., non-numeric characters)"
-    },
-    "sortOptionAlbumNameDescendingLabel": "Nom de l'àlbum (descendent)",
-    "@sortOptionAlbumNameDescendingLabel": {
-        "description": "Sort by album name, in descending order"
-    },
-    "sortOptionManualLabel": "Manual",
-    "@sortOptionManualLabel": {
-        "description": "Sort manually"
-    },
-    "albumEditDragRearrangeNotification": "Prem i arrastra per a reordenar manualment",
-    "@albumEditDragRearrangeNotification": {
-        "description": "Instructions on how to rearrange photos"
-    },
-    "albumAddTextTooltip": "Afegeix text",
-    "@albumAddTextTooltip": {
-        "description": "Add some text that display between photos to an album"
-    },
-    "shareTooltip": "Compartir",
-    "@shareTooltip": {
-        "description": "Share selected items to other apps"
-    },
-    "shareSelectedEmptyNotification": "Selecciona algunes fotos per a compartir",
-    "@shareSelectedEmptyNotification": {
-        "description": "Shown when user pressed the share button with only non-sharable items (e.g., text labels) selected"
-    },
-    "shareDownloadingDialogContent": "Descarregant",
-    "@shareDownloadingDialogContent": {
-        "description": "Downloading photos to be shared"
-    },
-    "searchTooltip": "Cerca",
-    "clearTooltip": "Buidar",
-    "@clearTooltip": {
-        "description": "Clear some sort of user input, typically a text field"
-    },
-    "listNoResultsText": "Sense resultats",
-    "@listNoResultsText": {
-        "description": "When there's nothing in a list"
-    },
-    "listEmptyText": "Buit",
-    "@listEmptyText": {
-        "description": "When there's nothing in a list"
-    },
-    "albumTrashLabel": "Paperera",
-    "@albumTrashLabel": {
-        "description": "Deleted photos"
-    },
-    "restoreTooltip": "Restaurar",
-    "@restoreTooltip": {
-        "description": "Restore selected items from trashbin"
-    },
-    "restoreSelectedProcessingNotification": "{count, plural, one{Restaurant 1 element} other{Restaurant {count} elements}}",
-    "@restoreSelectedProcessingNotification": {
-        "description": "Restoring selected items from trashbin",
-        "placeholders": {
-            "count": {
-                "example": "1"
-            }
-        }
-    },
-    "restoreSelectedSuccessNotification": "Tots els elements s'han restaurat correctament",
-    "@restoreSelectedSuccessNotification": {
-        "description": "Restored all selected items from trashbin successfully"
-    },
-    "restoreSelectedFailureNotification": "{count, plural, one{No s'ha pogut restaurar 1 element} other{No s'han pogut restaurar {count} elements}}",
-    "@restoreSelectedFailureNotification": {
-        "description": "Cannot restore some of the selected items from trashbin",
-        "placeholders": {
-            "count": {
-                "example": "1"
-            }
-        }
-    },
-    "restoreProcessingNotification": "Restaurant element",
-    "@restoreProcessingNotification": {
-        "description": "Restoring the opened item from trashbin"
-    },
-    "restoreSuccessNotification": "S'ha restaurat l'element amb èxit",
-    "@restoreSuccessNotification": {
-        "description": "Restored the opened item from trashbin successfully"
-    },
-    "restoreFailureNotification": "No s'ha pogut restaurar l'element",
-    "@restoreFailureNotification": {
-        "description": "Cannot restore the opened item from trashbin"
-    },
-    "deletePermanentlyTooltip": "Eliminar permanentment",
-    "@deletePermanentlyTooltip": {
-        "description": "Permanently delete selected items from trashbin"
-    },
-    "emptyTrashbinConfirmationDialogContent": "Tots els elements s'eliminaran permanentment del servidor.\n\nAquesta acció no és reversible",
-    "@emptyTrashbinConfirmationDialogContent": {
-        "description": "Make sure the user wants to delete all items"
-    },
-    "unsetAlbumCoverTooltip": "Elimina la coberta",
-    "@unsetAlbumCoverTooltip": {
-        "description": "Unset the cover of the opened album"
-    },
-    "muteTooltip": "Silencia",
-    "@muteTooltip": {
-        "description": "Mute the video player"
-    },
-    "unmuteTooltip": "Desilencia",
-    "@unmuteTooltip": {
-        "description": "Unmute the video player"
-    },
-    "collectionPeopleLabel": "Gent",
-    "@collectionPeopleLabel": {
-        "description": "Browse photos grouped by person"
-    },
-    "slideshowTooltip": "Carrussel",
-    "@slideshowTooltip": {
-        "description": "A button to start a slideshow from the current collection"
-    },
-    "slideshowSetupDialogTitle": "Configura el carrussel",
-    "@slideshowSetupDialogTitle": {
-        "description": "Setup slideshow before starting"
-    },
-    "slideshowSetupDialogDurationTitle": "Duració de la imatge (MM:SS)",
-    "@slideshowSetupDialogDurationTitle": {
-        "description": "Set the duration of each image in MM:SS format. This setting is ignored for videos"
-    },
-    "slideshowSetupDialogShuffleTitle": "Mescla",
-    "@slideshowSetupDialogShuffleTitle": {
-        "description": "Whether to shuffle the collection"
-    },
-    "slideshowSetupDialogRepeatTitle": "Repeteix",
-    "@slideshowSetupDialogRepeatTitle": {
-        "description": "Whether to restart the slideshow from the beginning after the last slide"
-    },
-    "slideshowSetupDialogReverseTitle": "Inverteix",
-    "@slideshowSetupDialogReverseTitle": {
-        "description": "Whether to play the slideshow in reverse order"
-    },
-    "linkCopiedNotification": "Enllaç copiat",
-    "@linkCopiedNotification": {
-        "description": "Copied the share link to clipboard"
-    },
-    "shareMethodDialogTitle": "Comparteix com a",
-    "@shareMethodDialogTitle": {
-        "description": "Let the user pick how they want to share"
-    },
-    "shareMethodPreviewTitle": "Previsualitza",
-    "@shareMethodPreviewTitle": {
-        "description": "Share the preview of a file"
-    },
-    "shareMethodPreviewDescription": "Comparteix com a una previsualització amb altres apps (només es suporten imatges)",
-    "shareMethodOriginalFileTitle": "Arxiu original",
-    "@shareMethodOriginalFileTitle": {
-        "description": "Share the original file"
-    },
-    "shareMethodOriginalFileDescription": "Descarrega l'arxiu original i comparteix-lo amb altres apps",
-    "shareMethodPublicLinkTitle": "Enllaç públic",
-    "@shareMethodPublicLinkTitle": {
-        "description": "Create a share link on server and share it"
-    }
+	"appTitle": "Fotos",
+	"translator": "Arnau Mora",
+	"@translator": {
+		"description": "Name of the translator(s) for this language"
+	},
+	"photosTabLabel": "Fotos",
+	"@photosTabLabel": {
+		"description": "Label of the tab that lists user photos"
+	},
+	"collectionsTooltip": "Col·leccions",
+	"@collectionsTooltip": {
+		"description": "Groups of photos, e.g., albums, trash bin, etc"
+	},
+	"zoomTooltip": "Zoom",
+	"@zoomTooltip": {
+		"description": "Tooltip of the zoom button"
+	},
+	"refreshMenuLabel": "Refrescar",
+	"@refreshMenuLabel": {
+		"description": "Label of the refresh entry in menu"
+	},
+	"settingsMenuLabel": "Configuració",
+	"@settingsMenuLabel": {
+		"description": "Label of the settings entry in menu"
+	},
+	"selectionAppBarTitle": "{count, plural, other{{count} seleccionats}}",
+	"@selectionAppBarTitle": {
+		"description": "Title of the contextual app bar that shows number of selected items",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"deleteSelectedProcessingNotification": "{count, plural, one{Eliminant 1 element} other{Eliminant {count} elements}}",
+	"@deleteSelectedProcessingNotification": {
+		"description": "Inform user that the selected items are being deleted",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"deleteSelectedSuccessNotification": "Elements eliminats correctament",
+	"@deleteSelectedSuccessNotification": {
+		"description": "Inform user that the selected items are deleted successfully"
+	},
+	"deleteSelectedFailureNotification": "{count, plural, one{No s'ha pogut eliminar 1 element} other{No s'han pogut eliminar {count} elements}}",
+	"@deleteSelectedFailureNotification": {
+		"description": "Inform user that some/all the selected items cannot be deleted",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"archiveTooltip": "Arxivar",
+	"@archiveTooltip": {
+		"description": "Archive selected items"
+	},
+	"archiveSelectedProcessingNotification": "{count, plural, one{Arxivant 1 element} other{Arxivant {count} elements}}",
+	"@archiveSelectedProcessingNotification": {
+		"description": "Archiving the selected items",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"archiveSelectedSuccessNotification": "Elements arxivats correctament",
+	"@archiveSelectedSuccessNotification": {
+		"description": "Archived all selected items successfully"
+	},
+	"archiveSelectedFailureNotification": "{count, plural, one{No s'ha pogut arxivar 1 element} other{No s'han pogut arxivar {count} elements}}",
+	"@archiveSelectedFailureNotification": {
+		"description": "Cannot archive some of the selected items",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"unarchiveTooltip": "Desarxivar",
+	"@unarchiveTooltip": {
+		"description": "Unarchive selected items"
+	},
+	"unarchiveSelectedProcessingNotification": "{count, plural, one{Desarxivant 1 element} other{Desarxivant {count}  elements}}",
+	"@unarchiveSelectedProcessingNotification": {
+		"description": "Unarchiving selected items",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"unarchiveSelectedSuccessNotification": "Elements desarxivats correctament",
+	"@unarchiveSelectedSuccessNotification": {
+		"description": "Unarchived all selected items successfully"
+	},
+	"unarchiveSelectedFailureNotification": "{count, plural, one{No s'ha pogut arxivar 1 element} other{No s'han pogut arxivar {count} elements}}",
+	"@unarchiveSelectedFailureNotification": {
+		"description": "Cannot unarchive some of the selected items",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"deleteTooltip": "Eliminar",
+	"@deleteTooltip": {
+		"description": "Delete selected items"
+	},
+	"deleteProcessingNotification": "Eliminant element",
+	"@deleteProcessingNotification": {
+		"description": "Inform user that the item is being deleted"
+	},
+	"deleteSuccessNotification": "Element eliminat correctament",
+	"@deleteSuccessNotification": {
+		"description": "Inform user that the item is deleted successfully"
+	},
+	"deleteFailureNotification": "No s'ha pogut eliminar",
+	"@deleteFailureNotification": {
+		"description": "Inform user that the item cannot be deleted"
+	},
+	"removeSelectedFromAlbumFailureNotification": "No s'han pogut eliminar de l'àlbum",
+	"@removeSelectedFromAlbumFailureNotification": {
+		"description": "Inform user that the selected items cannot be removed from an album"
+	},
+	"addServerTooltip": "Afegir servidor",
+	"@addServerTooltip": {
+		"description": "Tooltip of the button that adds a new server"
+	},
+	"removeServerSuccessNotification": "{server} eliminat correctament",
+	"@removeServerSuccessNotification": {
+		"description": "Inform user that a server is removed successfully",
+		"placeholders": {
+			"server": {
+				"example": "http://www.example.com"
+			}
+		}
+	},
+	"createAlbumTooltip": "Nou àlbum",
+	"@createAlbumTooltip": {
+		"description": "Tooltip of the button that creates a new album"
+	},
+	"albumSize": "{count, plural, =0{Buit} one{1 element} other{{count} elements}}",
+	"@albumSize": {
+		"description": "Number of items inside an album",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"albumArchiveLabel": "Arxiu",
+	"@albumArchiveLabel": {
+		"description": "A collection containing all archived photos"
+	},
+	"connectingToServer": "Connectant amb\n{server}",
+	"@connectingToServer": {
+		"description": "(deprecated, may be removed in the future) Inform user that the app is connecting to a server",
+		"placeholders": {
+			"server": {
+				"example": "http://www.example.com"
+			}
+		}
+	},
+	"connectingToServer2": "Esperant a que el servidor ens autoritze",
+	"@connectingToServer2": {
+		"description": "Shown when the app is waiting for the user to sign in via an external browser"
+	},
+	"connectingToServerInstruction": "Per favor, inicia sessió amb el navegador obert",
+	"@connectingToServerInstruction": {
+		"description": "Shown when the app is waiting for the user to sign in via an external browser"
+	},
+	"nameInputHint": "Nom",
+	"@nameInputHint": {
+		"description": "Hint of the text field expecting name data"
+	},
+	"nameInputInvalidEmpty": "El nom és necessari",
+	"@nameInputInvalidEmpty": {
+		"description": "Shown when a name input is required but value not given. This is intended to be a generic message and does not assume what this 'name' represents"
+	},
+	"skipButtonLabel": "SALTAR",
+	"@skipButtonLabel": {
+		"description": "Label of the skip button"
+	},
+	"confirmButtonLabel": "CONFIRMAR",
+	"@confirmButtonLabel": {
+		"description": "Label of the confirm button"
+	},
+	"signInHeaderText": "Inicia sessió al servidor de Nextcloud",
+	"@signInHeaderText": {
+		"description": "(deprecated, may be removed in the future)"
+	},
+	"signIn2faHintText": "Fes servir una contrasenya d'aplicació si tens habilitada l'autentificació de dos passes al servidor",
+	"@signIn2faHintText": {
+		"description": "(deprecated, may be removed in the future)"
+	},
+	"signInHeaderText2": "Nextcloud\nIniciar sessió",
+	"@signInHeaderText2": {
+		"description": "Sign in to Nextcloud server"
+	},
+	"serverAddressInputHint": "Direcció del servidor",
+	"@serverAddressInputHint": {
+		"description": "Hint of the text field expecting server address data"
+	},
+	"serverAddressInputInvalidEmpty": "Per favor, introdueix la direcció del servidor",
+	"@serverAddressInputInvalidEmpty": {
+		"description": "Inform user that the server address input field cannot be empty"
+	},
+	"usernameInputHint": "Nom d'Usuari",
+	"@usernameInputHint": {
+		"description": "Hint of the text field expecting username data"
+	},
+	"usernameInputInvalidEmpty": "Per favor, introdueix el teu nom d'usuari",
+	"@usernameInputInvalidEmpty": {
+		"description": "Inform user that the username input field cannot be empty"
+	},
+	"passwordInputHint": "Contrasenya",
+	"@passwordInputHint": {
+		"description": "Hint of the text field expecting password data"
+	},
+	"passwordInputInvalidEmpty": "Per favor, introdueix la teva contrasenya",
+	"@passwordInputInvalidEmpty": {
+		"description": "Inform user that the password input field cannot be empty"
+	},
+	"rootPickerHeaderText": "Selecciona les carpetes a incloure",
+	"@rootPickerHeaderText": {
+		"description": "Inform user what to do in root picker widget"
+	},
+	"rootPickerSubHeaderText": "Només es mostraran les fotos a aquests directoris. Toca SALTAR per a incloure totes les carpetes",
+	"@rootPickerSubHeaderText": {
+		"description": "Inform user what to do in root picker widget"
+	},
+	"rootPickerNavigateUpItemText": "(ves enrere)",
+	"@rootPickerNavigateUpItemText": {
+		"description": "Text of the list item to navigate up the directory tree"
+	},
+	"rootPickerUnpickFailureNotification": "No s'ha pogut deseleccionar l'element",
+	"@rootPickerUnpickFailureNotification": {
+		"description": "Failed while unpicking an item in the root picker list"
+	},
+	"rootPickerListEmptyNotification": "Per favor, selecciona almenys una carpeta o prem saltar per a incloure-les totes",
+	"@rootPickerListEmptyNotification": {
+		"description": "Error when user pressing confirm without picking any folders"
+	},
+	"setupWidgetTitle": "Per a començar",
+	"@setupWidgetTitle": {
+		"description": "Title of the introductory widget"
+	},
+	"setupSettingsModifyLaterHint": "Pots canviar-ho més tard a la configuració",
+	"@setupSettingsModifyLaterHint": {
+		"description": "Inform user that they can modify this setting after the setup process"
+	},
+	"setupHiddenPrefDirNoticeDetail": "Aquesta aplicació crea una carpeta al servidor de Nextcloud per a desar fitxers de preferències. Per favor, no la modifiques o elimines si no tens pensat eliminar aquesta app",
+	"@setupHiddenPrefDirNoticeDetail": {
+		"description": "Inform user about the preference folder created by this app"
+	},
+	"settingsWidgetTitle": "Configuració",
+	"@settingsWidgetTitle": {
+		"description": "Title of the Settings widget"
+	},
+	"settingsLanguageTitle": "Idioma",
+	"@settingsLanguageTitle": {
+		"description": "Set display language"
+	},
+	"settingsLanguageOptionSystemDefaultLabel": "Per defecte",
+	"@settingsLanguageOptionSystemDefaultLabel": {
+		"description": "Follow the Android system language"
+	},
+	"settingsExifSupportTitle": "Suport EXIF",
+	"@settingsExifSupportTitle": {
+		"description": "Title of the EXIF support setting"
+	},
+	"settingsExifSupportTrueSubtitle": "Requereix un ús extra de la xarxa",
+	"@settingsExifSupportTrueSubtitle": {
+		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
+	},
+	"settingsExifWifiOnlyTitle": "Processa l'EXIF només a través de WiFi",
+	"@settingsExifWifiOnlyTitle": {
+		"description": "Whether to only process EXIF data when connected to a Wi-Fi network"
+	},
+	"settingsExifWifiOnlyFalseSubtitle": "Es poden aplicar càrrecs",
+	"@settingsExifWifiOnlyFalseSubtitle": {
+		"description": "Shown when users allow processing exif data over any network"
+	},
+	"settingsMemoriesTitle": "Memories",
+	"@settingsMemoriesTitle": {
+		"description": "Memory albums contain photos taken in a specific time range in the past"
+	},
+	"settingsMemoriesSubtitle": "Mostra fotos fetes al passat",
+	"@settingsMemoriesSubtitle": {
+		"description": "Memory albums contain photos taken in a specific time range in the past"
+	},
+	"settingsAccountTitle": "Compte",
+	"settingsAccountLabelTitle": "Etiqueta",
+	"@settingsAccountLabelTitle": {
+		"description": "An account label is used to replace the server URL in the app bar, could be useful for privacy reason"
+	},
+	"settingsAccountLabelDescription": "Estableix una etiqueta per a mostrar en comptes de l'URL del servidor",
+	"settingsIncludedFoldersTitle": "Carpetes incloses",
+	"@settingsIncludedFoldersTitle": {
+		"description": "Change the included folders of an account"
+	},
+	"settingsShareFolderTitle": "Compartir carpeta",
+	"@settingsShareFolderTitle": {
+		"description": "Set the share folder such that it matches the parameter in config.php"
+	},
+	"settingsShareFolderDialogTitle": "Troba la carpeta compartida",
+	"@settingsShareFolderDialogTitle": {
+		"description": "Set the share folder such that it matches the parameter in config.php"
+	},
+	"settingsShareFolderDialogDescription": "Aquest ajust correspon al paràmetre share_folder a config.php. Els dos valors han de ser idèntics.\n\nPer favor, troba la mateixa carpeta a la establerta en config.php.",
+	"@settingsShareFolderDialogDescription": {
+		"description": "Set the share folder such that it matches the parameter in config.php"
+	},
+	"settingsImageEditSaveResultsToServerFalseDescription": "Els resultats es desen al dispositiu",
+	"settingsThemeTitle": "Tema",
+	"settingsThemeDescription": "Personalitza l'apariència de l'app",
+	"settingsFollowSystemThemeTitle": "Segueix el tema del dispositiu",
+	"@settingsFollowSystemThemeTitle": {
+		"description": "Respect the system dark mode settings introduced on Android 10"
+	},
+	"settingsSeedColorTitle": "Color del tema",
+	"@settingsSeedColorTitle": {
+		"description": "Customize the colors used in app"
+	},
+	"settingsSeedColorDescription": "Utilitzat per a derivar tots els colors de l'app",
+	"@settingsSeedColorDescription": {
+		"description": "Customize the colors used in app"
+	},
+	"settingsSeedColorPickerTitle": "Selecciona un color",
+	"@settingsSeedColorPickerTitle": {
+		"description": "Dialog to customize the colors used in app"
+	},
+	"settingsUseBlackInDarkThemeTitle": "Tema més obscur",
+	"@settingsUseBlackInDarkThemeTitle": {
+		"description": "Make the dark theme darker"
+	},
+	"settingsUseBlackInDarkThemeTrueDescription": "Fes servir el negre al tema obscur",
+	"@settingsUseBlackInDarkThemeTrueDescription": {
+		"description": "When black in dark theme is set to true"
+	},
+	"settingsUseBlackInDarkThemeFalseDescription": "Fes servir el gris al tema obscur",
+	"@settingsUseBlackInDarkThemeFalseDescription": {
+		"description": "When black in dark theme is set to false"
+	},
+	"settingsMiscellaneousTitle": "Varis",
+	"settingsDoubleTapExitTitle": "Prem dos vegades per a sortir",
+	"@settingsDoubleTapExitTitle": {
+		"description": "If enabled, users need to tap the back button twice to exit app"
+	},
+	"settingsPhotosTabSortByNameTitle": "Ordena pel nom del fitxer a Fotos",
+	"@settingsPhotosTabSortByNameTitle": {
+		"description": "Sort photos listed in the Photos tab by filename (descending)"
+	},
+	"settingsExperimentalTitle": "Experimental",
+	"settingsExperimentalDescription": "Funcions que no estan llestes per a un ús diari",
+	"settingsExpertTitle": "Avançat",
+	"@settingsExpertTitle": {
+		"description": "Settings that must be tweaked with caution"
+	},
+	"settingsExpertWarningText": "Per favor estigues segur que entens totes les opcions abans de fer-les servir",
+	"settingsClearCacheDatabaseTitle": "Buida la base de dades de fitxers",
+	"settingsClearCacheDatabaseDescription": "Buida totes les dades desades sobre els arxius, i resincronitza amb el servidor",
+	"settingsClearCacheDatabaseSuccessNotification": "La base de dades s'ha buidat correctament. Es recomana reiniciar l'app",
+	"millimeterCountSymbol": "{count}mm",
+	"@millimeterCountSymbol": {
+		"description": "Number of millimeters",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"detailsTooltip": "Detalls",
+	"@detailsTooltip": {
+		"description": "Tooltip of the details button"
+	},
+	"downloadTooltip": "Descarrega",
+	"@downloadTooltip": {
+		"description": "Tooltip of the download button"
+	},
+	"downloadProcessingNotification": "Descarregant l'arxiu",
+	"@downloadProcessingNotification": {
+		"description": "Inform user that the file is being downloaded"
+	},
+	"downloadSuccessNotification": "S'ha descarregat correctament",
+	"@downloadSuccessNotification": {
+		"description": "Inform user that the file is downloaded successfully"
+	},
+	"downloadFailureNotification": "No s'ha pogut descarregar",
+	"@downloadFailureNotification": {
+		"description": "Inform user that the file cannot be downloaded"
+	},
+	"nextTooltip": "Següent",
+	"@nextTooltip": {
+		"description": "Tooltip of the next button"
+	},
+	"previousTooltip": "Anterior",
+	"@previousTooltip": {
+		"description": "Tooltip of the previous button"
+	},
+	"webSelectRangeNotification": "Mantè shift + clic per a seleccionar tots els d'enmig",
+	"@webSelectRangeNotification": {
+		"description": "Inform web user how to select items in range"
+	},
+	"mobileSelectRangeNotification": "Manté premut un altre element per a seleccionar tots els d'enmig",
+	"@mobileSelectRangeNotification": {
+		"description": "Inform mobile user how to select items in range"
+	},
+	"updateDateTimeDialogTitle": "Modifica la data i hora",
+	"@updateDateTimeDialogTitle": {
+		"description": "Dialog to modify the date & time of a file"
+	},
+	"dateSubtitle": "Data",
+	"timeSubtitle": "Hora",
+	"dateYearInputHint": "Any",
+	"dateMonthInputHint": "Mes",
+	"dateDayInputHint": "Dia",
+	"timeHourInputHint": "Hora",
+	"timeMinuteInputHint": "Minut",
+	"timeSecondInputHint": "Segon",
+	"dateTimeInputInvalid": "Valor invàlid",
+	"@dateTimeInputInvalid": {
+		"description": "Invalid date/time input (e.g., non-numeric characters)"
+	},
+	"sortOptionAlbumNameDescendingLabel": "Nom de l'àlbum (descendent)",
+	"@sortOptionAlbumNameDescendingLabel": {
+		"description": "Sort by album name, in descending order"
+	},
+	"sortOptionManualLabel": "Manual",
+	"@sortOptionManualLabel": {
+		"description": "Sort manually"
+	},
+	"albumEditDragRearrangeNotification": "Prem i arrastra per a reordenar manualment",
+	"@albumEditDragRearrangeNotification": {
+		"description": "Instructions on how to rearrange photos"
+	},
+	"albumAddTextTooltip": "Afegeix text",
+	"@albumAddTextTooltip": {
+		"description": "Add some text that display between photos to an album"
+	},
+	"shareTooltip": "Compartir",
+	"@shareTooltip": {
+		"description": "Share selected items to other apps"
+	},
+	"shareSelectedEmptyNotification": "Selecciona algunes fotos per a compartir",
+	"@shareSelectedEmptyNotification": {
+		"description": "Shown when user pressed the share button with only non-sharable items (e.g., text labels) selected"
+	},
+	"shareDownloadingDialogContent": "Descarregant",
+	"@shareDownloadingDialogContent": {
+		"description": "Downloading photos to be shared"
+	},
+	"searchTooltip": "Cerca",
+	"clearTooltip": "Buidar",
+	"@clearTooltip": {
+		"description": "Clear some sort of user input, typically a text field"
+	},
+	"listNoResultsText": "Sense resultats",
+	"@listNoResultsText": {
+		"description": "When there's nothing in a list"
+	},
+	"listEmptyText": "Buit",
+	"@listEmptyText": {
+		"description": "When there's nothing in a list"
+	},
+	"albumTrashLabel": "Paperera",
+	"@albumTrashLabel": {
+		"description": "Deleted photos"
+	},
+	"restoreTooltip": "Restaurar",
+	"@restoreTooltip": {
+		"description": "Restore selected items from trashbin"
+	},
+	"restoreSelectedProcessingNotification": "{count, plural, one{Restaurant 1 element} other{Restaurant {count} elements}}",
+	"@restoreSelectedProcessingNotification": {
+		"description": "Restoring selected items from trashbin",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"restoreSelectedSuccessNotification": "Tots els elements s'han restaurat correctament",
+	"@restoreSelectedSuccessNotification": {
+		"description": "Restored all selected items from trashbin successfully"
+	},
+	"restoreSelectedFailureNotification": "{count, plural, one{No s'ha pogut restaurar 1 element} other{No s'han pogut restaurar {count} elements}}",
+	"@restoreSelectedFailureNotification": {
+		"description": "Cannot restore some of the selected items from trashbin",
+		"placeholders": {
+			"count": {
+				"example": "1"
+			}
+		}
+	},
+	"restoreProcessingNotification": "Restaurant element",
+	"@restoreProcessingNotification": {
+		"description": "Restoring the opened item from trashbin"
+	},
+	"restoreSuccessNotification": "S'ha restaurat l'element amb èxit",
+	"@restoreSuccessNotification": {
+		"description": "Restored the opened item from trashbin successfully"
+	},
+	"restoreFailureNotification": "No s'ha pogut restaurar l'element",
+	"@restoreFailureNotification": {
+		"description": "Cannot restore the opened item from trashbin"
+	},
+	"deletePermanentlyTooltip": "Eliminar permanentment",
+	"@deletePermanentlyTooltip": {
+		"description": "Permanently delete selected items from trashbin"
+	},
+	"emptyTrashbinConfirmationDialogContent": "Tots els elements s'eliminaran permanentment del servidor.\n\nAquesta acció no és reversible",
+	"@emptyTrashbinConfirmationDialogContent": {
+		"description": "Make sure the user wants to delete all items"
+	},
+	"unsetAlbumCoverTooltip": "Elimina la coberta",
+	"@unsetAlbumCoverTooltip": {
+		"description": "Unset the cover of the opened album"
+	},
+	"muteTooltip": "Silencia",
+	"@muteTooltip": {
+		"description": "Mute the video player"
+	},
+	"unmuteTooltip": "Desilencia",
+	"@unmuteTooltip": {
+		"description": "Unmute the video player"
+	},
+	"collectionPeopleLabel": "Gent",
+	"@collectionPeopleLabel": {
+		"description": "Browse photos grouped by person"
+	},
+	"slideshowTooltip": "Carrussel",
+	"@slideshowTooltip": {
+		"description": "A button to start a slideshow from the current collection"
+	},
+	"slideshowSetupDialogTitle": "Configura el carrussel",
+	"@slideshowSetupDialogTitle": {
+		"description": "Setup slideshow before starting"
+	},
+	"slideshowSetupDialogDurationTitle": "Duració de la imatge (MM:SS)",
+	"@slideshowSetupDialogDurationTitle": {
+		"description": "Set the duration of each image in MM:SS format. This setting is ignored for videos"
+	},
+	"slideshowSetupDialogShuffleTitle": "Mescla",
+	"@slideshowSetupDialogShuffleTitle": {
+		"description": "Whether to shuffle the collection"
+	},
+	"slideshowSetupDialogRepeatTitle": "Repeteix",
+	"@slideshowSetupDialogRepeatTitle": {
+		"description": "Whether to restart the slideshow from the beginning after the last slide"
+	},
+	"slideshowSetupDialogReverseTitle": "Inverteix",
+	"@slideshowSetupDialogReverseTitle": {
+		"description": "Whether to play the slideshow in reverse order"
+	},
+	"linkCopiedNotification": "Enllaç copiat",
+	"@linkCopiedNotification": {
+		"description": "Copied the share link to clipboard"
+	},
+	"shareMethodDialogTitle": "Comparteix com a",
+	"@shareMethodDialogTitle": {
+		"description": "Let the user pick how they want to share"
+	},
+	"shareMethodPreviewTitle": "Previsualitza",
+	"@shareMethodPreviewTitle": {
+		"description": "Share the preview of a file"
+	},
+	"shareMethodPreviewDescription": "Comparteix com a una previsualització amb altres apps (només es suporten imatges)",
+	"shareMethodOriginalFileTitle": "Arxiu original",
+	"@shareMethodOriginalFileTitle": {
+		"description": "Share the original file"
+	},
+	"shareMethodOriginalFileDescription": "Descarrega l'arxiu original i comparteix-lo amb altres apps",
+	"shareMethodPublicLinkTitle": "Enllaç públic",
+	"@shareMethodPublicLinkTitle": {
+		"description": "Create a share link on server and share it"
+	}
 }
