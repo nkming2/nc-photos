@@ -12,6 +12,7 @@ class _Changelog660 extends StatelessWidget {
         _subSectionHighlight("CRITICAL"),
         _bulletGroup(const Text("Android 5.0 is no longer supported")),
         _bulletGroup(const Text("Sort by name is no longer supported in the new photos timeline, please contact me if you wish to downgrade")),
+        _sectionPadding(),
         _subSection("Changes"),
         _bulletGroup(const Text("Drastically improve performance when dealing with large amount of photos")),
         _bulletGroup(const Text("Rewrite photos timeline and files handling from scratch for better performance")),
