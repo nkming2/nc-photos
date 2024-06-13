@@ -984,26 +984,6 @@
     "disabledText"
   ],
 
-  "tr": [
-    "settingsThemePrimaryColor",
-    "settingsThemeSecondaryColor",
-    "settingsThemePresets",
-    "settingsAppLock",
-    "settingsAppLockTypeBiometric",
-    "settingsAppLockTypePin",
-    "settingsAppLockTypePassword",
-    "settingsAppLockDescription",
-    "settingsAppLockSetupBiometricFallbackDialogTitle",
-    "settingsAppLockSetupPinDialogTitle",
-    "settingsAppLockConfirmPinDialogTitle",
-    "settingsAppLockSetupPasswordDialogTitle",
-    "settingsAppLockConfirmPasswordDialogTitle",
-    "appLockUnlockHint",
-    "appLockUnlockWrongPassword",
-    "enabledText",
-    "disabledText"
-  ],
-
   "zh": [
     "settingsMetadataTitle",
     "settingsPersonProviderTitle",
