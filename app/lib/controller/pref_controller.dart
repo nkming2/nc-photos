@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/di_container.dart';
+import 'package:nc_photos/entity/collection/util.dart';
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/language_util.dart';
 import 'package:nc_photos/object_extension.dart';
@@ -38,9 +39,9 @@ class PrefController {
         value: value,
       );
 
-  Future<bool> setHomeAlbumsSort(int value) => _set<int>(
+  Future<bool> setHomeAlbumsSort(CollectionSort value) => _set<CollectionSort>(
         controller: _homeAlbumsSortController,
-        setter: (pref, value) => pref.setHomeAlbumsSort(value),
+        setter: (pref, value) => pref.setHomeAlbumsSort(value.index),
         value: value,
       );
 
@@ -190,8 +191,8 @@ class PrefController {
   late final _albumBrowserZoomLevelController =
       BehaviorSubject.seeded(_c.pref.getAlbumBrowserZoomLevelOr(0));
   @npSubjectAccessor
-  late final _homeAlbumsSortController =
-      BehaviorSubject.seeded(_c.pref.getHomeAlbumsSortOr(0));
+  late final _homeAlbumsSortController = BehaviorSubject.seeded(
+      CollectionSort.values[_c.pref.getHomeAlbumsSortOr(0)]);
   @npSubjectAccessor
   late final _isEnableExifController =
       BehaviorSubject.seeded(_c.pref.isEnableExifOr(true));

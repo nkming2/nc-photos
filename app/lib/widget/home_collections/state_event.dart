@@ -14,10 +14,12 @@ class _State {
     required this.removeError,
   });
 
-  factory _State.init() {
-    return const _State(
+  factory _State.init({
+    required collection_util.CollectionSort sort,
+  }) {
+    return _State(
       collections: [],
-      sort: collection_util.CollectionSort.dateDescending,
+      sort: sort,
       isLoading: false,
       transformedItems: [],
       selectedItems: {},

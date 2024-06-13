@@ -38,10 +38,12 @@ extension $PrefControllerNpSubjectAccessor on PrefController {
       albumBrowserZoomLevel.distinct().skip(1);
   int get albumBrowserZoomLevelValue => _albumBrowserZoomLevelController.value;
 // _homeAlbumsSortController
-  ValueStream<int> get homeAlbumsSort => _homeAlbumsSortController.stream;
-  Stream<int> get homeAlbumsSortNew => homeAlbumsSort.skip(1);
-  Stream<int> get homeAlbumsSortChange => homeAlbumsSort.distinct().skip(1);
-  int get homeAlbumsSortValue => _homeAlbumsSortController.value;
+  ValueStream<CollectionSort> get homeAlbumsSort =>
+      _homeAlbumsSortController.stream;
+  Stream<CollectionSort> get homeAlbumsSortNew => homeAlbumsSort.skip(1);
+  Stream<CollectionSort> get homeAlbumsSortChange =>
+      homeAlbumsSort.distinct().skip(1);
+  CollectionSort get homeAlbumsSortValue => _homeAlbumsSortController.value;
 // _isEnableExifController
   ValueStream<bool> get isEnableExif => _isEnableExifController.stream;
   Stream<bool> get isEnableExifNew => isEnableExif.skip(1);

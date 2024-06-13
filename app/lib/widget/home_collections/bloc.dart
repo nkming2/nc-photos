@@ -6,7 +6,9 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     required this.account,
     required this.controller,
     required this.prefController,
-  }) : super(_State.init()) {
+  }) : super(_State.init(
+          sort: prefController.homeAlbumsSortValue,
+        )) {
     on<_LoadCollections>(_onLoad);
     on<_ReloadCollections>(_onReload);
     on<_TransformItems>(_onTransformItems);
@@ -21,7 +23,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     on<_SetError>(_onSetError);
 
     _subscriptions.add(prefController.homeAlbumsSortChange.listen((event) {
-      add(_UpdateCollectionSort(collection_util.CollectionSort.values[event]));
+      add(_UpdateCollectionSort(event));
     }));
     _subscriptions.add(controller.stream.listen((event) {
       for (final s in _itemSubscriptions) {
@@ -120,7 +122,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
 
   void _onSetCollectionSort(_SetCollectionSort ev, Emitter<_State> emit) {
     _log.info(ev);
-    prefController.setHomeAlbumsSort(ev.sort.index);
+    prefController.setHomeAlbumsSort(ev.sort);
   }
 
   void _onSetItemCount(_SetItemCount ev, Emitter<_State> emit) {
