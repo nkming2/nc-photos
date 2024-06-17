@@ -16,6 +16,7 @@ import 'package:np_string/np_string.dart';
 import 'package:rxdart/rxdart.dart';
 
 part 'pref_controller.g.dart';
+part 'pref_controller/util.dart';
 
 @npSubjectAccessor
 class PrefController {

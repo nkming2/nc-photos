@@ -62,11 +62,6 @@ extension PrefExtension on Pref {
       value,
       (key, value) => provider.setInt(key, value));
 
-  int? getHomeAlbumsSort() => provider.getInt(PrefKey.homeAlbumsSort);
-  int getHomeAlbumsSortOr(int def) => getHomeAlbumsSort() ?? def;
-  Future<bool> setHomeAlbumsSort(int value) => _set<int>(PrefKey.homeAlbumsSort,
-      value, (key, value) => provider.setInt(key, value));
-
   bool? isEnableExif() => provider.getBool(PrefKey.enableExif);
   bool isEnableExifOr([bool def = true]) => isEnableExif() ?? def;
   Future<bool> setEnableExif(bool value) => _set<bool>(
@@ -100,35 +95,6 @@ extension PrefExtension on Pref {
   int getLastVersionOr(int def) => getLastVersion() ?? def;
   Future<bool> setLastVersion(int value) => _set<int>(
       PrefKey.lastVersion, value, (key, value) => provider.setInt(key, value));
-
-  @Deprecated("Use PrefController")
-  bool? isDarkTheme() => provider.getBool(PrefKey.darkTheme);
-  @Deprecated("Use PrefController")
-  bool isDarkThemeOr(bool def) => isDarkTheme() ?? def;
-  @Deprecated("Use PrefController")
-  Future<bool> setDarkTheme(bool value) => _set<bool>(
-      PrefKey.darkTheme, value, (key, value) => provider.setBool(key, value));
-
-  @Deprecated("Use PrefController")
-  bool? isFollowSystemTheme() => provider.getBool(PrefKey.followSystemTheme);
-  @Deprecated("Use PrefController")
-  bool isFollowSystemThemeOr(bool def) => isFollowSystemTheme() ?? def;
-  @Deprecated("Use PrefController")
-  Future<bool> setFollowSystemTheme(bool value) => _set<bool>(
-      PrefKey.followSystemTheme,
-      value,
-      (key, value) => provider.setBool(key, value));
-
-  @Deprecated("Use PrefController")
-  bool? isUseBlackInDarkTheme() =>
-      provider.getBool(PrefKey.useBlackInDarkTheme);
-  @Deprecated("Use PrefController")
-  bool isUseBlackInDarkThemeOr(bool def) => isUseBlackInDarkTheme() ?? def;
-  @Deprecated("Use PrefController")
-  Future<bool> setUseBlackInDarkTheme(bool value) => _set<bool>(
-      PrefKey.useBlackInDarkTheme,
-      value,
-      (key, value) => provider.setBool(key, value));
 
   int? getLanguage() => provider.getInt(PrefKey.language);
   int getLanguageOr(int def) => getLanguage() ?? def;
@@ -164,11 +130,6 @@ extension PrefExtension on Pref {
       PrefKey.isAlbumBrowserShowDate,
       value,
       (key, value) => provider.setBool(key, value));
-
-  int? getGpsMapProvider() => provider.getInt(PrefKey.gpsMapProvider);
-  int getGpsMapProviderOr(int def) => getGpsMapProvider() ?? def;
-  Future<bool> setGpsMapProvider(int value) => _set<int>(PrefKey.gpsMapProvider,
-      value, (key, value) => provider.setInt(key, value));
 
   bool? hasShownSharedAlbumInfo() =>
       provider.getBool(PrefKey.hasShownSharedAlbumInfo);
@@ -249,20 +210,6 @@ extension PrefExtension on Pref {
       value,
       (key, value) => provider.setBool(key, value));
 
-  @Deprecated("Use PrefController")
-  int? getSeedColor() => provider.getInt(PrefKey.seedColor);
-  @Deprecated("Use PrefController")
-  int getSeedColorOr(int def) => getSeedColor() ?? def;
-  @Deprecated("Use PrefController")
-  Future<bool> setSeedColor(int? value) {
-    if (value == null) {
-      return _remove(PrefKey.seedColor);
-    } else {
-      return _set<int>(PrefKey.seedColor, value,
-          (key, value) => provider.setInt(key, value));
-    }
-  }
-
   bool? isVideoPlayerMute() => provider.getBool(PrefKey.isVideoPlayerMute);
   bool isVideoPlayerMuteOr([bool def = false]) => isVideoPlayerMute() ?? def;
   Future<bool> setVideoPlayerMute(bool value) => _set<bool>(
@@ -276,58 +223,6 @@ extension PrefExtension on Pref {
       PrefKey.isVideoPlayerLoop,
       value,
       (key, value) => provider.setBool(key, value));
-
-  @Deprecated("Use PrefController")
-  int? getSecondarySeedColor() => provider.getInt(PrefKey.secondarySeedColor);
-  @Deprecated("Use PrefController")
-  int getSecondarySeedColorOr(int def) => getSecondarySeedColor() ?? def;
-  @Deprecated("Use PrefController")
-  Future<bool> setSecondarySeedColor(int? value) {
-    if (value == null) {
-      return _remove(PrefKey.secondarySeedColor);
-    } else {
-      return _set<int>(PrefKey.secondarySeedColor, value,
-          (key, value) => provider.setInt(key, value));
-    }
-  }
-
-  int? getProtectedPageAuthType() =>
-      provider.getInt(PrefKey.protectedPageAuthType);
-  int getProtectedPageAuthTypeOr(int def) => getProtectedPageAuthType() ?? def;
-  Future<bool> setProtectedPageAuthType(int? value) {
-    if (value == null) {
-      return _remove(PrefKey.protectedPageAuthType);
-    } else {
-      return _set<int>(PrefKey.protectedPageAuthType, value,
-          (key, value) => provider.setInt(key, value));
-    }
-  }
-
-  String? getProtectedPageAuthPin() =>
-      provider.getString(PrefKey.protectedPageAuthPin);
-  String getProtectedPageAuthPinOr(String def) =>
-      getProtectedPageAuthPin() ?? def;
-  Future<bool> setProtectedPageAuthPin(String? value) {
-    if (value == null) {
-      return _remove(PrefKey.protectedPageAuthPin);
-    } else {
-      return _set<String>(PrefKey.protectedPageAuthPin, value,
-          (key, value) => provider.setString(key, value));
-    }
-  }
-
-  String? getProtectedPageAuthPassword() =>
-      provider.getString(PrefKey.protectedPageAuthPassword);
-  String getProtectedPageAuthPasswordOr(String def) =>
-      getProtectedPageAuthPassword() ?? def;
-  Future<bool> setProtectedPageAuthPassword(String? value) {
-    if (value == null) {
-      return _remove(PrefKey.protectedPageAuthPassword);
-    } else {
-      return _set<String>(PrefKey.protectedPageAuthPassword, value,
-          (key, value) => provider.setString(key, value));
-    }
-  }
 }
 
 extension AccountPrefExtension on AccountPref {
