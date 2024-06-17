@@ -18,6 +18,7 @@ import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/use_case/ls_single_file.dart';
+import 'package:nc_photos/widget/server_cert_error_dialog.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_string/np_string.dart';
 
@@ -132,58 +133,22 @@ class _ConnectState extends State<Connect> {
   void _onSelfSignedCert(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(L10n.global().serverCertErrorDialogTitle),
-        content: Text(L10n.global().serverCertErrorDialogContent),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text(MaterialLocalizations.of(context).closeButtonLabel),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(true);
-            },
-            child: Text(L10n.global().advancedButtonLabel),
-          ),
-        ],
-      ),
+      builder: (_) => const ServerCertErrorDialog(),
     ).then((value) {
       if (value != true) {
-        Navigator.of(context).pop(null);
+        Navigator.of(context).pop();
         return;
       }
       showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          title: Text(L10n.global().whitelistCertDialogTitle),
-          content: Text(L10n.global().whitelistCertDialogContent(
-              SelfSignedCertManager().getLastBadCertHost(),
-              SelfSignedCertManager().getLastBadCertFingerprint())),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(true);
-              },
-              child: Text(L10n.global().whitelistCertButtonLabel),
-            ),
-          ],
-        ),
+        builder: (context) => const WhitelistLastBadCertDialog(),
       ).then((value) {
         if (value != true) {
-          Navigator.of(context).pop(null);
+          Navigator.of(context).pop();
           return;
         }
         SelfSignedCertManager().whitelistLastBadCert().then((value) {
-          Navigator.of(context).pop(null);
+          Navigator.of(context).pop();
         });
       });
     });
