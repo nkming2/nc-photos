@@ -1,7 +1,8 @@
 part of '../metadata_settings.dart';
 
 @npLog
-class _Bloc extends Bloc<_Event, _State> with BlocLogger {
+class _Bloc extends Bloc<_Event, _State>
+    with BlocLogger, BlocForEachMixin<_Event, _State> {
   _Bloc({
     required this.prefController,
   }) : super(_State(
@@ -19,7 +20,8 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   Future<void> _onInit(_Init ev, Emitter<_State> emit) async {
     _log.info(ev);
     await Future.wait([
-      emit.forEach<bool>(
+      forEach(
+        emit,
         prefController.isEnableExifChange,
         onData: (data) => state.copyWith(isEnable: data),
         onError: (e, stackTrace) {
@@ -27,7 +29,8 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
           return state.copyWith(error: ExceptionEvent(e, stackTrace));
         },
       ),
-      emit.forEach<bool>(
+      forEach(
+        emit,
         prefController.shouldProcessExifWifiOnlyChange,
         onData: (data) => state.copyWith(isWifiOnly: data),
         onError: (e, stackTrace) {

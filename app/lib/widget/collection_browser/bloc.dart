@@ -1,7 +1,8 @@
 part of '../collection_browser.dart';
 
 @npLog
-class _Bloc extends Bloc<_Event, _State> with BlocLogger {
+class _Bloc extends Bloc<_Event, _State>
+    with BlocLogger, BlocForEachMixin<_Event, _State> {
   _Bloc({
     required DiContainer container,
     required this.account,
@@ -121,7 +122,8 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   Future<void> _onLoad(_LoadItems ev, Emitter<_State> emit) async {
     _log.info(ev);
     await Future.wait([
-      emit.forEach<CollectionItemStreamData>(
+      forEach(
+        emit,
         itemsController.stream,
         onData: (data) => state.copyWith(
           items: _filterItems(data.items, state.itemsWhitelist),
@@ -136,7 +138,8 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
           );
         },
       ),
-      emit.forEach<FilesStreamEvent>(
+      forEach(
+        emit,
         filesController.stream,
         onData: (data) {
           final whitelist = HashSet.of(data.dataMap.keys);

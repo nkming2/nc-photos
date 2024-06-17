@@ -1,7 +1,8 @@
 part of '../collection_settings.dart';
 
 @npLog
-class _Bloc extends Bloc<_Event, _State> with BlocLogger {
+class _Bloc extends Bloc<_Event, _State>
+    with BlocLogger, BlocForEachMixin<_Event, _State> {
   _Bloc({
     required this.prefController,
   }) : super(_State(
@@ -16,7 +17,8 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
 
   Future<void> _onInit(_Init ev, Emitter<_State> emit) async {
     _log.info(ev);
-    return emit.forEach<bool>(
+    return forEach(
+      emit,
       prefController.isAlbumBrowserShowDateChange,
       onData: (data) => state.copyWith(isBrowserShowDate: data),
       onError: (e, stackTrace) {

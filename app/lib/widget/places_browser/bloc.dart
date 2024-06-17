@@ -1,7 +1,8 @@
 part of '../places_browser.dart';
 
 @npLog
-class _Bloc extends Bloc<_Event, _State> with BlocLogger {
+class _Bloc extends Bloc<_Event, _State>
+    with BlocLogger, BlocForEachMixin<_Event, _State> {
   _Bloc({
     required this.account,
     required this.placesController,
@@ -16,7 +17,8 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
 
   Future<void> _onLoad(_LoadPlaces ev, Emitter<_State> emit) {
     _log.info(ev);
-    return emit.forEach<PlaceStreamEvent>(
+    return forEach(
+      emit,
       placesController.stream,
       onData: (data) => state.copyWith(
         places: data.data,

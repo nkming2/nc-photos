@@ -1,7 +1,8 @@
 part of '../misc_settings.dart';
 
 @npLog
-class _Bloc extends Bloc<_Event, _State> with BlocLogger {
+class _Bloc extends Bloc<_Event, _State>
+    with BlocLogger, BlocForEachMixin<_Event, _State> {
   _Bloc({
     required this.prefController,
     required this.securePrefController,
@@ -19,7 +20,8 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   Future<void> _onInit(_Init ev, Emitter<_State> emit) async {
     _log.info(ev);
     await Future.wait([
-      emit.forEach<bool>(
+      forEach(
+        emit,
         prefController.isDoubleTapExitChange,
         onData: (data) => state.copyWith(isDoubleTapExit: data),
         onError: (e, stackTrace) {
@@ -27,7 +29,8 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
           return state.copyWith(error: ExceptionEvent(e, stackTrace));
         },
       ),
-      emit.forEach<ProtectedPageAuthType?>(
+      forEach(
+        emit,
         securePrefController.protectedPageAuthTypeChange,
         onData: (data) => state.copyWith(appLockType: data),
         onError: (e, stackTrace) {

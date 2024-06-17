@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/single_child_widget.dart';
@@ -57,4 +59,43 @@ extension BlocExtension<E, S> on Bloc<E, S> {
       add(event);
     }
   }
+}
+
+class _BlocForEachObj {
+  const _BlocForEachObj(this.subscription, this.completer);
+
+  final StreamSubscription subscription;
+  final Completer completer;
+}
+
+mixin BlocForEachMixin<E, S> implements Bloc<E, S> {
+  @override
+  Future<void> close() async {
+    for (final e in _forEaches) {
+      unawaited(e.subscription.cancel());
+      e.completer.complete();
+    }
+  }
+
+  // The original emit.forEach is causing the internal eventController in Bloc
+  // to deadlock when closing, use this instead
+  Future<void> forEach<T>(
+    Emitter<S> emit,
+    Stream<T> stream, {
+    required S Function(T data) onData,
+    S Function(Object error, StackTrace stackTrace)? onError,
+  }) async {
+    final completer = Completer();
+    final subscription = stream.listen((event) {
+      emit(onData(event));
+    }, onError: (e, stackTrace) {
+      if (onError != null) {
+        emit(onError(e, stackTrace));
+      }
+    });
+    _forEaches.add(_BlocForEachObj(subscription, completer));
+    return completer.future;
+  }
+
+  final _forEaches = <_BlocForEachObj>[];
 }

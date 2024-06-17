@@ -1,7 +1,8 @@
 part of '../archive_browser.dart';
 
 @npLog
-class _Bloc extends Bloc<_Event, _State> with BlocLogger {
+class _Bloc extends Bloc<_Event, _State>
+    with BlocLogger, BlocForEachMixin<_Event, _State> {
   _Bloc({
     required this.account,
     required this.filesController,
@@ -58,7 +59,8 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   Future<void> _onLoad(_LoadItems ev, Emitter<_State> emit) {
     _log.info(ev);
     unawaited(filesController.queryByArchived());
-    return emit.forEach<FilesStreamEvent>(
+    return forEach(
+      emit,
       filesController.stream,
       onData: (data) => state.copyWith(
         files: data.data,

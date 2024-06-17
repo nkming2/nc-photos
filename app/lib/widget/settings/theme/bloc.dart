@@ -1,7 +1,8 @@
 part of '../theme_settings.dart';
 
 @npLog
-class _Bloc extends Bloc<_Event, _State> with BlocLogger {
+class _Bloc extends Bloc<_Event, _State>
+    with BlocLogger, BlocForEachMixin<_Event, _State> {
   _Bloc({
     required this.prefController,
   }) : super(_State(
@@ -22,7 +23,8 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   Future<void> _onInit(_Init ev, Emitter<_State> emit) async {
     _log.info(ev);
     await Future.wait([
-      emit.forEach<bool>(
+      forEach(
+        emit,
         prefController.isFollowSystemThemeChange,
         onData: (data) => state.copyWith(isFollowSystemTheme: data),
         onError: (e, stackTrace) {
@@ -30,7 +32,8 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
           return state.copyWith(error: ExceptionEvent(e, stackTrace));
         },
       ),
-      emit.forEach<bool>(
+      forEach(
+        emit,
         prefController.isUseBlackInDarkThemeChange,
         onData: (data) => state.copyWith(isUseBlackInDarkTheme: data),
         onError: (e, stackTrace) {
@@ -38,7 +41,8 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
           return state.copyWith(error: ExceptionEvent(e, stackTrace));
         },
       ),
-      emit.forEach<Color?>(
+      forEach(
+        emit,
         prefController.seedColorChange,
         onData: (data) => state.copyWith(seedColor: data?.value),
         onError: (e, stackTrace) {
@@ -46,7 +50,8 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
           return state.copyWith(error: ExceptionEvent(e, stackTrace));
         },
       ),
-      emit.forEach<Color?>(
+      forEach(
+        emit,
         prefController.secondarySeedColorChange,
         onData: (data) => state.copyWith(secondarySeedColor: data?.value),
         onError: (e, stackTrace) {

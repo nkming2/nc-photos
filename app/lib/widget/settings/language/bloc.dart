@@ -1,7 +1,8 @@
 part of '../language_settings.dart';
 
 @npLog
-class _Bloc extends Bloc<_Event, _State> with BlocLogger {
+class _Bloc extends Bloc<_Event, _State>
+    with BlocLogger, BlocForEachMixin<_Event, _State> {
   _Bloc({
     required this.prefController,
   }) : super(_State.init(
@@ -30,7 +31,8 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
 
   Future<void> _onInit(_Init ev, Emitter<_State> emit) {
     _log.info(ev);
-    return emit.forEach<language_util.AppLanguage>(
+    return forEach(
+      emit,
       prefController.languageChange,
       onData: (data) => state.copyWith(selected: data),
       onError: (e, stackTrace) {

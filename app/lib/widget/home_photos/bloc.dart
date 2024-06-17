@@ -1,7 +1,8 @@
 part of '../home_photos2.dart';
 
 @npLog
-class _Bloc extends Bloc<_Event, _State> with BlocLogger {
+class _Bloc extends Bloc<_Event, _State>
+    with BlocLogger, BlocForEachMixin<_Event, _State> {
   _Bloc(
     this._c, {
     required this.account,
@@ -138,7 +139,8 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   Future<void> _onLoad(_LoadItems ev, Emitter<_State> emit) async {
     _log.info(ev);
     await Future.wait([
-      emit.forEach<FilesSummaryStreamEvent>(
+      forEach(
+        emit,
         filesController.summaryStream,
         onData: (data) {
           if (data.summary.items.isEmpty && _isInitialLoad) {
@@ -157,7 +159,8 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
           );
         },
       ),
-      emit.forEach<TimelineStreamEvent>(
+      forEach(
+        emit,
         filesController.timelineStream,
         onData: (data) {
           if (!data.isDummy && _isInitialLoad) {

@@ -1,7 +1,8 @@
 part of '../collection_picker.dart';
 
 @npLog
-class _Bloc extends Bloc<_Event, _State> with BlocLogger {
+class _Bloc extends Bloc<_Event, _State>
+    with BlocLogger, BlocForEachMixin<_Event, _State> {
   _Bloc({
     required this.account,
     required this.controller,
@@ -31,7 +32,8 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
 
   Future<void> _onLoad(_LoadCollections ev, Emitter<_State> emit) async {
     _log.info(ev);
-    return emit.forEach<CollectionStreamEvent>(
+    return forEach(
+      emit,
       controller.stream,
       onData: (data) => state.copyWith(
         collections: data.data.map((e) => e.collection).toList(),

@@ -2,7 +2,7 @@ part of '../sharing_browser.dart';
 
 /// List shares to be shown in [SharingBrowser]
 @npLog
-class _Bloc extends Bloc<_Event, _State> {
+class _Bloc extends Bloc<_Event, _State> with BlocForEachMixin<_Event, _State> {
   _Bloc({
     required this.account,
     required this.accountPrefController,
@@ -21,7 +21,8 @@ class _Bloc extends Bloc<_Event, _State> {
           "[_onInit] Failed while _importPotentialSharedAlbum", e, stackTrace);
     }
     unawaited(sharingsController.reload());
-    return emit.forEach<SharingStreamEvent>(
+    return forEach(
+      emit,
       sharingsController.stream,
       onData: (data) => state.copyWith(
         items: data.data,
