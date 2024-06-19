@@ -72,6 +72,8 @@ class _ItemView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final now = clock.now();
+    final isExpired = now.isAfter(cert.endValidity);
     return ListTile(
       title: Text(cert.host),
       subtitle: Column(
@@ -107,6 +109,8 @@ class _ItemView extends StatelessWidget {
           ),
         ],
       ),
+      tileColor:
+          isExpired ? Theme.of(context).colorScheme.errorContainer : null,
     );
   }
 
