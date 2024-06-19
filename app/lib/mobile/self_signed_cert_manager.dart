@@ -16,14 +16,12 @@ part 'self_signed_cert_manager.g.dart';
 class SelfSignedCertManager {
   factory SelfSignedCertManager() => _inst;
 
-  SelfSignedCertManager._() {
-    _readAllCerts().then((infos) {
-      _whitelist = infos;
-    });
-  }
+  SelfSignedCertManager._();
 
-  void init() {
+  Future<void> init() async {
     HttpOverrides.global = _CustomHttpOverrides();
+    final infos = await _readAllCerts();
+    _whitelist = infos;
   }
 
   /// Verify [cert] and return if it's registered in the whitelist for [host]

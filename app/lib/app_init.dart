@@ -69,7 +69,7 @@ Future<void> init(InitIsolateType isolateType) async {
   await _initAccountPrefs();
   _initEquatable();
   if (features.isSupportSelfSignedCert) {
-    _initSelfSignedCertManager();
+    await _initSelfSignedCertManager();
   }
   await _initDiContainer(isolateType);
   _initVisibilityDetector();
@@ -134,8 +134,13 @@ void _initEquatable() {
   EquatableConfig.stringify = false;
 }
 
-void _initSelfSignedCertManager() {
-  SelfSignedCertManager().init();
+Future<void> _initSelfSignedCertManager() async {
+  try {
+    return SelfSignedCertManager().init();
+  } catch (e, stackTrace) {
+    _log.shout("[_initSelfSignedCertManager] Failed to load self signed certs",
+        e, stackTrace);
+  }
 }
 
 Future<void> _initDiContainer(InitIsolateType isolateType) async {
