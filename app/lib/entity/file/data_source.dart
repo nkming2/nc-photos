@@ -8,7 +8,9 @@ import 'package:nc_photos/db/entity_converter.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
+import 'package:nc_photos/entity/file/data_source2.dart';
 import 'package:nc_photos/entity/file/file_cache_manager.dart';
+import 'package:nc_photos/entity/file/repo.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception.dart';
@@ -418,9 +420,9 @@ class FileSqliteDbDataSource implements FileDataSource {
   }
 
   @override
-  remove(Account account, FileDescriptor f) {
+  Future<void> remove(Account account, FileDescriptor f) {
     _log.info("[remove] ${f.fdPath}");
-    return _c.fileRepo2.remove(account, f);
+    return BasicFileRepo(FileNpDbDataSource(_c.npDb)).remove(account, f);
   }
 
   @override
