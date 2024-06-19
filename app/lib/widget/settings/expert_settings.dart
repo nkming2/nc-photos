@@ -11,6 +11,7 @@ import 'package:nc_photos/db/entity_converter.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
+import 'package:nc_photos/widget/trusted_cert_manager.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_db/np_db.dart';
 import 'package:to_string/to_string.dart';
@@ -119,6 +120,14 @@ class _WrappedExpertSettingsState extends State<_WrappedExpertSettings> {
                           L10n.global().settingsClearCacheDatabaseDescription),
                       onTap: () {
                         context.read<_Bloc>().add(_ClearCacheDatabase());
+                      },
+                    ),
+                    ListTile(
+                      title: Text(
+                          L10n.global().settingsManageTrustedCertificateTitle),
+                      onTap: () {
+                        Navigator.of(context)
+                            .pushNamed(TrustedCertManager.routeName);
                       },
                     ),
                   ],

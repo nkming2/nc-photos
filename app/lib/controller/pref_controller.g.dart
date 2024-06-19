@@ -18,7 +18,12 @@ extension _$__NpLog on __ {
 // **************************************************************************
 
 extension $PrefControllerNpSubjectAccessor on PrefController {
-  // _languageController
+  // _accountsController
+  ValueStream<List<Account>> get accounts => _accountsController.stream;
+  Stream<List<Account>> get accountsNew => accounts.skip(1);
+  Stream<List<Account>> get accountsChange => accounts.distinct().skip(1);
+  List<Account> get accountsValue => _accountsController.value;
+// _languageController
   ValueStream<AppLanguage> get language => _languageController.stream;
   Stream<AppLanguage> get languageNew => language.skip(1);
   Stream<AppLanguage> get languageChange => language.distinct().skip(1);

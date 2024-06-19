@@ -1,11 +1,14 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:equatable/equatable.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/mobile/android/self_signed_cert.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/type.dart';
+import 'package:np_string/np_string.dart';
 import 'package:path/path.dart' as path_lib;
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
@@ -38,10 +41,11 @@ class SelfSignedCertManager {
       _sha1BytesToString(_latestBadCert.cert.sha1);
 
   /// Whitelist the last bad cert
-  Future<void> whitelistLastBadCert() async {
+  Future<CertInfo> whitelistLastBadCert() async {
     final info = await _writeCert(_latestBadCert.host, _latestBadCert.cert);
     _whitelist.add(info);
-    return SelfSignedCert.reload();
+    unawaited(SelfSignedCert.reload());
+    return info;
   }
 
   /// Clear all whitelisted certs and they will no longer be allowed afterwards
@@ -52,9 +56,7 @@ class SelfSignedCertManager {
     return SelfSignedCert.reload();
   }
 
-  /// Read and return all persisted certificate infos
-  Future<List<_CertInfo>> _readAllCerts() async {
-    final products = <_CertInfo>[];
+  Future<bool> removeFromWhitelist(CertInfo cert) async {
     final certDir = await _openCertsDir();
     final certFiles = (await certDir.list().toList()).whereType<File>();
     for (final f in certFiles) {
@@ -62,7 +64,39 @@ class SelfSignedCertManager {
         continue;
       }
       try {
-        final info = _CertInfo.fromJson(jsonDecode(await f.readAsString()));
+        final info = CertInfo.fromJson(jsonDecode(await f.readAsString()));
+        if (info == cert) {
+          final pemF = File(f.path.slice(0, -5));
+          await Future.wait([f.delete(), pemF.delete()]);
+          _log.info(
+              "[removeFromWhitelist] File removed: ${f.path}, ${pemF.path}");
+          unawaited(SelfSignedCert.reload());
+          _whitelist.remove(cert);
+          return true;
+        }
+      } catch (e, stacktrace) {
+        _log.severe(
+            "[removeFromWhitelist] Failed to read certificate file: ${path_lib.basename(f.path)}",
+            e,
+            stacktrace);
+      }
+    }
+    return false;
+  }
+
+  List<CertInfo> get whitelist => _whitelist.toList();
+
+  /// Read and return all persisted certificate infos
+  Future<List<CertInfo>> _readAllCerts() async {
+    final products = <CertInfo>[];
+    final certDir = await _openCertsDir();
+    final certFiles = (await certDir.list().toList()).whereType<File>();
+    for (final f in certFiles) {
+      if (!f.path.endsWith(".json")) {
+        continue;
+      }
+      try {
+        final info = CertInfo.fromJson(jsonDecode(await f.readAsString()));
         _log.info(
             "[_readAllCerts] Found certificate info: ${path_lib.basename(f.path)} for host: ${info.host}");
         products.add(info);
@@ -77,7 +111,7 @@ class SelfSignedCertManager {
   }
 
   /// Persist a new cert and return the info object
-  Future<_CertInfo> _writeCert(String host, X509Certificate cert) async {
+  Future<CertInfo> _writeCert(String host, X509Certificate cert) async {
     final certDir = await _openCertsDir();
     while (true) {
       final fileName = const Uuid().v4();
@@ -88,7 +122,7 @@ class SelfSignedCertManager {
       await certF.writeAsString(cert.pem, flush: true);
 
       final siteF = File("${certDir.path}/$fileName.json");
-      final certInfo = _CertInfo.fromX509Certificate(host, cert);
+      final certInfo = CertInfo.fromX509Certificate(host, cert);
       await siteF.writeAsString(jsonEncode(certInfo.toJson()), flush: true);
       _log.info(
           "[_persistBadCert] Persisted cert at '${certF.path}' for host '${_latestBadCert.host}'");
@@ -107,24 +141,30 @@ class SelfSignedCertManager {
   }
 
   late _BadCertInfo _latestBadCert;
-  var _whitelist = <_CertInfo>[];
+  var _whitelist = <CertInfo>[];
 
   static final _inst = SelfSignedCertManager._();
 }
 
 // Modifications to this class must also reflect on Android side
-class _CertInfo {
-  _CertInfo(this.host, this.sha1, this.subject, this.issuer, this.startValidity,
-      this.endValidity);
+final class CertInfo with EquatableMixin {
+  const CertInfo({
+    required this.host,
+    required this.sha1,
+    required this.subject,
+    required this.issuer,
+    required this.startValidity,
+    required this.endValidity,
+  });
 
-  factory _CertInfo.fromX509Certificate(String host, X509Certificate cert) {
-    return _CertInfo(
-      host,
-      _sha1BytesToString(cert.sha1),
-      cert.subject,
-      cert.issuer,
-      cert.startValidity,
-      cert.endValidity,
+  factory CertInfo.fromX509Certificate(String host, X509Certificate cert) {
+    return CertInfo(
+      host: host,
+      sha1: _sha1BytesToString(cert.sha1),
+      subject: cert.subject,
+      issuer: cert.issuer,
+      startValidity: cert.startValidity,
+      endValidity: cert.endValidity,
     );
   }
 
@@ -139,16 +179,26 @@ class _CertInfo {
     };
   }
 
-  factory _CertInfo.fromJson(JsonObj json) {
-    return _CertInfo(
-      json["host"],
-      json["sha1"],
-      json["subject"],
-      json["issuer"],
-      DateTime.parse(json["startValidity"]),
-      DateTime.parse(json["endValidity"]),
+  factory CertInfo.fromJson(JsonObj json) {
+    return CertInfo(
+      host: json["host"],
+      sha1: json["sha1"],
+      subject: json["subject"],
+      issuer: json["issuer"],
+      startValidity: DateTime.parse(json["startValidity"]),
+      endValidity: DateTime.parse(json["endValidity"]),
     );
   }
+
+  @override
+  List<Object?> get props => [
+        host,
+        sha1,
+        subject,
+        issuer,
+        startValidity,
+        endValidity,
+      ];
 
   final String host;
   final String sha1;

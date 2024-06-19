@@ -37,6 +37,7 @@
     "settingsAppLockConfirmPinDialogTitle",
     "settingsAppLockSetupPasswordDialogTitle",
     "settingsAppLockConfirmPasswordDialogTitle",
+    "settingsManageTrustedCertificateTitle",
     "settingsAboutSectionTitle",
     "settingsVersionTitle",
     "settingsServerVersionTitle",
@@ -241,6 +242,11 @@
     "appLockUnlockWrongPassword",
     "enabledText",
     "disabledText",
+    "trustedCertManagerPageTitle",
+    "trustedCertManagerAlreadyTrustedError",
+    "trustedCertManagerSelectServer",
+    "trustedCertManagerNoHttpsServerError",
+    "trustedCertManagerFailedToRemoveCertError",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -265,10 +271,16 @@
     "settingsAppLockConfirmPinDialogTitle",
     "settingsAppLockSetupPasswordDialogTitle",
     "settingsAppLockConfirmPasswordDialogTitle",
+    "settingsManageTrustedCertificateTitle",
     "appLockUnlockHint",
     "appLockUnlockWrongPassword",
     "enabledText",
-    "disabledText"
+    "disabledText",
+    "trustedCertManagerPageTitle",
+    "trustedCertManagerAlreadyTrustedError",
+    "trustedCertManagerSelectServer",
+    "trustedCertManagerNoHttpsServerError",
+    "trustedCertManagerFailedToRemoveCertError"
   ],
 
   "de": [
@@ -290,6 +302,7 @@
     "settingsAppLockConfirmPinDialogTitle",
     "settingsAppLockSetupPasswordDialogTitle",
     "settingsAppLockConfirmPasswordDialogTitle",
+    "settingsManageTrustedCertificateTitle",
     "fileLastSharedByOthersDescription",
     "multipleFilesLinkShareDialogContent",
     "createShareProgressText",
@@ -314,7 +327,12 @@
     "appLockUnlockHint",
     "appLockUnlockWrongPassword",
     "enabledText",
-    "disabledText"
+    "disabledText",
+    "trustedCertManagerPageTitle",
+    "trustedCertManagerAlreadyTrustedError",
+    "trustedCertManagerSelectServer",
+    "trustedCertManagerNoHttpsServerError",
+    "trustedCertManagerFailedToRemoveCertError"
   ],
 
   "el": [
@@ -362,6 +380,7 @@
     "settingsClearCacheDatabaseTitle",
     "settingsClearCacheDatabaseDescription",
     "settingsClearCacheDatabaseSuccessNotification",
+    "settingsManageTrustedCertificateTitle",
     "settingsServerVersionTitle",
     "slideshowSetupDialogReverseTitle",
     "shareMethodPreviewTitle",
@@ -443,7 +462,12 @@
     "appLockUnlockHint",
     "appLockUnlockWrongPassword",
     "enabledText",
-    "disabledText"
+    "disabledText",
+    "trustedCertManagerPageTitle",
+    "trustedCertManagerAlreadyTrustedError",
+    "trustedCertManagerSelectServer",
+    "trustedCertManagerNoHttpsServerError",
+    "trustedCertManagerFailedToRemoveCertError"
   ],
 
   "es": [
@@ -460,10 +484,16 @@
     "settingsAppLockConfirmPinDialogTitle",
     "settingsAppLockSetupPasswordDialogTitle",
     "settingsAppLockConfirmPasswordDialogTitle",
+    "settingsManageTrustedCertificateTitle",
     "appLockUnlockHint",
     "appLockUnlockWrongPassword",
     "enabledText",
-    "disabledText"
+    "disabledText",
+    "trustedCertManagerPageTitle",
+    "trustedCertManagerAlreadyTrustedError",
+    "trustedCertManagerSelectServer",
+    "trustedCertManagerNoHttpsServerError",
+    "trustedCertManagerFailedToRemoveCertError"
   ],
 
   "fi": [
@@ -480,10 +510,16 @@
     "settingsAppLockConfirmPinDialogTitle",
     "settingsAppLockSetupPasswordDialogTitle",
     "settingsAppLockConfirmPasswordDialogTitle",
+    "settingsManageTrustedCertificateTitle",
     "appLockUnlockHint",
     "appLockUnlockWrongPassword",
     "enabledText",
-    "disabledText"
+    "disabledText",
+    "trustedCertManagerPageTitle",
+    "trustedCertManagerAlreadyTrustedError",
+    "trustedCertManagerSelectServer",
+    "trustedCertManagerNoHttpsServerError",
+    "trustedCertManagerFailedToRemoveCertError"
   ],
 
   "fr": [
@@ -500,10 +536,16 @@
     "settingsAppLockConfirmPinDialogTitle",
     "settingsAppLockSetupPasswordDialogTitle",
     "settingsAppLockConfirmPasswordDialogTitle",
+    "settingsManageTrustedCertificateTitle",
     "appLockUnlockHint",
     "appLockUnlockWrongPassword",
     "enabledText",
-    "disabledText"
+    "disabledText",
+    "trustedCertManagerPageTitle",
+    "trustedCertManagerAlreadyTrustedError",
+    "trustedCertManagerSelectServer",
+    "trustedCertManagerNoHttpsServerError",
+    "trustedCertManagerFailedToRemoveCertError"
   ],
 
   "it": [
@@ -522,13 +564,19 @@
     "settingsAppLockConfirmPinDialogTitle",
     "settingsAppLockSetupPasswordDialogTitle",
     "settingsAppLockConfirmPasswordDialogTitle",
+    "settingsManageTrustedCertificateTitle",
     "unmuteTooltip",
     "slideshowTooltip",
     "enhanceColorPopTitle",
     "appLockUnlockHint",
     "appLockUnlockWrongPassword",
     "enabledText",
-    "disabledText"
+    "disabledText",
+    "trustedCertManagerPageTitle",
+    "trustedCertManagerAlreadyTrustedError",
+    "trustedCertManagerSelectServer",
+    "trustedCertManagerNoHttpsServerError",
+    "trustedCertManagerFailedToRemoveCertError"
   ],
 
   "nl": [
@@ -628,6 +676,7 @@
     "settingsClearCacheDatabaseTitle",
     "settingsClearCacheDatabaseDescription",
     "settingsClearCacheDatabaseSuccessNotification",
+    "settingsManageTrustedCertificateTitle",
     "settingsAboutSectionTitle",
     "settingsVersionTitle",
     "settingsServerVersionTitle",
@@ -890,6 +939,11 @@
     "appLockUnlockWrongPassword",
     "enabledText",
     "disabledText",
+    "trustedCertManagerPageTitle",
+    "trustedCertManagerAlreadyTrustedError",
+    "trustedCertManagerSelectServer",
+    "trustedCertManagerNoHttpsServerError",
+    "trustedCertManagerFailedToRemoveCertError",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -915,13 +969,19 @@
     "settingsAppLockConfirmPinDialogTitle",
     "settingsAppLockSetupPasswordDialogTitle",
     "settingsAppLockConfirmPasswordDialogTitle",
+    "settingsManageTrustedCertificateTitle",
     "enhanceColorPopTitle",
     "imageEditTransformOrientationClockwise",
     "imageEditTransformOrientationCounterclockwise",
     "appLockUnlockHint",
     "appLockUnlockWrongPassword",
     "enabledText",
-    "disabledText"
+    "disabledText",
+    "trustedCertManagerPageTitle",
+    "trustedCertManagerAlreadyTrustedError",
+    "trustedCertManagerSelectServer",
+    "trustedCertManagerNoHttpsServerError",
+    "trustedCertManagerFailedToRemoveCertError"
   ],
 
   "pt": [
@@ -943,6 +1003,7 @@
     "settingsAppLockConfirmPinDialogTitle",
     "settingsAppLockSetupPasswordDialogTitle",
     "settingsAppLockConfirmPasswordDialogTitle",
+    "settingsManageTrustedCertificateTitle",
     "settingsServerVersionTitle",
     "searchLandingPeopleListEmptyText2",
     "createCollectionFailureNotification",
@@ -961,7 +1022,12 @@
     "appLockUnlockHint",
     "appLockUnlockWrongPassword",
     "enabledText",
-    "disabledText"
+    "disabledText",
+    "trustedCertManagerPageTitle",
+    "trustedCertManagerAlreadyTrustedError",
+    "trustedCertManagerSelectServer",
+    "trustedCertManagerNoHttpsServerError",
+    "trustedCertManagerFailedToRemoveCertError"
   ],
 
   "ru": [
@@ -978,10 +1044,25 @@
     "settingsAppLockConfirmPinDialogTitle",
     "settingsAppLockSetupPasswordDialogTitle",
     "settingsAppLockConfirmPasswordDialogTitle",
+    "settingsManageTrustedCertificateTitle",
     "appLockUnlockHint",
     "appLockUnlockWrongPassword",
     "enabledText",
-    "disabledText"
+    "disabledText",
+    "trustedCertManagerPageTitle",
+    "trustedCertManagerAlreadyTrustedError",
+    "trustedCertManagerSelectServer",
+    "trustedCertManagerNoHttpsServerError",
+    "trustedCertManagerFailedToRemoveCertError"
+  ],
+
+  "tr": [
+    "settingsManageTrustedCertificateTitle",
+    "trustedCertManagerPageTitle",
+    "trustedCertManagerAlreadyTrustedError",
+    "trustedCertManagerSelectServer",
+    "trustedCertManagerNoHttpsServerError",
+    "trustedCertManagerFailedToRemoveCertError"
   ],
 
   "zh": [
@@ -1005,6 +1086,7 @@
     "settingsAppLockConfirmPinDialogTitle",
     "settingsAppLockSetupPasswordDialogTitle",
     "settingsAppLockConfirmPasswordDialogTitle",
+    "settingsManageTrustedCertificateTitle",
     "slideshowSetupDialogReverseTitle",
     "enhanceColorPopTitle",
     "enhanceRetouchTitle",
@@ -1032,7 +1114,12 @@
     "appLockUnlockHint",
     "appLockUnlockWrongPassword",
     "enabledText",
-    "disabledText"
+    "disabledText",
+    "trustedCertManagerPageTitle",
+    "trustedCertManagerAlreadyTrustedError",
+    "trustedCertManagerSelectServer",
+    "trustedCertManagerNoHttpsServerError",
+    "trustedCertManagerFailedToRemoveCertError"
   ],
 
   "zh_Hant": [
@@ -1083,6 +1170,7 @@
     "settingsClearCacheDatabaseTitle",
     "settingsClearCacheDatabaseDescription",
     "settingsClearCacheDatabaseSuccessNotification",
+    "settingsManageTrustedCertificateTitle",
     "settingsServerVersionTitle",
     "sortOptionFilenameAscendingLabel",
     "sortOptionFilenameDescendingLabel",
@@ -1177,6 +1265,11 @@
     "appLockUnlockHint",
     "appLockUnlockWrongPassword",
     "enabledText",
-    "disabledText"
+    "disabledText",
+    "trustedCertManagerPageTitle",
+    "trustedCertManagerAlreadyTrustedError",
+    "trustedCertManagerSelectServer",
+    "trustedCertManagerNoHttpsServerError",
+    "trustedCertManagerFailedToRemoveCertError"
   ]
 }

@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
+import 'package:nc_photos/account.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/collection/util.dart';
 import 'package:nc_photos/entity/pref.dart';
@@ -21,6 +22,12 @@ part 'pref_controller/util.dart';
 @npSubjectAccessor
 class PrefController {
   PrefController(this._c);
+
+  Future<bool> setAccounts(List<Account> value) => _set<List<Account>>(
+        controller: _accountsController,
+        setter: (pref, value) => pref.setAccounts3(value),
+        value: value,
+      );
 
   Future<bool> setAppLanguage(AppLanguage value) => _set<AppLanguage>(
         controller: _languageController,
@@ -182,6 +189,9 @@ class PrefController {
   }
 
   final DiContainer _c;
+  @npSubjectAccessor
+  late final _accountsController =
+      BehaviorSubject.seeded(_c.pref.getAccounts3() ?? []);
   @npSubjectAccessor
   late final _languageController =
       BehaviorSubject.seeded(_langIdToAppLanguage(_c.pref.getLanguageOr(0)));

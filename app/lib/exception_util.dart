@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/exception.dart';
+import 'package:nc_photos/navigation_manager.dart';
+import 'package:nc_photos/widget/trusted_cert_manager.dart';
 
 /// Convert an exception to a user-facing string
 ///
@@ -46,6 +48,16 @@ String toUserString(Object? exception) {
     return (L10n.global().errorInvalidBaseUrl, null);
   } else if (exception is AlbumDowngradeException) {
     return (L10n.global().errorAlbumDowngrade, null);
+  } else if (exception is HandshakeException) {
+    return (
+      L10n.global().serverCertErrorDialogTitle,
+      SnackBarAction(
+        label: L10n.global().configButtonLabel,
+        onPressed: () => NavigationManager()
+            .getNavigator()
+            ?.pushNamed(TrustedCertManager.routeName),
+      ),
+    );
   }
   return (exception?.toString() ?? "Unknown error", null);
 }

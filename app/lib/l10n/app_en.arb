@@ -453,6 +453,7 @@
 	"settingsClearCacheDatabaseTitle": "Clear file database",
 	"settingsClearCacheDatabaseDescription": "Clear cached file info and trigger a complete resync with the server",
 	"settingsClearCacheDatabaseSuccessNotification": "Database cleared successfully. You are suggested to restart the app",
+	"settingsManageTrustedCertificateTitle": "Manage trusted certificates",
 	"settingsAboutSectionTitle": "About",
 	"@settingsAboutSectionTitle": {
 		"description": "Title of the about section in settings widget"
@@ -1467,6 +1468,23 @@
 	},
 	"enabledText": "Enabled",
 	"disabledText": "Disabled",
+	"trustedCertManagerPageTitle": "Trusted certificates",
+	"@trustedCertManagerPageTitle": {
+		"description": "A page to manage trusted certificates"
+	},
+	"trustedCertManagerAlreadyTrustedError": "Already trusted",
+	"@trustedCertManagerAlreadyTrustedError": {
+		"description": "The selected cert has been trusted already"
+	},
+	"trustedCertManagerSelectServer": "Select HTTPS server",
+	"@trustedCertManagerSelectServer": {
+		"description": "Select a server from the account list"
+	},
+	"trustedCertManagerNoHttpsServerError": "No server available",
+	"@trustedCertManagerNoHttpsServerError": {
+		"description": "There's no HTTPS server in the account list"
+	},
+	"trustedCertManagerFailedToRemoveCertError": "Failed to remove certificate",
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {

@@ -13,10 +13,12 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/bloc_util.dart';
 import 'package:nc_photos/controller/account_controller.dart';
 import 'package:nc_photos/controller/pref_controller.dart';
+import 'package:nc_photos/controller/trusted_cert_controller.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/legacy/connect.dart' as legacy;
 import 'package:nc_photos/legacy/sign_in.dart' as legacy;
+import 'package:nc_photos/mobile/self_signed_cert_manager.dart';
 import 'package:nc_photos/navigation_manager.dart';
 import 'package:nc_photos/protected_page_handler.dart';
 import 'package:nc_photos/session_storage.dart';
@@ -52,6 +54,7 @@ import 'package:nc_photos/widget/slideshow_viewer.dart';
 import 'package:nc_photos/widget/splash.dart';
 import 'package:nc_photos/widget/trashbin_browser.dart';
 import 'package:nc_photos/widget/trashbin_viewer.dart';
+import 'package:nc_photos/widget/trusted_cert_manager.dart';
 import 'package:nc_photos/widget/viewer.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_db/np_db.dart';
@@ -87,6 +90,11 @@ class MyApp extends StatelessWidget {
         ),
         RepositoryProvider<NpDb>(
           create: (_) => _c.npDb,
+        ),
+        RepositoryProvider<TrustedCertController>(
+          create: (_) => TrustedCertController(
+            manager: SelfSignedCertManager(),
+          ),
         ),
       ],
       child: BlocProvider(
@@ -210,6 +218,7 @@ class _WrappedAppState extends State<_WrappedApp>
         SharingBrowser.routeName: SharingBrowser.buildRoute,
         PlacesBrowser.routeName: PlacesBrowser.buildRoute,
         ArchiveBrowser.routeName: ArchiveBrowser.buildRoute,
+        TrustedCertManager.routeName: TrustedCertManager.buildRoute,
       };
 
   Route<dynamic>? _onGenerateRoute(RouteSettings settings) {
