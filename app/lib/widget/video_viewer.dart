@@ -9,7 +9,6 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/pref.dart';
-import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/np_api_util.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
@@ -69,10 +68,7 @@ class _VideoViewerState extends State<VideoViewer>
       }
     }).onError((e, stacktrace) {
       _log.shout("[initState] Failed while _getVideoUrl", e, stacktrace);
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(e)),
-        duration: k.snackBarDurationNormal,
-      ));
+      SnackBarManager().showSnackBarForException(e);
       widget.onLoadFailure?.call();
     });
   }
@@ -135,10 +131,7 @@ class _VideoViewerState extends State<VideoViewer>
       });
     } catch (e, stackTrace) {
       _log.shout("[_initController] Failed while initialize", e, stackTrace);
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(e)),
-        duration: k.snackBarDurationNormal,
-      ));
+      SnackBarManager().showSnackBarForException(e);
       widget.onLoadFailure?.call();
     }
   }

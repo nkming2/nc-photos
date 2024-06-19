@@ -16,7 +16,6 @@ import 'package:nc_photos/entity/collection/builder.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/exception_event.dart';
-import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/help_utils.dart' as help_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
@@ -134,11 +133,7 @@ class _WrappedSearchLandingState extends State<_WrappedSearchLanding> {
                     return;
                   }
                 }
-                SnackBarManager().showSnackBar(SnackBar(
-                  content:
-                      Text(exception_util.toUserString(state.error!.error)),
-                  duration: k.snackBarDurationNormal,
-                ));
+                SnackBarManager().showSnackBarForException(state.error!.error);
               }
             },
           ),

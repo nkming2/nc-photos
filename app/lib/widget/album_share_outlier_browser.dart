@@ -11,8 +11,6 @@ import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/share/data_source.dart';
-import 'package:nc_photos/exception_util.dart' as exception_util;
-import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/use_case/create_share.dart';
 import 'package:nc_photos/use_case/remove_share.dart';
@@ -314,10 +312,7 @@ class _AlbumShareOutlierBrowserState extends State<AlbumShareOutlierBrowser> {
       _transformItems(state.items);
     } else if (state is ListAlbumShareOutlierBlocFailure) {
       _transformItems(state.items);
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(state.exception)),
-        duration: k.snackBarDurationNormal,
-      ));
+      SnackBarManager().showSnackBarForException(state.exception);
     }
   }
 
@@ -384,10 +379,7 @@ class _AlbumShareOutlierBrowserState extends State<AlbumShareOutlierBrowser> {
     } catch (e, stackTrace) {
       _log.shout(
           "[_fixMissingSharee] Failed while CreateUserShare", e, stackTrace);
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(e)),
-        duration: k.snackBarDurationNormal,
-      ));
+      SnackBarManager().showSnackBarForException(e);
       if (mounted) {
         setState(() {
           _removeItemStatus(item.file.fdPath, item.shareWith);
@@ -412,10 +404,7 @@ class _AlbumShareOutlierBrowserState extends State<AlbumShareOutlierBrowser> {
       }
     } catch (e, stackTrace) {
       _log.shout("[_fixExtraShare] Failed while RemoveShare", e, stackTrace);
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(e)),
-        duration: k.snackBarDurationNormal,
-      ));
+      SnackBarManager().showSnackBarForException(e);
       if (mounted) {
         setState(() {
           _removeItemStatus(item.file.fdPath, item.share.shareWith!);

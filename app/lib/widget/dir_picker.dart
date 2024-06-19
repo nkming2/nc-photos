@@ -10,7 +10,6 @@ import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
-import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:np_codegen/np_codegen.dart';
@@ -123,10 +122,7 @@ class DirPickerState extends State<DirPicker> {
                   try {
                     _navigateInto(File(path: path_lib.dirname(_currentPath)));
                   } catch (e) {
-                    SnackBarManager().showSnackBar(SnackBar(
-                      content: Text(exception_util.toUserString(e)),
-                      duration: k.snackBarDurationNormal,
-                    ));
+                    SnackBarManager().showSnackBarForException(e);
                   }
                 },
               );
@@ -219,10 +215,7 @@ class DirPickerState extends State<DirPicker> {
               try {
                 _navigateInto(item.file);
               } catch (e) {
-                SnackBarManager().showSnackBar(SnackBar(
-                  content: Text(exception_util.toUserString(e)),
-                  duration: k.snackBarDurationNormal,
-                ));
+                SnackBarManager().showSnackBarForException(e);
               }
             }
           : null,
@@ -238,10 +231,7 @@ class DirPickerState extends State<DirPicker> {
                 : ""));
       }
     } else if (state is LsDirBlocFailure) {
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(state.exception)),
-        duration: k.snackBarDurationNormal,
-      ));
+      SnackBarManager().showSnackBarForException(state.exception);
     }
   }
 

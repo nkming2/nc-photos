@@ -22,8 +22,6 @@ import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/exception_event.dart';
-import 'package:nc_photos/exception_util.dart' as exception_util;
-import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/use_case/import_potential_shared_album.dart';
@@ -112,10 +110,7 @@ class _WrappedSharingBrowserState extends State<_WrappedSharingBrowser>
           listenWhen: (previous, current) => previous.error != current.error,
           listener: (context, state) {
             if (state.error != null && isPageVisible()) {
-              SnackBarManager().showSnackBar(SnackBar(
-                content: Text(exception_util.toUserString(state.error!.error)),
-                duration: k.snackBarDurationNormal,
-              ));
+              SnackBarManager().showSnackBarForException(state.error!.error);
             }
           },
         ),

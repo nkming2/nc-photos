@@ -15,7 +15,6 @@ import 'package:nc_photos/controller/pref_controller.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception_event.dart';
-import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/flutter_util.dart' as flutter_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
@@ -103,10 +102,7 @@ class _WrappedArchiveBrowserState extends State<_WrappedArchiveBrowser>
                     duration: k.snackBarDurationNormal,
                   ));
                 } else {
-                  SnackBarManager().showSnackBar(SnackBar(
-                    content: Text(exception_util.toUserString(error.error)),
-                    duration: k.snackBarDurationNormal,
-                  ));
+                  SnackBarManager().showSnackBarForException(error.error);
                 }
               }
             },

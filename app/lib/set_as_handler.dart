@@ -6,9 +6,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
-import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/internal_download_handler.dart';
-import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/share.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
@@ -41,10 +39,7 @@ class SetAsHandler {
       }
     } catch (e, stackTrace) {
       _log.shout("[setAsFile] Failed while sharing files", e, stackTrace);
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(e)),
-        duration: k.snackBarDurationNormal,
-      ));
+      SnackBarManager().showSnackBarForException(e);
     } finally {
       if (!isSelectionCleared) {
         clearSelection?.call();

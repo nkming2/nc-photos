@@ -8,8 +8,6 @@ import 'package:nc_photos/controller/account_controller.dart';
 import 'package:nc_photos/controller/account_pref_controller.dart';
 import 'package:nc_photos/controller/pref_controller.dart';
 import 'package:nc_photos/exception_event.dart';
-import 'package:nc_photos/exception_util.dart' as exception_util;
-import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
 import 'package:np_codegen/np_codegen.dart';
@@ -63,11 +61,7 @@ class _WrappedPhotosSettingsState extends State<_WrappedPhotosSettings>
             listenWhen: (previous, current) => previous.error != current.error,
             listener: (context, state) {
               if (state.error != null && isPageVisible()) {
-                SnackBarManager().showSnackBar(SnackBar(
-                  content:
-                      Text(exception_util.toUserString(state.error!.error)),
-                  duration: k.snackBarDurationNormal,
-                ));
+                SnackBarManager().showSnackBarForException(state.error!.error);
               }
             },
           ),

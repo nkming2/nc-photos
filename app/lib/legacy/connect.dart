@@ -9,7 +9,6 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception.dart';
-import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/help_utils.dart' as help_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/legacy/app_password_exchange_bloc.dart';
@@ -121,10 +120,7 @@ class _ConnectState extends State<Connect> {
         ));
         Navigator.of(context).pop(null);
       } else {
-        SnackBarManager().showSnackBar(SnackBar(
-          content: Text(exception_util.toUserString(state.exception)),
-          duration: k.snackBarDurationNormal,
-        ));
+        SnackBarManager().showSnackBarForException(state.exception);
         Navigator.of(context).pop(null);
       }
     }
@@ -181,10 +177,7 @@ class _ConnectState extends State<Connect> {
       if (e.response.statusCode == 404) {
         return _onCheckWebDavUrlFailed(context, account);
       }
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(e)),
-        duration: k.snackBarDurationNormal,
-      ));
+      SnackBarManager().showSnackBarForException(e);
       Navigator.of(context).pop(null);
     } on StateError catch (_) {
       // Nextcloud for some reason doesn't return HTTP error when listing home
@@ -192,10 +185,7 @@ class _ConnectState extends State<Connect> {
       return _onCheckWebDavUrlFailed(context, account);
     } catch (e, stackTrace) {
       _log.shout("[_checkWebDavUrl] Failed", e, stackTrace);
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(e)),
-        duration: k.snackBarDurationNormal,
-      ));
+      SnackBarManager().showSnackBarForException(e);
       Navigator.of(context).pop(null);
     }
   }

@@ -10,8 +10,6 @@ import 'package:nc_photos/bloc_util.dart';
 import 'package:nc_photos/db/entity_converter.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/pref.dart';
-import 'package:nc_photos/exception_util.dart' as exception_util;
-import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_db/np_db.dart';
@@ -50,10 +48,7 @@ class _WrappedExpertSettingsState extends State<_WrappedExpertSettings> {
     super.initState();
     _errorSubscription = context.read<_Bloc>().errorStream().listen((error) {
       if (error.ev is _ClearCacheDatabase) {
-        SnackBarManager().showSnackBar(SnackBar(
-          content: Text(exception_util.toUserString(error.error)),
-          duration: k.snackBarDurationNormal,
-        ));
+        SnackBarManager().showSnackBarForException(error.error);
       }
     });
   }

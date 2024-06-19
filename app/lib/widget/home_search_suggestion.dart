@@ -8,8 +8,6 @@ import 'package:nc_photos/entity/collection.dart';
 import 'package:nc_photos/entity/collection/builder.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/entity/tag.dart';
-import 'package:nc_photos/exception_util.dart' as exception_util;
-import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/use_case/list_location_group.dart';
@@ -119,10 +117,7 @@ class _HomeSearchSuggestionState extends State<HomeSearchSuggestion>
     } else if (state is HomeSearchSuggestionBlocFailure) {
       _transformItems(state.results);
       if (isPageVisible()) {
-        SnackBarManager().showSnackBar(SnackBar(
-          content: Text(exception_util.toUserString(state.exception)),
-          duration: k.snackBarDurationNormal,
-        ));
+        SnackBarManager().showSnackBarForException(state.exception);
       }
     }
   }

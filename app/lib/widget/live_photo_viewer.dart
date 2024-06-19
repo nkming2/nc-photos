@@ -7,7 +7,6 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/api/api_util.dart' as api_util;
 import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
-import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/np_api_util.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
@@ -55,10 +54,7 @@ class _LivePhotoViewerState extends State<LivePhotoViewer> {
       }
     }).onError((e, stacktrace) {
       _log.shout("[initState] Failed while _getVideoUrl", e, stacktrace);
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(e)),
-        duration: k.snackBarDurationNormal,
-      ));
+      SnackBarManager().showSnackBarForException(e);
       widget.onLoadFailure?.call();
     });
 
@@ -122,10 +118,7 @@ class _LivePhotoViewerState extends State<LivePhotoViewer> {
       await _controller.play();
     } catch (e, stackTrace) {
       _log.shout("[_initController] Failed while initialize", e, stackTrace);
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(e)),
-        duration: k.snackBarDurationNormal,
-      ));
+      SnackBarManager().showSnackBarForException(e);
       widget.onLoadFailure?.call();
     }
   }

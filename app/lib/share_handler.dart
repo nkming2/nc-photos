@@ -16,7 +16,6 @@ import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/local_file.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/share/data_source.dart';
-import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/internal_download_handler.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/share.dart';
@@ -62,10 +61,7 @@ class ShareHandler {
               e,
               stackTrace);
           if (!hasShownError) {
-            SnackBarManager().showSnackBar(SnackBar(
-              content: Text(exception_util.toUserString(e)),
-              duration: k.snackBarDurationNormal,
-            ));
+            SnackBarManager().showSnackBarForException(e);
             hasShownError = true;
           }
         }
@@ -91,10 +87,7 @@ class ShareHandler {
       }
     } catch (e, stackTrace) {
       _log.shout("[shareFiles] Failed while sharing files", e, stackTrace);
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(e)),
-        duration: k.snackBarDurationNormal,
-      ));
+      SnackBarManager().showSnackBarForException(e);
     } finally {
       if (!isSelectionCleared) {
         clearSelection?.call();
@@ -199,10 +192,7 @@ class ShareHandler {
     } catch (e, stackTrace) {
       _log.shout(
           "[_shareFileAsLink] Failed while CreateLinkShare", e, stackTrace);
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(e)),
-        duration: k.snackBarDurationNormal,
-      ));
+      SnackBarManager().showSnackBarForException(e);
     }
   }
 

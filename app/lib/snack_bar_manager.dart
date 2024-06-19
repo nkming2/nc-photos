@@ -2,6 +2,8 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
+import 'package:nc_photos/exception_util.dart';
+import 'package:nc_photos/k.dart' as k;
 import 'package:np_codegen/np_codegen.dart';
 
 part 'snack_bar_manager.g.dart';
@@ -38,6 +40,15 @@ class SnackBarManager {
   }) {
     _add(_Item(snackBar, canBeReplaced));
     _ensureRunning();
+  }
+
+  void showSnackBarForException(Object? exception) {
+    final (text, action) = exceptionToSnackBarData(exception);
+    showSnackBar(SnackBar(
+      content: Text(text),
+      action: action,
+      duration: k.snackBarDurationNormal,
+    ));
   }
 
   void _ensureRunning() {

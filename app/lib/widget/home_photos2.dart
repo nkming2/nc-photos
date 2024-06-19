@@ -32,7 +32,6 @@ import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_event.dart';
-import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/flutter_util.dart' as flutter_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/progress_util.dart';
@@ -138,20 +137,23 @@ class _WrappedHomePhotosState extends State<_WrappedHomePhotos> {
             selector: (state) => state.error,
             listener: (context, error) {
               if (error != null && _isVisible == true) {
-                final String content;
                 if (error.error is _ArchiveFailedError) {
-                  content = L10n.global().archiveSelectedFailureNotification(
-                      (error.error as _ArchiveFailedError).count);
+                  SnackBarManager().showSnackBar(SnackBar(
+                    content: Text(L10n.global()
+                        .archiveSelectedFailureNotification(
+                            (error.error as _ArchiveFailedError).count)),
+                    duration: k.snackBarDurationNormal,
+                  ));
                 } else if (error.error is _RemoveFailedError) {
-                  content = L10n.global().deleteSelectedFailureNotification(
-                      (error.error as _RemoveFailedError).count);
+                  SnackBarManager().showSnackBar(SnackBar(
+                    content: Text(L10n.global()
+                        .deleteSelectedFailureNotification(
+                            (error.error as _RemoveFailedError).count)),
+                    duration: k.snackBarDurationNormal,
+                  ));
                 } else {
-                  content = exception_util.toUserString(error.error);
+                  SnackBarManager().showSnackBarForException(error.error);
                 }
-                SnackBarManager().showSnackBar(SnackBar(
-                  content: Text(content),
-                  duration: k.snackBarDurationNormal,
-                ));
               }
             },
           ),

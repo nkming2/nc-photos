@@ -14,7 +14,6 @@ import 'package:nc_photos/download_handler.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/entity/search.dart';
-import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/object_extension.dart';
@@ -341,10 +340,7 @@ class _HomeSearchState extends State<HomeSearch>
     } else if (state is SearchBlocFailure) {
       _transformItems(state.items);
       if (isPageVisible()) {
-        SnackBarManager().showSnackBar(SnackBar(
-          content: Text(exception_util.toUserString(state.exception)),
-          duration: k.snackBarDurationNormal,
-        ));
+        SnackBarManager().showSnackBarForException(state.exception);
       }
     } else if (state is SearchBlocInconsistent) {
       _reqQuery(_activeInput, _activeFilters);

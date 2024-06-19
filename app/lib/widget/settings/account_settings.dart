@@ -14,7 +14,6 @@ import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/exception_event.dart';
-import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/help_utils.dart' as help_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
@@ -129,19 +128,22 @@ class _WrappedAccountSettingsState extends State<_WrappedAccountSettings>
             listenWhen: (previous, current) => previous.error != current.error,
             listener: (context, state) {
               if (state.error != null && isPageVisible()) {
-                final String errorMsg;
                 if (state.error is _AccountConflictError) {
-                  errorMsg =
-                      L10n.global().editAccountConflictFailureNotification;
+                  SnackBarManager().showSnackBar(SnackBar(
+                    content: Text(
+                        L10n.global().editAccountConflictFailureNotification),
+                    duration: k.snackBarDurationNormal,
+                  ));
                 } else if (state.error is _WritePrefError) {
-                  errorMsg = L10n.global().writePreferenceFailureNotification;
+                  SnackBarManager().showSnackBar(SnackBar(
+                    content:
+                        Text(L10n.global().writePreferenceFailureNotification),
+                    duration: k.snackBarDurationNormal,
+                  ));
                 } else {
-                  errorMsg = exception_util.toUserString(state.error!.error);
+                  SnackBarManager()
+                      .showSnackBarForException(state.error!.error);
                 }
-                SnackBarManager().showSnackBar(SnackBar(
-                  content: Text(errorMsg),
-                  duration: k.snackBarDurationNormal,
-                ));
               }
             },
           ),

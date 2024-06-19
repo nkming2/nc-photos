@@ -13,8 +13,6 @@ import 'package:nc_photos/controller/account_controller.dart';
 import 'package:nc_photos/controller/places_controller.dart';
 import 'package:nc_photos/entity/collection/builder.dart';
 import 'package:nc_photos/exception_event.dart';
-import 'package:nc_photos/exception_util.dart' as exception_util;
-import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/list_location_group.dart';
@@ -88,10 +86,7 @@ class _WrappedPlacesBrowserState extends State<_WrappedPlacesBrowser>
           listenWhen: (previous, current) => previous.error != current.error,
           listener: (context, state) {
             if (state.error != null && isPageVisible()) {
-              SnackBarManager().showSnackBar(SnackBar(
-                content: Text(exception_util.toUserString(state.error!.error)),
-                duration: k.snackBarDurationNormal,
-              ));
+              SnackBarManager().showSnackBarForException(state.error!.error);
             }
           },
         ),

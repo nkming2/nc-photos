@@ -9,8 +9,6 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc_util.dart';
 import 'package:nc_photos/controller/pref_controller.dart';
 import 'package:nc_photos/exception_event.dart';
-import 'package:nc_photos/exception_util.dart' as exception_util;
-import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/android_info.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/session_storage.dart';
@@ -65,11 +63,7 @@ class _WrappedThemeSettingsState extends State<_WrappedThemeSettings>
             listenWhen: (previous, current) => previous.error != current.error,
             listener: (context, state) {
               if (state.error != null && isPageVisible()) {
-                SnackBarManager().showSnackBar(SnackBar(
-                  content:
-                      Text(exception_util.toUserString(state.error!.error)),
-                  duration: k.snackBarDurationNormal,
-                ));
+                SnackBarManager().showSnackBarForException(state.error!.error);
               }
             },
           ),

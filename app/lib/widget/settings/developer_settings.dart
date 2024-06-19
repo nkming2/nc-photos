@@ -8,7 +8,6 @@ import 'package:nc_photos/bloc_util.dart';
 import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/exception_event.dart';
-import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/self_signed_cert_manager.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
@@ -53,11 +52,7 @@ class _WrappedDeveloperSettingsState extends State<_WrappedDeveloperSettings>
             listenWhen: (previous, current) => previous.error != current.error,
             listener: (context, state) {
               if (state.error != null && isPageVisible()) {
-                SnackBarManager().showSnackBar(SnackBar(
-                  content:
-                      Text(exception_util.toUserString(state.error!.error)),
-                  duration: k.snackBarDurationNormal,
-                ));
+                SnackBarManager().showSnackBarForException(state.error!.error);
               }
             },
           ),

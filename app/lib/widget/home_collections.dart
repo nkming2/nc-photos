@@ -21,7 +21,6 @@ import 'package:nc_photos/entity/collection/content_provider/nc_album.dart';
 import 'package:nc_photos/entity/collection/util.dart' as collection_util;
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/exception_event.dart';
-import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/np_api_util.dart';
 import 'package:nc_photos/platform/features.dart' as features;
@@ -104,10 +103,7 @@ class _WrappedHomeCollectionsState extends State<_WrappedHomeCollections>
           listenWhen: (previous, current) => previous.error != current.error,
           listener: (context, state) {
             if (state.error != null && isPageVisible()) {
-              SnackBarManager().showSnackBar(SnackBar(
-                content: Text(exception_util.toUserString(state.error!.error)),
-                duration: k.snackBarDurationNormal,
-              ));
+              SnackBarManager().showSnackBarForException(state.error!.error);
             }
           },
         ),

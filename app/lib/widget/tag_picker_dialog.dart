@@ -6,7 +6,6 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/list_tag.dart';
 import 'package:nc_photos/bloc/search_suggestion.dart';
 import 'package:nc_photos/entity/tag.dart';
-import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/widget/dialog_scaffold.dart';
@@ -109,10 +108,7 @@ class _TagPickerDialogState extends State<TagPickerDialog> {
     if (state is ListTagBlocSuccess) {
       _transformSuggestionItems(state.items);
     } else if (state is ListTagBlocFailure) {
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(state.exception)),
-        duration: k.snackBarDurationNormal,
-      ));
+      SnackBarManager().showSnackBarForException(state.exception);
     }
   }
 

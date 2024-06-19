@@ -17,7 +17,6 @@ import 'package:nc_photos/entity/collection.dart';
 import 'package:nc_photos/entity/collection/adapter.dart';
 import 'package:nc_photos/entity/collection/util.dart' as collection_util;
 import 'package:nc_photos/exception_event.dart';
-import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/np_api_util.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
@@ -99,11 +98,7 @@ class _WrappedCollectionPickerState extends State<_WrappedCollectionPicker> {
             listenWhen: (previous, current) => previous.error != current.error,
             listener: (context, state) {
               if (state.error != null) {
-                SnackBarManager().showSnackBar(SnackBar(
-                  content:
-                      Text(exception_util.toUserString(state.error!.error)),
-                  duration: k.snackBarDurationNormal,
-                ));
+                SnackBarManager().showSnackBarForException(state.error!.error);
               }
             },
           ),

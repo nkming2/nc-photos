@@ -14,7 +14,6 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/entity/share/data_source.dart';
-import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/np_api_util.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
@@ -240,10 +239,7 @@ class _SharedFileViewerState extends State<SharedFileViewer> {
     } catch (e, stackTrace) {
       _log.shout(
           "[_onItemUnsharePressed] Failed while RemoveShare", e, stackTrace);
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(e)),
-        duration: k.snackBarDurationNormal,
-      ));
+      SnackBarManager().showSnackBarForException(e);
     }
   }
 

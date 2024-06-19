@@ -6,7 +6,6 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/pref.dart';
-import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
@@ -112,10 +111,7 @@ class _ResultViewerState extends State<ResultViewer> {
       file = await LsSingleFile(_c)(_account!, filePath);
     } catch (e, stackTrace) {
       _log.severe("[_doWork] Failed while LsSingleFile", e, stackTrace);
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(e)),
-        duration: k.snackBarDurationNormal,
-      ));
+      SnackBarManager().showSnackBarForException(e);
       Navigator.of(context).pop();
       return;
     }

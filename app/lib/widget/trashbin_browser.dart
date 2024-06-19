@@ -14,7 +14,6 @@ import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/pref.dart';
-import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/object_extension.dart';
@@ -258,10 +257,7 @@ class _TrashbinBrowserState extends State<TrashbinBrowser>
       _transformItems(state.items);
     } else if (state is LsTrashbinBlocFailure) {
       _transformItems(state.items);
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(exception_util.toUserString(state.exception)),
-        duration: k.snackBarDurationNormal,
-      ));
+      SnackBarManager().showSnackBarForException(state.exception);
     } else if (state is LsTrashbinBlocInconsistent) {
       _reqQuery();
     }

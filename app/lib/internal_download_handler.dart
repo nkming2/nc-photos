@@ -8,7 +8,6 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception.dart';
-import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/platform/download.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
@@ -84,10 +83,7 @@ class InternalDownloadHandler {
         } catch (e, stacktrace) {
           _log.shout(
               "[downloadPreviews] Failed while DownloadPreview", e, stacktrace);
-          SnackBarManager().showSnackBar(SnackBar(
-            content: Text(exception_util.toUserString(e)),
-            duration: k.snackBarDurationNormal,
-          ));
+          SnackBarManager().showSnackBarForException(e);
         }
       }
       return results.toMap();
@@ -156,10 +152,7 @@ class InternalDownloadHandler {
         } catch (e, stacktrace) {
           _log.shout(
               "[downloadFiles] Failed while downloadFile", e, stacktrace);
-          SnackBarManager().showSnackBar(SnackBar(
-            content: Text(exception_util.toUserString(e)),
-            duration: k.snackBarDurationNormal,
-          ));
+          SnackBarManager().showSnackBarForException(e);
         }
       }
       return results.toMap();
