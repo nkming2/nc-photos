@@ -21,6 +21,10 @@ class _AppLockMyAppState extends State<_AppLockMyApp> {
         SessionStorage().lastSuspendTime = clock.now();
       },
       onShow: () async {
+        if (context.read<SecurePrefController>().protectedPageAuthTypeValue ==
+            null) {
+          return;
+        }
         final now = clock.now();
         final diff = now.difference(SessionStorage().lastSuspendTime);
         _log.info("Suspended for: $diff");
