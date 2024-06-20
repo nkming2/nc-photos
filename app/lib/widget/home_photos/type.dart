@@ -72,6 +72,9 @@ class _VideoItem extends _FileItem {
       account: account,
       previewUrl: _previewUrl,
       isFavorite: file.fdIsFavorite,
+      onError: () {
+        context.addEvent(const _TripMissingVideoPreview());
+      },
     );
   }
 

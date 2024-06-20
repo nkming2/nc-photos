@@ -148,6 +148,15 @@ extension $PrefControllerNpSubjectAccessor on PrefController {
   Stream<Color?> get secondarySeedColorChange =>
       secondarySeedColor.distinct().skip(1);
   Color? get secondarySeedColorValue => _secondarySeedColorController.value;
+// _isDontShowVideoPreviewHintController
+  ValueStream<bool> get isDontShowVideoPreviewHint =>
+      _isDontShowVideoPreviewHintController.stream;
+  Stream<bool> get isDontShowVideoPreviewHintNew =>
+      isDontShowVideoPreviewHint.skip(1);
+  Stream<bool> get isDontShowVideoPreviewHintChange =>
+      isDontShowVideoPreviewHint.distinct().skip(1);
+  bool get isDontShowVideoPreviewHintValue =>
+      _isDontShowVideoPreviewHintController.value;
 }
 
 extension $SecurePrefControllerNpSubjectAccessor on SecurePrefController {

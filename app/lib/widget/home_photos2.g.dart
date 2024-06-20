@@ -35,6 +35,7 @@ abstract class $_StateCopyWithWorker {
       List<_MinimapItem>? minimapItems,
       double? minimapYRatio,
       Date? scrollDate,
+      bool? hasMissingVideoPreview,
       ExceptionEvent? error});
 }
 
@@ -64,6 +65,7 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
       dynamic minimapItems = copyWithNull,
       dynamic minimapYRatio,
       dynamic scrollDate = copyWithNull,
+      dynamic hasMissingVideoPreview,
       dynamic error = copyWithNull}) {
     return _State(
         files: files as List<FileDescriptor>? ?? that.files,
@@ -102,6 +104,8 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
         minimapYRatio: minimapYRatio as double? ?? that.minimapYRatio,
         scrollDate:
             scrollDate == copyWithNull ? that.scrollDate : scrollDate as Date?,
+        hasMissingVideoPreview:
+            hasMissingVideoPreview as bool? ?? that.hasMissingVideoPreview,
         error: error == copyWithNull ? that.error : error as ExceptionEvent?);
   }
 
@@ -180,7 +184,7 @@ extension _$_ContentListBodyNpLog on _ContentListBody {
 extension _$_StateToString on _State {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_State {files: [length: ${files.length}], isLoading: $isLoading, transformedItems: [length: ${transformedItems.length}], selectedItems: {length: ${selectedItems.length}}, filesSummary: $filesSummary, visibleDates: {length: ${visibleDates.length}}, queriedDates: {length: ${queriedDates.length}}, isEnableMemoryCollection: $isEnableMemoryCollection, memoryCollections: [length: ${memoryCollections.length}], contentListMaxExtent: ${contentListMaxExtent == null ? null : "${contentListMaxExtent!.toStringAsFixed(3)}"}, syncProgress: $syncProgress, zoom: $zoom, scale: ${scale == null ? null : "${scale!.toStringAsFixed(3)}"}, viewWidth: ${viewWidth == null ? null : "${viewWidth!.toStringAsFixed(3)}"}, viewHeight: ${viewHeight == null ? null : "${viewHeight!.toStringAsFixed(3)}"}, itemPerRow: $itemPerRow, itemSize: ${itemSize == null ? null : "${itemSize!.toStringAsFixed(3)}"}, isScrolling: $isScrolling, minimapItems: ${minimapItems == null ? null : "[length: ${minimapItems!.length}]"}, minimapYRatio: ${minimapYRatio.toStringAsFixed(3)}, scrollDate: $scrollDate, error: $error}";
+    return "_State {files: [length: ${files.length}], isLoading: $isLoading, transformedItems: [length: ${transformedItems.length}], selectedItems: {length: ${selectedItems.length}}, filesSummary: $filesSummary, visibleDates: {length: ${visibleDates.length}}, queriedDates: {length: ${queriedDates.length}}, isEnableMemoryCollection: $isEnableMemoryCollection, memoryCollections: [length: ${memoryCollections.length}], contentListMaxExtent: ${contentListMaxExtent == null ? null : "${contentListMaxExtent!.toStringAsFixed(3)}"}, syncProgress: $syncProgress, zoom: $zoom, scale: ${scale == null ? null : "${scale!.toStringAsFixed(3)}"}, viewWidth: ${viewWidth == null ? null : "${viewWidth!.toStringAsFixed(3)}"}, viewHeight: ${viewHeight == null ? null : "${viewHeight!.toStringAsFixed(3)}"}, itemPerRow: $itemPerRow, itemSize: ${itemSize == null ? null : "${itemSize!.toStringAsFixed(3)}"}, isScrolling: $isScrolling, minimapItems: ${minimapItems == null ? null : "[length: ${minimapItems!.length}]"}, minimapYRatio: ${minimapYRatio.toStringAsFixed(3)}, scrollDate: $scrollDate, hasMissingVideoPreview: $hasMissingVideoPreview, error: $error}";
   }
 }
 
@@ -357,6 +361,13 @@ extension _$_UpdateMemoriesToString on _UpdateMemories {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
     return "_UpdateMemories {}";
+  }
+}
+
+extension _$_TripMissingVideoPreviewToString on _TripMissingVideoPreview {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_TripMissingVideoPreview {}";
   }
 }
 

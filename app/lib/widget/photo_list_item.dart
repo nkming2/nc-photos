@@ -278,6 +278,7 @@ class PhotoListVideo extends StatelessWidget {
     required this.account,
     required this.previewUrl,
     this.isFavorite = false,
+    this.onError,
   });
 
   @override
@@ -293,24 +294,29 @@ class PhotoListVideo extends StatelessWidget {
               child: NetworkRectThumbnail(
                 account: account,
                 imageUrl: previewUrl,
-                errorBuilder: (_) => Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Icon(
-                    Icons.image_not_supported,
-                    color: Theme.of(context).listPlaceholderForegroundColor,
-                  ),
-                ),
+                errorBuilder: (context) {
+                  onError?.call();
+                  return Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Icon(
+                      Icons.image_not_supported,
+                      color: Theme.of(context).listPlaceholderForegroundColor,
+                    ),
+                  );
+                },
               ),
             ),
-            Container(
-              alignment: AlignmentDirectional.topEnd,
-              padding: const EdgeInsets.all(6),
+            Positioned.directional(
+              textDirection: Directionality.of(context),
+              top: 6,
+              end: 6,
               child: const Icon(Icons.play_circle_outlined, size: 17),
             ),
             if (isFavorite)
-              Container(
-                alignment: AlignmentDirectional.bottomStart,
-                padding: const EdgeInsets.all(6),
+              Positioned.directional(
+                textDirection: Directionality.of(context),
+                bottom: 6,
+                start: 6,
                 child: const Icon(Icons.star, size: 15),
               ),
           ],
@@ -322,6 +328,7 @@ class PhotoListVideo extends StatelessWidget {
   final Account account;
   final String previewUrl;
   final bool isFavorite;
+  final VoidCallback? onError;
 }
 
 class PhotoListLabel extends StatelessWidget {

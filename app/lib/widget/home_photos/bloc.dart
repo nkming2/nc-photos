@@ -50,6 +50,8 @@ class _Bloc extends Bloc<_Event, _State>
     on<_UpdateDateTimeGroup>(_onUpdateDateTimeGroup);
     on<_UpdateMemories>(_onUpdateMemories);
 
+    on<_TripMissingVideoPreview>(_onTripMissingVideoPreview);
+
     on<_SetError>(_onSetError);
 
     _subscriptions
@@ -484,6 +486,14 @@ class _Bloc extends Bloc<_Event, _State>
         );
       }).toList(),
     ));
+  }
+
+  void _onTripMissingVideoPreview(
+      _TripMissingVideoPreview ev, Emitter<_State> emit) {
+    // _log.info(ev);
+    if (!state.hasMissingVideoPreview) {
+      emit(state.copyWith(hasMissingVideoPreview: true));
+    }
   }
 
   void _onSetError(_SetError ev, Emitter<_State> emit) {

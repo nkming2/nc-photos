@@ -81,4 +81,11 @@ extension on Pref {
       return provider.setString(PrefKey.protectedPageAuthPassword, value);
     }
   }
+
+  bool? isDontShowVideoPreviewHint() =>
+      provider.getBool(PrefKey.dontShowVideoPreviewHint);
+  bool isDontShowVideoPreviewHintOr(bool def) =>
+      isDontShowVideoPreviewHint() ?? def;
+  Future<bool> setDontShowVideoPreviewHint(bool value) =>
+      provider.setBool(PrefKey.dontShowVideoPreviewHint, value);
 }

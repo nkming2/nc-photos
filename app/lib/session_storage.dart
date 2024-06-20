@@ -22,5 +22,7 @@ class SessionStorage {
 
   DateTime lastSuspendTime = clock.now();
 
+  bool hasShownVideoPreviewHint = false;
+
   static final _inst = SessionStorage._();
 }

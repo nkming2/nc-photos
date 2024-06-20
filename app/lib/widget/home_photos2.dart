@@ -33,13 +33,16 @@ import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/flutter_util.dart' as flutter_util;
+import 'package:nc_photos/help_utils.dart' as help_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/progress_util.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
+import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/stream_extension.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/theme/dimension.dart';
+import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/widget/collection_browser.dart';
 import 'package:nc_photos/widget/collection_picker.dart';
 import 'package:nc_photos/widget/file_sharer_dialog.dart';
@@ -133,6 +136,23 @@ class _WrappedHomePhotosState extends State<_WrappedHomePhotos> {
       },
       child: MultiBlocListener(
         listeners: [
+          _BlocListenerT<bool>(
+            selector: (state) => state.hasMissingVideoPreview,
+            listener: (context, hasMissingVideoPreview) {
+              if (hasMissingVideoPreview) {
+                if (!context
+                        .read<PrefController>()
+                        .isDontShowVideoPreviewHintValue &&
+                    !SessionStorage().hasShownVideoPreviewHint) {
+                  SessionStorage().hasShownVideoPreviewHint = true;
+                  showDialog(
+                    context: context,
+                    builder: (context) => const _VideoPreviewHintDialog(),
+                  );
+                }
+              }
+            },
+          ),
           _BlocListenerT<ExceptionEvent?>(
             selector: (state) => state.error,
             listener: (context, error) {

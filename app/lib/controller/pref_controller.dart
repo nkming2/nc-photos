@@ -152,6 +152,12 @@ class PrefController {
         value: value,
       );
 
+  Future<bool> setDontShowVideoPreviewHint(bool value) => _set<bool>(
+        controller: _isDontShowVideoPreviewHintController,
+        setter: (pref, value) => pref.setDontShowVideoPreviewHint(value),
+        value: value,
+      );
+
   Future<bool> _set<T>({
     required BehaviorSubject<T> controller,
     required Future<bool> Function(Pref pref, T value) setter,
@@ -249,6 +255,9 @@ class PrefController {
   @NpSubjectAccessor(type: "Color?")
   late final _secondarySeedColorController = BehaviorSubject<Color?>.seeded(
       _c.pref.getSecondarySeedColor()?.run(Color.new));
+  @npSubjectAccessor
+  late final _isDontShowVideoPreviewHintController =
+      BehaviorSubject.seeded(_c.pref.isDontShowVideoPreviewHintOr(false));
 }
 
 @npSubjectAccessor

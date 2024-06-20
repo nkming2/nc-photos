@@ -311,3 +311,30 @@ class _ScrollLabel extends StatelessWidget {
     );
   }
 }
+
+class _VideoPreviewHintDialog extends StatelessWidget {
+  const _VideoPreviewHintDialog();
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text(L10n.global().missingVideoThumbnailHelpDialogTitle),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+            launch(help_util.videoPreviewUrl);
+          },
+          child: Text(L10n.global().learnMoreButtonLabel),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+            context.read<PrefController>().setDontShowVideoPreviewHint(true);
+          },
+          child: Text(L10n.global().dontShowAgain),
+        ),
+      ],
+    );
+  }
+}

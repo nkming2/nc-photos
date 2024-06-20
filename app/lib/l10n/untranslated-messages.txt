@@ -247,6 +247,8 @@
     "trustedCertManagerSelectServer",
     "trustedCertManagerNoHttpsServerError",
     "trustedCertManagerFailedToRemoveCertError",
+    "missingVideoThumbnailHelpDialogTitle",
+    "dontShowAgain",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -280,7 +282,9 @@
     "trustedCertManagerAlreadyTrustedError",
     "trustedCertManagerSelectServer",
     "trustedCertManagerNoHttpsServerError",
-    "trustedCertManagerFailedToRemoveCertError"
+    "trustedCertManagerFailedToRemoveCertError",
+    "missingVideoThumbnailHelpDialogTitle",
+    "dontShowAgain"
   ],
 
   "de": [
@@ -332,7 +336,9 @@
     "trustedCertManagerAlreadyTrustedError",
     "trustedCertManagerSelectServer",
     "trustedCertManagerNoHttpsServerError",
-    "trustedCertManagerFailedToRemoveCertError"
+    "trustedCertManagerFailedToRemoveCertError",
+    "missingVideoThumbnailHelpDialogTitle",
+    "dontShowAgain"
   ],
 
   "el": [
@@ -467,7 +473,9 @@
     "trustedCertManagerAlreadyTrustedError",
     "trustedCertManagerSelectServer",
     "trustedCertManagerNoHttpsServerError",
-    "trustedCertManagerFailedToRemoveCertError"
+    "trustedCertManagerFailedToRemoveCertError",
+    "missingVideoThumbnailHelpDialogTitle",
+    "dontShowAgain"
   ],
 
   "es": [
@@ -493,7 +501,9 @@
     "trustedCertManagerAlreadyTrustedError",
     "trustedCertManagerSelectServer",
     "trustedCertManagerNoHttpsServerError",
-    "trustedCertManagerFailedToRemoveCertError"
+    "trustedCertManagerFailedToRemoveCertError",
+    "missingVideoThumbnailHelpDialogTitle",
+    "dontShowAgain"
   ],
 
   "fi": [
@@ -519,7 +529,9 @@
     "trustedCertManagerAlreadyTrustedError",
     "trustedCertManagerSelectServer",
     "trustedCertManagerNoHttpsServerError",
-    "trustedCertManagerFailedToRemoveCertError"
+    "trustedCertManagerFailedToRemoveCertError",
+    "missingVideoThumbnailHelpDialogTitle",
+    "dontShowAgain"
   ],
 
   "fr": [
@@ -545,7 +557,9 @@
     "trustedCertManagerAlreadyTrustedError",
     "trustedCertManagerSelectServer",
     "trustedCertManagerNoHttpsServerError",
-    "trustedCertManagerFailedToRemoveCertError"
+    "trustedCertManagerFailedToRemoveCertError",
+    "missingVideoThumbnailHelpDialogTitle",
+    "dontShowAgain"
   ],
 
   "it": [
@@ -576,7 +590,9 @@
     "trustedCertManagerAlreadyTrustedError",
     "trustedCertManagerSelectServer",
     "trustedCertManagerNoHttpsServerError",
-    "trustedCertManagerFailedToRemoveCertError"
+    "trustedCertManagerFailedToRemoveCertError",
+    "missingVideoThumbnailHelpDialogTitle",
+    "dontShowAgain"
   ],
 
   "nl": [
@@ -944,6 +960,8 @@
     "trustedCertManagerSelectServer",
     "trustedCertManagerNoHttpsServerError",
     "trustedCertManagerFailedToRemoveCertError",
+    "missingVideoThumbnailHelpDialogTitle",
+    "dontShowAgain",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -981,7 +999,9 @@
     "trustedCertManagerAlreadyTrustedError",
     "trustedCertManagerSelectServer",
     "trustedCertManagerNoHttpsServerError",
-    "trustedCertManagerFailedToRemoveCertError"
+    "trustedCertManagerFailedToRemoveCertError",
+    "missingVideoThumbnailHelpDialogTitle",
+    "dontShowAgain"
   ],
 
   "pt": [
@@ -1027,7 +1047,9 @@
     "trustedCertManagerAlreadyTrustedError",
     "trustedCertManagerSelectServer",
     "trustedCertManagerNoHttpsServerError",
-    "trustedCertManagerFailedToRemoveCertError"
+    "trustedCertManagerFailedToRemoveCertError",
+    "missingVideoThumbnailHelpDialogTitle",
+    "dontShowAgain"
   ],
 
   "ru": [
@@ -1053,7 +1075,9 @@
     "trustedCertManagerAlreadyTrustedError",
     "trustedCertManagerSelectServer",
     "trustedCertManagerNoHttpsServerError",
-    "trustedCertManagerFailedToRemoveCertError"
+    "trustedCertManagerFailedToRemoveCertError",
+    "missingVideoThumbnailHelpDialogTitle",
+    "dontShowAgain"
   ],
 
   "tr": [
@@ -1062,7 +1086,9 @@
     "trustedCertManagerAlreadyTrustedError",
     "trustedCertManagerSelectServer",
     "trustedCertManagerNoHttpsServerError",
-    "trustedCertManagerFailedToRemoveCertError"
+    "trustedCertManagerFailedToRemoveCertError",
+    "missingVideoThumbnailHelpDialogTitle",
+    "dontShowAgain"
   ],
 
   "zh": [
@@ -1119,7 +1145,9 @@
     "trustedCertManagerAlreadyTrustedError",
     "trustedCertManagerSelectServer",
     "trustedCertManagerNoHttpsServerError",
-    "trustedCertManagerFailedToRemoveCertError"
+    "trustedCertManagerFailedToRemoveCertError",
+    "missingVideoThumbnailHelpDialogTitle",
+    "dontShowAgain"
   ],
 
   "zh_Hant": [
@@ -1270,6 +1298,8 @@
     "trustedCertManagerAlreadyTrustedError",
     "trustedCertManagerSelectServer",
     "trustedCertManagerNoHttpsServerError",
-    "trustedCertManagerFailedToRemoveCertError"
+    "trustedCertManagerFailedToRemoveCertError",
+    "missingVideoThumbnailHelpDialogTitle",
+    "dontShowAgain"
   ]
 }

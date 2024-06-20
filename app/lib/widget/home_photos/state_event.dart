@@ -25,6 +25,7 @@ class _State {
     this.minimapItems,
     required this.minimapYRatio,
     this.scrollDate,
+    required this.hasMissingVideoPreview,
     this.error,
   });
 
@@ -45,6 +46,7 @@ class _State {
         isScrolling: false,
         filesSummary: const DbFilesSummary(items: {}),
         minimapYRatio: 1,
+        hasMissingVideoPreview: false,
       );
 
   @override
@@ -75,6 +77,8 @@ class _State {
   final List<_MinimapItem>? minimapItems;
   final double minimapYRatio;
   final Date? scrollDate;
+
+  final bool hasMissingVideoPreview;
 
   final ExceptionEvent? error;
 }
@@ -310,6 +314,14 @@ class _UpdateDateTimeGroup implements _Event {
 @toString
 class _UpdateMemories implements _Event {
   const _UpdateMemories();
+
+  @override
+  String toString() => _$toString();
+}
+
+@toString
+class _TripMissingVideoPreview implements _Event {
+  const _TripMissingVideoPreview();
 
   @override
   String toString() => _$toString();

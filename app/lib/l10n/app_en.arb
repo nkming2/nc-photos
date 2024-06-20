@@ -1485,6 +1485,8 @@
 		"description": "There's no HTTPS server in the account list"
 	},
 	"trustedCertManagerFailedToRemoveCertError": "Failed to remove certificate",
+	"missingVideoThumbnailHelpDialogTitle": "Having trouble with video thumbnails?",
+	"dontShowAgain": "Don't show again",
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {
