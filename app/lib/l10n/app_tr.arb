@@ -1,6 +1,6 @@
 {
 	"appTitle": "Fotoğraflar",
-	"translator": "Çeviren",
+	"translator": "Ali Yasin Yeşilyaprak",
 	"@translator": {
 		"description": "Name of the translator(s) for this language"
 	},
@@ -304,7 +304,7 @@
 	"@settingsIncludedFoldersTitle": {
 		"description": "Change the included folders of an account"
 	},
-	"settingsShareFolderTitle": "Klasörü Paylaş",
+	"settingsShareFolderTitle": "Paylaşım Klasörü",
 	"@settingsShareFolderTitle": {
 		"description": "Set the share folder such that it matches the parameter in config.php"
 	},
@@ -412,6 +412,7 @@
 	"settingsClearCacheDatabaseTitle": "Dosya veritabanını temizle",
 	"settingsClearCacheDatabaseDescription": "Önbelleğe alınmış dosya bilgilerini temizler ve sunucu ile tekrar senkronize eder",
 	"settingsClearCacheDatabaseSuccessNotification": "Veritabanı başarıyla temizlendi. Uygulamayı yeniden başlatmanız tavsiye edilir",
+	"settingsManageTrustedCertificateTitle": "Güvenilen Sertifikaları Yönet",
 	"settingsAboutSectionTitle": "Hakkında",
 	"@settingsAboutSectionTitle": {
 		"description": "Title of the about section in settings widget"
@@ -453,7 +454,7 @@
 	"@exifSupportDetails": {
 		"description": "Detailed description of the exif support feature"
 	},
-	"exifSupportConfirmationDialogTitle": "EXIF Desteğini Etkinleştir?",
+	"exifSupportConfirmationDialogTitle": "EXIF Desteğini Etkinleştir",
 	"@exifSupportConfirmationDialogTitle": {
 		"description": "Title of the dialog to confirm enabling exif support"
 	},
@@ -1076,7 +1077,7 @@
 	"@collectionFavoritesLabel": {
 		"description": "Browse photos added to favorites"
 	},
-	"favoriteTooltip": "Favoriye Ekle",
+	"favoriteTooltip": "Favorilere Ekle",
 	"@favoriteTooltip": {
 		"description": "Add photo to favorites"
 	},
@@ -1263,7 +1264,7 @@
 		"description": "Crop the image"
 	},
 	"categoriesLabel": "Kategoriler",
-	"searchLandingCategoryVideosLabel": "VİDEOLAR",
+	"searchLandingCategoryVideosLabel": "Videolar",
 	"@searchLandingCategoryVideosLabel": {
 		"description": "Search all videos"
 	},
@@ -1498,5 +1499,22 @@
 		"description": "Unlock app via selected means (e.g., password) in case app lock is enabled by user"
 	},
 	"enabledText": "Etkin",
-	"disabledText": "Devre Dışı"
+	"disabledText": "Devre Dışı",
+	"trustedCertManagerPageTitle": "Güvenilen Sertifikalar",
+	"@trustedCertManagerPageTitle": {
+		"description": "A page to manage trusted certificates"
+	},
+	"trustedCertManagerAlreadyTrustedError": "Zaten güveniliyor",
+	"@trustedCertManagerAlreadyTrustedError": {
+		"description": "The selected cert has been trusted already"
+	},
+	"trustedCertManagerSelectServer": "Bir HTTPS sunucu seçin",
+	"@trustedCertManagerSelectServer": {
+		"description": "Select a server from the account list"
+	},
+	"trustedCertManagerNoHttpsServerError": "Kullanılabilir sunucu bulunamadı",
+	"@trustedCertManagerNoHttpsServerError": {
+		"description": "There's no HTTPS server in the account list"
+	},
+	"trustedCertManagerFailedToRemoveCertError": "Sertifika kaldırılırken bir hata oluştu"
 }
