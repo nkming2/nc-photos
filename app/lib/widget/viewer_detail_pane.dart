@@ -94,11 +94,21 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
       DiContainer.has(c, DiType.albumRepo);
 
   @override
-  initState() {
+  void initState() {
     _log.info("[initState] File: ${widget.fd.fdPath}");
     super.initState();
     _dateTime = widget.fd.fdDateTime.toLocal();
     _initFile();
+
+    _buttonScrollController.addListener(
+        () => _updateButtonScroll(_buttonScrollController.position));
+    _ensureUpdateButtonScroll();
+  }
+
+  @override
+  void dispose() {
+    _buttonScrollController.dispose();
+    super.dispose();
   }
 
   Future<void> _initFile() async {
@@ -138,7 +148,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
   }
 
   @override
-  build(BuildContext context) {
+  Widget build(BuildContext context) {
     final dateStr = DateFormat(DateFormat.YEAR_ABBR_MONTH_DAY,
             Localizations.localeOf(context).languageCode)
         .format(_dateTime);
@@ -163,61 +173,80 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
         children: [
           if (_file != null) ...[
             const SizedBox(height: 8),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (_canRemoveFromAlbum)
-                    _DetailPaneButton(
-                      icon: Icons.remove_outlined,
-                      label: L10n.global().removeFromAlbumTooltip,
-                      onPressed: () =>
-                          widget.onRemoveFromCollectionPressed(context),
-                    ),
-                  if (_canSetCover)
-                    _DetailPaneButton(
-                      icon: Icons.photo_album_outlined,
-                      label: L10n.global().useAsAlbumCoverTooltip,
-                      onPressed: () => _onSetAlbumCoverPressed(context),
-                    ),
-                  _DetailPaneButton(
-                    icon: Icons.add,
-                    label: L10n.global().addItemToCollectionTooltip,
-                    onPressed: () => _onAddToAlbumPressed(context),
+            Stack(
+              children: [
+                if (_hasLeftButton)
+                  const Positioned(
+                    left: 0,
+                    top: 0,
+                    bottom: 0,
+                    child: Icon(Icons.keyboard_arrow_left),
                   ),
-                  if (getRawPlatform() == NpPlatform.android &&
-                      file_util.isSupportedImageFormat(_file!))
-                    _DetailPaneButton(
-                      icon: Icons.launch,
-                      label: L10n.global().setAsTooltip,
-                      onPressed: () => _onSetAsPressed(context),
-                    ),
-                  if (widget.fd.fdIsArchived == true)
-                    _DetailPaneButton(
-                      icon: Icons.unarchive_outlined,
-                      label: L10n.global().unarchiveTooltip,
-                      onPressed: () => widget.onUnarchivePressed(context),
-                    )
-                  else
-                    _DetailPaneButton(
-                      icon: Icons.archive_outlined,
-                      label: L10n.global().archiveTooltip,
-                      onPressed: () => widget.onArchivePressed(context),
-                    ),
-                  if (isShowDelete)
-                    _DetailPaneButton(
-                      icon: Icons.delete_outlined,
-                      label: L10n.global().deleteTooltip,
-                      onPressed: () => widget.onDeletePressed(context),
-                    ),
-                  _DetailPaneButton(
-                    icon: Icons.slideshow_outlined,
-                    label: L10n.global().slideshowTooltip,
-                    onPressed: widget.onSlideshowPressed,
+                if (_hasRightButton)
+                  const Positioned(
+                    right: 0,
+                    top: 0,
+                    bottom: 0,
+                    child: Icon(Icons.keyboard_arrow_right),
                   ),
-                ],
-              ),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  controller: _buttonScrollController,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (_canRemoveFromAlbum)
+                        _DetailPaneButton(
+                          icon: Icons.remove_outlined,
+                          label: L10n.global().removeFromAlbumTooltip,
+                          onPressed: () =>
+                              widget.onRemoveFromCollectionPressed(context),
+                        ),
+                      if (_canSetCover)
+                        _DetailPaneButton(
+                          icon: Icons.photo_album_outlined,
+                          label: L10n.global().useAsAlbumCoverTooltip,
+                          onPressed: () => _onSetAlbumCoverPressed(context),
+                        ),
+                      _DetailPaneButton(
+                        icon: Icons.add,
+                        label: L10n.global().addItemToCollectionTooltip,
+                        onPressed: () => _onAddToAlbumPressed(context),
+                      ),
+                      if (getRawPlatform() == NpPlatform.android &&
+                          file_util.isSupportedImageFormat(_file!))
+                        _DetailPaneButton(
+                          icon: Icons.launch,
+                          label: L10n.global().setAsTooltip,
+                          onPressed: () => _onSetAsPressed(context),
+                        ),
+                      if (widget.fd.fdIsArchived == true)
+                        _DetailPaneButton(
+                          icon: Icons.unarchive_outlined,
+                          label: L10n.global().unarchiveTooltip,
+                          onPressed: () => widget.onUnarchivePressed(context),
+                        )
+                      else
+                        _DetailPaneButton(
+                          icon: Icons.archive_outlined,
+                          label: L10n.global().archiveTooltip,
+                          onPressed: () => widget.onArchivePressed(context),
+                        ),
+                      if (isShowDelete)
+                        _DetailPaneButton(
+                          icon: Icons.delete_outlined,
+                          label: L10n.global().deleteTooltip,
+                          onPressed: () => widget.onDeletePressed(context),
+                        ),
+                      _DetailPaneButton(
+                        icon: Icons.slideshow_outlined,
+                        label: L10n.global().slideshowTooltip,
+                        onPressed: widget.onSlideshowPressed,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 32),
@@ -501,6 +530,52 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     });
   }
 
+  bool _updateButtonScroll(ScrollPosition pos) {
+    if (!pos.hasContentDimensions || !pos.hasPixels) {
+      return false;
+    }
+    if (pos.pixels <= pos.minScrollExtent) {
+      if (_hasLeftButton) {
+        setState(() {
+          _hasLeftButton = false;
+        });
+      }
+    } else {
+      if (!_hasLeftButton) {
+        setState(() {
+          _hasLeftButton = true;
+        });
+      }
+    }
+    if (pos.pixels >= pos.maxScrollExtent) {
+      if (_hasRightButton) {
+        setState(() {
+          _hasRightButton = false;
+        });
+      }
+    } else {
+      if (!_hasRightButton) {
+        setState(() {
+          _hasRightButton = true;
+        });
+      }
+    }
+    _hasFirstButtonScrollUpdate = true;
+    return true;
+  }
+
+  void _ensureUpdateButtonScroll() {
+    if (_hasFirstButtonScrollUpdate || !mounted) {
+      return;
+    }
+    if (_buttonScrollController.hasClients) {
+      if (_updateButtonScroll(_buttonScrollController.position)) {
+        return;
+      }
+    }
+    Timer(const Duration(milliseconds: 100), _ensureUpdateButtonScroll);
+  }
+
   late final DiContainer _c;
 
   File? _file;
@@ -527,6 +602,11 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
           CollectionAdapter.of(_c, widget.account, d.collection)
               .isPermitted(CollectionCapability.manualCover)) ??
       false;
+
+  late final _buttonScrollController = ScrollController();
+  var _hasFirstButtonScrollUpdate = false;
+  var _hasLeftButton = false;
+  var _hasRightButton = false;
 }
 
 class _DetailPaneButton extends StatelessWidget {
