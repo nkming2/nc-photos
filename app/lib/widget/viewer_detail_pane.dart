@@ -162,9 +162,11 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (_file != null) ...[
+            const SizedBox(height: 8),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (_canRemoveFromAlbum)
                     _DetailPaneButton(
@@ -535,28 +537,34 @@ class _DetailPaneButton extends StatelessWidget {
   });
 
   @override
-  build(BuildContext context) {
-    return TextButton(
-      onPressed: onPressed,
-      style: ButtonStyle(
-        foregroundColor:
-            MaterialStateProperty.all(Theme.of(context).colorScheme.onSurface),
-      ),
-      child: SizedBox(
-        width: 96,
-        height: 96,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(8, 16, 8, 0),
-          child: Column(
-            children: [
-              Icon(icon),
-              const SizedBox(height: 4),
-              Text(
-                label,
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.labelMedium,
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(80),
+      child: Material(
+        type: MaterialType.transparency,
+        child: InkWell(
+          onTap: onPressed,
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Container(
+              constraints: const BoxConstraints(
+                maxWidth: 72,
+                minWidth: 72,
+                minHeight: 72,
               ),
-            ],
+              alignment: Alignment.topCenter,
+              child: Column(
+                children: [
+                  Icon(icon),
+                  const SizedBox(height: 4),
+                  Text(
+                    label,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.labelMedium,
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ),
