@@ -180,14 +180,20 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
                     left: 0,
                     top: 0,
                     bottom: 0,
-                    child: Icon(Icons.keyboard_arrow_left),
+                    child: Opacity(
+                      opacity: .5,
+                      child: Icon(Icons.keyboard_arrow_left),
+                    ),
                   ),
                 if (_hasRightButton)
                   const Positioned(
                     right: 0,
                     top: 0,
                     bottom: 0,
-                    child: Icon(Icons.keyboard_arrow_right),
+                    child: Opacity(
+                      opacity: .5,
+                      child: Icon(Icons.keyboard_arrow_right),
+                    ),
                   ),
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
@@ -238,6 +244,11 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
                           label: L10n.global().deleteTooltip,
                           onPressed: () => widget.onDeletePressed(context),
                         ),
+                      _DetailPaneButton(
+                        icon: Icons.slideshow_outlined,
+                        label: L10n.global().slideshowTooltip,
+                        onPressed: widget.onSlideshowPressed,
+                      ),
                       _DetailPaneButton(
                         icon: Icons.slideshow_outlined,
                         label: L10n.global().slideshowTooltip,
