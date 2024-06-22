@@ -76,7 +76,7 @@ class _WrappedEnhancementSettingsState
           slivers: [
             SliverAppBar(
               pinned: true,
-              title: Text(L10n.global().photosTabLabel),
+              title: Text(L10n.global().settingsImageEditTitle),
             ),
             SliverList(
               delegate: SliverChildListDelegate(
