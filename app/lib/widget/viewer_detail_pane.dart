@@ -40,7 +40,6 @@ import 'package:np_platform_util/np_platform_util.dart';
 import 'package:np_string/np_string.dart';
 import 'package:np_ui/np_ui.dart';
 import 'package:path/path.dart' as path_lib;
-import 'package:tuple/tuple.dart';
 
 part 'viewer_detail_pane.g.dart';
 
@@ -405,7 +404,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     final lng = exif.gpsLongitudeDeg;
     if (lat != null && lng != null) {
       _log.fine("GPS: ($lat, $lng)");
-      _gps = Tuple2(lat, lng);
+      _gps = (lat: lat, lng: lng);
       _location = _file!.location;
     }
   }
@@ -503,7 +502,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     if (getRawPlatform() == NpPlatform.android) {
       final intent = AndroidIntent(
         action: "action_view",
-        data: Uri.encodeFull("geo:${_gps!.item1},${_gps!.item2}?z=16"),
+        data: Uri.encodeFull("geo:${_gps!.lat},${_gps!.lng}?z=16"),
       );
       intent.launch();
     }
@@ -597,7 +596,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
   String? _exposureTime;
   double? _focalLength;
   int? _isoSpeedRatings;
-  Tuple2<double, double>? _gps;
+  ({double lat, double lng})? _gps;
   ImageLocation? _location;
 
   final _tags = <String>[];

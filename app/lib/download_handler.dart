@@ -21,7 +21,6 @@ import 'package:nc_photos/use_case/inflate_file_descriptor.dart';
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_platform_util/np_platform_util.dart';
-import 'package:tuple/tuple.dart';
 
 part 'download_handler.g.dart';
 
@@ -79,7 +78,7 @@ class _DownlaodHandlerAndroid extends _DownloadHandlerBase {
     );
     final id = await nm.notify(notif);
 
-    final successes = <Tuple2<File, dynamic>>[];
+    final successes = <({File file, dynamic result})>[];
     StreamSubscription<DownloadCancelEvent>? subscription;
     try {
       bool isCancel = false;
@@ -117,7 +116,7 @@ class _DownlaodHandlerAndroid extends _DownloadHandlerBase {
             }
           });
           final result = await download();
-          successes.add(Tuple2(f, result));
+          successes.add((file: f, result: result));
         } on PermissionException catch (_) {
           _log.warning("[downloadFiles] Permission not granted");
           SnackBarManager().showSnackBar(SnackBar(
@@ -143,8 +142,8 @@ class _DownlaodHandlerAndroid extends _DownloadHandlerBase {
     } finally {
       unawaited(subscription?.cancel());
       if (successes.isNotEmpty) {
-        await _onDownloadSuccessful(successes.map((e) => e.item1).toList(),
-            successes.map((e) => e.item2).toList(), id);
+        await _onDownloadSuccessful(successes.map((e) => e.file).toList(),
+            successes.map((e) => e.result).toList(), id);
       } else {
         await nm.dismiss(id);
       }

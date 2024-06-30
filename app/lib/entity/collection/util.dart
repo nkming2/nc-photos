@@ -3,7 +3,6 @@ import 'package:equatable/equatable.dart';
 import 'package:nc_photos/entity/collection.dart';
 import 'package:np_string/np_string.dart';
 import 'package:to_string/to_string.dart';
-import 'package:tuple/tuple.dart';
 
 part 'util.g.dart';
 
@@ -43,28 +42,28 @@ enum CollectionShareResult {
 
 extension CollectionListExtension on Iterable<Collection> {
   List<Collection> sortedBy(CollectionSort by) {
-    return map<Tuple2<Comparable, Collection>>((e) {
+    return map<({Comparable comparable, Collection collection})>((e) {
       switch (by) {
         case CollectionSort.nameAscending:
         case CollectionSort.nameDescending:
-          return Tuple2(e.name.toLowerCase(), e);
+          return (comparable: e.name.toLowerCase(), collection: e);
 
         case CollectionSort.dateAscending:
         case CollectionSort.dateDescending:
-          return Tuple2(e.contentProvider.lastModified, e);
+          return (comparable: e.contentProvider.lastModified, collection: e);
       }
     })
         .sorted((a, b) {
           final x = by.isAscending() ? a : b;
           final y = by.isAscending() ? b : a;
-          final tmp = x.item1.compareTo(y.item1);
+          final tmp = x.comparable.compareTo(y.comparable);
           if (tmp != 0) {
             return tmp;
           } else {
-            return x.item2.name.compareTo(y.item2.name);
+            return x.collection.name.compareTo(y.collection.name);
           }
         })
-        .map((e) => e.item2)
+        .map((e) => e.collection)
         .toList();
   }
 }

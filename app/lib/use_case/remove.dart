@@ -39,9 +39,7 @@ class Remove {
       await _cleanUpAlbums(account, files);
     }
     var count = 0;
-    for (final pair in files.withIndex()) {
-      final i = pair.item1;
-      final f = pair.item2;
+    for (final (:i, e: f) in files.withIndex()) {
       try {
         await _c.fileRepo2.remove(account, f);
         ++count;

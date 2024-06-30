@@ -4,7 +4,6 @@ import 'dart:collection';
 import 'package:collection/collection.dart';
 import 'package:np_collection/src/list_extension.dart';
 import 'package:quiver/iterables.dart';
-import 'package:tuple/tuple.dart';
 
 extension IterableExtension<T> on Iterable<T> {
   /// Return a new stable sorted list
@@ -15,7 +14,7 @@ extension IterableExtension<T> on Iterable<T> {
   /// toString for each items
   String toReadableString() => "[${join(', ')}]";
 
-  Iterable<Tuple2<int, T>> withIndex() => mapIndexed((i, e) => Tuple2(i, e));
+  Iterable<({int i, T e})> withIndex() => mapIndexed((i, e) => (i: i, e: e));
 
   /// Whether the collection contains an element equal to [element] using the
   /// equality function [equalFn]

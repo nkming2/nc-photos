@@ -38,7 +38,6 @@ import 'package:np_codegen/np_codegen.dart';
 import 'package:np_collection/np_collection.dart';
 import 'package:np_platform_util/np_platform_util.dart';
 import 'package:to_string/to_string.dart';
-import 'package:tuple/tuple.dart';
 
 part 'file_sharer_dialog.g.dart';
 part 'file_sharer_dialog/bloc.dart';

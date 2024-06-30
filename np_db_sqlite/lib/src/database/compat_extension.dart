@@ -8,7 +8,7 @@ extension SqliteDbCompatExtension on SqliteDb {
     final count = await countQ.map((r) => r.read(countExp)!).getSingle();
     onProgress?.call(0, count);
 
-    final dateTimeUpdates = <Tuple2<int, DateTime>>[];
+    final dateTimeUpdates = <({int rowId, DateTime dateTime})>[];
     final imageRemoves = <int>[];
     for (var i = 0; i < count; i += 1000) {
       final q = select(files).join([
@@ -40,7 +40,10 @@ extension SqliteDbCompatExtension on SqliteDb {
         );
         if (f.accountFile.bestDateTime != bestDateTime) {
           // need update
-          dateTimeUpdates.add(Tuple2(f.accountFile.rowId, bestDateTime));
+          dateTimeUpdates.add((
+            rowId: f.accountFile.rowId,
+            dateTime: bestDateTime,
+          ));
         }
 
         if (f.file.contentType == "image/heic" &&
@@ -56,7 +59,7 @@ extension SqliteDbCompatExtension on SqliteDb {
         "[migrateV55] ${dateTimeUpdates.length} rows require updating, ${imageRemoves.length} rows require removing");
     if (kDebugMode) {
       _log.fine(
-          "[migrateV55] dateTimeUpdates: ${dateTimeUpdates.map((e) => e.item1).toReadableString()}");
+          "[migrateV55] dateTimeUpdates: ${dateTimeUpdates.map((e) => e.rowId).toReadableString()}");
       _log.fine(
           "[migrateV55] imageRemoves: ${imageRemoves.map((e) => e).toReadableString()}");
     }
@@ -65,9 +68,9 @@ extension SqliteDbCompatExtension on SqliteDb {
         batch.update(
           accountFiles,
           AccountFilesCompanion(
-            bestDateTime: Value(pair.item2),
+            bestDateTime: Value(pair.dateTime),
           ),
-          where: ($AccountFilesTable table) => table.rowId.equals(pair.item1),
+          where: ($AccountFilesTable table) => table.rowId.equals(pair.rowId),
         );
       }
       for (final r in imageRemoves) {

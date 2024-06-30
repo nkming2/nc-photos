@@ -4,7 +4,6 @@ import 'package:np_gps_map/src/native/google_gps_map.dart'
     if (dart.library.html) 'package:np_gps_map/src/web/google_gps_map.dart';
 import 'package:np_gps_map/src/osm_gps_map.dart';
 import 'package:np_platform_util/np_platform_util.dart';
-import 'package:tuple/tuple.dart';
 
 enum GpsMapProvider {
   google,
@@ -50,7 +49,7 @@ class GpsMap extends StatelessWidget {
   final GpsMapProvider providerHint;
 
   /// A pair of latitude and longitude coordinates, stored as degrees
-  final Tuple2<double, double> center;
+  final ({double lat, double lng}) center;
   final double zoom;
   final void Function()? onTap;
 

@@ -28,13 +28,13 @@ Future<List<T>> waitOr<T>(
     }
   }
 
-  for (final p in futures.withIndex()) {
+  for (final (:i, :e) in futures.withIndex()) {
     unawaited(
-      p.item2.then((value) {
-        results[p.item1] = value;
+      e.then((value) {
+        results[i] = value;
         onResult();
       }).onError((error, stackTrace) {
-        results[p.item1] = onError(error!, stackTrace);
+        results[i] = onError(error!, stackTrace);
         onResult();
       }),
     );

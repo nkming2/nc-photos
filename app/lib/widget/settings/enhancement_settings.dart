@@ -12,7 +12,6 @@ import 'package:nc_photos/widget/page_visibility_mixin.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_ui/np_ui.dart';
 import 'package:to_string/to_string.dart';
-import 'package:tuple/tuple.dart';
 
 part 'enhancement/bloc.dart';
 part 'enhancement/state_event.dart';
@@ -135,9 +134,9 @@ class _WrappedEnhancementSettingsState
             _SizeSlider(
               initialWidth: initialSize.width,
               initialHeight: initialSize.height,
-              onChanged: (value) {
-                width = value.item1;
-                height = value.item2;
+              onChanged: (size) {
+                width = size.w;
+                height = size.h;
               },
             )
           ],
@@ -175,7 +174,7 @@ class _SizeSlider extends StatefulWidget {
 
   final int initialWidth;
   final int initialHeight;
-  final ValueChanged<Tuple2<int, int>>? onChanged;
+  final ValueChanged<({int w, int h})>? onChanged;
 }
 
 class _SizeSliderState extends State<_SizeSlider> {
@@ -202,8 +201,8 @@ class _SizeSliderState extends State<_SizeSlider> {
           onChangeEnd: (value) async {
             final resolution = sliderValueToResolution(value.toInt());
             setState(() {
-              _width = resolution.item1;
-              _height = resolution.item2;
+              _width = resolution.w;
+              _height = resolution.h;
             });
             widget.onChanged?.call(resolution);
           },
@@ -212,22 +211,22 @@ class _SizeSliderState extends State<_SizeSlider> {
     );
   }
 
-  static Tuple2<int, int> sliderValueToResolution(int value) {
+  static ({int w, int h}) sliderValueToResolution(int value) {
     switch (value) {
       case -3:
-        return const Tuple2(1024, 768);
+        return const (w: 1024, h: 768);
       case -2:
-        return const Tuple2(1280, 960);
+        return const (w: 1280, h: 960);
       case -1:
-        return const Tuple2(1600, 1200);
+        return const (w: 1600, h: 1200);
       case 1:
-        return const Tuple2(2560, 1920);
+        return const (w: 2560, h: 1920);
       case 2:
-        return const Tuple2(3200, 2400);
+        return const (w: 3200, h: 2400);
       case 3:
-        return const Tuple2(4096, 3072);
+        return const (w: 4096, h: 3072);
       default:
-        return const Tuple2(2048, 1536);
+        return const (w: 2048, h: 1536);
     }
   }
 

@@ -8,7 +8,6 @@ import 'package:nc_photos/use_case/face_recognition_person/sync_face_recognition
 import 'package:np_db/np_db.dart';
 import 'package:np_db_sqlite/np_db_sqlite_compat.dart' as compat;
 import 'package:test/test.dart';
-import 'package:tuple/tuple.dart';
 
 import '../../mock_type.dart';
 import '../../test_util.dart' as util;
@@ -157,13 +156,15 @@ Future<Map<String, Set<DbFaceRecognitionPerson>>> _listSqliteDbPersons(
         db.accounts.rowId.equalsExp(db.faceRecognitionPersons.account)),
   ]);
   final result = await query
-      .map((r) => Tuple2(
-          r.readTable(db.accounts), r.readTable(db.faceRecognitionPersons)))
+      .map((r) => (
+            account: r.readTable(db.accounts),
+            faceRecognitionPerson: r.readTable(db.faceRecognitionPersons),
+          ))
       .get();
   final product = <String, Set<DbFaceRecognitionPerson>>{};
   for (final r in result) {
-    (product[r.item1.userId] ??= {})
-        .add(compat.FaceRecognitionPersonConverter.fromSql(r.item2));
+    (product[r.account.userId] ??= {}).add(
+        compat.FaceRecognitionPersonConverter.fromSql(r.faceRecognitionPerson));
   }
   return product;
 }

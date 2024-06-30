@@ -97,9 +97,8 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     emit(state.copyWith(
       fileState: _FileState.init(count: files.length),
     ));
-    final results = <Tuple2<FileDescriptor, dynamic>>[];
-    for (final pair in files.withIndex()) {
-      final i = pair.item1, f = pair.item2;
+    final results = <({FileDescriptor file, dynamic result})>[];
+    for (final (:i, e: f) in files.withIndex()) {
       emit(state.copyWith(
         fileState: state.fileState?.copyWith(
           index: i,
@@ -124,7 +123,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
         if (state.fileState?.shouldRun == false) {
           throw const JobCanceledException();
         }
-        results.add(Tuple2(f, result));
+        results.add((file: f, result: result));
       } on PermissionException catch (e, stackTrace) {
         _log.warning("[_doShareFile] Permission not granted");
         emit(state.copyWith(error: ExceptionEvent(e, stackTrace)));
@@ -141,7 +140,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     }
     if (results.isNotEmpty) {
       final share = AndroidFileShare(results
-          .map((e) => AndroidFileShareFile(e.item2 as String, e.item1.fdMime))
+          .map((e) => AndroidFileShareFile(e.result as String, e.file.fdMime))
           .toList());
       unawaited(share.share());
     }
@@ -153,9 +152,8 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     emit(state.copyWith(
       previewState: _PreviewState(index: 0, count: files.length),
     ));
-    final results = <Tuple2<FileDescriptor, dynamic>>[];
-    for (final pair in files.withIndex()) {
-      final i = pair.item1, f = pair.item2;
+    final results = <({FileDescriptor file, dynamic result})>[];
+    for (final (:i, e: f) in files.withIndex()) {
       emit(state.copyWith(
         previewState: state.previewState?.copyWith(index: i),
       ));
@@ -166,7 +164,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
         } else {
           uri = await DownloadFile()(account, f, shouldNotify: false);
         }
-        results.add(Tuple2(f, uri));
+        results.add((file: f, result: uri));
       } catch (e, stackTrace) {
         _log.shout(
             "[_doSharePreview] Failed while DownloadPreview", e, stackTrace);
@@ -175,7 +173,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     }
     if (results.isNotEmpty) {
       final share = AndroidFileShare(results
-          .map((e) => AndroidFileShareFile(e.item2 as String, e.item1.fdMime))
+          .map((e) => AndroidFileShareFile(e.result as String, e.file.fdMime))
           .toList());
       unawaited(share.share());
     }

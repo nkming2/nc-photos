@@ -4,7 +4,6 @@ import 'dart:html';
 import 'package:flutter/widgets.dart';
 import 'package:np_gps_map/src/ui_hack.dart' if (dart.library.html) 'dart:ui'
     as ui;
-import 'package:tuple/tuple.dart';
 
 class GoogleGpsMap extends StatefulWidget {
   const GoogleGpsMap({
@@ -17,7 +16,7 @@ class GoogleGpsMap extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _GoogleGpsMapState();
 
-  final Tuple2<double, double> center;
+  final ({double lat, double lng}) center;
   final double zoom;
   final void Function()? onTap;
 }
@@ -28,7 +27,7 @@ class _GoogleGpsMapState extends State<GoogleGpsMap> {
     super.initState();
     final iframe = IFrameElement()
       ..src = "https://www.google.com/maps/embed/v1/place?key=$_apiKey"
-          "&q=${widget.center.item1},${widget.center.item2}"
+          "&q=${widget.center.lat},${widget.center.lng}"
           "&zoom=${widget.zoom}"
       ..style.border = "none";
     ui.platformViewRegistry.registerViewFactory(viewType, (_) => iframe);
@@ -44,5 +43,5 @@ class _GoogleGpsMapState extends State<GoogleGpsMap> {
   static const _apiKey = "";
 
   String get viewType =>
-      "googleMapIframe(${widget.center.item1},${widget.center.item2})";
+      "googleMapIframe(${widget.center.lat},${widget.center.lng})";
 }

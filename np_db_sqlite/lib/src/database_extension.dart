@@ -22,7 +22,6 @@ import 'package:np_db_sqlite/src/util.dart';
 import 'package:np_geocoder/np_geocoder.dart';
 import 'package:np_platform_lock/np_platform_lock.dart';
 import 'package:np_platform_util/np_platform_util.dart';
-import 'package:tuple/tuple.dart';
 
 part 'database/account_extension.dart';
 part 'database/album_extension.dart';

@@ -150,7 +150,6 @@ dependencies:
       url: https://gitlab.com/nkming2/dart-to-string
       ref: to_string-1.0.0
       path: to_string
-  tuple: ^2.0.2
   url_launcher: ^6.2.6
   uuid: ^3.0.7
   video_player:

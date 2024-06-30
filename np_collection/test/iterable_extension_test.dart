@@ -2,18 +2,17 @@ import 'package:np_collection/src/iterable_extension.dart';
 import 'package:np_math/np_math.dart';
 import 'package:quiver/core.dart';
 import 'package:test/test.dart';
-import 'package:tuple/tuple.dart';
 
 void main() {
   group("IterableExtension", () {
     test("withIndex", () {
       final src = [1, 4, 5, 2, 3];
       final result = src.withIndex().toList();
-      expect(result[0], const Tuple2(0, 1));
-      expect(result[1], const Tuple2(1, 4));
-      expect(result[2], const Tuple2(2, 5));
-      expect(result[3], const Tuple2(3, 2));
-      expect(result[4], const Tuple2(4, 3));
+      expect(result[0], const (i: 0, e: 1));
+      expect(result[1], const (i: 1, e: 4));
+      expect(result[2], const (i: 2, e: 5));
+      expect(result[3], const (i: 3, e: 2));
+      expect(result[4], const (i: 4, e: 3));
     });
 
     test("containsIf", () {
