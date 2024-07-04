@@ -1,6 +1,6 @@
 {
 	"appTitle": "Fotos",
-	"translator": "Andreas\nPhilProg\nshagn\nOdious",
+	"translator": "Andreas\nPhilProg\nshagn\nOdious\nNiclas H",
 	"@translator": {
 		"description": "Name of the translator(s) for this language"
 	},
@@ -906,6 +906,10 @@
 	"@folderNameInputInvalidCharacters": {
 		"description": "Folder name contains characters that are not allowed"
 	},
+	"createShareProgressText": "Freigabe erstellen",
+	"@createShareProgressText": {
+		"description": "Message shown when sharing files"
+	},
 	"copyItemsFailureNotification": "{count, plural, one{1 Objekt konnte nicht kopiert werden} other{{count} Objekte konnten nicht kopiert werden}}",
 	"@copyItemsFailureNotification": {
 		"description": "Error message shown when some files cannot be copied",
@@ -1049,8 +1053,13 @@
 	"@enhanceTooltip": {
 		"description": "Enhance a photo"
 	},
+	"enhanceButtonLabel": "VERBESSERN",
 	"enhanceIntroDialogTitle": "Verbessern Sie ihre Fotos",
 	"enhanceIntroDialogDescription": "Ihre Fotos werden lokal auf Ihrem Gerät verarbeitet. Standardmäßig werden sie auf 2048x1536 herunterskaliert. Sie können die Ausgabeauflösung in den Einstellungen anpassen",
+	"enhanceLowLightTitle": "Verbesserung bei schlechten Lichtverhältnissen",
+	"@enhanceLowLightTitle": {
+		"description": "Enhance a photo taken in low-light environment"
+	},
 	"enhanceLowLightDescription": "Hellen Sie ihre Fotos auf, die bei schwachen Lichtverhältnissen aufgenommen wurden",
 	"enhanceLowLightParamBrightnessLabel": "Helligkeit",
 	"@enhanceLowLightParamBrightnessLabel": {
@@ -1207,6 +1216,10 @@
 	"@searchFilterTypeOptionImageLabel": {
 		"description": "Filter search results by file type"
 	},
+	"searchFilterBubbleTypeImageText": "Bilder",
+	"@searchFilterBubbleTypeImageText": {
+		"description": "List of active search filters shown in the result page (by file type, image)"
+	},
 	"searchFilterTypeOptionVideoLabel": "Video",
 	"@searchFilterTypeOptionVideoLabel": {
 		"description": "Filter search results by file type"
@@ -1250,6 +1263,10 @@
 	"@collectionPlacesLabel": {
 		"description": "Browse photos grouped by place"
 	},
+	"imageSaveOptionDialogTitle": "Speichert das Ergebnis",
+	"@imageSaveOptionDialogTitle": {
+		"description": "This dialog asks users to choose between saving the edited/enhanced result on the device or server"
+	},
 	"imageSaveOptionDialogDeviceButtonLabel": "GERÄT",
 	"@imageSaveOptionDialogDeviceButtonLabel": {
 		"description": "Save the image on the current device"
@@ -1261,6 +1278,10 @@
 	"initialSyncMessage": "Erstmalige Synchronisierung mit Ihrem Server",
 	"@initialSyncMessage": {
 		"description": "After adding a new account, the app need to sync with the server before showing anything. This message will be shown on screen instead with a proper progress bar and the folder being synced."
+	},
+	"loopTooltip": "Schleife",
+	"@loopTooltip": {
+		"description": "Enable or disable loop in the video player"
 	},
 	"createCollectionFailureNotification": "Album konnte nicht erstellt werden",
 	"@createCollectionFailureNotification": {
@@ -1329,6 +1350,10 @@
 	"@settingsSeedColorSystemColorDescription": {
 		"description": "Use color provided by the OS, i.e., Material You"
 	},
+	"settingsSeedColorPickerSystemColorButtonLabel": "Verwende Systemfarben",
+	"@settingsSeedColorPickerSystemColorButtonLabel": {
+		"description": "Use color provided by the OS, i.e., Material You"
+	},
 	"accountSettingsTooltip": "Kontoeinstellungen",
 	"contributorsTooltip": "Mitwirkende",
 	"setAsTooltip": "Festlegen als",
@@ -1343,5 +1368,36 @@
 				"example": "http://www.example.com"
 			}
 		}
-	}
+	},
+	"settingsAppLock": "App Sperre",
+	"@settingsAppLock": {
+		"description": "If enabled, users need to authenticate themselves when opening the app"
+	},
+	"settingsAppLockTypeBiometric": "Biometrie",
+	"@settingsAppLockTypeBiometric": {
+		"description": "Unlock app with fingerprint, face, etc"
+	},
+	"settingsAppLockTypePin": "PIN",
+	"@settingsAppLockTypePin": {
+		"description": "Unlock app with 4 to 6 digits PIN"
+	},
+	"settingsAppLockTypePassword": "Password",
+	"@settingsAppLockTypePassword": {
+		"description": "Unlock app with password"
+	},
+	"settingsAppLockDescription": "Wenn diese Funktion aktiviert ist, werden Sie beim Öffnen der App aufgefordert, sich zu authentifizieren. Diese Funktion schützt Sie NICHT vor Angriffen aus der realen Welt.",
+	"settingsAppLockSetupPinDialogTitle": "PIN zum Entsperren der App einrichten",
+	"settingsAppLockConfirmPinDialogTitle": "Geben Sie den selben PIN nochmals ein",
+	"settingsAppLockSetupPasswordDialogTitle": "Setzen Sie das Password für die Entsperrung",
+	"settingsAppLockConfirmPasswordDialogTitle": "Geben Sie das selbe Password nochmals ein",
+	"appLockUnlockHint": "Entsperren der App",
+	"@appLockUnlockHint": {
+		"description": "Unlock app via selected means (e.g., password) in case app lock is enabled by user"
+	},
+	"appLockUnlockWrongPassword": "Ungültiges Password",
+	"@appLockUnlockWrongPassword": {
+		"description": "Unlock app via selected means (e.g., password) in case app lock is enabled by user"
+	},
+	"enabledText": "Aktiviert",
+	"disabledText": "Deaktiviert"
 }
