@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:tuple/tuple.dart';
 
 class GoogleGpsMap extends StatelessWidget {
   const GoogleGpsMap({
@@ -12,7 +11,7 @@ class GoogleGpsMap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final centerLl = LatLng(center.item1, center.item2);
+    final centerLl = LatLng(center.lat, center.lng);
     return GoogleMap(
       compassEnabled: false,
       mapToolbarEnabled: false,
@@ -41,7 +40,7 @@ class GoogleGpsMap extends StatelessWidget {
     );
   }
 
-  final Tuple2<double, double> center;
+  final ({double lat, double lng}) center;
   final double zoom;
   final VoidCallback? onTap;
 }

@@ -47,7 +47,7 @@ Screenshots contain photos by:
 - Czech/Čeština (contributed by Skyhawk)
 - Finnish/Suomi (contributed by pHamala)
 - French/Français (contributed by mgreil)
-- German/Deutsch (contributed by PhilProg)
+- German/Deutsch (contributed by PhilProg, Niclas Heinz)
 - Greek/Ελληνικά (contributed by Chris Karasoulis)
 - Polish/Polski (contributed by szymok)
 - Portuguese/Português (contributed by fernosan)

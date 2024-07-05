@@ -35,7 +35,6 @@ import 'package:np_collection/np_collection.dart';
 import 'package:np_common/or_null.dart';
 import 'package:np_common/type.dart';
 import 'package:np_string/np_string.dart';
-import 'package:tuple/tuple.dart';
 
 part 'album.g.dart';
 
@@ -135,20 +134,20 @@ class CollectionAlbumAdapter implements CollectionAdapter {
     try {
       final group = items
           .withIndex()
-          .groupListsBy((e) => e.item2 is AlbumAdaptedCollectionItem);
+          .groupListsBy((e) => e.e is AlbumAdaptedCollectionItem);
       var failed = 0;
       if (group[true]?.isNotEmpty ?? false) {
         final newAlbum = await RemoveFromAlbum(_c)(
           account,
           _provider.album,
           group[true]!
-              .map((e) => e.item2)
+              .map((e) => e.e)
               .cast<AlbumAdaptedCollectionItem>()
               .map((e) => e.albumItem)
               .toList(),
           onError: (i, item, e, stackTrace) {
             ++failed;
-            final actualIndex = group[true]![i].item1;
+            final actualIndex = group[true]![i].i;
             try {
               onError?.call(actualIndex, items[actualIndex], e, stackTrace);
             } catch (e, stackTrace) {
@@ -162,8 +161,9 @@ class CollectionAlbumAdapter implements CollectionAdapter {
           ),
         ));
       }
-      for (final pair in (group[false] ?? const <Tuple2<int, int>>[])) {
-        final actualIndex = pair.item1;
+      for (final (:i, e: _)
+          in (group[false] ?? const <({int i, CollectionItem e})>[])) {
+        final actualIndex = i;
         onError?.call(
           actualIndex,
           items[actualIndex],
@@ -174,8 +174,8 @@ class CollectionAlbumAdapter implements CollectionAdapter {
       }
       return (group[true] ?? []).length - failed;
     } catch (e, stackTrace) {
-      for (final pair in items.withIndex()) {
-        onError?.call(pair.item1, pair.item2, e, stackTrace);
+      for (final (:i, e: item) in items.withIndex()) {
+        onError?.call(i, item, e, stackTrace);
       }
       return 0;
     }

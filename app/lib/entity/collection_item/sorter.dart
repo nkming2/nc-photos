@@ -6,7 +6,6 @@ import 'package:nc_photos/entity/collection_item/util.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_collection/np_collection.dart';
-import 'package:tuple/tuple.dart';
 
 part 'sorter.g.dart';
 
@@ -58,24 +57,24 @@ class CollectionTimeSorter implements CollectionSorter {
             prevFileTime = e.file.fdDateTime;
           }
           // for non file items, use the sibling file's time
-          return Tuple2(prevFileTime, e);
+          return (dateTime: prevFileTime, item: e);
         })
         .stableSorted((x, y) {
-          if (x.item1 == null && y.item1 == null) {
+          if (x.dateTime == null && y.dateTime == null) {
             return 0;
-          } else if (x.item1 == null) {
+          } else if (x.dateTime == null) {
             return -1;
-          } else if (y.item1 == null) {
+          } else if (y.dateTime == null) {
             return 1;
           } else {
             if (isAscending) {
-              return x.item1!.compareTo(y.item1!);
+              return x.dateTime!.compareTo(y.dateTime!);
             } else {
-              return y.item1!.compareTo(x.item1!);
+              return y.dateTime!.compareTo(x.dateTime!);
             }
           }
         })
-        .map((e) => e.item2)
+        .map((e) => e.item)
         .toList();
   }
 
@@ -98,24 +97,24 @@ class CollectionFilenameSorter implements CollectionSorter {
             prevFilename = e.file.filename;
           }
           // for non file items, use the sibling file's name
-          return Tuple2(prevFilename, e);
+          return (dateTime: prevFilename, item: e);
         })
         .stableSorted((x, y) {
-          if (x.item1 == null && y.item1 == null) {
+          if (x.dateTime == null && y.dateTime == null) {
             return 0;
-          } else if (x.item1 == null) {
+          } else if (x.dateTime == null) {
             return -1;
-          } else if (y.item1 == null) {
+          } else if (y.dateTime == null) {
             return 1;
           } else {
             if (isAscending) {
-              return compareNatural(x.item1!, y.item1!);
+              return compareNatural(x.dateTime!, y.dateTime!);
             } else {
-              return compareNatural(y.item1!, x.item1!);
+              return compareNatural(y.dateTime!, x.dateTime!);
             }
           }
         })
-        .map((e) => e.item2)
+        .map((e) => e.item)
         .toList();
   }
 

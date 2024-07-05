@@ -66,7 +66,7 @@ class _WrappedAlbumSettingsState extends State<_WrappedAlbumSettings>
           slivers: [
             SliverAppBar(
               pinned: true,
-              title: Text(L10n.global().settingsViewerTitle),
+              title: Text(L10n.global().collectionsTooltip),
             ),
             SliverList(
               delegate: SliverChildListDelegate(

@@ -19,7 +19,6 @@ import 'package:np_codegen/np_codegen.dart';
 import 'package:np_collection/np_collection.dart';
 import 'package:np_string/np_string.dart';
 import 'package:to_string/to_string.dart';
-import 'package:tuple/tuple.dart';
 import 'package:woozy_search/woozy_search.dart';
 
 part 'home_search_suggestion.g.dart';
@@ -172,17 +171,17 @@ class HomeSearchSuggestionBloc
         .map((e) {
           if (e.value!.toKeywords().any((k) => k.startsWith(ev.phrase))) {
             // prefer names that start exactly with the search phrase
-            return Tuple2(e.score + 1, e.value);
+            return (score: e.score + 1, item: e.value);
           } else {
-            return Tuple2(e.score, e.value);
+            return (score: e.score, item: e.value);
           }
         })
-        .sorted((a, b) => b.item1.compareTo(a.item1))
+        .sorted((a, b) => b.score.compareTo(a.score))
         .distinctIf(
-          (a, b) => identical(a.item2, b.item2),
-          (a) => a.item2.hashCode,
+          (a, b) => identical(a.item, b.item),
+          (a) => a.item.hashCode,
         )
-        .map((e) => e.item2!.toResult())
+        .map((e) => e.item!.toResult())
         .toList();
     emit(HomeSearchSuggestionBlocSuccess(matches));
   }

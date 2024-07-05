@@ -477,11 +477,12 @@ class _Bloc extends Bloc<_Event, _State>
             month: localToday.month,
             day: localToday.day,
             cover: e.value
-                .map((e) => Tuple2(e.bestDateTime.difference(center), e))
-                .sorted((a, b) => a.item1.compareTo(b.item1))
+                .map((e) =>
+                    (comparable: e.bestDateTime.difference(center), item: e))
+                .sorted((a, b) => a.comparable.compareTo(b.comparable))
                 .firstOrNull
                 ?.let((e) => DbFileDescriptorConverter.fromDb(
-                    account.userId.toString(), e.item2)),
+                    account.userId.toString(), e.item)),
           ),
         );
       }).toList(),

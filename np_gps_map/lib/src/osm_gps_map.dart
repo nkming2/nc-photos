@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:tuple/tuple.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class OsmGpsMap extends StatelessWidget {
@@ -15,11 +14,11 @@ class OsmGpsMap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const double pinSize = 48;
-    final centerLl = LatLng(center.item1, center.item2);
+    final centerLl = LatLng(center.lat, center.lng);
     return GestureDetector(
       onTap: () {
         launchUrlString(
-          "https://www.openstreetmap.org/?mlat=${center.item1}&mlon=${center.item2}#map=${zoom.toInt()}/${center.item1}/${center.item2}",
+          "https://www.openstreetmap.org/?mlat=${center.lat}&mlon=${center.lng}#map=${zoom.toInt()}/${center.lat}/${center.lng}",
           mode: LaunchMode.externalApplication,
         );
       },
@@ -62,7 +61,7 @@ class OsmGpsMap extends StatelessWidget {
     );
   }
 
-  final Tuple2<double, double> center;
+  final ({double lat, double lng}) center;
   final double zoom;
   final void Function()? onTap;
 }

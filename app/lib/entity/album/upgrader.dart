@@ -9,7 +9,6 @@ import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/type.dart';
 import 'package:np_db/np_db.dart';
 import 'package:np_string/np_string.dart';
-import 'package:tuple/tuple.dart';
 
 part 'upgrader.g.dart';
 
@@ -143,22 +142,22 @@ class AlbumUpgraderV4 implements AlbumUpgrader {
             // remove metadata
             e.remove("metadata");
             if (latestItemTime != null) {
-              return Tuple2(latestItemTime, e);
+              return (latestItemTime: latestItemTime, item: e);
             } else {
               return null;
             }
           })
-          .whereType<Tuple2<DateTime, JsonObj>>()
-          .sorted((a, b) => a.item1.compareTo(b.item1))
+          .whereType<({DateTime latestItemTime, JsonObj item})>()
+          .sorted((a, b) => a.latestItemTime.compareTo(b.latestItemTime))
           .lastOrNull;
       if (latestItem != null) {
         // save the latest item time
         result["provider"]["content"]["latestItemTime"] =
-            latestItem.item1.toIso8601String();
+            latestItem.latestItemTime.toIso8601String();
         if (result["coverProvider"]["type"] == "auto") {
           // save the cover
           result["coverProvider"]["content"]["coverFile"] =
-              Map.of(latestItem.item2);
+              Map.of(latestItem.item);
         }
       }
     } catch (e, stackTrace) {

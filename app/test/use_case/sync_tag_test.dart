@@ -8,7 +8,6 @@ import 'package:nc_photos/use_case/sync_tag.dart';
 import 'package:np_db/np_db.dart';
 import 'package:np_db_sqlite/np_db_sqlite_compat.dart' as compat;
 import 'package:test/test.dart';
-import 'package:tuple/tuple.dart';
 
 import '../mock_type.dart';
 import '../test_util.dart' as util;
@@ -175,11 +174,11 @@ Future<Map<String, Set<DbTag>>> _listSqliteDbTags(compat.SqliteDb db) async {
     sql.innerJoin(db.servers, db.servers.rowId.equalsExp(db.tags.server)),
   ]);
   final result = await query
-      .map((r) => Tuple2(r.readTable(db.servers), r.readTable(db.tags)))
+      .map((r) => (server: r.readTable(db.servers), tag: r.readTable(db.tags)))
       .get();
   final product = <String, Set<DbTag>>{};
   for (final r in result) {
-    (product[r.item1.address] ??= {}).add(compat.TagConverter.fromSql(r.item2));
+    (product[r.server.address] ??= {}).add(compat.TagConverter.fromSql(r.tag));
   }
   return product;
 }

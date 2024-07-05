@@ -4,7 +4,6 @@ import 'package:logging/logging.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_collection/np_collection.dart';
 import 'package:np_string/np_string.dart';
-import 'package:tuple/tuple.dart';
 import 'package:woozy_search/woozy_search.dart';
 
 part 'suggester.g.dart';
@@ -34,18 +33,18 @@ class Suggester<T> {
         .map((e) {
           if (itemToKeywords(e.value as T).any((k) => k.startsWith(phrase))) {
             // prefer names that start exactly with the search phrase
-            return Tuple2(e.score + 1, e.value as T);
+            return (score: e.score + 1, item: e.value as T);
           } else {
-            return Tuple2(e.score, e.value as T);
+            return (score: e.score, item: e.value as T);
           }
         })
-        .sorted((a, b) => a.item1.compareTo(b.item1))
+        .sorted((a, b) => a.score.compareTo(b.score))
         .reversed
         .distinctIf(
-          (a, b) => identical(a.item2, b.item2),
-          (a) => a.item2.hashCode,
+          (a, b) => identical(a.item, b.item),
+          (a) => a.item.hashCode,
         )
-        .map((e) => e.item2)
+        .map((e) => e.item)
         .toList();
     return matches;
   }

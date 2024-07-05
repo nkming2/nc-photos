@@ -11,7 +11,6 @@ import 'package:nc_photos/progress_util.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/use_case/ls_single_file.dart';
 import 'package:np_codegen/np_codegen.dart';
-import 'package:tuple/tuple.dart';
 
 part 'sync_dir.g.dart';
 
@@ -52,7 +51,7 @@ class SyncDir {
     ValueChanged<Progress>? onProgressUpdate,
   }) async {
     final status = await _checkContentUpdated(account, remoteDir, dirCache);
-    if (!status.item1) {
+    if (!status.isUpdated) {
       _log.finer("[_syncDir] Dir unchanged: ${remoteDir.path}");
       return false;
     }
@@ -60,7 +59,7 @@ class SyncDir {
 
     final dataSrc = FileCachedDataSource(_c, shouldCheckCache: true);
     final syncState = await dataSrc.beginSync(account, remoteDir,
-        remoteTouchEtag: status.item2);
+        remoteTouchEtag: status.touchResult);
     final children = syncState.files;
     if (!isRecursive) {
       await dataSrc.concludeSync(syncState);
@@ -97,19 +96,19 @@ class SyncDir {
     return true;
   }
 
-  Future<Tuple2<bool, String?>> _checkContentUpdated(
+  Future<({bool isUpdated, String? touchResult})> _checkContentUpdated(
       Account account, File remoteDir, Map<int, String> dirCache) async {
     String? touchResult;
     try {
       touchResult = await _c.touchManager.checkTouchEtag(account, remoteDir);
       if (touchResult == null &&
           dirCache[remoteDir.fileId!] == remoteDir.etag!) {
-        return const Tuple2(false, null);
+        return const (isUpdated: false, touchResult: null);
       }
     } catch (e, stackTrace) {
       _log.severe("[_isContentUpdated] Uncaught exception", e, stackTrace);
     }
-    return Tuple2(true, touchResult);
+    return (isUpdated: true, touchResult: touchResult);
   }
 
   Future<Map<int, String>> _queryAllDirEtags(

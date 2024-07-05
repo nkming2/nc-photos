@@ -56,8 +56,7 @@ class InternalDownloadHandler {
     );
     try {
       final results = <MapEntry<File, dynamic>>[];
-      for (final pair in files.withIndex()) {
-        final i = pair.item1, f = pair.item2;
+      for (final (:i, e: f) in files.withIndex()) {
         controller.add(_DownloadProgress(current: i));
         try {
           final dynamic result;
@@ -122,8 +121,7 @@ class InternalDownloadHandler {
     );
     try {
       final results = <MapEntry<File, dynamic>>[];
-      for (final pair in files.withIndex()) {
-        final i = pair.item1, f = pair.item2;
+      for (final (:i, e: f) in files.withIndex()) {
         controller.add(_DownloadProgress(current: i));
         try {
           download = DownloadFile().build(

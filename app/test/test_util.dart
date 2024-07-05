@@ -28,7 +28,6 @@ import 'package:np_db_sqlite/np_db_sqlite.dart';
 import 'package:np_db_sqlite/np_db_sqlite_compat.dart' as compat;
 import 'package:np_geocoder/np_geocoder.dart';
 import 'package:np_string/np_string.dart';
-import 'package:tuple/tuple.dart';
 
 part 'test_compat_util.dart';
 
@@ -589,10 +588,11 @@ Future<Map<File, Set<File>>> listSqliteDbDirs(compat.SqliteDb db) async {
   }).get());
 
   final dirQuery = db.select(db.dirFiles);
-  final dirs = await dirQuery.map((r) => Tuple2(r.dir, r.child)).get();
+  final dirs =
+      await dirQuery.map((r) => (dirRowId: r.dir, childRowId: r.child)).get();
   final result = <File, Set<File>>{};
-  for (final d in dirs) {
-    (result[fileMap[d.item1]!] ??= <File>{}).add(fileMap[d.item2]!);
+  for (final (:dirRowId, :childRowId) in dirs) {
+    (result[fileMap[dirRowId]!] ??= <File>{}).add(fileMap[childRowId]!);
   }
   return result;
 }
@@ -616,26 +616,28 @@ Future<Set<Album>> listSqliteDbAlbums(compat.SqliteDb db) async {
         null,
       ),
     );
-    return Tuple2(
-      r.read(db.albums.rowId)!,
-      _SqliteAlbumConverter.fromSql(r.readTable(db.albums), albumFile, []),
+    return (
+      rowId: r.read(db.albums.rowId)!,
+      album:
+          _SqliteAlbumConverter.fromSql(r.readTable(db.albums), albumFile, []),
     );
   }).get();
 
   final results = <Album>{};
-  for (final a in albums) {
+  for (final (:rowId, :album) in albums) {
     final shareQuery = db.select(db.albumShares)
-      ..where((t) => t.album.equals(a.item1));
+      ..where((t) => t.album.equals(rowId));
     final dbShares = await shareQuery.get();
-    results.add(a.item2.copyWith(
+    results.add(album.copyWith(
       lastUpdated: const OrNull(null),
       shares: dbShares.isEmpty
           ? null
           : OrNull(dbShares
               .map((s) => AlbumShare(
-                  userId: s.userId.toCi(),
-                  displayName: s.displayName,
-                  sharedAt: s.sharedAt))
+                    userId: s.userId.toCi(),
+                    displayName: s.displayName,
+                    sharedAt: s.sharedAt,
+                  ))
               .toList()),
     ));
   }

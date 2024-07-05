@@ -18,7 +18,6 @@ dependencies:
     path: ../np_async
   np_platform_util:
     path: ../np_platform_util
-  tuple: ^2.0.2
   url_launcher: ^6.1.11
 
 dev_dependencies:
