@@ -3,6 +3,7 @@ import 'dart:io' as io;
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
+import 'package:np_async/np_async.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_collection/np_collection.dart';
 import 'package:np_common/object_util.dart';
@@ -572,6 +573,22 @@ class NpDbSqlite implements NpDb {
       admin2: admin2Result?.toDbLocationGroups() ?? [],
       countryCode: ccResult?.toDbLocationGroups() ?? [],
     );
+  }
+
+  @override
+  Future<List<DbImageLatLng>> getImageLatLngWithFileIds({
+    required DbAccount account,
+  }) async {
+    final sqlObjs = await _db.use((db) async {
+      return await db.queryImageLatLngWithFileIds(
+        account: ByAccount.db(account),
+      );
+    });
+    return sqlObjs.computeAll((e) => DbImageLatLng(
+          lat: e.lat,
+          lng: e.lng,
+          fileId: e.fileId,
+        ));
   }
 
   @override

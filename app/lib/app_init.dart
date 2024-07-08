@@ -16,6 +16,8 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file/data_source2.dart';
 import 'package:nc_photos/entity/file/repo.dart';
+import 'package:nc_photos/entity/image_location/data_source.dart';
+import 'package:nc_photos/entity/image_location/repo.dart';
 import 'package:nc_photos/entity/local_file.dart';
 import 'package:nc_photos/entity/local_file/data_source.dart';
 import 'package:nc_photos/entity/nc_album/data_source.dart';
@@ -187,6 +189,8 @@ Future<void> _initDiContainer(InitIsolateType isolateType) async {
       const BasicRecognizeFaceRepo(RecognizeFaceRemoteDataSource());
   c.recognizeFaceRepoLocal =
       BasicRecognizeFaceRepo(RecognizeFaceSqliteDbDataSource(c.npDb));
+  c.imageLocationRepo =
+      BasicImageLocationRepo(ImageLocationNpDbDataSource(c.npDb));
 
   c.touchManager = TouchManager(c);
 
