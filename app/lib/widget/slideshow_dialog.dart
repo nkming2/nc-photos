@@ -12,7 +12,7 @@ part 'slideshow_dialog.g.dart';
 
 @toString
 class SlideshowConfig {
-  SlideshowConfig({
+  const SlideshowConfig({
     required this.duration,
     required this.isShuffle,
     required this.isRepeat,
