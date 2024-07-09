@@ -1516,5 +1516,7 @@
 	"@trustedCertManagerNoHttpsServerError": {
 		"description": "There's no HTTPS server in the account list"
 	},
-	"trustedCertManagerFailedToRemoveCertError": "Sertifika kaldırılırken bir hata oluştu"
+	"trustedCertManagerFailedToRemoveCertError": "Sertifika kaldırılırken bir hata oluştu",
+	"missingVideoThumbnailHelpDialogTitle": "Video önizlemeleriyle ilgili sorun mu yaşıyorsunuz?",
+	"dontShowAgain": "Tekrar gösterme"
 }
