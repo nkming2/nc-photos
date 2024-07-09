@@ -248,11 +248,6 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
                         label: L10n.global().slideshowTooltip,
                         onPressed: widget.onSlideshowPressed,
                       ),
-                      _DetailPaneButton(
-                        icon: Icons.slideshow_outlined,
-                        label: L10n.global().slideshowTooltip,
-                        onPressed: widget.onSlideshowPressed,
-                      ),
                     ],
                   ),
                 ),
