@@ -1060,11 +1060,6 @@
     "dontShowAgain"
   ],
 
-  "tr": [
-    "missingVideoThumbnailHelpDialogTitle",
-    "dontShowAgain"
-  ],
-
   "zh": [
     "settingsMetadataTitle",
     "settingsPersonProviderTitle",
