@@ -9,6 +9,10 @@ class _State {
     required this.nextPage,
     required this.currentFile,
     required this.isShowUi,
+    required this.isPlay,
+    required this.isVideoCompleted,
+    required this.hasPrev,
+    required this.hasNext,
   });
 
   factory _State.init({
@@ -20,6 +24,10 @@ class _State {
         nextPage: 0,
         currentFile: initialFile,
         isShowUi: false,
+        isPlay: true,
+        isVideoCompleted: false,
+        hasPrev: false,
+        hasNext: false,
       );
 
   @override
@@ -30,6 +38,10 @@ class _State {
   final int nextPage;
   final FileDescriptor currentFile;
   final bool isShowUi;
+  final bool isPlay;
+  final bool isVideoCompleted;
+  final bool hasPrev;
+  final bool hasNext;
 }
 
 abstract class _Event {}
@@ -62,12 +74,42 @@ class _PreloadSidePages implements _Event {
 
 @toString
 class _VideoCompleted implements _Event {
-  const _VideoCompleted(this.page);
+  const _VideoCompleted();
 
   @override
   String toString() => _$toString();
+}
 
-  final int page;
+@toString
+class _SetPause implements _Event {
+  const _SetPause();
+
+  @override
+  String toString() => _$toString();
+}
+
+@toString
+class _SetPlay implements _Event {
+  const _SetPlay();
+
+  @override
+  String toString() => _$toString();
+}
+
+@toString
+class _RequestPrevPage implements _Event {
+  const _RequestPrevPage();
+
+  @override
+  String toString() => _$toString();
+}
+
+@toString
+class _RequestNextPage implements _Event {
+  const _RequestNextPage();
+
+  @override
+  String toString() => _$toString();
 }
 
 @toString

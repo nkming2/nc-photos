@@ -37,6 +37,88 @@ class _AppBar extends StatelessWidget {
   }
 }
 
+class _ControlBar extends StatelessWidget {
+  const _ControlBar();
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Positioned(
+          left: 0,
+          right: 0,
+          bottom: 0,
+          child: Container(
+            height: kToolbarHeight,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color.fromARGB(0, 0, 0, 0),
+                  Color.fromARGB(192, 0, 0, 0),
+                ],
+              ),
+            ),
+          ),
+        ),
+        Positioned(
+          left: 0,
+          right: 0,
+          bottom: 0,
+          child: Container(
+            height: kToolbarHeight,
+            alignment: Alignment.center,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _BlocSelector<bool>(
+                  selector: (state) => state.hasPrev,
+                  builder: (context, hasPrev) => IconButton(
+                    onPressed: hasPrev
+                        ? () {
+                            context.addEvent(const _RequestPrevPage());
+                          }
+                        : null,
+                    icon: const Icon(Icons.skip_previous_outlined),
+                  ),
+                ),
+                _BlocSelector<bool>(
+                  selector: (state) => state.isPlay,
+                  builder: (context, isPlay) => isPlay
+                      ? IconButton(
+                          onPressed: () {
+                            context.addEvent(const _SetPause());
+                          },
+                          icon: const Icon(Icons.pause_outlined),
+                        )
+                      : IconButton(
+                          onPressed: () {
+                            context.addEvent(const _SetPlay());
+                          },
+                          icon: const Icon(Icons.play_arrow_outlined),
+                        ),
+                ),
+                _BlocSelector<bool>(
+                  selector: (state) => state.hasNext,
+                  builder: (context, hasNext) => IconButton(
+                    onPressed: hasNext
+                        ? () {
+                            context.addEvent(const _RequestNextPage());
+                          }
+                        : null,
+                    icon: const Icon(Icons.skip_next_outlined),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 @npLog
 class _Body extends StatelessWidget {
   const _Body();
@@ -61,10 +143,15 @@ class _Body extends StatelessWidget {
             builder: (context, isShowUi) => AnimatedVisibility(
               opacity: isShowUi ? 1 : 0,
               duration: k.animationDurationNormal,
-              child: const Align(
-                alignment: Alignment.topCenter,
-                child: _AppBar(),
-              ),
+              child: const _AppBar(),
+            ),
+          ),
+          _BlocSelector<bool>(
+            selector: (state) => state.isShowUi,
+            builder: (context, isShowUi) => AnimatedVisibility(
+              opacity: isShowUi ? 1 : 0,
+              duration: k.animationDurationNormal,
+              child: const _ControlBar(),
             ),
           ),
         ],
@@ -87,8 +174,9 @@ class _PageViewerState extends State<_PageViewer> {
       listeners: [
         _BlocListenerT(
           selector: (state) => state.nextPage,
-          listener: (context, state) {
-            _controller.nextPage(
+          listener: (context, nextPage) {
+            _controller.animateToPage(
+              nextPage,
               duration: k.animationDurationLong,
               curve: Curves.easeInOut,
             );
@@ -97,12 +185,10 @@ class _PageViewerState extends State<_PageViewer> {
       ],
       child: HorizontalPageViewer(
         pageCount: context.bloc.pageCount,
-        pageBuilder: (context, index) {
-          return FractionallySizedBox(
-            widthFactor: 1 / _viewportFraction,
-            child: _PageView.ofPage(context, index),
-          );
-        },
+        pageBuilder: (context, index) => FractionallySizedBox(
+          widthFactor: 1 / _viewportFraction,
+          child: _PageView.ofPage(context, index),
+        ),
         initialPage: context.bloc.initialPage,
         controller: _controller,
         viewportFraction: _viewportFraction,
@@ -143,7 +229,7 @@ class _PageView extends StatelessWidget {
       return _VideoPageView(
         file: file,
         onCompleted: () {
-          context.addEvent(_VideoCompleted(page));
+          context.addEvent(const _VideoCompleted());
         },
       );
     } else {

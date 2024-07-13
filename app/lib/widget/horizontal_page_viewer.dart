@@ -278,6 +278,17 @@ class HorizontalPageViewerController {
         curve: curve,
       );
 
+  void animateToPage(
+    int page, {
+    required Duration duration,
+    required Curve curve,
+  }) =>
+      _pageController.animateToPage(
+        page,
+        duration: duration,
+        curve: curve,
+      );
+
   void jumpToPage(int page) {
     _pageController.jumpToPage(page);
   }
