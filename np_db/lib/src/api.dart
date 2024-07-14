@@ -435,6 +435,7 @@ abstract class NpDb {
   /// Return the latitude, longitude and the file id of all files
   Future<List<DbImageLatLng>> getImageLatLngWithFileIds({
     required DbAccount account,
+    TimeRange? timeRange,
     List<String>? includeRelativeRoots,
     List<String>? excludeRelativeRoots,
     List<String>? mimes,

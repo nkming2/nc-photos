@@ -578,6 +578,7 @@ class NpDbSqlite implements NpDb {
   @override
   Future<List<DbImageLatLng>> getImageLatLngWithFileIds({
     required DbAccount account,
+    TimeRange? timeRange,
     List<String>? includeRelativeRoots,
     List<String>? excludeRelativeRoots,
     List<String>? mimes,
@@ -585,6 +586,7 @@ class NpDbSqlite implements NpDb {
     final sqlObjs = await _db.use((db) async {
       return await db.queryImageLatLngWithFileIds(
         account: ByAccount.db(account),
+        timeRange: timeRange,
         includeRelativeRoots: includeRelativeRoots,
         excludeRelativeRoots: excludeRelativeRoots,
         mimes: mimes,

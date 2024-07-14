@@ -31,12 +31,13 @@ class ImageLatLng {
 extension SqliteDbImageLocationExtension on SqliteDb {
   Future<List<ImageLatLng>> queryImageLatLngWithFileIds({
     required ByAccount account,
+    TimeRange? timeRange,
     List<String>? includeRelativeRoots,
     List<String>? includeRelativeDirs,
     List<String>? excludeRelativeRoots,
     List<String>? mimes,
   }) async {
-    _log.info("[queryImageLatLngWithFileIds]");
+    _log.info("[queryImageLatLngWithFileIds] timeRange: $timeRange");
     final query = _queryFiles().let((q) {
       q
         ..setQueryMode(
@@ -72,6 +73,11 @@ extension SqliteDbImageLocationExtension on SqliteDb {
       query.where(files.contentType.isIn(mimes));
     } else {
       query.where(files.isCollection.isNotValue(true));
+    }
+    if (timeRange != null) {
+      accountFiles.bestDateTime
+          .isBetweenTimeRange(timeRange)
+          ?.let((e) => query.where(e));
     }
     query
       ..where(imageLocations.latitude.isNotNull() &

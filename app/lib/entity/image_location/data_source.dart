@@ -8,6 +8,7 @@ import 'package:nc_photos/entity/image_location/repo.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:np_async/np_async.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_datetime/np_datetime.dart';
 import 'package:np_db/np_db.dart';
 
 part 'data_source.g.dart';
@@ -17,10 +18,12 @@ class ImageLocationNpDbDataSource implements ImageLocationDataSource {
   const ImageLocationNpDbDataSource(this.db);
 
   @override
-  Future<List<ImageLatLng>> getLocations(Account account) async {
-    _log.info("[getLocations]");
+  Future<List<ImageLatLng>> getLocations(
+      Account account, TimeRange timeRange) async {
+    _log.info("[getLocations] timeRange: $timeRange");
     final results = await db.getImageLatLngWithFileIds(
       account: account.toDb(),
+      timeRange: timeRange,
       includeRelativeRoots: account.roots
           .map((e) => File(path: file_util.unstripPath(account, e))
               .strippedPathWithEmpty)
