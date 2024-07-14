@@ -19,3 +19,24 @@ class _DataPoint implements ClusterItem {
   final LatLng location;
   final int fileId;
 }
+
+enum _DateRangeType {
+  thisMonth,
+  prevMonth,
+  thisYear,
+  custom,
+  ;
+
+  String toDisplayString() {
+    switch (this) {
+      case thisMonth:
+        return L10n.global().mapBrowserDateRangeThisMonth;
+      case prevMonth:
+        return L10n.global().mapBrowserDateRangePrevMonth;
+      case thisYear:
+        return L10n.global().mapBrowserDateRangeThisYear;
+      case custom:
+        return L10n.global().mapBrowserDateRangeCustom;
+    }
+  }
+}

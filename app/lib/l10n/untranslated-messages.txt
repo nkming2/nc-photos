@@ -249,6 +249,11 @@
     "trustedCertManagerFailedToRemoveCertError",
     "missingVideoThumbnailHelpDialogTitle",
     "dontShowAgain",
+    "mapBrowserDateRangeLabel",
+    "mapBrowserDateRangeThisMonth",
+    "mapBrowserDateRangePrevMonth",
+    "mapBrowserDateRangeThisYear",
+    "mapBrowserDateRangeCustom",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -284,7 +289,12 @@
     "trustedCertManagerNoHttpsServerError",
     "trustedCertManagerFailedToRemoveCertError",
     "missingVideoThumbnailHelpDialogTitle",
-    "dontShowAgain"
+    "dontShowAgain",
+    "mapBrowserDateRangeLabel",
+    "mapBrowserDateRangeThisMonth",
+    "mapBrowserDateRangePrevMonth",
+    "mapBrowserDateRangeThisYear",
+    "mapBrowserDateRangeCustom"
   ],
 
   "de": [
@@ -318,7 +328,12 @@
     "trustedCertManagerNoHttpsServerError",
     "trustedCertManagerFailedToRemoveCertError",
     "missingVideoThumbnailHelpDialogTitle",
-    "dontShowAgain"
+    "dontShowAgain",
+    "mapBrowserDateRangeLabel",
+    "mapBrowserDateRangeThisMonth",
+    "mapBrowserDateRangePrevMonth",
+    "mapBrowserDateRangeThisYear",
+    "mapBrowserDateRangeCustom"
   ],
 
   "el": [
@@ -455,7 +470,12 @@
     "trustedCertManagerNoHttpsServerError",
     "trustedCertManagerFailedToRemoveCertError",
     "missingVideoThumbnailHelpDialogTitle",
-    "dontShowAgain"
+    "dontShowAgain",
+    "mapBrowserDateRangeLabel",
+    "mapBrowserDateRangeThisMonth",
+    "mapBrowserDateRangePrevMonth",
+    "mapBrowserDateRangeThisYear",
+    "mapBrowserDateRangeCustom"
   ],
 
   "es": [
@@ -483,7 +503,12 @@
     "trustedCertManagerNoHttpsServerError",
     "trustedCertManagerFailedToRemoveCertError",
     "missingVideoThumbnailHelpDialogTitle",
-    "dontShowAgain"
+    "dontShowAgain",
+    "mapBrowserDateRangeLabel",
+    "mapBrowserDateRangeThisMonth",
+    "mapBrowserDateRangePrevMonth",
+    "mapBrowserDateRangeThisYear",
+    "mapBrowserDateRangeCustom"
   ],
 
   "fi": [
@@ -511,7 +536,12 @@
     "trustedCertManagerNoHttpsServerError",
     "trustedCertManagerFailedToRemoveCertError",
     "missingVideoThumbnailHelpDialogTitle",
-    "dontShowAgain"
+    "dontShowAgain",
+    "mapBrowserDateRangeLabel",
+    "mapBrowserDateRangeThisMonth",
+    "mapBrowserDateRangePrevMonth",
+    "mapBrowserDateRangeThisYear",
+    "mapBrowserDateRangeCustom"
   ],
 
   "fr": [
@@ -539,7 +569,12 @@
     "trustedCertManagerNoHttpsServerError",
     "trustedCertManagerFailedToRemoveCertError",
     "missingVideoThumbnailHelpDialogTitle",
-    "dontShowAgain"
+    "dontShowAgain",
+    "mapBrowserDateRangeLabel",
+    "mapBrowserDateRangeThisMonth",
+    "mapBrowserDateRangePrevMonth",
+    "mapBrowserDateRangeThisYear",
+    "mapBrowserDateRangeCustom"
   ],
 
   "it": [
@@ -572,7 +607,12 @@
     "trustedCertManagerNoHttpsServerError",
     "trustedCertManagerFailedToRemoveCertError",
     "missingVideoThumbnailHelpDialogTitle",
-    "dontShowAgain"
+    "dontShowAgain",
+    "mapBrowserDateRangeLabel",
+    "mapBrowserDateRangeThisMonth",
+    "mapBrowserDateRangePrevMonth",
+    "mapBrowserDateRangeThisYear",
+    "mapBrowserDateRangeCustom"
   ],
 
   "nl": [
@@ -942,6 +982,11 @@
     "trustedCertManagerFailedToRemoveCertError",
     "missingVideoThumbnailHelpDialogTitle",
     "dontShowAgain",
+    "mapBrowserDateRangeLabel",
+    "mapBrowserDateRangeThisMonth",
+    "mapBrowserDateRangePrevMonth",
+    "mapBrowserDateRangeThisYear",
+    "mapBrowserDateRangeCustom",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -981,7 +1026,12 @@
     "trustedCertManagerNoHttpsServerError",
     "trustedCertManagerFailedToRemoveCertError",
     "missingVideoThumbnailHelpDialogTitle",
-    "dontShowAgain"
+    "dontShowAgain",
+    "mapBrowserDateRangeLabel",
+    "mapBrowserDateRangeThisMonth",
+    "mapBrowserDateRangePrevMonth",
+    "mapBrowserDateRangeThisYear",
+    "mapBrowserDateRangeCustom"
   ],
 
   "pt": [
@@ -1029,7 +1079,12 @@
     "trustedCertManagerNoHttpsServerError",
     "trustedCertManagerFailedToRemoveCertError",
     "missingVideoThumbnailHelpDialogTitle",
-    "dontShowAgain"
+    "dontShowAgain",
+    "mapBrowserDateRangeLabel",
+    "mapBrowserDateRangeThisMonth",
+    "mapBrowserDateRangePrevMonth",
+    "mapBrowserDateRangeThisYear",
+    "mapBrowserDateRangeCustom"
   ],
 
   "ru": [
@@ -1057,7 +1112,20 @@
     "trustedCertManagerNoHttpsServerError",
     "trustedCertManagerFailedToRemoveCertError",
     "missingVideoThumbnailHelpDialogTitle",
-    "dontShowAgain"
+    "dontShowAgain",
+    "mapBrowserDateRangeLabel",
+    "mapBrowserDateRangeThisMonth",
+    "mapBrowserDateRangePrevMonth",
+    "mapBrowserDateRangeThisYear",
+    "mapBrowserDateRangeCustom"
+  ],
+
+  "tr": [
+    "mapBrowserDateRangeLabel",
+    "mapBrowserDateRangeThisMonth",
+    "mapBrowserDateRangePrevMonth",
+    "mapBrowserDateRangeThisYear",
+    "mapBrowserDateRangeCustom"
   ],
 
   "zh": [
@@ -1116,7 +1184,12 @@
     "trustedCertManagerNoHttpsServerError",
     "trustedCertManagerFailedToRemoveCertError",
     "missingVideoThumbnailHelpDialogTitle",
-    "dontShowAgain"
+    "dontShowAgain",
+    "mapBrowserDateRangeLabel",
+    "mapBrowserDateRangeThisMonth",
+    "mapBrowserDateRangePrevMonth",
+    "mapBrowserDateRangeThisYear",
+    "mapBrowserDateRangeCustom"
   ],
 
   "zh_Hant": [
@@ -1269,6 +1342,11 @@
     "trustedCertManagerNoHttpsServerError",
     "trustedCertManagerFailedToRemoveCertError",
     "missingVideoThumbnailHelpDialogTitle",
-    "dontShowAgain"
+    "dontShowAgain",
+    "mapBrowserDateRangeLabel",
+    "mapBrowserDateRangeThisMonth",
+    "mapBrowserDateRangePrevMonth",
+    "mapBrowserDateRangeThisYear",
+    "mapBrowserDateRangeCustom"
   ]
 }

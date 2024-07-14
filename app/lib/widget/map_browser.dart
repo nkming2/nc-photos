@@ -1,16 +1,18 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:clock/clock.dart';
 import 'package:copy_with/copy_with.dart';
-import 'package:flex_seed_scheme/flex_seed_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_cluster_manager/google_maps_cluster_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc_util.dart';
 import 'package:nc_photos/controller/account_controller.dart';
 import 'package:nc_photos/di_container.dart';
@@ -18,9 +20,14 @@ import 'package:nc_photos/entity/collection.dart';
 import 'package:nc_photos/entity/collection/content_provider/ad_hoc.dart';
 import 'package:nc_photos/entity/image_location/repo.dart';
 import 'package:nc_photos/exception_event.dart';
+import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
+import 'package:nc_photos/stream_extension.dart';
+import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/collection_browser.dart';
+import 'package:nc_photos/widget/measure.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_datetime/np_datetime.dart';
 import 'package:to_string/to_string.dart';
 
 part 'map_browser.g.dart';
@@ -44,7 +51,7 @@ class MapBrowser extends StatelessWidget {
       create: (_) => _Bloc(
         KiwiContainer().resolve(),
         account: context.read<AccountController>().account,
-      )..add(const _Init()),
+      )..add(const _LoadData()),
       child: const _WrappedMapBrowser(),
     );
   }
@@ -69,7 +76,42 @@ class _WrappedMapBrowser extends StatelessWidget {
               },
             ),
           ],
-          child: const _MapView(),
+          child: Stack(
+            children: [
+              const _MapView(),
+              Positioned.directional(
+                textDirection: Directionality.of(context),
+                top: MediaQuery.of(context).padding.top + 8,
+                end: 8,
+                child: const _DateRangeToggle(),
+              ),
+              _BlocSelector<bool>(
+                selector: (state) => state.isShowDataRangeControlPanel,
+                builder: (context, isShowAnyPanel) => Positioned.fill(
+                  child: isShowAnyPanel
+                      ? GestureDetector(
+                          onTap: () {
+                            context.addEvent(const _CloseControlPanel());
+                          },
+                        )
+                      : const SizedBox.shrink(),
+                ),
+              ),
+              Positioned(
+                left: 8,
+                right: 8,
+                top: MediaQuery.of(context).padding.top + 8,
+                child: _BlocSelector<bool>(
+                  selector: (state) => state.isShowDataRangeControlPanel,
+                  builder: (context, isShowDataRangeControlPanel) =>
+                      _PanelContainer(
+                    isShow: isShowDataRangeControlPanel,
+                    child: const _DateRangeControlPanel(),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -79,7 +121,7 @@ class _WrappedMapBrowser extends StatelessWidget {
 typedef _BlocBuilder = BlocBuilder<_Bloc, _State>;
 // typedef _BlocListener = BlocListener<_Bloc, _State>;
 typedef _BlocListenerT<T> = BlocListenerT<_Bloc, _State, T>;
-// typedef _BlocSelector<T> = BlocSelector<_Bloc, _State, T>;
+typedef _BlocSelector<T> = BlocSelector<_Bloc, _State, T>;
 
 extension on BuildContext {
   _Bloc get bloc => read<_Bloc>();

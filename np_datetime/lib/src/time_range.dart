@@ -11,6 +11,22 @@ class TimeRange {
     this.toBound = TimeRangeBound.exclusive,
   });
 
+  /// Return a copy of the current instance with some changed fields. Setting
+  /// null is not supported
+  TimeRange copyWith({
+    DateTime? from,
+    TimeRangeBound? fromBound,
+    DateTime? to,
+    TimeRangeBound? toBound,
+  }) {
+    return TimeRange(
+      from: from ?? this.from,
+      fromBound: fromBound ?? this.fromBound,
+      to: to ?? this.to,
+      toBound: toBound ?? this.toBound,
+    );
+  }
+
   @override
   String toString() {
     return "${fromBound == TimeRangeBound.inclusive ? "[" : "("}"

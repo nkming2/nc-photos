@@ -17,6 +17,9 @@ abstract class $_StateCopyWithWorker {
       {List<_DataPoint>? data,
       LatLng? initialPoint,
       Set<Marker>? markers,
+      bool? isShowDataRangeControlPanel,
+      _DateRangeType? dateRangeType,
+      DateRange? localDateRange,
       ExceptionEvent? error});
 }
 
@@ -28,6 +31,9 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
       {dynamic data,
       dynamic initialPoint = copyWithNull,
       dynamic markers,
+      dynamic isShowDataRangeControlPanel,
+      dynamic dateRangeType,
+      dynamic localDateRange,
       dynamic error = copyWithNull}) {
     return _State(
         data: data as List<_DataPoint>? ?? that.data,
@@ -35,6 +41,10 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
             ? that.initialPoint
             : initialPoint as LatLng?,
         markers: markers as Set<Marker>? ?? that.markers,
+        isShowDataRangeControlPanel: isShowDataRangeControlPanel as bool? ??
+            that.isShowDataRangeControlPanel,
+        dateRangeType: dateRangeType as _DateRangeType? ?? that.dateRangeType,
+        localDateRange: localDateRange as DateRange? ?? that.localDateRange,
         error: error == copyWithNull ? that.error : error as ExceptionEvent?);
   }
 
@@ -64,14 +74,14 @@ extension _$_BlocNpLog on _Bloc {
 extension _$_StateToString on _State {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_State {data: [length: ${data.length}], initialPoint: $initialPoint, markers: {length: ${markers.length}}, error: $error}";
+    return "_State {data: [length: ${data.length}], initialPoint: $initialPoint, markers: {length: ${markers.length}}, isShowDataRangeControlPanel: $isShowDataRangeControlPanel, dateRangeType: ${dateRangeType.name}, localDateRange: $localDateRange, error: $error}";
   }
 }
 
-extension _$_InitToString on _Init {
+extension _$_LoadDataToString on _LoadData {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_Init {}";
+    return "_LoadData {}";
   }
 }
 
@@ -79,6 +89,34 @@ extension _$_SetMarkersToString on _SetMarkers {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
     return "_SetMarkers {markers: {length: ${markers.length}}}";
+  }
+}
+
+extension _$_OpenDataRangeControlPanelToString on _OpenDataRangeControlPanel {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_OpenDataRangeControlPanel {}";
+  }
+}
+
+extension _$_CloseControlPanelToString on _CloseControlPanel {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_CloseControlPanel {}";
+  }
+}
+
+extension _$_SetDateRangeTypeToString on _SetDateRangeType {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_SetDateRangeType {value: ${value.name}}";
+  }
+}
+
+extension _$_SetLocalDateRangeToString on _SetLocalDateRange {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_SetLocalDateRange {value: $value}";
   }
 }
 
