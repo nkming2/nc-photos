@@ -131,11 +131,19 @@ class _MapViewState extends State<_MapView> {
         r = (count / 10) * step;
     }
     if (Theme.of(context).brightness == Brightness.light) {
-      final tone = (r * 30 + 65).toInt();
-      return Color(_colorTonalPalette.get(tone));
+      return HSLColor.fromAHSL(
+        1,
+        _colorHsl.hue,
+        r * .8 + .2,
+        (_colorHsl.lightness - (.1 - r * .1)).clamp(0, 1),
+      ).toColor();
     } else {
-      final tone = (60 - r * 30).toInt();
-      return Color(_colorTonalPalette.get(tone));
+      return HSLColor.fromAHSL(
+        1,
+        _colorHsl.hue,
+        r * .65 + .35,
+        (_colorHsl.lightness - (.1 - r * .1)).clamp(0, 1),
+      ).toColor();
     }
   }
 
@@ -154,7 +162,7 @@ class _MapViewState extends State<_MapView> {
       default:
         r = (count / 10) * step;
     }
-    return (r * 50).toInt() + 90;
+    return (r * 85).toInt() + 75;
   }
 
   late final _clusterManager = ClusterManager<_DataPoint>(
@@ -189,8 +197,6 @@ class _MapViewState extends State<_MapView> {
   );
   GoogleMapController? _mapController;
 
-  late final _colorTonalPalette = () {
-    final hct = Hct.fromInt(Theme.of(context).colorScheme.primary.value);
-    return FlexTonalPalette.of(hct.hue, hct.chroma);
-  }();
+  late final _colorHsl =
+      HSLColor.fromColor(Theme.of(context).colorScheme.primaryContainer);
 }
