@@ -420,6 +420,9 @@ class _Bloc extends Bloc<_Event, _State>
       _SetEnableMemoryCollection ev, Emitter<_State> emit) {
     _log.info(ev);
     emit(state.copyWith(isEnableMemoryCollection: ev.value));
+    if (ev.value) {
+      add(const _UpdateMemories());
+    }
   }
 
   void _onUpdateDateTimeGroup(_UpdateDateTimeGroup ev, Emitter<_State> emit) {
