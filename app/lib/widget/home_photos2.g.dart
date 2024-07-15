@@ -343,13 +343,6 @@ extension _$_SetEnableMemoryCollectionToString on _SetEnableMemoryCollection {
   }
 }
 
-extension _$_SetMemoriesRangeToString on _SetMemoriesRange {
-  String _$toString() {
-    // ignore: unnecessary_string_interpolations
-    return "_SetMemoriesRange {value: $value}";
-  }
-}
-
 extension _$_UpdateDateTimeGroupToString on _UpdateDateTimeGroup {
   String _$toString() {
     // ignore: unnecessary_string_interpolations

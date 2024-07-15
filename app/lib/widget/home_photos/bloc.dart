@@ -46,7 +46,6 @@ class _Bloc extends Bloc<_Event, _State>
     on<_UpdateScrollDate>(_onUpdateScrollDate);
 
     on<_SetEnableMemoryCollection>(_onSetEnableMemoryCollection);
-    on<_SetMemoriesRange>(_onSetMemoriesRange);
     on<_UpdateDateTimeGroup>(_onUpdateDateTimeGroup);
     on<_UpdateMemories>(_onUpdateMemories);
 
@@ -57,9 +56,6 @@ class _Bloc extends Bloc<_Event, _State>
     _subscriptions
         .add(accountPrefController.isEnableMemoryAlbumChange.listen((event) {
       add(_SetEnableMemoryCollection(event));
-    }));
-    _subscriptions.add(prefController.memoriesRangeChange.listen((event) {
-      add(_SetMemoriesRange(event));
     }));
     _subscriptions.add(stream
         .distinct((previous, next) =>
@@ -424,11 +420,6 @@ class _Bloc extends Bloc<_Event, _State>
       _SetEnableMemoryCollection ev, Emitter<_State> emit) {
     _log.info(ev);
     emit(state.copyWith(isEnableMemoryCollection: ev.value));
-  }
-
-  void _onSetMemoriesRange(_SetMemoriesRange ev, Emitter<_State> emit) {
-    _log.info(ev);
-    _transformItems(state.files, state.filesSummary);
   }
 
   void _onUpdateDateTimeGroup(_UpdateDateTimeGroup ev, Emitter<_State> emit) {

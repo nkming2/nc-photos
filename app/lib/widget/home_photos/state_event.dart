@@ -294,16 +294,6 @@ class _SetEnableMemoryCollection implements _Event {
 }
 
 @toString
-class _SetMemoriesRange implements _Event {
-  const _SetMemoriesRange(this.value);
-
-  @override
-  String toString() => _$toString();
-
-  final int value;
-}
-
-@toString
 class _UpdateDateTimeGroup implements _Event {
   const _UpdateDateTimeGroup();
 
