@@ -28,11 +28,11 @@ apply plugin: 'kotlin-android'
 
 android {
     namespace 'com.nkming.nc_photos.np_platform_image_processor'
-   	compileSdk 33
-    ndkVersion "23.2.8568313"
+   	compileSdk 34
+    ndkVersion "25.2.9519653"
 
     defaultConfig {
-   		minSdk 21
+   		minSdk 23
         ndk {
             abiFilters "armeabi-v7a", "arm64-v8a", "x86_64"
         }
@@ -42,7 +42,7 @@ android {
     externalNativeBuild {
         cmake {
             path file('src/main/cpp/CMakeLists.txt')
-            version '3.18.1'
+            version '3.22.1'
         }
     }
 

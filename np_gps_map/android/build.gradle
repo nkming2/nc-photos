@@ -27,10 +27,10 @@ apply plugin: 'kotlin-android'
 
 android {
     namespace 'com.nkming.nc_photos.np_gps_map'
-   	compileSdk 33
+   	compileSdk 34
 
     defaultConfig {
-   		minSdk 21
+   		minSdk 23
    	}
 
     buildTypes {
