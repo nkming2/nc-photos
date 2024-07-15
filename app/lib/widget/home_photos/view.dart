@@ -180,7 +180,7 @@ class _MemoryCollectionList extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: SizedBox(
-        height: _MemoryCollectionItem.height,
+        height: _MemoryCollectionItemView.height,
         child: _BlocSelector<List<Collection>>(
           selector: (state) => state.memoryCollections,
           builder: (context, memoryCollections) => ListView.separated(

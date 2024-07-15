@@ -479,7 +479,7 @@ class _BodyState extends State<_Body> {
           AppDimension.of(context).homeBottomAppBarHeight;
       // final metadataTaskHeaderExtent = _web?.getHeaderHeight() ?? 0;
       final smartAlbumListHeight =
-          hasMemoryCollection ? _MemoryCollectionItem.height : 0;
+          hasMemoryCollection ? _MemoryCollectionItemView.height : 0;
       // scroll extent = list height - widget viewport height
       // + sliver app bar height + bottom app bar height
       // + metadata task header height + smart album list height
