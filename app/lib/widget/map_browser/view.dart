@@ -60,7 +60,13 @@ class _MapViewState extends State<_MapView> {
   }) async {
     final PictureRecorder pictureRecorder = PictureRecorder();
     final Canvas canvas = Canvas(pictureRecorder);
-    final Paint paint1 = Paint()..color = color;
+    final fillPaint = Paint()..color = color;
+    final outlinePaint = Paint()
+      ..color = Theme.of(context).brightness == Brightness.light
+          ? Colors.black.withOpacity(.28)
+          : Colors.white.withOpacity(.6)
+      ..strokeWidth = size / 28
+      ..style = PaintingStyle.stroke;
 
     const shadowPadding = 6.0;
     const shadowPaddingHalf = shadowPadding / 2;
@@ -71,7 +77,12 @@ class _MapViewState extends State<_MapView> {
     canvas.drawCircle(
       Offset(size / 2 - shadowPaddingHalf, size / 2 - shadowPaddingHalf),
       size / 2 - shadowPaddingHalf,
-      paint1,
+      fillPaint,
+    );
+    canvas.drawCircle(
+      Offset(size / 2 - shadowPaddingHalf, size / 2 - shadowPaddingHalf),
+      size / 2 - shadowPaddingHalf - (size / 28 / 2),
+      outlinePaint,
     );
 
     if (text != null) {
@@ -79,7 +90,7 @@ class _MapViewState extends State<_MapView> {
       painter.text = TextSpan(
         text: text,
         style: TextStyle(
-          fontSize: size / 3.5,
+          fontSize: size / 3 - ((text.length / 6) * (size * 0.1)),
           color: Theme.of(context).colorScheme.onPrimaryContainer,
           fontWeight: FontWeight.normal,
         ),
@@ -134,14 +145,14 @@ class _MapViewState extends State<_MapView> {
       return HSLColor.fromAHSL(
         1,
         _colorHsl.hue,
-        r * .8 + .2,
+        r * .7 + .3,
         (_colorHsl.lightness - (.1 - r * .1)).clamp(0, 1),
       ).toColor();
     } else {
       return HSLColor.fromAHSL(
         1,
         _colorHsl.hue,
-        r * .65 + .35,
+        r * .6 + .4,
         (_colorHsl.lightness - (.1 - r * .1)).clamp(0, 1),
       ).toColor();
     }
@@ -162,7 +173,7 @@ class _MapViewState extends State<_MapView> {
       default:
         r = (count / 10) * step;
     }
-    return (r * 85).toInt() + 75;
+    return (r * 85).toInt() + 85;
   }
 
   late final _clusterManager = ClusterManager<_DataPoint>(
