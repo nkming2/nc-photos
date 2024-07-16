@@ -214,7 +214,7 @@ class _MemoryCollectionList extends StatelessWidget {
 
 class _MemoryCollectionItemView extends StatelessWidget {
   static const width = 96.0;
-  static const height = width * 1.15;
+  static const height = 128.0;
 
   const _MemoryCollectionItemView({
     required this.coverUrl,
@@ -234,10 +234,17 @@ class _MemoryCollectionItemView extends StatelessWidget {
           child: Stack(
             fit: StackFit.expand,
             children: [
-              PhotoListImage(
-                account: context.bloc.account,
-                previewUrl: coverUrl,
-                padding: const EdgeInsets.all(0),
+              OverflowBox(
+                maxHeight: height,
+                maxWidth: height,
+                child: SizedBox.square(
+                  dimension: height,
+                  child: PhotoListImage(
+                    account: context.bloc.account,
+                    previewUrl: coverUrl,
+                    padding: const EdgeInsets.all(0),
+                  ),
+                ),
               ),
               Positioned.fill(
                 child: Container(
@@ -257,7 +264,7 @@ class _MemoryCollectionItemView extends StatelessWidget {
                     padding: const EdgeInsets.all(4),
                     child: Text(
                       label,
-                      style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
                             color: Theme.of(context).onDarkSurface,
                           ),
                     ),
