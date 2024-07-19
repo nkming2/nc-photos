@@ -15,7 +15,7 @@ part of 'map_browser.dart';
 abstract class $_StateCopyWithWorker {
   _State call(
       {List<_DataPoint>? data,
-      LatLng? initialPoint,
+      MapCoord? initialPoint,
       Set<Marker>? markers,
       bool? isShowDataRangeControlPanel,
       _DateRangeType? dateRangeType,
@@ -39,7 +39,7 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
         data: data as List<_DataPoint>? ?? that.data,
         initialPoint: initialPoint == copyWithNull
             ? that.initialPoint
-            : initialPoint as LatLng?,
+            : initialPoint as MapCoord?,
         markers: markers as Set<Marker>? ?? that.markers,
         isShowDataRangeControlPanel: isShowDataRangeControlPanel as bool? ??
             that.isShowDataRangeControlPanel,

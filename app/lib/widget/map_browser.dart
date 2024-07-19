@@ -15,6 +15,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc_util.dart';
 import 'package:nc_photos/controller/account_controller.dart';
+import 'package:nc_photos/controller/pref_controller.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/collection.dart';
 import 'package:nc_photos/entity/collection/content_provider/ad_hoc.dart';
@@ -27,7 +28,9 @@ import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/collection_browser.dart';
 import 'package:nc_photos/widget/measure.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_common/object_util.dart';
 import 'package:np_datetime/np_datetime.dart';
+import 'package:np_gps_map/np_gps_map.dart';
 import 'package:to_string/to_string.dart';
 
 part 'map_browser.g.dart';
@@ -51,6 +54,7 @@ class MapBrowser extends StatelessWidget {
       create: (_) => _Bloc(
         KiwiContainer().resolve(),
         account: context.read<AccountController>().account,
+        prefController: context.read(),
       )..add(const _LoadData()),
       child: const _WrappedMapBrowser(),
     );

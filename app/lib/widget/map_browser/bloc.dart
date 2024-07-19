@@ -6,6 +6,7 @@ class _Bloc extends Bloc<_Event, _State>
   _Bloc(
     this._c, {
     required this.account,
+    required this.prefController,
   }) : super(_State.init(
           dateRangeType: _DateRangeType.thisMonth,
           localDateRange:
@@ -59,13 +60,21 @@ class _Bloc extends Bloc<_Event, _State>
     );
     final raw = await _c.imageLocationRepo.getLocations(account, utcTimeRange);
     _log.info("[_onLoadData] Loaded ${raw.length} markers");
-    emit(state.copyWith(
-      data: raw.map(_DataPoint.fromImageLatLng).toList(),
-      initialPoint: state.initialPoint ??
-          (raw.firstOrNull == null
-              ? null
-              : LatLng(raw.first.latitude, raw.first.longitude)),
-    ));
+    if (state.initialPoint == null) {
+      final initialPoint =
+          raw.firstOrNull?.let((obj) => MapCoord(obj.latitude, obj.longitude));
+      if (initialPoint != null) {
+        unawaited(prefController.setMapBrowserPrevPosition(initialPoint));
+      }
+      emit(state.copyWith(
+        data: raw.map(_DataPoint.fromImageLatLng).toList(),
+        initialPoint: initialPoint,
+      ));
+    } else {
+      emit(state.copyWith(
+        data: raw.map(_DataPoint.fromImageLatLng).toList(),
+      ));
+    }
   }
 
   void _onSetMarkers(_SetMarkers ev, Emitter<_State> emit) {
@@ -151,6 +160,7 @@ class _Bloc extends Bloc<_Event, _State>
 
   final DiContainer _c;
   final Account account;
+  final PrefController prefController;
 
   final _subscriptions = <StreamSubscription>[];
 

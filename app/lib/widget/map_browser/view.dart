@@ -18,12 +18,12 @@ class _MapViewState extends State<_MapView> {
             _clusterManager.setItems(data);
           },
         ),
-        _BlocListenerT<LatLng?>(
+        _BlocListenerT<MapCoord?>(
           selector: (state) => state.initialPoint,
           listener: (context, initialPoint) {
             if (initialPoint != null) {
-              _mapController
-                  ?.animateCamera(CameraUpdate.newLatLngZoom(initialPoint, 10));
+              _mapController?.animateCamera(
+                  CameraUpdate.newLatLngZoom(initialPoint.toLatLng(), 10));
             }
           },
         ),
@@ -32,14 +32,19 @@ class _MapViewState extends State<_MapView> {
         buildWhen: (previous, current) => previous.markers != current.markers,
         builder: (context, state) => GoogleMap(
           mapType: MapType.normal,
-          initialCameraPosition: const CameraPosition(target: LatLng(0, 0)),
+          initialCameraPosition: context
+                  .read<PrefController>()
+                  .mapBrowserPrevPositionValue
+                  ?.let(
+                      (p) => CameraPosition(target: p.toLatLng(), zoom: 10)) ??
+              const CameraPosition(target: LatLng(0, 0)),
           markers: state.markers,
           onMapCreated: (controller) {
             _clusterManager.setMapId(controller.mapId);
             _mapController = controller;
             if (state.initialPoint != null) {
-              controller.animateCamera(
-                  CameraUpdate.newLatLngZoom(state.initialPoint!, 10));
+              controller.animateCamera(CameraUpdate.newLatLngZoom(
+                  state.initialPoint!.toLatLng(), 10));
             }
           },
           onCameraMove: _clusterManager.onCameraMove,

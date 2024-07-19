@@ -88,4 +88,20 @@ extension on Pref {
       isDontShowVideoPreviewHint() ?? def;
   Future<bool> setDontShowVideoPreviewHint(bool value) =>
       provider.setBool(PrefKey.dontShowVideoPreviewHint, value);
+
+  String? getMapBrowserPrevPosition() =>
+      provider.getString(PrefKey.mapBrowserPrevPosition);
+  Future<bool> setMapBrowserPrevPosition(String value) =>
+      provider.setString(PrefKey.mapBrowserPrevPosition, value);
+}
+
+MapCoord? _tryMapCoordFromJson(dynamic json) {
+  try {
+    final j = (json as List).cast<double>();
+    return MapCoord(j[0], j[1]);
+  } catch (e, stackTrace) {
+    _$__NpLog.log
+        .severe("[_tryMapCoordFromJson] Failed to parse json", e, stackTrace);
+    return null;
+  }
 }

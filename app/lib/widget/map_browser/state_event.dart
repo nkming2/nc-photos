@@ -30,7 +30,7 @@ class _State {
   String toString() => _$toString();
 
   final List<_DataPoint> data;
-  final LatLng? initialPoint;
+  final MapCoord? initialPoint;
   final Set<Marker> markers;
 
   final bool isShowDataRangeControlPanel;

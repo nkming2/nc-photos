@@ -40,3 +40,7 @@ enum _DateRangeType {
     }
   }
 }
+
+extension on MapCoord {
+  LatLng toLatLng() => LatLng(latitude, longitude);
+}
