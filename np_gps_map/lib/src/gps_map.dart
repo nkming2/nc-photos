@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:np_gps_map/src/map_coord.dart';
 import 'package:np_gps_map/src/native.dart';
 import 'package:np_gps_map/src/native/google_gps_map.dart'
     if (dart.library.html) 'package:np_gps_map/src/web/google_gps_map.dart';
@@ -49,7 +50,7 @@ class GpsMap extends StatelessWidget {
   final GpsMapProvider providerHint;
 
   /// A pair of latitude and longitude coordinates, stored as degrees
-  final ({double lat, double lng}) center;
+  final MapCoord center;
   final double zoom;
   final void Function()? onTap;
 
