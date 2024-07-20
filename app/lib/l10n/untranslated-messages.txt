@@ -254,6 +254,7 @@
     "mapBrowserDateRangePrevMonth",
     "mapBrowserDateRangeThisYear",
     "mapBrowserDateRangeCustom",
+    "homeTabMapBrowser",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -294,7 +295,8 @@
     "mapBrowserDateRangeThisMonth",
     "mapBrowserDateRangePrevMonth",
     "mapBrowserDateRangeThisYear",
-    "mapBrowserDateRangeCustom"
+    "mapBrowserDateRangeCustom",
+    "homeTabMapBrowser"
   ],
 
   "de": [
@@ -333,7 +335,8 @@
     "mapBrowserDateRangeThisMonth",
     "mapBrowserDateRangePrevMonth",
     "mapBrowserDateRangeThisYear",
-    "mapBrowserDateRangeCustom"
+    "mapBrowserDateRangeCustom",
+    "homeTabMapBrowser"
   ],
 
   "el": [
@@ -475,7 +478,8 @@
     "mapBrowserDateRangeThisMonth",
     "mapBrowserDateRangePrevMonth",
     "mapBrowserDateRangeThisYear",
-    "mapBrowserDateRangeCustom"
+    "mapBrowserDateRangeCustom",
+    "homeTabMapBrowser"
   ],
 
   "es": [
@@ -508,7 +512,8 @@
     "mapBrowserDateRangeThisMonth",
     "mapBrowserDateRangePrevMonth",
     "mapBrowserDateRangeThisYear",
-    "mapBrowserDateRangeCustom"
+    "mapBrowserDateRangeCustom",
+    "homeTabMapBrowser"
   ],
 
   "fi": [
@@ -541,7 +546,8 @@
     "mapBrowserDateRangeThisMonth",
     "mapBrowserDateRangePrevMonth",
     "mapBrowserDateRangeThisYear",
-    "mapBrowserDateRangeCustom"
+    "mapBrowserDateRangeCustom",
+    "homeTabMapBrowser"
   ],
 
   "fr": [
@@ -574,7 +580,8 @@
     "mapBrowserDateRangeThisMonth",
     "mapBrowserDateRangePrevMonth",
     "mapBrowserDateRangeThisYear",
-    "mapBrowserDateRangeCustom"
+    "mapBrowserDateRangeCustom",
+    "homeTabMapBrowser"
   ],
 
   "it": [
@@ -612,7 +619,8 @@
     "mapBrowserDateRangeThisMonth",
     "mapBrowserDateRangePrevMonth",
     "mapBrowserDateRangeThisYear",
-    "mapBrowserDateRangeCustom"
+    "mapBrowserDateRangeCustom",
+    "homeTabMapBrowser"
   ],
 
   "nl": [
@@ -987,6 +995,7 @@
     "mapBrowserDateRangePrevMonth",
     "mapBrowserDateRangeThisYear",
     "mapBrowserDateRangeCustom",
+    "homeTabMapBrowser",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -1031,7 +1040,8 @@
     "mapBrowserDateRangeThisMonth",
     "mapBrowserDateRangePrevMonth",
     "mapBrowserDateRangeThisYear",
-    "mapBrowserDateRangeCustom"
+    "mapBrowserDateRangeCustom",
+    "homeTabMapBrowser"
   ],
 
   "pt": [
@@ -1084,7 +1094,8 @@
     "mapBrowserDateRangeThisMonth",
     "mapBrowserDateRangePrevMonth",
     "mapBrowserDateRangeThisYear",
-    "mapBrowserDateRangeCustom"
+    "mapBrowserDateRangeCustom",
+    "homeTabMapBrowser"
   ],
 
   "ru": [
@@ -1117,7 +1128,8 @@
     "mapBrowserDateRangeThisMonth",
     "mapBrowserDateRangePrevMonth",
     "mapBrowserDateRangeThisYear",
-    "mapBrowserDateRangeCustom"
+    "mapBrowserDateRangeCustom",
+    "homeTabMapBrowser"
   ],
 
   "tr": [
@@ -1125,7 +1137,8 @@
     "mapBrowserDateRangeThisMonth",
     "mapBrowserDateRangePrevMonth",
     "mapBrowserDateRangeThisYear",
-    "mapBrowserDateRangeCustom"
+    "mapBrowserDateRangeCustom",
+    "homeTabMapBrowser"
   ],
 
   "zh": [
@@ -1189,7 +1202,8 @@
     "mapBrowserDateRangeThisMonth",
     "mapBrowserDateRangePrevMonth",
     "mapBrowserDateRangeThisYear",
-    "mapBrowserDateRangeCustom"
+    "mapBrowserDateRangeCustom",
+    "homeTabMapBrowser"
   ],
 
   "zh_Hant": [
@@ -1347,6 +1361,7 @@
     "mapBrowserDateRangeThisMonth",
     "mapBrowserDateRangePrevMonth",
     "mapBrowserDateRangeThisYear",
-    "mapBrowserDateRangeCustom"
+    "mapBrowserDateRangeCustom",
+    "homeTabMapBrowser"
   ]
 }
