@@ -16,7 +16,82 @@ class ImageLocationGroup {
   final DateTime latestDateTime;
 }
 
+class ImageLatLng {
+  const ImageLatLng({
+    required this.lat,
+    required this.lng,
+    required this.fileId,
+  });
+
+  final double lat;
+  final double lng;
+  final int fileId;
+}
+
 extension SqliteDbImageLocationExtension on SqliteDb {
+  Future<List<ImageLatLng>> queryImageLatLngWithFileIds({
+    required ByAccount account,
+    TimeRange? timeRange,
+    List<String>? includeRelativeRoots,
+    List<String>? includeRelativeDirs,
+    List<String>? excludeRelativeRoots,
+    List<String>? mimes,
+  }) async {
+    _log.info("[queryImageLatLngWithFileIds] timeRange: $timeRange");
+    final query = _queryFiles().let((q) {
+      q
+        ..setQueryMode(
+          FilesQueryMode.expression,
+          expressions: [files.fileId],
+        )
+        ..setExtraJoins([
+          innerJoin(
+            imageLocations,
+            imageLocations.accountFile.equalsExp(accountFiles.rowId),
+          ),
+        ])
+        ..setAccount(account);
+      if (includeRelativeRoots != null) {
+        if (includeRelativeRoots.none((p) => p.isEmpty)) {
+          for (final r in includeRelativeRoots) {
+            q.byOrRelativePathPattern("$r/%");
+          }
+        }
+      }
+      return q.build();
+    });
+    query.addColumns([
+      imageLocations.latitude,
+      imageLocations.longitude,
+    ]);
+    if (excludeRelativeRoots != null) {
+      for (final r in excludeRelativeRoots) {
+        query.where(accountFiles.relativePath.like("$r/%").not());
+      }
+    }
+    if (mimes != null) {
+      query.where(files.contentType.isIn(mimes));
+    } else {
+      query.where(files.isCollection.isNotValue(true));
+    }
+    if (timeRange != null) {
+      accountFiles.bestDateTime
+          .isBetweenTimeRange(timeRange)
+          ?.let((e) => query.where(e));
+    }
+    query
+      ..where(imageLocations.latitude.isNotNull() &
+          imageLocations.longitude.isNotNull())
+      ..orderBy([OrderingTerm.desc(accountFiles.bestDateTime)]);
+    return query
+        .map((r) => ImageLatLng(
+              lat: r.read(imageLocations.latitude)!,
+              lng: r.read(imageLocations.longitude)!,
+              fileId: r.read(files.fileId)!,
+            ))
+        .get();
+  }
+
   Future<List<ImageLocationGroup>> groupImageLocationsByName({
     required ByAccount account,
     List<String>? includeRelativeRoots,

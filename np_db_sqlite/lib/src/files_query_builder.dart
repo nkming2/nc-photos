@@ -36,6 +36,10 @@ class FilesQueryBuilder {
     _selectExpressions = expressions;
   }
 
+  void setExtraJoins(List<Join> joins) {
+    _extraJoins = joins.toList();
+  }
+
   void setAccount(ByAccount account) {
     if (account.sqlAccount != null) {
       assert(_dbAccount == null);
@@ -131,6 +135,7 @@ class FilesQueryBuilder {
       if (_queryMode == FilesQueryMode.completeFile || _byLocation != null)
         leftOuterJoin(db.imageLocations,
             db.imageLocations.accountFile.equalsExp(db.accountFiles.rowId)),
+      if (_extraJoins != null) ..._extraJoins!,
     ]) as JoinedSelectStatement;
     if (_queryMode == FilesQueryMode.expression) {
       query.addColumns(_selectExpressions!);
@@ -232,6 +237,7 @@ class FilesQueryBuilder {
 
   FilesQueryMode _queryMode = FilesQueryMode.file;
   Iterable<Expression>? _selectExpressions;
+  List<Join>? _extraJoins;
 
   Account? _sqlAccount;
   DbAccount? _dbAccount;

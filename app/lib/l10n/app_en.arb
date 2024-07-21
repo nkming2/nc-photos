@@ -1487,6 +1487,15 @@
 	"trustedCertManagerFailedToRemoveCertError": "Failed to remove certificate",
 	"missingVideoThumbnailHelpDialogTitle": "Having trouble with video thumbnails?",
 	"dontShowAgain": "Don't show again",
+	"mapBrowserDateRangeLabel": "Date range",
+	"@mapBrowserDateRangeLabel": {
+		"description": "Filter photos by date range"
+	},
+	"mapBrowserDateRangeThisMonth": "This month",
+	"mapBrowserDateRangePrevMonth": "Previous month",
+	"mapBrowserDateRangeThisYear": "This year",
+	"mapBrowserDateRangeCustom": "Custom",
+	"homeTabMapBrowser": "Map",
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {

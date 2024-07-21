@@ -158,6 +158,9 @@ dependencies:
   wakelock_plus: ^1.1.1
   woozy_search: ^2.0.3
 
+  google_maps_flutter: 2.5.3
+  google_maps_cluster_manager: 3.1.0
+
 dependency_overrides:
   video_player:
     git:
@@ -174,6 +177,8 @@ dependency_overrides:
       url: https://gitlab.com/nc-photos/flutter-plugins
       ref: video_player-v2.8.6-nc-photos-2
       path: packages/video_player/video_player_platform_interface
+  google_maps_flutter_android: 2.7.0
+  google_maps_flutter_platform_interface: 2.5.0
 
 dev_dependencies:
   test: ^1.22.1

@@ -4,6 +4,7 @@ import 'package:nc_photos/entity/face_recognition_person/repo.dart';
 import 'package:nc_photos/entity/favorite.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/repo.dart';
+import 'package:nc_photos/entity/image_location/repo.dart';
 import 'package:nc_photos/entity/local_file.dart';
 import 'package:nc_photos/entity/nc_album/repo.dart';
 import 'package:nc_photos/entity/pref.dart';
@@ -48,6 +49,7 @@ enum DiType {
   recognizeFaceRepo,
   recognizeFaceRepoRemote,
   recognizeFaceRepoLocal,
+  imageLocationRepo,
   pref,
   touchManager,
   npDb,
@@ -86,6 +88,7 @@ class DiContainer {
     RecognizeFaceRepo? recognizeFaceRepo,
     RecognizeFaceRepo? recognizeFaceRepoRemote,
     RecognizeFaceRepo? recognizeFaceRepoLocal,
+    ImageLocationRepo? imageLocationRepo,
     Pref? pref,
     TouchManager? touchManager,
     NpDb? npDb,
@@ -120,6 +123,7 @@ class DiContainer {
         _recognizeFaceRepo = recognizeFaceRepo,
         _recognizeFaceRepoRemote = recognizeFaceRepoRemote,
         _recognizeFaceRepoLocal = recognizeFaceRepoLocal,
+        _imageLocationRepo = imageLocationRepo,
         _pref = pref,
         _touchManager = touchManager,
         _npDb = npDb,
@@ -189,6 +193,8 @@ class DiContainer {
         return contianer._recognizeFaceRepoRemote != null;
       case DiType.recognizeFaceRepoLocal:
         return contianer._recognizeFaceRepoLocal != null;
+      case DiType.imageLocationRepo:
+        return contianer._imageLocationRepo != null;
       case DiType.pref:
         return contianer._pref != null;
       case DiType.touchManager:
@@ -215,6 +221,7 @@ class DiContainer {
     OrNull<NcAlbumRepo>? ncAlbumRepo,
     OrNull<FaceRecognitionPersonRepo>? faceRecognitionPersonRepo,
     OrNull<RecognizeFaceRepo>? recognizeFaceRepo,
+    OrNull<ImageLocationRepo>? imageLocationRepo,
     OrNull<Pref>? pref,
     OrNull<TouchManager>? touchManager,
     OrNull<NpDb>? npDb,
@@ -240,6 +247,9 @@ class DiContainer {
       recognizeFaceRepo: recognizeFaceRepo == null
           ? _recognizeFaceRepo
           : recognizeFaceRepo.obj,
+      imageLocationRepo: imageLocationRepo == null
+          ? _imageLocationRepo
+          : imageLocationRepo.obj,
       pref: pref == null ? _pref : pref.obj,
       touchManager: touchManager == null ? _touchManager : touchManager.obj,
       npDb: npDb == null ? _npDb : npDb.obj,
@@ -280,6 +290,7 @@ class DiContainer {
   RecognizeFaceRepo get recognizeFaceRepo => _recognizeFaceRepo!;
   RecognizeFaceRepo get recognizeFaceRepoRemote => _recognizeFaceRepoRemote!;
   RecognizeFaceRepo get recognizeFaceRepoLocal => _recognizeFaceRepoLocal!;
+  ImageLocationRepo get imageLocationRepo => _imageLocationRepo!;
 
   Pref get pref => _pref!;
   TouchManager get touchManager => _touchManager!;
@@ -436,6 +447,11 @@ class DiContainer {
     _recognizeFaceRepoLocal = v;
   }
 
+  set imageLocationRepo(ImageLocationRepo v) {
+    assert(_imageLocationRepo == null);
+    _imageLocationRepo = v;
+  }
+
   set pref(Pref v) {
     assert(_pref == null);
     _pref = v;
@@ -489,6 +505,7 @@ class DiContainer {
   RecognizeFaceRepo? _recognizeFaceRepo;
   RecognizeFaceRepo? _recognizeFaceRepoRemote;
   RecognizeFaceRepo? _recognizeFaceRepoLocal;
+  ImageLocationRepo? _imageLocationRepo;
 
   Pref? _pref;
   TouchManager? _touchManager;

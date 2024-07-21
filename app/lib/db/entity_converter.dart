@@ -9,6 +9,7 @@ import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/entity/face_recognition_person.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
+import 'package:nc_photos/entity/image_location/repo.dart';
 import 'package:nc_photos/entity/nc_album.dart';
 import 'package:nc_photos/entity/nc_album_item.dart';
 import 'package:nc_photos/entity/recognize_face.dart';
@@ -271,6 +272,16 @@ abstract class DbLocationGroupConverter {
       src.count,
       src.latestFileId,
       src.latestDateTime,
+    );
+  }
+}
+
+abstract class DbImageLatLngConverter {
+  static ImageLatLng fromDb(DbImageLatLng src) {
+    return ImageLatLng(
+      latitude: src.lat,
+      longitude: src.lng,
+      fileId: src.fileId,
     );
   }
 }

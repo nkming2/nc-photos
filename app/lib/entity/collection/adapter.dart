@@ -2,12 +2,14 @@ import 'package:flutter/foundation.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/collection.dart';
+import 'package:nc_photos/entity/collection/adapter/ad_hoc.dart';
 import 'package:nc_photos/entity/collection/adapter/album.dart';
 import 'package:nc_photos/entity/collection/adapter/location_group.dart';
 import 'package:nc_photos/entity/collection/adapter/memory.dart';
 import 'package:nc_photos/entity/collection/adapter/nc_album.dart';
 import 'package:nc_photos/entity/collection/adapter/person.dart';
 import 'package:nc_photos/entity/collection/adapter/tag.dart';
+import 'package:nc_photos/entity/collection/content_provider/ad_hoc.dart';
 import 'package:nc_photos/entity/collection/content_provider/album.dart';
 import 'package:nc_photos/entity/collection/content_provider/location_group.dart';
 import 'package:nc_photos/entity/collection/content_provider/memory.dart';
@@ -30,6 +32,8 @@ abstract class CollectionAdapter {
   static CollectionAdapter of(
       DiContainer c, Account account, Collection collection) {
     switch (collection.contentProvider.runtimeType) {
+      case const (CollectionAdHocProvider):
+        return CollectionAdHocAdapter(c, account, collection);
       case const (CollectionAlbumProvider):
         return CollectionAlbumAdapter(c, account, collection);
       case const (CollectionLocationGroupProvider):
