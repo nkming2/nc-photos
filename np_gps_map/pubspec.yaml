@@ -12,13 +12,20 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_map: ^6.1.0
-  google_maps_flutter: ^2.2.8
+  google_maps_flutter: 2.5.3
+  google_maps_cluster_manager: 3.1.0
   latlong2: any
   np_async:
     path: ../np_async
+  np_common:
+    path: ../np_common
   np_platform_util:
     path: ../np_platform_util
   url_launcher: ^6.1.11
+
+dependency_overrides:
+  google_maps_flutter_android: 2.7.0
+  google_maps_flutter_platform_interface: 2.5.0
 
 dev_dependencies:
   np_lints:

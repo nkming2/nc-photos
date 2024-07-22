@@ -28,4 +28,10 @@ extension StreamExtension<T> on Stream<T> {
 
   Stream<T> distinctBy<U>(U Function(T element) keyOf) =>
       distinct((previous, next) => keyOf(previous) == keyOf(next));
+
+  /// By default the first event will always pass through the distinct check,
+  /// which may not always make sense. In this variant, the first event will be
+  /// absorbed
+  Stream<T> distinctByIgnoreFirst<U>(U Function(T element) keyOf) =>
+      distinct((previous, next) => keyOf(previous) == keyOf(next)).skip(1);
 }

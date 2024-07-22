@@ -16,7 +16,6 @@ abstract class $_StateCopyWithWorker {
   _State call(
       {List<_DataPoint>? data,
       MapCoord? initialPoint,
-      Set<Marker>? markers,
       bool? isShowDataRangeControlPanel,
       _DateRangeType? dateRangeType,
       DateRange? localDateRange,
@@ -30,7 +29,6 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
   _State call(
       {dynamic data,
       dynamic initialPoint = copyWithNull,
-      dynamic markers,
       dynamic isShowDataRangeControlPanel,
       dynamic dateRangeType,
       dynamic localDateRange,
@@ -40,7 +38,6 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
         initialPoint: initialPoint == copyWithNull
             ? that.initialPoint
             : initialPoint as MapCoord?,
-        markers: markers as Set<Marker>? ?? that.markers,
         isShowDataRangeControlPanel: isShowDataRangeControlPanel as bool? ??
             that.isShowDataRangeControlPanel,
         dateRangeType: dateRangeType as _DateRangeType? ?? that.dateRangeType,
@@ -74,7 +71,7 @@ extension _$_BlocNpLog on _Bloc {
 extension _$_StateToString on _State {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_State {data: [length: ${data.length}], initialPoint: $initialPoint, markers: {length: ${markers.length}}, isShowDataRangeControlPanel: $isShowDataRangeControlPanel, dateRangeType: ${dateRangeType.name}, localDateRange: $localDateRange, error: $error}";
+    return "_State {data: [length: ${data.length}], initialPoint: $initialPoint, isShowDataRangeControlPanel: $isShowDataRangeControlPanel, dateRangeType: ${dateRangeType.name}, localDateRange: $localDateRange, error: $error}";
   }
 }
 
@@ -82,13 +79,6 @@ extension _$_LoadDataToString on _LoadData {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
     return "_LoadData {}";
-  }
-}
-
-extension _$_SetMarkersToString on _SetMarkers {
-  String _$toString() {
-    // ignore: unnecessary_string_interpolations
-    return "_SetMarkers {markers: {length: ${markers.length}}}";
   }
 }
 

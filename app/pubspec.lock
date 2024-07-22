@@ -661,7 +661,7 @@ packages:
     source: hosted
     version: "6.3.0"
   google_maps_cluster_manager:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: google_maps_cluster_manager
       sha256: "36e9a4b2d831c470fc85d692a6c9cec70e0f385d578b9697de5f4de347561b83"

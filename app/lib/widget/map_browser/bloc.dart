@@ -13,15 +13,15 @@ class _Bloc extends Bloc<_Event, _State>
               _calcDateRange(clock.now().toDate(), _DateRangeType.thisMonth),
         )) {
     on<_LoadData>(_onLoadData);
-    on<_SetMarkers>(_onSetMarkers);
     on<_OpenDataRangeControlPanel>(_onOpenDataRangeControlPanel);
     on<_CloseControlPanel>(_onCloseControlPanel);
     on<_SetDateRangeType>(_onSetDateRangeType);
     on<_SetLocalDateRange>(_onSetDateRange);
     on<_SetError>(_onSetError);
 
-    _subscriptions
-        .add(stream.distinctBy((state) => state.localDateRange).listen((state) {
+    _subscriptions.add(stream
+        .distinctByIgnoreFirst((state) => state.localDateRange)
+        .listen((state) {
       add(const _LoadData());
     }));
   }
@@ -75,11 +75,6 @@ class _Bloc extends Bloc<_Event, _State>
         data: raw.map(_DataPoint.fromImageLatLng).toList(),
       ));
     }
-  }
-
-  void _onSetMarkers(_SetMarkers ev, Emitter<_State> emit) {
-    _log.info(ev);
-    emit(state.copyWith(markers: ev.markers));
   }
 
   void _onOpenDataRangeControlPanel(
