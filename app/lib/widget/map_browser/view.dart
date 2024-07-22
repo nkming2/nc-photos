@@ -49,6 +49,9 @@ class _MapViewState extends State<_MapView> {
             },
             googleClusterBuilder: (context, dataPoints) =>
                 _GoogleMarkerBuilder(context).build(dataPoints),
+            osmClusterBuilder: (context, dataPoints) => _OsmMarker(
+              count: dataPoints.length,
+            ),
             contentPadding: EdgeInsets.only(
               top: MediaQuery.of(context).padding.top,
               bottom: MediaQuery.of(context).padding.bottom,
@@ -66,6 +69,30 @@ class _MapViewState extends State<_MapView> {
   }
 
   InteractiveMapController? _controller;
+}
+
+class _OsmMarker extends StatelessWidget {
+  const _OsmMarker({
+    required this.count,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: Theme.of(context).colorScheme.primary,
+      ),
+      child: Center(
+        child: Text(
+          count.toString(),
+          style: const TextStyle(color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  final int count;
 }
 
 class _PanelContainer extends StatefulWidget {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:np_gps_map/src/gps_map.dart';
 import 'package:np_gps_map/src/interactive_map/google.dart';
+import 'package:np_gps_map/src/interactive_map/osm.dart';
 import 'package:np_gps_map/src/map_coord.dart';
 import 'package:np_gps_map/src/util.dart';
 import 'package:np_platform_util/np_platform_util.dart';
@@ -26,6 +27,7 @@ class InteractiveMap extends StatelessWidget {
     this.initialZoom,
     this.dataPoints,
     this.onClusterTap,
+    this.osmClusterBuilder,
     this.googleClusterBuilder,
     this.contentPadding,
     this.onMapCreated,
@@ -35,7 +37,15 @@ class InteractiveMap extends StatelessWidget {
   Widget build(BuildContext context) {
     if (providerHint == GpsMapProvider.osm ||
         (getRawPlatform() == NpPlatform.android && !isNewGMapsRenderer())) {
-      return const SizedBox.shrink();
+      return OsmInteractiveMap(
+        initialPosition: initialPosition,
+        initialZoom: initialZoom,
+        dataPoints: dataPoints,
+        onClusterTap: onClusterTap,
+        clusterBuilder: osmClusterBuilder,
+        contentPadding: contentPadding,
+        onMapCreated: onMapCreated,
+      );
     } else {
       return GoogleInteractiveMap(
         initialPosition: initialPosition,
@@ -57,6 +67,7 @@ class InteractiveMap extends StatelessWidget {
   final List<DataPoint>? dataPoints;
   final void Function(List<DataPoint> dataPoints)? onClusterTap;
   final GoogleClusterBuilder? googleClusterBuilder;
+  final OsmClusterBuilder? osmClusterBuilder;
   final EdgeInsets? contentPadding;
   final void Function(InteractiveMapController controller)? onMapCreated;
 }
