@@ -91,8 +91,13 @@ extension on Pref {
 
   String? getMapBrowserPrevPosition() =>
       provider.getString(PrefKey.mapBrowserPrevPosition);
-  Future<bool> setMapBrowserPrevPosition(String value) =>
-      provider.setString(PrefKey.mapBrowserPrevPosition, value);
+  Future<bool> setMapBrowserPrevPosition(String? value) {
+    if (value == null) {
+      return provider.remove(PrefKey.mapBrowserPrevPosition);
+    } else {
+      return provider.setString(PrefKey.mapBrowserPrevPosition, value);
+    }
+  }
 }
 
 MapCoord? _tryMapCoordFromJson(dynamic json) {

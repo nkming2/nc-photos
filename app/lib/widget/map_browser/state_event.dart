@@ -6,7 +6,6 @@ class _State {
   const _State({
     required this.data,
     this.initialPoint,
-    required this.markers,
     required this.isShowDataRangeControlPanel,
     required this.dateRangeType,
     required this.localDateRange,
@@ -19,7 +18,6 @@ class _State {
   }) {
     return _State(
       data: const [],
-      markers: const {},
       isShowDataRangeControlPanel: false,
       dateRangeType: dateRangeType,
       localDateRange: localDateRange,
@@ -31,7 +29,6 @@ class _State {
 
   final List<_DataPoint> data;
   final MapCoord? initialPoint;
-  final Set<Marker> markers;
 
   final bool isShowDataRangeControlPanel;
   final _DateRangeType dateRangeType;
@@ -50,16 +47,6 @@ class _LoadData implements _Event {
 
   @override
   String toString() => _$toString();
-}
-
-@toString
-class _SetMarkers implements _Event {
-  const _SetMarkers(this.markers);
-
-  @override
-  String toString() => _$toString();
-
-  final Set<Marker> markers;
 }
 
 @toString

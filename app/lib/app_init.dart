@@ -75,7 +75,7 @@ Future<void> init(InitIsolateType isolateType) async {
   }
   await _initDiContainer(isolateType);
   _initVisibilityDetector();
-  GpsMap.init();
+  initGpsMap();
   // init session storage
   SessionStorage();
 

@@ -161,10 +161,12 @@ class PrefController {
         value: value,
       );
 
-  Future<bool> setMapBrowserPrevPosition(MapCoord value) => _set<MapCoord?>(
+  Future<bool> setMapBrowserPrevPosition(MapCoord? value) =>
+      _setOrRemove<MapCoord>(
         controller: _mapBrowserPrevPositionController,
         setter: (pref, value) => pref.setMapBrowserPrevPosition(
-            jsonEncode([value!.latitude, value.longitude])),
+            jsonEncode([value.latitude, value.longitude])),
+        remover: (pref) => pref.setMapBrowserPrevPosition(null),
         value: value,
       );
 
@@ -270,9 +272,9 @@ class PrefController {
       BehaviorSubject.seeded(_c.pref.isDontShowVideoPreviewHintOr(false));
   @npSubjectAccessor
   late final _mapBrowserPrevPositionController = BehaviorSubject.seeded(_c.pref
-          .getMapBrowserPrevPosition()
-          ?.let(tryJsonDecode)
-          ?.let(_tryMapCoordFromJson));
+      .getMapBrowserPrevPosition()
+      ?.let(tryJsonDecode)
+      ?.let(_tryMapCoordFromJson));
 }
 
 @npSubjectAccessor

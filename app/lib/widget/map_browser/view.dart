@@ -12,212 +12,113 @@ class _MapViewState extends State<_MapView> {
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
-        _BlocListenerT<List<_DataPoint>>(
-          selector: (state) => state.data,
-          listener: (context, data) {
-            _clusterManager.setItems(data);
-          },
-        ),
         _BlocListenerT<MapCoord?>(
           selector: (state) => state.initialPoint,
           listener: (context, initialPoint) {
             if (initialPoint != null) {
-              _mapController?.animateCamera(
-                  CameraUpdate.newLatLngZoom(initialPoint.toLatLng(), 10));
+              _controller?.setPosition(initialPoint);
             }
           },
         ),
       ],
       child: _BlocBuilder(
-        buildWhen: (previous, current) => previous.markers != current.markers,
-        builder: (context, state) => GoogleMap(
-          mapType: MapType.normal,
-          initialCameraPosition: context
-                  .read<PrefController>()
-                  .mapBrowserPrevPositionValue
-                  ?.let(
-                      (p) => CameraPosition(target: p.toLatLng(), zoom: 10)) ??
-              const CameraPosition(target: LatLng(0, 0)),
-          markers: state.markers,
-          onMapCreated: (controller) {
-            _clusterManager.setMapId(controller.mapId);
-            _mapController = controller;
-            if (Theme.of(context).brightness == Brightness.dark) {
-              controller.setMapStyle(_mapStyleNight);
-            }
-            if (state.initialPoint != null) {
-              controller.animateCamera(CameraUpdate.newLatLngZoom(
-                  state.initialPoint!.toLatLng(), 10));
-            }
-          },
-          onCameraMove: _clusterManager.onCameraMove,
-          onCameraIdle: _clusterManager.updateMap,
-          padding: EdgeInsets.only(
-            top: MediaQuery.of(context).padding.top,
-            bottom: MediaQuery.of(context).padding.bottom,
+        buildWhen: (previous, current) => previous.data != current.data,
+        builder: (context, state) {
+          final prevPosition =
+              context.read<PrefController>().mapBrowserPrevPositionValue;
+          return ValueStreamBuilder<GpsMapProvider>(
+            stream: context.bloc.prefController.gpsMapProvider,
+            builder: (context, gpsMapProvider) => InteractiveMap(
+              providerHint: gpsMapProvider.requireData,
+              initialPosition: prevPosition ?? const MapCoord(0, 0),
+              initialZoom: prevPosition == null ? 2.5 : 10,
+              dataPoints: state.data,
+              onClusterTap: (dataPoints) {
+                final c = Collection(
+                  name: "",
+                  contentProvider: CollectionAdHocProvider(
+                    account: context.bloc.account,
+                    fileIds: dataPoints
+                        .cast<_DataPoint>()
+                        .map((e) => e.fileId)
+                        .toList(),
+                  ),
+                );
+                Navigator.of(context).pushNamed(
+                  CollectionBrowser.routeName,
+                  arguments: CollectionBrowserArguments(c),
+                );
+              },
+              googleClusterBuilder: (context, dataPoints) =>
+                  _GoogleMarkerBuilder(context).build(dataPoints),
+              osmClusterBuilder: (context, dataPoints) =>
+                  _OsmMarkerBuilder(context).build(dataPoints),
+              contentPadding: EdgeInsets.only(
+                top: MediaQuery.of(context).padding.top,
+                bottom: MediaQuery.of(context).padding.bottom,
+              ),
+              onMapCreated: (controller) {
+                _controller = controller;
+                if (state.initialPoint != null) {
+                  controller.setPosition(state.initialPoint!);
+                }
+              },
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  InteractiveMapController? _controller;
+}
+
+class _OsmMarker extends StatelessWidget {
+  const _OsmMarker({
+    required this.size,
+    required this.text,
+    required this.textSize,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(size / 2),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(.3),
+              blurRadius: 2,
+              offset: const Offset(1, 1),
+            ),
+          ],
+          border: Border.all(
+            color: Colors.white.withOpacity(.75),
+            width: 1.5,
+          ),
+          color: color,
+        ),
+        child: Center(
+          child: Text(
+            text,
+            style: TextStyle(
+              fontSize: textSize,
+              color: Colors.white.withOpacity(.75),
+            ),
           ),
         ),
       ),
     );
   }
 
-  Future<BitmapDescriptor> _getClusterBitmap(
-    int size, {
-    String? text,
-    required Color color,
-  }) async {
-    final PictureRecorder pictureRecorder = PictureRecorder();
-    final Canvas canvas = Canvas(pictureRecorder);
-    final fillPaint = Paint()..color = color;
-    final outlinePaint = Paint()
-      ..color = Theme.of(context).brightness == Brightness.light
-          ? Colors.black.withOpacity(.28)
-          : Colors.white.withOpacity(.6)
-      ..strokeWidth = size / 28
-      ..style = PaintingStyle.stroke;
-
-    const shadowPadding = 6.0;
-    const shadowPaddingHalf = shadowPadding / 2;
-    final shadowPath = Path()
-      ..addOval(
-          Rect.fromLTWH(0, 0, size - shadowPadding, size - shadowPadding));
-    canvas.drawShadow(shadowPath, Colors.black, 1, false);
-    canvas.drawCircle(
-      Offset(size / 2 - shadowPaddingHalf, size / 2 - shadowPaddingHalf),
-      size / 2 - shadowPaddingHalf,
-      fillPaint,
-    );
-    canvas.drawCircle(
-      Offset(size / 2 - shadowPaddingHalf, size / 2 - shadowPaddingHalf),
-      size / 2 - shadowPaddingHalf - (size / 28 / 2),
-      outlinePaint,
-    );
-
-    if (text != null) {
-      TextPainter painter = TextPainter(textDirection: TextDirection.ltr);
-      painter.text = TextSpan(
-        text: text,
-        style: TextStyle(
-          fontSize: size / 3 - ((text.length / 6) * (size * 0.1)),
-          color: Theme.of(context).colorScheme.onPrimaryContainer,
-          fontWeight: FontWeight.normal,
-        ),
-      );
-      painter.layout();
-      painter.paint(
-        canvas,
-        Offset(
-          size / 2 - painter.width / 2 - shadowPaddingHalf,
-          size / 2 - painter.height / 2 - shadowPaddingHalf,
-        ),
-      );
-    }
-
-    final img = await pictureRecorder.endRecording().toImage(size, size);
-    final data = await img.toByteData(format: ImageByteFormat.png) as ByteData;
-
-    return BitmapDescriptor.fromBytes(data.buffer.asUint8List());
-  }
-
-  String _getMarkerCountString(int count) {
-    switch (count) {
-      case >= 10000:
-        return "10000+";
-      case >= 1000:
-        return "${count ~/ 1000 * 1000}+";
-      case >= 100:
-        return "${count ~/ 100 * 100}+";
-      case >= 10:
-        return "${count ~/ 10 * 10}+";
-      default:
-        return count.toString();
-    }
-  }
-
-  Color _getMarkerColor(int count) {
-    const step = 1 / 4;
-    final double r;
-    switch (count) {
-      case >= 10000:
-        r = 1;
-      case >= 1000:
-        r = (count ~/ 1000) / 10 * step + step * 3;
-      case >= 100:
-        r = (count ~/ 100) / 10 * step + step * 2;
-      case >= 10:
-        r = (count ~/ 10) / 10 * step + step;
-      default:
-        r = (count / 10) * step;
-    }
-    if (Theme.of(context).brightness == Brightness.light) {
-      return HSLColor.fromAHSL(
-        1,
-        _colorHsl.hue,
-        r * .7 + .3,
-        (_colorHsl.lightness - (.1 - r * .1)).clamp(0, 1),
-      ).toColor();
-    } else {
-      return HSLColor.fromAHSL(
-        1,
-        _colorHsl.hue,
-        r * .6 + .4,
-        (_colorHsl.lightness - (.1 - r * .1)).clamp(0, 1),
-      ).toColor();
-    }
-  }
-
-  int _getMarkerSize(int count) {
-    const step = 1 / 4;
-    final double r;
-    switch (count) {
-      case >= 10000:
-        r = 1;
-      case >= 1000:
-        r = (count ~/ 1000) / 10 * step + step * 3;
-      case >= 100:
-        r = (count ~/ 100) / 10 * step + step * 2;
-      case >= 10:
-        r = (count ~/ 10) / 10 * step + step;
-      default:
-        r = (count / 10) * step;
-    }
-    return (r * 85).toInt() + 85;
-  }
-
-  late final _clusterManager = ClusterManager<_DataPoint>(
-    const [],
-    (markers) {
-      if (mounted) {
-        context.addEvent(_SetMarkers(markers));
-      }
-    },
-    markerBuilder: (cluster) async => Marker(
-      markerId: MarkerId(cluster.getId()),
-      position: cluster.location,
-      onTap: () {
-        final c = Collection(
-          name: "",
-          contentProvider: CollectionAdHocProvider(
-            account: context.bloc.account,
-            fileIds: cluster.items.map((e) => e.fileId).toList(),
-          ),
-        );
-        Navigator.of(context).pushNamed(
-          CollectionBrowser.routeName,
-          arguments: CollectionBrowserArguments(c),
-        );
-      },
-      icon: await _getClusterBitmap(
-        _getMarkerSize(cluster.count * 1),
-        text: _getMarkerCountString(cluster.count * 1),
-        color: _getMarkerColor(cluster.count * 1),
-      ),
-    ),
-  );
-  GoogleMapController? _mapController;
-
-  late final _colorHsl =
-      HSLColor.fromColor(Theme.of(context).colorScheme.primaryContainer);
+  final double size;
+  final String text;
+  final double textSize;
+  final Color color;
 }
 
 class _PanelContainer extends StatefulWidget {
@@ -430,7 +331,7 @@ class _DateFieldState extends State<_DateField> {
         onTap: () async {
           final result = await showDatePicker(
             context: context,
-            firstDate: DateTime(1970),
+            firstDate: DateTime.fromMillisecondsSinceEpoch(0),
             lastDate: clock.now(),
             currentDate: widget.date.toLocalDateTime(),
           );
@@ -458,7 +359,3 @@ class _DateFieldState extends State<_DateField> {
 
   late final _controller = TextEditingController(text: _stringify(widget.date));
 }
-
-// Generated in https://mapstyle.withgoogle.com/
-const _mapStyleNight =
-    '[{"elementType":"geometry","stylers":[{"color":"#242f3e"}]},{"elementType":"labels.text.fill","stylers":[{"color":"#746855"}]},{"elementType":"labels.text.stroke","stylers":[{"color":"#242f3e"}]},{"featureType":"administrative.locality","elementType":"labels.text.fill","stylers":[{"color":"#d59563"}]},{"featureType":"poi","elementType":"labels.text.fill","stylers":[{"color":"#d59563"}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#263c3f"}]},{"featureType":"poi.park","elementType":"labels.text.fill","stylers":[{"color":"#6b9a76"}]},{"featureType":"road","elementType":"geometry","stylers":[{"color":"#38414e"}]},{"featureType":"road","elementType":"geometry.stroke","stylers":[{"color":"#212a37"}]},{"featureType":"road","elementType":"labels.text.fill","stylers":[{"color":"#9ca5b3"}]},{"featureType":"road.highway","elementType":"geometry","stylers":[{"color":"#746855"}]},{"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"color":"#1f2835"}]},{"featureType":"road.highway","elementType":"labels.text.fill","stylers":[{"color":"#f3d19c"}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#2f3948"}]},{"featureType":"transit.station","elementType":"labels.text.fill","stylers":[{"color":"#d59563"}]},{"featureType":"water","elementType":"geometry","stylers":[{"color":"#17263c"}]},{"featureType":"water","elementType":"labels.text.fill","stylers":[{"color":"#515c6d"}]},{"featureType":"water","elementType":"labels.text.stroke","stylers":[{"color":"#17263c"}]}]';
