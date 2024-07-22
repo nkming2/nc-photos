@@ -83,6 +83,10 @@ android {
             dimension "version"
             applicationIdSuffix ".gitlab"
         }
+        dev {
+            dimension "version"
+            applicationIdSuffix ".dev"
+        }
     }
 
     splits {
