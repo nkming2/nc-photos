@@ -73,6 +73,12 @@ class _OsmInteractiveMapState extends State<OsmInteractiveMap> {
                 context,
                 markers.cast<_OsmDataPoint>().map((e) => e.original).toList(),
               ),
+              // need to be large enough to contain markers of all size
+              size: const Size.square(120),
+              // disable all tap handlers from package
+              zoomToBoundsOnClick: false,
+              centerMarkerOnClick: false,
+              spiderfyCluster: false,
             ),
           ),
         Padding(

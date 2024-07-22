@@ -26,42 +26,44 @@ class _MapViewState extends State<_MapView> {
         builder: (context, state) {
           final prevPosition =
               context.read<PrefController>().mapBrowserPrevPositionValue;
-          return InteractiveMap(
-            providerHint: GpsMapProvider.google,
-            initialPosition: prevPosition ?? const MapCoord(0, 0),
-            initialZoom: prevPosition == null ? 2.5 : 10,
-            dataPoints: state.data,
-            onClusterTap: (dataPoints) {
-              final c = Collection(
-                name: "",
-                contentProvider: CollectionAdHocProvider(
-                  account: context.bloc.account,
-                  fileIds: dataPoints
-                      .cast<_DataPoint>()
-                      .map((e) => e.fileId)
-                      .toList(),
-                ),
-              );
-              Navigator.of(context).pushNamed(
-                CollectionBrowser.routeName,
-                arguments: CollectionBrowserArguments(c),
-              );
-            },
-            googleClusterBuilder: (context, dataPoints) =>
-                _GoogleMarkerBuilder(context).build(dataPoints),
-            osmClusterBuilder: (context, dataPoints) => _OsmMarker(
-              count: dataPoints.length,
+          return ValueStreamBuilder<GpsMapProvider>(
+            stream: context.bloc.prefController.gpsMapProvider,
+            builder: (context, gpsMapProvider) => InteractiveMap(
+              providerHint: gpsMapProvider.requireData,
+              initialPosition: prevPosition ?? const MapCoord(0, 0),
+              initialZoom: prevPosition == null ? 2.5 : 10,
+              dataPoints: state.data,
+              onClusterTap: (dataPoints) {
+                final c = Collection(
+                  name: "",
+                  contentProvider: CollectionAdHocProvider(
+                    account: context.bloc.account,
+                    fileIds: dataPoints
+                        .cast<_DataPoint>()
+                        .map((e) => e.fileId)
+                        .toList(),
+                  ),
+                );
+                Navigator.of(context).pushNamed(
+                  CollectionBrowser.routeName,
+                  arguments: CollectionBrowserArguments(c),
+                );
+              },
+              googleClusterBuilder: (context, dataPoints) =>
+                  _GoogleMarkerBuilder(context).build(dataPoints),
+              osmClusterBuilder: (context, dataPoints) =>
+                  _OsmMarkerBuilder(context).build(dataPoints),
+              contentPadding: EdgeInsets.only(
+                top: MediaQuery.of(context).padding.top,
+                bottom: MediaQuery.of(context).padding.bottom,
+              ),
+              onMapCreated: (controller) {
+                _controller = controller;
+                if (state.initialPoint != null) {
+                  controller.setPosition(state.initialPoint!);
+                }
+              },
             ),
-            contentPadding: EdgeInsets.only(
-              top: MediaQuery.of(context).padding.top,
-              bottom: MediaQuery.of(context).padding.bottom,
-            ),
-            onMapCreated: (controller) {
-              _controller = controller;
-              if (state.initialPoint != null) {
-                controller.setPosition(state.initialPoint!);
-              }
-            },
           );
         },
       ),
@@ -73,26 +75,50 @@ class _MapViewState extends State<_MapView> {
 
 class _OsmMarker extends StatelessWidget {
   const _OsmMarker({
-    required this.count,
+    required this.size,
+    required this.text,
+    required this.textSize,
+    required this.color,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        color: Theme.of(context).colorScheme.primary,
-      ),
-      child: Center(
-        child: Text(
-          count.toString(),
-          style: const TextStyle(color: Colors.white),
+    return Center(
+      child: Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(size / 2),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(.3),
+              blurRadius: 2,
+              offset: const Offset(1, 1),
+            ),
+          ],
+          border: Border.all(
+            color: Colors.white.withOpacity(.75),
+            width: 1.5,
+          ),
+          color: color,
+        ),
+        child: Center(
+          child: Text(
+            text,
+            style: TextStyle(
+              fontSize: textSize,
+              color: Colors.white.withOpacity(.75),
+            ),
+          ),
         ),
       ),
     );
   }
 
-  final int count;
+  final double size;
+  final String text;
+  final double textSize;
+  final Color color;
 }
 
 class _PanelContainer extends StatefulWidget {
