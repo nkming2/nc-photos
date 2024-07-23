@@ -74,11 +74,12 @@ class _OsmInteractiveMapState extends State<OsmInteractiveMap> {
                 markers.cast<_OsmDataPoint>().map((e) => e.original).toList(),
               ),
               // need to be large enough to contain markers of all size
-              size: const Size.square(120),
+              size: const Size.square(_markerBoundingBoxSize),
               // disable all tap handlers from package
               zoomToBoundsOnClick: false,
               centerMarkerOnClick: false,
               spiderfyCluster: false,
+              markerChildBehavior: true,
             ),
           ),
         Padding(
@@ -110,7 +111,11 @@ class _OsmDataPoint extends Marker {
   _OsmDataPoint({
     required this.original,
     required super.child,
-  }) : super(point: original.position.toLatLng());
+  }) : super(
+          point: original.position.toLatLng(),
+          width: _markerBoundingBoxSize,
+          height: _markerBoundingBoxSize,
+        );
 
   final DataPoint original;
 }
@@ -129,3 +134,8 @@ class _ParentController implements InteractiveMapController {
 extension on MapCoord {
   LatLng toLatLng() => LatLng(latitude, longitude);
 }
+
+// define the size of each marker's bounding box. This is NOT necessarily the
+// size of the marker, it's merely the size of its bounding box and the actual
+// size of the content is determined by the child (e.g., the Container widget)
+const _markerBoundingBoxSize = 120.0;
