@@ -18,6 +18,8 @@ dependencies:
   latlong2: any
   np_async:
     path: ../np_async
+  np_collection:
+    path: ../np_collection
   np_common:
     path: ../np_common
   np_platform_util:

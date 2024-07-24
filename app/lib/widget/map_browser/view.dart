@@ -50,9 +50,11 @@ class _MapViewState extends State<_MapView> {
                 );
               },
               googleClusterBuilder: (context, dataPoints) =>
-                  _GoogleMarkerBuilder(context).build(dataPoints),
+                  _GoogleMarkerBuilder(context, account: context.bloc.account)
+                      .build(dataPoints.cast()),
               osmClusterBuilder: (context, dataPoints) =>
-                  _OsmMarkerBuilder(context).build(dataPoints),
+                  _OsmMarkerBuilder(context, account: context.bloc.account)
+                      .build(dataPoints.cast()),
               contentPadding: EdgeInsets.only(
                 top: MediaQuery.of(context).padding.top,
                 bottom: MediaQuery.of(context).padding.bottom,
@@ -75,10 +77,13 @@ class _MapViewState extends State<_MapView> {
 
 class _OsmMarker extends StatelessWidget {
   const _OsmMarker({
+    required this.account,
+    required this.fileId,
     required this.size,
+    required this.color,
     required this.text,
     required this.textSize,
-    required this.color,
+    required this.textColor,
   });
 
   @override
@@ -98,27 +103,47 @@ class _OsmMarker extends StatelessWidget {
           ],
           border: Border.all(
             color: Colors.white.withOpacity(.75),
-            width: 1.5,
+            width: 2,
           ),
           color: color,
         ),
-        child: Center(
-          child: Text(
-            text,
-            style: TextStyle(
-              fontSize: textSize,
-              color: Colors.white.withOpacity(.75),
-            ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(size / 2),
+          child: Stack(
+            children: [
+              NetworkRectThumbnail(
+                account: account,
+                imageUrl:
+                    NetworkRectThumbnail.imageUrlForFileId(account, fileId),
+                errorBuilder: (_) => const SizedBox.shrink(),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.fromLTRB(4, 1, 4, 1),
+                  color: color,
+                  child: Text(
+                    text,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: textSize, color: textColor),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 
+  final Account account;
+  final int fileId;
   final double size;
+  final Color color;
   final String text;
   final double textSize;
-  final Color color;
+  final Color textColor;
 }
 
 class _PanelContainer extends StatefulWidget {

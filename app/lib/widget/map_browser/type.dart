@@ -51,123 +51,196 @@ class _MarkerBuilder {
   }
 
   final BuildContext context;
-
-  late final _minColorHsl =
-      HSLColor.fromColor(Theme.of(context).colorScheme.primary)
-          .withSaturation(
-              Theme.of(context).brightness == Brightness.light ? .9 : .7)
-          .withLightness(
-              Theme.of(context).brightness == Brightness.light ? .4 : .3);
-  late final _maxColorHsl =
-      HSLColor.fromColor(Theme.of(context).colorScheme.primary)
-          .withSaturation(
-              Theme.of(context).brightness == Brightness.light ? .9 : .7)
-          .withLightness(
-              Theme.of(context).brightness == Brightness.light ? .3 : .2);
 }
 
 class _OsmMarkerBuilder extends _MarkerBuilder {
-  _OsmMarkerBuilder(super.context);
+  _OsmMarkerBuilder(
+    super.context, {
+    required this.account,
+  });
 
-  Widget build(List<DataPoint> dataPoints) {
+  Widget build(List<_DataPoint> dataPoints) {
     final text = _getMarkerCountString(dataPoints.length);
     return _OsmMarker(
+      account: account,
+      fileId: dataPoints.first.fileId,
       size: _getMarkerSize(dataPoints.length),
+      color: Theme.of(context).colorScheme.primaryContainer,
       text: text,
-      textSize: _getMarkerTextSize(text, dataPoints.length),
-      color: _getMarkerColor(dataPoints.length),
+      textSize: _getMarkerTextSize(dataPoints.length),
+      textColor: Theme.of(context).colorScheme.onPrimaryContainer,
     );
   }
 
   double _getMarkerSize(int count) {
     final r = _getMarkerRatio(count);
-    return (r * 28).toInt() + 28;
+    return (r * 30).toInt() + 55;
   }
 
-  double _getMarkerTextSize(String text, int count) {
+  double _getMarkerTextSize(int count) {
     final r = _getMarkerRatio(count);
-    return (r * 3) + 9 - ((text.length / 6) * 1);
+    return (r * 3) + 7;
   }
 
-  Color _getMarkerColor(int count) {
-    final r = _getMarkerRatio(count);
-    return HSLColor.lerp(_minColorHsl, _maxColorHsl, r)!.toColor();
-  }
+  final Account account;
 }
 
+@npLog
 class _GoogleMarkerBuilder extends _MarkerBuilder {
-  _GoogleMarkerBuilder(super.context);
+  _GoogleMarkerBuilder(
+    super.context, {
+    required this.account,
+  });
 
-  Future<BitmapDescriptor> build(List<DataPoint> dataPoints) {
-    return _getClusterBitmap(
-      _getMarkerSize(dataPoints.length),
+  Future<BitmapDescriptor> build(List<_DataPoint> dataPoints) async {
+    return _GoogleMarkerBitmapBuilder(
+      imagePath: await _getImagePath(dataPoints),
+      size: _getMarkerSize(dataPoints.length),
+      color: Theme.of(context).colorScheme.primaryContainer,
       text: _getMarkerCountString(dataPoints.length),
-      color: _getMarkerColor(dataPoints.length),
-    );
+      textSize: _getMarkerTextSize(dataPoints.length),
+      textColor: Theme.of(context).colorScheme.onPrimaryContainer,
+    ).build();
+  }
+
+  Future<String?> _getImagePath(List<_DataPoint> dataPoints) async {
+    try {
+      final url = NetworkRectThumbnail.imageUrlForFileId(
+          account, dataPoints.first.fileId);
+      final fileInfo = await ThumbnailCacheManager.inst.getSingleFile(
+        url,
+        headers: {
+          "authorization": AuthUtil.fromAccount(account).toHeaderValue(),
+        },
+      );
+      return fileInfo.absolute.path;
+    } catch (e, stackTrace) {
+      _log.severe(
+          "[_getImagePath] Failed to get file path for fileId: ${dataPoints.first.fileId}",
+          e,
+          stackTrace);
+      return null;
+    }
   }
 
   double _getMarkerSize(int count) {
     final r = _getMarkerRatio(count);
-    return (r * 75).toInt() + 100;
+    return (r * 105).toInt() + 192;
   }
 
-  Color _getMarkerColor(int count) {
+  double _getMarkerTextSize(int count) {
     final r = _getMarkerRatio(count);
-    return HSLColor.lerp(_minColorHsl, _maxColorHsl, r)!.toColor();
+    return (r * 10.5) + 24.5;
   }
 
-  Future<BitmapDescriptor> _getClusterBitmap(
-    double size, {
-    String? text,
-    required Color color,
-  }) async {
-    final PictureRecorder pictureRecorder = PictureRecorder();
-    final Canvas canvas = Canvas(pictureRecorder);
-    final fillPaint = Paint()..color = color;
-    final outlinePaint = Paint()
-      ..color = Colors.white.withOpacity(.75)
-      ..strokeWidth = size / 28
-      ..style = PaintingStyle.stroke;
-    const shadowPadding = 6.0;
-    const shadowPaddingHalf = shadowPadding / 2;
-    final shadowPath = Path()
-      ..addOval(
-          Rect.fromLTWH(0, 0, size - shadowPadding, size - shadowPadding));
-    canvas.drawShadow(shadowPath, Colors.black, 1, false);
-    canvas.drawCircle(
-      Offset(size / 2 - shadowPaddingHalf, size / 2 - shadowPaddingHalf),
-      size / 2 - shadowPaddingHalf,
-      fillPaint,
-    );
-    canvas.drawCircle(
-      Offset(size / 2 - shadowPaddingHalf, size / 2 - shadowPaddingHalf),
-      size / 2 - shadowPaddingHalf - (size / 28 / 2),
-      outlinePaint,
-    );
-    if (text != null) {
-      TextPainter painter = TextPainter(textDirection: TextDirection.ltr);
-      painter.text = TextSpan(
-        text: text,
-        style: TextStyle(
-          fontSize: size / 3 - ((text.length / 6) * (size * 0.1)),
-          color: Colors.white.withOpacity(.75),
-          fontWeight: FontWeight.normal,
-        ),
-      );
-      painter.layout();
-      painter.paint(
-        canvas,
-        Offset(
-          size / 2 - painter.width / 2 - shadowPaddingHalf,
-          size / 2 - painter.height / 2 - shadowPaddingHalf,
-        ),
-      );
+  final Account account;
+}
+
+@npLog
+class _GoogleMarkerBitmapBuilder {
+  _GoogleMarkerBitmapBuilder({
+    required this.imagePath,
+    required this.size,
+    required this.color,
+    required this.text,
+    required this.textSize,
+    required this.textColor,
+  });
+
+  Future<BitmapDescriptor> build() async {
+    final pictureRecorder = PictureRecorder();
+    final canvas = Canvas(pictureRecorder);
+
+    _drawBackgroundShadow(canvas);
+    canvas.clipPath(_makeBackgroundPath());
+    _drawBackground(canvas);
+    if (imagePath != null) {
+      await _drawImage(canvas);
     }
+    _drawText(canvas);
+    _drawBorder(canvas);
+
     final img =
         await pictureRecorder.endRecording().toImage(size.ceil(), size.ceil());
     final data = await img.toByteData(format: ImageByteFormat.png) as ByteData;
     return BitmapDescriptor.fromBytes(data.buffer.asUint8List());
   }
+
+  void _drawBackgroundShadow(Canvas canvas) {
+    final shadowPath = _makeBackgroundPath();
+    canvas.drawShadow(shadowPath, Colors.black, 1, false);
+  }
+
+  void _drawBackground(Canvas canvas) {
+    canvas.drawColor(color, BlendMode.src);
+  }
+
+  Future<void> _drawImage(Canvas canvas) async {
+    try {
+      final imageData = await File(imagePath!).readAsBytes();
+      final imageDescriptor = await ImageDescriptor.encoded(
+        await ImmutableBuffer.fromUint8List(imageData),
+      );
+      final codec = await imageDescriptor.instantiateCodec();
+      final frame = await codec.getNextFrame();
+      paintImage(
+        canvas: canvas,
+        rect: Rect.fromLTRB(0, 0, size - _shadowPadding, size - _shadowPadding),
+        image: frame.image,
+        fit: BoxFit.cover,
+        filterQuality: FilterQuality.low,
+      );
+    } catch (e, stackTrace) {
+      _log.severe(
+          "[_drawImage] Failed to draw image: $imagePath", e, stackTrace);
+    }
+  }
+
+  void _drawText(Canvas canvas) {
+    final textPaint = TextPainter(textDirection: TextDirection.ltr);
+    textPaint.text = TextSpan(
+      text: text,
+      style: TextStyle(fontSize: textSize, color: textColor),
+    );
+    textPaint.layout();
+    final y = size - textPaint.height - _shadowPadding - size * .07;
+
+    final fillPaint = Paint()..color = color;
+    canvas.drawRect(Rect.fromLTRB(0, y - size * .04, size, size), fillPaint);
+
+    textPaint.paint(
+      canvas,
+      Offset(size / 2 - textPaint.width / 2 - _shadowPaddingHalf, y),
+    );
+  }
+
+  void _drawBorder(Canvas canvas) {
+    final outlinePaint = Paint()
+      ..color = Color.alphaBlend(Colors.white.withOpacity(.75), color)
+      ..strokeWidth = size * .04
+      ..style = PaintingStyle.stroke;
+    canvas.drawCircle(
+      Offset(size / 2 - _shadowPaddingHalf, size / 2 - _shadowPaddingHalf),
+      size / 2 - _shadowPaddingHalf - (size * .04 / 2),
+      outlinePaint,
+    );
+  }
+
+  Path _makeBackgroundPath() {
+    return Path()
+      ..addOval(
+          Rect.fromLTWH(0, 0, size - _shadowPadding, size - _shadowPadding));
+  }
+
+  final String? imagePath;
+  final double size;
+  final Color color;
+  final String text;
+  final double textSize;
+  final Color textColor;
+
+  static const _shadowPadding = 6.0;
+  static const _shadowPaddingHalf = _shadowPadding / 2;
 }
 
 enum _DateRangeType {

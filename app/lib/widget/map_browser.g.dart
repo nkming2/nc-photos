@@ -64,6 +64,20 @@ extension _$_BlocNpLog on _Bloc {
   static final log = Logger("widget.map_browser._Bloc");
 }
 
+extension _$_GoogleMarkerBuilderNpLog on _GoogleMarkerBuilder {
+  // ignore: unused_element
+  Logger get _log => log;
+
+  static final log = Logger("widget.map_browser._GoogleMarkerBuilder");
+}
+
+extension _$_GoogleMarkerBitmapBuilderNpLog on _GoogleMarkerBitmapBuilder {
+  // ignore: unused_element
+  Logger get _log => log;
+
+  static final log = Logger("widget.map_browser._GoogleMarkerBitmapBuilder");
+}
+
 // **************************************************************************
 // ToStringGenerator
 // **************************************************************************
