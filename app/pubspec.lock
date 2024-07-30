@@ -284,6 +284,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.6.3"
+  cronet_http:
+    dependency: transitive
+    description:
+      name: cronet_http
+      sha256: "9b9f00ae48971bc8a8cbdd4528bd35511adce00fb79d1ebf9f9907667056640f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.0"
   crypto:
     dependency: "direct main"
     description:
@@ -805,6 +813,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
+  jni:
+    dependency: transitive
+    description:
+      name: jni
+      sha256: "499558e919997adfc45809a66caf0b95b91393e23289dd2826b152f8f04e6611"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.7.3"
   js:
     dependency: transitive
     description:
@@ -1114,6 +1130,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  np_http:
+    dependency: "direct main"
+    description:
+      path: "../np_http"
+      relative: true
+    source: path
+    version: "1.0.0"
   np_lints:
     dependency: "direct dev"
     description:

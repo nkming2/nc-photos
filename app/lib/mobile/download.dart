@@ -7,6 +7,7 @@ import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/platform/download.dart' as itf;
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_http/np_http.dart';
 import 'package:np_platform_util/np_platform_util.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
@@ -65,7 +66,7 @@ class _AndroidDownload extends itf.Download {
       try {
         final uri = Uri.parse(url);
         final req = http.Request("GET", uri)..headers.addAll(headers ?? {});
-        final response = await http.Client().send(req);
+        final response = await makeHttpClient().send(req);
         bool isEnd = false;
         Object? error;
         final size = response.contentLength;

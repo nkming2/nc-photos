@@ -1,6 +1,7 @@
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 // ignore: implementation_imports
 import 'package:flutter_cache_manager/src/cache_store.dart';
+import 'package:np_http/np_http.dart';
 
 class CancelableGetFile {
   CancelableGetFile(this.store);
@@ -41,6 +42,7 @@ class ThumbnailCacheManager {
       key,
       stalePeriod: const Duration(days: 30),
       maxNrOfCacheObjects: 50000,
+      fileService: HttpFileService(httpClient: makeHttpClient()),
     ),
   );
 }
@@ -58,6 +60,7 @@ class LargeImageCacheManager {
       key,
       stalePeriod: const Duration(days: 30),
       maxNrOfCacheObjects: 1000,
+      fileService: HttpFileService(httpClient: makeHttpClient()),
     ),
   );
 }
@@ -73,6 +76,7 @@ class CoverCacheManager {
       key,
       stalePeriod: const Duration(days: 30),
       maxNrOfCacheObjects: 300,
+      fileService: HttpFileService(httpClient: makeHttpClient()),
     ),
   );
 }

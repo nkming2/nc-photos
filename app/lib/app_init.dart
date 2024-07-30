@@ -46,6 +46,7 @@ import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/touch_manager.dart';
 import 'package:np_db/np_db.dart';
 import 'package:np_gps_map/np_gps_map.dart';
+import 'package:np_http/np_http.dart';
 import 'package:np_log/np_log.dart' as np_log;
 import 'package:np_platform_util/np_platform_util.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -70,6 +71,7 @@ Future<void> init(InitIsolateType isolateType) async {
   await _initPref();
   await _initAccountPrefs();
   _initEquatable();
+  await initHttp(k.versionStr);
   if (features.isSupportSelfSignedCert) {
     await _initSelfSignedCertManager();
   }

@@ -18,6 +18,8 @@ dependencies:
     path: ../codegen
   np_common:
     path: ../np_common
+  np_http:
+    path: ../np_http
   np_log:
     path: ../np_log
   np_string:

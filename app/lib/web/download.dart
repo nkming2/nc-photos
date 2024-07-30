@@ -2,6 +2,7 @@ import 'package:http/http.dart' as http;
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/platform/download.dart' as itf;
 import 'package:nc_photos/web/file_saver.dart';
+import 'package:np_http/np_http.dart';
 
 class DownloadBuilder extends itf.DownloadBuilder {
   @override
@@ -33,7 +34,7 @@ class _WebDownload extends itf.Download {
     final uri = Uri.parse(url);
     final req = http.Request("GET", uri)..headers.addAll(headers ?? {});
     final response =
-        await http.Response.fromStream(await http.Client().send(req));
+        await http.Response.fromStream(await makeHttpClient().send(req));
     if (response.statusCode ~/ 100 != 2) {
       throw DownloadException(
           "Failed downloading $filename (HTTP ${response.statusCode})");

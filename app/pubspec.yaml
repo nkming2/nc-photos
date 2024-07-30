@@ -110,6 +110,8 @@ dependencies:
     path: ../np_geocoder
   np_gps_map:
     path: ../np_gps_map
+  np_http:
+    path: ../np_http
   np_log:
     path: ../np_log
   np_math:
