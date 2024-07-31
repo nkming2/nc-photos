@@ -1,4 +1,5 @@
 import 'package:cronet_http/cronet_http.dart';
+import 'package:cupertino_http/cupertino_http.dart';
 import 'package:http/http.dart';
 import 'package:logging/logging.dart';
 import 'package:np_platform_util/np_platform_util.dart';
@@ -18,12 +19,21 @@ Future<void> initHttp(String appVersion) async {
     } catch (e, stackTrace) {
       _log.severe("Failed creating CronetEngine", e, stackTrace);
     }
+  } else if (getRawPlatform().isApple) {
+    try {
+      _urlConfig = URLSessionConfiguration.ephemeralSessionConfiguration()
+        ..httpAdditionalHeaders = {"User-Agent": _userAgent};
+    } catch (e, stackTrace) {
+      _log.severe("Failed creating URLSessionConfiguration", e, stackTrace);
+    }
   }
 }
 
 Client makeHttpClient() {
   if (getRawPlatform() == NpPlatform.android && _cronetEngine != null) {
     return CronetClient.fromCronetEngine(_cronetEngine!);
+  } else if (getRawPlatform().isApple && _urlConfig != null) {
+    return CupertinoClient.fromSessionConfiguration(_urlConfig!);
   } else {
     return makeHttpClientImpl(userAgent: _userAgent);
   }
@@ -31,5 +41,6 @@ Client makeHttpClient() {
 
 late final String _userAgent;
 CronetEngine? _cronetEngine;
+URLSessionConfiguration? _urlConfig;
 
 final _log = Logger("np_http");
