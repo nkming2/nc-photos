@@ -9,38 +9,44 @@ import 'http_stub.dart'
     if (dart.library.io) 'http_io.dart';
 
 Future<void> initHttp(String appVersion) async {
-  _userAgent = "nc-photos $appVersion";
+  final userAgent = "nc-photos $appVersion";
+  Client? client;
   if (getRawPlatform() == NpPlatform.android) {
     try {
-      _cronetEngine = CronetEngine.build(
+      final cronetEngine = CronetEngine.build(
         enableHttp2: true,
-        userAgent: _userAgent,
+        userAgent: userAgent,
       );
+      client = CronetClient.fromCronetEngine(
+        cronetEngine,
+        closeEngine: true,
+      );
+      _log.info("Using cronet backend");
     } catch (e, stackTrace) {
       _log.severe("Failed creating CronetEngine", e, stackTrace);
     }
   } else if (getRawPlatform().isApple) {
     try {
-      _urlConfig = URLSessionConfiguration.ephemeralSessionConfiguration()
-        ..httpAdditionalHeaders = {"User-Agent": _userAgent};
+      final urlConfig = URLSessionConfiguration.ephemeralSessionConfiguration()
+        ..httpAdditionalHeaders = {"User-Agent": userAgent};
+      client = CupertinoClient.fromSessionConfiguration(urlConfig);
+      _log.info("Using cupertino backend");
     } catch (e, stackTrace) {
       _log.severe("Failed creating URLSessionConfiguration", e, stackTrace);
     }
   }
-}
-
-Client makeHttpClient() {
-  if (getRawPlatform() == NpPlatform.android && _cronetEngine != null) {
-    return CronetClient.fromCronetEngine(_cronetEngine!);
-  } else if (getRawPlatform().isApple && _urlConfig != null) {
-    return CupertinoClient.fromSessionConfiguration(_urlConfig!);
+  if (client == null) {
+    _httpClient = makeHttpClientImpl(userAgent: userAgent);
+    _log.info("Using dart backend");
   } else {
-    return makeHttpClientImpl(userAgent: _userAgent);
+    _httpClient = client;
   }
 }
 
-late final String _userAgent;
-CronetEngine? _cronetEngine;
-URLSessionConfiguration? _urlConfig;
+Client getHttpClient() {
+  return _httpClient;
+}
+
+late final Client _httpClient;
 
 final _log = Logger("np_http");

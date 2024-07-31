@@ -34,7 +34,7 @@ class _WebDownload extends itf.Download {
     final uri = Uri.parse(url);
     final req = http.Request("GET", uri)..headers.addAll(headers ?? {});
     final response =
-        await http.Response.fromStream(await makeHttpClient().send(req));
+        await http.Response.fromStream(await getHttpClient().send(req));
     if (response.statusCode ~/ 100 != 2) {
       throw DownloadException(
           "Failed downloading $filename (HTTP ${response.statusCode})");

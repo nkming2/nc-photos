@@ -66,7 +66,7 @@ class Api {
     }
     _log.finer(req.url);
     final response =
-        await http.Response.fromStream(await makeHttpClient().send(req));
+        await http.Response.fromStream(await getHttpClient().send(req));
     if (!isHttpStatusGood(response.statusCode)) {
       if (response.statusCode == 404) {
         _log.severe(

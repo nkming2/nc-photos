@@ -66,7 +66,7 @@ class _AndroidDownload extends itf.Download {
       try {
         final uri = Uri.parse(url);
         final req = http.Request("GET", uri)..headers.addAll(headers ?? {});
-        final response = await makeHttpClient().send(req);
+        final response = await getHttpClient().send(req);
         bool isEnd = false;
         Object? error;
         final size = response.contentLength;

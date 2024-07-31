@@ -42,7 +42,7 @@ class ThumbnailCacheManager {
       key,
       stalePeriod: const Duration(days: 30),
       maxNrOfCacheObjects: 50000,
-      fileService: HttpFileService(httpClient: makeHttpClient()),
+      fileService: HttpFileService(httpClient: getHttpClient()),
     ),
   );
 }
@@ -60,7 +60,7 @@ class LargeImageCacheManager {
       key,
       stalePeriod: const Duration(days: 30),
       maxNrOfCacheObjects: 1000,
-      fileService: HttpFileService(httpClient: makeHttpClient()),
+      fileService: HttpFileService(httpClient: getHttpClient()),
     ),
   );
 }
@@ -76,7 +76,7 @@ class CoverCacheManager {
       key,
       stalePeriod: const Duration(days: 30),
       maxNrOfCacheObjects: 300,
-      fileService: HttpFileService(httpClient: makeHttpClient()),
+      fileService: HttpFileService(httpClient: getHttpClient()),
     ),
   );
 }
