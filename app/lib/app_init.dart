@@ -71,10 +71,10 @@ Future<void> init(InitIsolateType isolateType) async {
   await _initPref();
   await _initAccountPrefs();
   _initEquatable();
-  await initHttp(k.versionStr);
   if (features.isSupportSelfSignedCert) {
     await _initSelfSignedCertManager();
   }
+  await initHttp(k.versionStr);
   await _initDiContainer(isolateType);
   _initVisibilityDetector();
   initGpsMap();
