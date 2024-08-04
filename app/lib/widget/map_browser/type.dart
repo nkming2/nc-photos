@@ -93,12 +93,13 @@ class _GoogleMarkerBuilder extends _MarkerBuilder {
   });
 
   Future<BitmapDescriptor> build(List<_DataPoint> dataPoints) async {
+    final size = MediaQuery.sizeOf(context);
     return _GoogleMarkerBitmapBuilder(
       imagePath: await _getImagePath(dataPoints),
-      size: _getMarkerSize(dataPoints.length),
+      size: _getMarkerSize(dataPoints.length) / 450 * size.width,
       color: Theme.of(context).colorScheme.primaryContainer,
       text: _getMarkerCountString(dataPoints.length),
-      textSize: _getMarkerTextSize(dataPoints.length),
+      textSize: _getMarkerTextSize(dataPoints.length) / 450 * size.width,
       textColor: Theme.of(context).colorScheme.onPrimaryContainer,
     ).build();
   }
