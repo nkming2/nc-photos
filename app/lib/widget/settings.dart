@@ -112,13 +112,6 @@ class _SettingsState extends State<Settings> {
                   label: L10n.global().settingsMiscellaneousTitle,
                   pageBuilder: () => const MiscSettings(),
                 ),
-                // if (_enabledExperiments.isNotEmpty)
-                //   _SubPageItem(
-                //     leading: const Icon(Icons.science_outlined),
-                //     label: L10n.global().settingsExperimentalTitle,
-                //     description: L10n.global().settingsExperimentalDescription,
-                //     pageBuilder: () => _ExperimentalSettings(),
-                //   ),
                 _SubPageItem(
                   leading: const Icon(Icons.warning_amber),
                   label: L10n.global().settingsExpertTitle,
@@ -265,6 +258,3 @@ class _SubPageItem extends StatelessWidget {
   final String? description;
   final Widget Function() pageBuilder;
 }
-
-// final _enabledExperiments = [
-// ];
