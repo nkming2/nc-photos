@@ -74,7 +74,10 @@ Future<void> init(InitIsolateType isolateType) async {
   if (features.isSupportSelfSignedCert) {
     await _initSelfSignedCertManager();
   }
-  await initHttp(k.versionStr);
+  await initHttp(
+    appVersion: k.versionStr,
+    isNewHttpEngine: Pref().isNewHttpEngine() ?? false,
+  );
   await _initDiContainer(isolateType);
   _initVisibilityDetector();
   initGpsMap();

@@ -98,6 +98,9 @@ extension on Pref {
       return provider.setString(PrefKey.mapBrowserPrevPosition, value);
     }
   }
+
+  Future<bool> setNewHttpEngine(bool value) =>
+      provider.setBool(PrefKey.isNewHttpEngine, value);
 }
 
 MapCoord? _tryMapCoordFromJson(dynamic json) {

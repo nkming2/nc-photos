@@ -9,13 +9,19 @@ class _Error {
 }
 
 @npLog
-class _Bloc extends Bloc<_Event, _State> with BlocLogger {
+class _Bloc extends Bloc<_Event, _State>
+    with BlocLogger, BlocForEachMixin<_Event, _State> {
   _Bloc(
     DiContainer c, {
     required this.db,
+    required this.prefController,
   })  : _c = c,
-        super(const _State()) {
+        super(_State.init(
+          isNewHttpEngine: prefController.isNewHttpEngineValue,
+        )) {
+    on<_Init>(_onInit);
     on<_ClearCacheDatabase>(_onClearCacheDatabase);
+    on<_SetNewHttpEngine>(_onSetNewHttpEngine);
   }
 
   @override
@@ -23,8 +29,18 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
 
   Stream<_Error> errorStream() => _errorStream.stream;
 
+  Future<void> _onInit(_Init ev, Emitter<_State> emit) async {
+    _log.info(ev);
+    return forEach(
+      emit,
+      prefController.isNewHttpEngineChange,
+      onData: (data) => state.copyWith(isNewHttpEngine: data),
+    );
+  }
+
   Future<void> _onClearCacheDatabase(
       _ClearCacheDatabase ev, Emitter<_State> emit) async {
+    _log.info(ev);
     try {
       final accounts = _c.pref.getAccounts3Or([]);
       await db.clearAndInitWithAccounts(accounts.toDb());
@@ -35,7 +51,14 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     }
   }
 
+  void _onSetNewHttpEngine(_SetNewHttpEngine ev, Emitter<_State> emit) {
+    _log.info(ev);
+    prefController.setNewHttpEngine(ev.value);
+  }
+
   final DiContainer _c;
   final NpDb db;
+  final PrefController prefController;
+
   final _errorStream = StreamController<_Error>.broadcast();
 }

@@ -454,6 +454,8 @@
 	"settingsClearCacheDatabaseDescription": "Clear cached file info and trigger a complete resync with the server",
 	"settingsClearCacheDatabaseSuccessNotification": "Database cleared successfully. You are suggested to restart the app",
 	"settingsManageTrustedCertificateTitle": "Manage trusted certificates",
+	"settingsUseNewHttpEngine": "Use new HTTP engine",
+	"settingsUseNewHttpEngineDescription": "New HTTP engine based on Chromium, supporting new standards like HTTP/2* and HTTP/3 QUIC*.\n\nLimitations:\nSelf-signed certs can no longer be managed by us. You must import your CA certs to the system trust store for them to work.\n\n* HTTPS is required for HTTP/2 and HTTP/3",
 	"settingsAboutSectionTitle": "About",
 	"@settingsAboutSectionTitle": {
 		"description": "Title of the about section in settings widget"
@@ -483,6 +485,7 @@
 	"@settingsTranslatorTitle": {
 		"description": "Title of the translator item"
 	},
+	"settingsRestartNeededDialog": "Please restart app to apply change",
 	"writePreferenceFailureNotification": "Failed setting preference",
 	"@writePreferenceFailureNotification": {
 		"description": "Inform user that the preference file cannot be modified"

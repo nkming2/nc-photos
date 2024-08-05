@@ -170,6 +170,12 @@ class PrefController {
         value: value,
       );
 
+  Future<bool> setNewHttpEngine(bool value) => _set<bool>(
+        controller: _isNewHttpEngineController,
+        setter: (pref, value) => pref.setNewHttpEngine(value),
+        value: value,
+      );
+
   Future<bool> _set<T>({
     required BehaviorSubject<T> controller,
     required Future<bool> Function(Pref pref, T value) setter,
@@ -275,6 +281,9 @@ class PrefController {
       .getMapBrowserPrevPosition()
       ?.let(tryJsonDecode)
       ?.let(_tryMapCoordFromJson));
+  @npSubjectAccessor
+  late final _isNewHttpEngineController =
+      BehaviorSubject.seeded(_c.pref.isNewHttpEngine() ?? false);
 }
 
 @npSubjectAccessor
