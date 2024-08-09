@@ -90,13 +90,13 @@ class _ControlBar extends StatelessWidget {
                           onPressed: () {
                             context.addEvent(const _SetPause());
                           },
-                          icon: const Icon(Icons.pause_outlined),
+                          icon: const Icon(Icons.pause_outlined, size: 36),
                         )
                       : IconButton(
                           onPressed: () {
                             context.addEvent(const _SetPlay());
                           },
-                          icon: const Icon(Icons.play_arrow_outlined),
+                          icon: const Icon(Icons.play_arrow_outlined, size: 36),
                         ),
                 ),
                 _BlocSelector<bool>(
@@ -114,6 +114,24 @@ class _ControlBar extends StatelessWidget {
             ),
           ),
         ),
+        Positioned(
+          right: 16,
+          bottom: 0,
+          child: SizedBox(
+            height: kToolbarHeight,
+            child: IconButton(
+              onPressed: () {
+                context.addEvent(const _ToggleTimeline());
+              },
+              icon: _BlocSelector<bool>(
+                selector: (state) => state.isShowTimeline,
+                builder: (context, isShowTimeline) => isShowTimeline
+                    ? const Icon(Icons.view_timeline)
+                    : const Icon(Icons.view_timeline_outlined),
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -127,7 +145,11 @@ class _Body extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.addEvent(const _ToggleShowUi());
+        if (context.state.isShowTimeline) {
+          context.addEvent(const _ToggleTimeline());
+        } else {
+          context.addEvent(const _ToggleShowUi());
+        }
       },
       child: Stack(
         fit: StackFit.expand,
@@ -154,6 +176,23 @@ class _Body extends StatelessWidget {
               child: const _ControlBar(),
             ),
           ),
+          _BlocSelector<bool>(
+            selector: (state) => state.isShowTimeline,
+            builder: (context, isShowTimeline) => AnimatedPositionedDirectional(
+              top: 0,
+              bottom: 0,
+              end: isShowTimeline ? 0 : -_Timeline.width,
+              duration: k.animationDurationNormal,
+              // needed because Timeline rely on some late var
+              child: _BlocSelector<bool>(
+                selector: (state) => state.hasShownTimeline,
+                builder: (context, hasShownTimeline) => Visibility(
+                  visible: hasShownTimeline,
+                  child: const _Timeline(),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -172,14 +211,19 @@ class _PageViewerState extends State<_PageViewer> {
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
-        _BlocListenerT(
-          selector: (state) => state.nextPage,
-          listener: (context, nextPage) {
-            _controller.animateToPage(
-              nextPage,
-              duration: k.animationDurationLong,
-              curve: Curves.easeInOut,
-            );
+        _BlocListener(
+          listenWhen: (previous, current) =>
+              previous.nextPage != current.nextPage,
+          listener: (context, state) {
+            if (state.shouldAnimateNextPage) {
+              _controller.animateToPage(
+                state.nextPage,
+                duration: k.animationDurationLong,
+                curve: Curves.easeInOut,
+              );
+            } else {
+              _controller.jumpToPage(state.nextPage);
+            }
           },
         ),
       ],

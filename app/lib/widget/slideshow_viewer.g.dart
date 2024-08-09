@@ -17,12 +17,15 @@ abstract class $_StateCopyWithWorker {
       {bool? hasInit,
       int? page,
       int? nextPage,
+      bool? shouldAnimateNextPage,
       FileDescriptor? currentFile,
       bool? isShowUi,
       bool? isPlay,
       bool? isVideoCompleted,
       bool? hasPrev,
-      bool? hasNext});
+      bool? hasNext,
+      bool? isShowTimeline,
+      bool? hasShownTimeline});
 }
 
 class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
@@ -33,22 +36,29 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
       {dynamic hasInit,
       dynamic page,
       dynamic nextPage,
+      dynamic shouldAnimateNextPage,
       dynamic currentFile,
       dynamic isShowUi,
       dynamic isPlay,
       dynamic isVideoCompleted,
       dynamic hasPrev,
-      dynamic hasNext}) {
+      dynamic hasNext,
+      dynamic isShowTimeline,
+      dynamic hasShownTimeline}) {
     return _State(
         hasInit: hasInit as bool? ?? that.hasInit,
         page: page as int? ?? that.page,
         nextPage: nextPage as int? ?? that.nextPage,
+        shouldAnimateNextPage:
+            shouldAnimateNextPage as bool? ?? that.shouldAnimateNextPage,
         currentFile: currentFile as FileDescriptor? ?? that.currentFile,
         isShowUi: isShowUi as bool? ?? that.isShowUi,
         isPlay: isPlay as bool? ?? that.isPlay,
         isVideoCompleted: isVideoCompleted as bool? ?? that.isVideoCompleted,
         hasPrev: hasPrev as bool? ?? that.hasPrev,
-        hasNext: hasNext as bool? ?? that.hasNext);
+        hasNext: hasNext as bool? ?? that.hasNext,
+        isShowTimeline: isShowTimeline as bool? ?? that.isShowTimeline,
+        hasShownTimeline: hasShownTimeline as bool? ?? that.hasShownTimeline);
   }
 
   final _State that;
@@ -91,7 +101,7 @@ extension _$_PageViewNpLog on _PageView {
 extension _$_StateToString on _State {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_State {hasInit: $hasInit, page: $page, nextPage: $nextPage, currentFile: ${currentFile.fdPath}, isShowUi: $isShowUi, isPlay: $isPlay, isVideoCompleted: $isVideoCompleted, hasPrev: $hasPrev, hasNext: $hasNext}";
+    return "_State {hasInit: $hasInit, page: $page, nextPage: $nextPage, shouldAnimateNextPage: $shouldAnimateNextPage, currentFile: ${currentFile.fdPath}, isShowUi: $isShowUi, isPlay: $isPlay, isVideoCompleted: $isVideoCompleted, hasPrev: $hasPrev, hasNext: $hasNext, isShowTimeline: $isShowTimeline, hasShownTimeline: $hasShownTimeline}";
   }
 }
 
@@ -162,5 +172,19 @@ extension _$_NextPageToString on _NextPage {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
     return "_NextPage {value: $value}";
+  }
+}
+
+extension _$_ToggleTimelineToString on _ToggleTimeline {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_ToggleTimeline {}";
+  }
+}
+
+extension _$_RequestPageToString on _RequestPage {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_RequestPage {value: $value}";
   }
 }

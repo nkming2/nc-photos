@@ -7,12 +7,15 @@ class _State {
     required this.hasInit,
     required this.page,
     required this.nextPage,
+    required this.shouldAnimateNextPage,
     required this.currentFile,
     required this.isShowUi,
     required this.isPlay,
     required this.isVideoCompleted,
     required this.hasPrev,
     required this.hasNext,
+    required this.isShowTimeline,
+    required this.hasShownTimeline,
   });
 
   factory _State.init({
@@ -22,12 +25,15 @@ class _State {
         hasInit: false,
         page: 0,
         nextPage: 0,
+        shouldAnimateNextPage: true,
         currentFile: initialFile,
         isShowUi: false,
         isPlay: true,
         isVideoCompleted: false,
         hasPrev: false,
         hasNext: false,
+        isShowTimeline: false,
+        hasShownTimeline: false,
       );
 
   @override
@@ -36,12 +42,15 @@ class _State {
   final bool hasInit;
   final int page;
   final int nextPage;
+  final bool shouldAnimateNextPage;
   final FileDescriptor currentFile;
   final bool isShowUi;
   final bool isPlay;
   final bool isVideoCompleted;
   final bool hasPrev;
   final bool hasNext;
+  final bool isShowTimeline;
+  final bool hasShownTimeline;
 }
 
 abstract class _Event {}
@@ -125,6 +134,24 @@ class _SetCurrentPage implements _Event {
 @toString
 class _NextPage implements _Event {
   const _NextPage(this.value);
+
+  @override
+  String toString() => _$toString();
+
+  final int value;
+}
+
+@toString
+class _ToggleTimeline implements _Event {
+  const _ToggleTimeline();
+
+  @override
+  String toString() => _$toString();
+}
+
+@toString
+class _RequestPage implements _Event {
+  const _RequestPage(this.value);
 
   @override
   String toString() => _$toString();

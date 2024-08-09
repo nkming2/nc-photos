@@ -20,12 +20,13 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     on<_RequestNextPage>(_onRequestNextPage);
     on<_SetCurrentPage>(_onSetCurrentPage);
     on<_NextPage>(_onNextPage);
+    on<_ToggleTimeline>(_onToggleTimeline);
+    on<_RequestPage>(_onRequestPage);
   }
 
   @override
   Future<void> close() {
     _pageChangeTimer?.cancel();
-    _showUiTimer?.cancel();
     for (final s in _subscriptions) {
       s.cancel();
     }
@@ -38,6 +39,9 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   /// Convert the page index to the corresponding item index
   int convertPageToFileIndex(int pageIndex) =>
       _shuffledIndex[pageIndex % files.length];
+
+  FileDescriptor getFileByPageIndex(int pageIndex) =>
+      files[convertPageToFileIndex(pageIndex)];
 
   void _onInit(_Init ev, Emitter<_State> emit) {
     _log.info(ev);
@@ -52,7 +56,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     emit(state.copyWith(
       hasInit: true,
       page: initialPage,
-      currentFile: _getFileByPageIndex(initialPage),
+      currentFile: getFileByPageIndex(initialPage),
       hasPrev: initialPage > 0,
       hasNext: pageCount == null || initialPage < (pageCount! - 1),
     ));
@@ -67,7 +71,6 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
         SystemUiMode.manual,
         overlays: SystemUiOverlay.values,
       );
-      _restartUiCountdown();
     } else {
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
     }
@@ -110,7 +113,6 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     _pageChangeTimer?.cancel();
     _pageChangeTimer = null;
     emit(state.copyWith(isPlay: false));
-    _restartUiCountdown();
   }
 
   void _onSetPlay(_SetPlay ev, Emitter<_State> emit) {
@@ -126,26 +128,23 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
       _pageChangeTimer = Timer(config.duration, _gotoNextPage);
     }
     emit(state.copyWith(isPlay: true));
-    _restartUiCountdown();
   }
 
   void _onRequestPrevPage(_RequestPrevPage ev, Emitter<_State> emit) {
     _log.info(ev);
     _gotoPrevPage();
-    _restartUiCountdown();
   }
 
   void _onRequestNextPage(_RequestNextPage ev, Emitter<_State> emit) {
     _log.info(ev);
     _gotoNextPage();
-    _restartUiCountdown();
   }
 
   void _onSetCurrentPage(_SetCurrentPage ev, Emitter<_State> emit) {
     _log.info(ev);
     emit(state.copyWith(
       page: ev.value,
-      currentFile: _getFileByPageIndex(ev.value),
+      currentFile: getFileByPageIndex(ev.value),
       isVideoCompleted: false,
       hasPrev: ev.value > 0,
       hasNext: pageCount == null || ev.value < (pageCount! - 1),
@@ -157,7 +156,27 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
 
   void _onNextPage(_NextPage ev, Emitter<_State> emit) {
     _log.info(ev);
-    emit(state.copyWith(nextPage: ev.value));
+    emit(state.copyWith(
+      nextPage: ev.value,
+      shouldAnimateNextPage: true,
+    ));
+  }
+
+  void _onToggleTimeline(_ToggleTimeline ev, Emitter<_State> emit) {
+    _log.info(ev);
+    final next = !state.isShowTimeline;
+    emit(state.copyWith(
+      isShowTimeline: next,
+      hasShownTimeline: state.hasShownTimeline || next,
+    ));
+  }
+
+  void _onRequestPage(_RequestPage ev, Emitter<_State> emit) {
+    _log.info(ev);
+    emit(state.copyWith(
+      nextPage: ev.value,
+      shouldAnimateNextPage: false,
+    ));
   }
 
   static ({List<int> shuffled, int initial, int? count}) _parseConfig({
@@ -229,23 +248,6 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     add(_NextPage(nextPage));
   }
 
-  FileDescriptor _getFileByPageIndex(int pageIndex) =>
-      files[convertPageToFileIndex(pageIndex)];
-
-  /// Restart the timer to hide the UI, mainly after user interacted with the
-  /// UI elements
-  void _restartUiCountdown() {
-    _showUiTimer?.cancel();
-    _showUiTimer = Timer(
-      const Duration(seconds: 3),
-      () {
-        if (state.isShowUi) {
-          add(const _ToggleShowUi());
-        }
-      },
-    );
-  }
-
   final Account account;
   final List<FileDescriptor> files;
   final int startIndex;
@@ -257,5 +259,4 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   Timer? _pageChangeTimer;
 
   final _subscriptions = <StreamSubscription>[];
-  Timer? _showUiTimer;
 }

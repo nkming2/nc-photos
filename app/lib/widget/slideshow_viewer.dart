@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:clock/clock.dart';
 import 'package:copy_with/copy_with.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,6 +16,8 @@ import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/disposable.dart';
 import 'package:nc_photos/widget/horizontal_page_viewer.dart';
 import 'package:nc_photos/widget/image_viewer.dart';
+import 'package:nc_photos/widget/network_thumbnail.dart';
+import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/slideshow_dialog.dart';
 import 'package:nc_photos/widget/video_viewer.dart';
 import 'package:nc_photos/widget/viewer_mixin.dart';
@@ -26,6 +29,7 @@ import 'package:to_string/to_string.dart';
 part 'slideshow_viewer.g.dart';
 part 'slideshow_viewer/bloc.dart';
 part 'slideshow_viewer/state_event.dart';
+part 'slideshow_viewer/timeline.dart';
 part 'slideshow_viewer/view.dart';
 
 class SlideshowViewerArguments {
@@ -122,12 +126,12 @@ class _WrappedSlideshowViewerState extends State<_WrappedSlideshowViewer>
 }
 
 // typedef _BlocBuilder = BlocBuilder<_Bloc, _State>;
-// typedef _BlocListener = BlocListener<_Bloc, _State>;
+typedef _BlocListener = BlocListener<_Bloc, _State>;
 typedef _BlocListenerT<T> = BlocListenerT<_Bloc, _State, T>;
 typedef _BlocSelector<T> = BlocSelector<_Bloc, _State, T>;
 
 extension on BuildContext {
   _Bloc get bloc => read<_Bloc>();
-  // _State get state => bloc.state;
+  _State get state => bloc.state;
   void addEvent(_Event event) => bloc.add(event);
 }
