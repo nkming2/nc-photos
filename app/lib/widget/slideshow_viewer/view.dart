@@ -5,34 +5,126 @@ class _AppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          // + status bar height
-          height: kToolbarHeight + MediaQuery.of(context).padding.top,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color.fromARGB(192, 0, 0, 0),
-                Color.fromARGB(0, 0, 0, 0),
+    return SizedBox(
+      // + status bar height
+      height: kToolbarHeight + MediaQuery.of(context).padding.top,
+      child: Stack(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color.fromARGB(192, 0, 0, 0),
+                  Color.fromARGB(0, 0, 0, 0),
+                ],
+              ),
+            ),
+          ),
+          AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            scrolledUnderElevation: 0,
+            leading: IconButton(
+              icon: const Icon(Icons.close),
+              tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ControlBar extends StatelessWidget {
+  const _ControlBar();
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: kToolbarHeight,
+      child: Stack(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color.fromARGB(0, 0, 0, 0),
+                  Color.fromARGB(192, 0, 0, 0),
+                ],
+              ),
+            ),
+          ),
+          Center(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _BlocSelector<bool>(
+                  selector: (state) => state.hasPrev,
+                  builder: (context, hasPrev) => IconButton(
+                    onPressed: hasPrev
+                        ? () {
+                            context.addEvent(const _RequestPrevPage());
+                          }
+                        : null,
+                    icon: const Icon(Icons.skip_previous_outlined),
+                  ),
+                ),
+                _BlocSelector<bool>(
+                  selector: (state) => state.isPlay,
+                  builder: (context, isPlay) => isPlay
+                      ? IconButton(
+                          onPressed: () {
+                            context.addEvent(const _SetPause());
+                          },
+                          icon: const Icon(Icons.pause_outlined, size: 36),
+                        )
+                      : IconButton(
+                          onPressed: () {
+                            context.addEvent(const _SetPlay());
+                          },
+                          icon: const Icon(Icons.play_arrow_outlined, size: 36),
+                        ),
+                ),
+                _BlocSelector<bool>(
+                  selector: (state) => state.hasNext,
+                  builder: (context, hasNext) => IconButton(
+                    onPressed: hasNext
+                        ? () {
+                            context.addEvent(const _RequestNextPage());
+                          }
+                        : null,
+                    icon: const Icon(Icons.skip_next_outlined),
+                  ),
+                ),
               ],
             ),
           ),
-        ),
-        AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(Icons.close),
-            tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
+          Align(
+            alignment: AlignmentDirectional.centerEnd,
+            child: Padding(
+              padding: const EdgeInsetsDirectional.only(end: 16),
+              child: IconButton(
+                onPressed: () {
+                  context.addEvent(const _ToggleTimeline());
+                },
+                icon: _BlocSelector<bool>(
+                  selector: (state) => state.isShowTimeline,
+                  builder: (context, isShowTimeline) => isShowTimeline
+                      ? const Icon(Icons.view_timeline)
+                      : const Icon(Icons.view_timeline_outlined),
+                ),
+              ),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -45,7 +137,11 @@ class _Body extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.addEvent(const _ToggleShowUi());
+        if (context.state.isShowTimeline) {
+          context.addEvent(const _ToggleTimeline());
+        } else {
+          context.addEvent(const _ToggleShowUi());
+        }
       },
       child: Stack(
         fit: StackFit.expand,
@@ -67,6 +163,34 @@ class _Body extends StatelessWidget {
               ),
             ),
           ),
+          _BlocSelector<bool>(
+            selector: (state) => state.isShowUi,
+            builder: (context, isShowUi) => AnimatedVisibility(
+              opacity: isShowUi ? 1 : 0,
+              duration: k.animationDurationNormal,
+              child: const Align(
+                alignment: Alignment.bottomCenter,
+                child: _ControlBar(),
+              ),
+            ),
+          ),
+          _BlocSelector<bool>(
+            selector: (state) => state.isShowTimeline,
+            builder: (context, isShowTimeline) => AnimatedPositionedDirectional(
+              top: 0,
+              bottom: 0,
+              end: isShowTimeline ? 0 : -_Timeline.width,
+              duration: k.animationDurationNormal,
+              // needed because Timeline rely on some late var
+              child: _BlocSelector<bool>(
+                selector: (state) => state.hasShownTimeline,
+                builder: (context, hasShownTimeline) => Visibility(
+                  visible: hasShownTimeline,
+                  child: const _Timeline(),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -85,24 +209,28 @@ class _PageViewerState extends State<_PageViewer> {
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
-        _BlocListenerT(
-          selector: (state) => state.nextPage,
+        _BlocListener(
+          listenWhen: (previous, current) =>
+              previous.nextPage != current.nextPage,
           listener: (context, state) {
-            _controller.nextPage(
-              duration: k.animationDurationLong,
-              curve: Curves.easeInOut,
-            );
+            if (state.shouldAnimateNextPage) {
+              _controller.animateToPage(
+                state.nextPage,
+                duration: k.animationDurationLong,
+                curve: Curves.easeInOut,
+              );
+            } else {
+              _controller.jumpToPage(state.nextPage);
+            }
           },
         ),
       ],
       child: HorizontalPageViewer(
         pageCount: context.bloc.pageCount,
-        pageBuilder: (context, index) {
-          return FractionallySizedBox(
-            widthFactor: 1 / _viewportFraction,
-            child: _PageView.ofPage(context, index),
-          );
-        },
+        pageBuilder: (context, index) => FractionallySizedBox(
+          widthFactor: 1 / _viewportFraction,
+          child: _PageView.ofPage(context, index),
+        ),
         initialPage: context.bloc.initialPage,
         controller: _controller,
         viewportFraction: _viewportFraction,
@@ -143,7 +271,7 @@ class _PageView extends StatelessWidget {
       return _VideoPageView(
         file: file,
         onCompleted: () {
-          context.addEvent(_VideoCompleted(page));
+          context.addEvent(const _VideoCompleted());
         },
       );
     } else {
