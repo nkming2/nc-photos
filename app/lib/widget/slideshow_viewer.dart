@@ -118,8 +118,14 @@ class _WrappedSlideshowViewerState extends State<_WrappedSlideshowViewer>
   Widget build(BuildContext context) {
     return Theme(
       data: buildDarkTheme(context),
-      child: const Scaffold(
-        body: _Body(),
+      child: const AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle(
+          systemNavigationBarColor: Colors.black,
+          systemNavigationBarIconBrightness: Brightness.dark,
+        ),
+        child: Scaffold(
+          body: _Body(),
+        ),
       ),
     );
   }
