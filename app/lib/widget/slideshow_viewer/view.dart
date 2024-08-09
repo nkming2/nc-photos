@@ -5,35 +5,37 @@ class _AppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          // + status bar height
-          height: kToolbarHeight + MediaQuery.of(context).padding.top,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color.fromARGB(192, 0, 0, 0),
-                Color.fromARGB(0, 0, 0, 0),
-              ],
+    return SizedBox(
+      // + status bar height
+      height: kToolbarHeight + MediaQuery.of(context).padding.top,
+      child: Stack(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color.fromARGB(192, 0, 0, 0),
+                  Color.fromARGB(0, 0, 0, 0),
+                ],
+              ),
             ),
           ),
-        ),
-        AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          scrolledUnderElevation: 0,
-          leading: IconButton(
-            icon: const Icon(Icons.close),
-            tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
+          AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            scrolledUnderElevation: 0,
+            leading: IconButton(
+              icon: const Icon(Icons.close),
+              tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -43,14 +45,11 @@ class _ControlBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned(
-          left: 0,
-          right: 0,
-          bottom: 0,
-          child: Container(
-            height: kToolbarHeight,
+    return SizedBox(
+      height: kToolbarHeight,
+      child: Stack(
+        children: [
+          Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
@@ -62,14 +61,7 @@ class _ControlBar extends StatelessWidget {
               ),
             ),
           ),
-        ),
-        Positioned(
-          left: 0,
-          right: 0,
-          bottom: 0,
-          child: Container(
-            height: kToolbarHeight,
-            alignment: Alignment.center,
+          Center(
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -114,26 +106,25 @@ class _ControlBar extends StatelessWidget {
               ],
             ),
           ),
-        ),
-        Positioned(
-          right: 16,
-          bottom: 0,
-          child: SizedBox(
-            height: kToolbarHeight,
-            child: IconButton(
-              onPressed: () {
-                context.addEvent(const _ToggleTimeline());
-              },
-              icon: _BlocSelector<bool>(
-                selector: (state) => state.isShowTimeline,
-                builder: (context, isShowTimeline) => isShowTimeline
-                    ? const Icon(Icons.view_timeline)
-                    : const Icon(Icons.view_timeline_outlined),
+          Align(
+            alignment: AlignmentDirectional.centerEnd,
+            child: Padding(
+              padding: const EdgeInsetsDirectional.only(end: 16),
+              child: IconButton(
+                onPressed: () {
+                  context.addEvent(const _ToggleTimeline());
+                },
+                icon: _BlocSelector<bool>(
+                  selector: (state) => state.isShowTimeline,
+                  builder: (context, isShowTimeline) => isShowTimeline
+                      ? const Icon(Icons.view_timeline)
+                      : const Icon(Icons.view_timeline_outlined),
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -166,7 +157,10 @@ class _Body extends StatelessWidget {
             builder: (context, isShowUi) => AnimatedVisibility(
               opacity: isShowUi ? 1 : 0,
               duration: k.animationDurationNormal,
-              child: const _AppBar(),
+              child: const Align(
+                alignment: Alignment.topCenter,
+                child: _AppBar(),
+              ),
             ),
           ),
           _BlocSelector<bool>(
@@ -174,7 +168,10 @@ class _Body extends StatelessWidget {
             builder: (context, isShowUi) => AnimatedVisibility(
               opacity: isShowUi ? 1 : 0,
               duration: k.animationDurationNormal,
-              child: const _ControlBar(),
+              child: const Align(
+                alignment: Alignment.bottomCenter,
+                child: _ControlBar(),
+              ),
             ),
           ),
           _BlocSelector<bool>(
