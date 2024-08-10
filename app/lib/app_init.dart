@@ -16,6 +16,8 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file/data_source2.dart';
 import 'package:nc_photos/entity/file/repo.dart';
+import 'package:nc_photos/entity/image_location/data_source.dart';
+import 'package:nc_photos/entity/image_location/repo.dart';
 import 'package:nc_photos/entity/local_file.dart';
 import 'package:nc_photos/entity/local_file/data_source.dart';
 import 'package:nc_photos/entity/nc_album/data_source.dart';
@@ -44,6 +46,7 @@ import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/touch_manager.dart';
 import 'package:np_db/np_db.dart';
 import 'package:np_gps_map/np_gps_map.dart';
+import 'package:np_http/np_http.dart';
 import 'package:np_log/np_log.dart' as np_log;
 import 'package:np_platform_util/np_platform_util.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -71,9 +74,13 @@ Future<void> init(InitIsolateType isolateType) async {
   if (features.isSupportSelfSignedCert) {
     await _initSelfSignedCertManager();
   }
+  await initHttp(
+    appVersion: k.versionStr,
+    isNewHttpEngine: Pref().isNewHttpEngine() ?? false,
+  );
   await _initDiContainer(isolateType);
   _initVisibilityDetector();
-  GpsMap.init();
+  initGpsMap();
   // init session storage
   SessionStorage();
 
@@ -187,6 +194,8 @@ Future<void> _initDiContainer(InitIsolateType isolateType) async {
       const BasicRecognizeFaceRepo(RecognizeFaceRemoteDataSource());
   c.recognizeFaceRepoLocal =
       BasicRecognizeFaceRepo(RecognizeFaceSqliteDbDataSource(c.npDb));
+  c.imageLocationRepo =
+      BasicImageLocationRepo(ImageLocationNpDbDataSource(c.npDb));
 
   c.touchManager = TouchManager(c);
 

@@ -157,6 +157,20 @@ extension $PrefControllerNpSubjectAccessor on PrefController {
       isDontShowVideoPreviewHint.distinct().skip(1);
   bool get isDontShowVideoPreviewHintValue =>
       _isDontShowVideoPreviewHintController.value;
+// _mapBrowserPrevPositionController
+  ValueStream<MapCoord?> get mapBrowserPrevPosition =>
+      _mapBrowserPrevPositionController.stream;
+  Stream<MapCoord?> get mapBrowserPrevPositionNew =>
+      mapBrowserPrevPosition.skip(1);
+  Stream<MapCoord?> get mapBrowserPrevPositionChange =>
+      mapBrowserPrevPosition.distinct().skip(1);
+  MapCoord? get mapBrowserPrevPositionValue =>
+      _mapBrowserPrevPositionController.value;
+// _isNewHttpEngineController
+  ValueStream<bool> get isNewHttpEngine => _isNewHttpEngineController.stream;
+  Stream<bool> get isNewHttpEngineNew => isNewHttpEngine.skip(1);
+  Stream<bool> get isNewHttpEngineChange => isNewHttpEngine.distinct().skip(1);
+  bool get isNewHttpEngineValue => _isNewHttpEngineController.value;
 }
 
 extension $SecurePrefControllerNpSubjectAccessor on SecurePrefController {

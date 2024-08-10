@@ -16,6 +16,7 @@ import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/use_case/restore_trashbin.dart';
+import 'package:nc_photos/widget/app_intermediate_circular_progress_indicator.dart';
 import 'package:nc_photos/widget/handler/remove_selection_handler.dart';
 import 'package:nc_photos/widget/horizontal_page_viewer.dart';
 import 'package:nc_photos/widget/image_viewer.dart';
@@ -90,7 +91,7 @@ class _TrashbinViewerState extends State<TrashbinViewer> {
               !_pageStates[_viewerController.currentPage]!.hasLoaded)
             const Align(
               alignment: Alignment.center,
-              child: CircularProgressIndicator(),
+              child: AppIntermediateCircularProgressIndicator(),
             ),
           HorizontalPageViewer(
             pageCount: widget.streamFiles.length,

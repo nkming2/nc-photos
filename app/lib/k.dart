@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 /// Version string shown in settings page
 const versionStr = "66.3";
 const version = 663;
@@ -9,20 +11,20 @@ const snackBarDurationShort = Duration(seconds: 4);
 const snackBarDurationNormal = Duration(seconds: 7);
 
 /// Duration for short animation
-const animationDurationShort = Duration(milliseconds: 100);
+const animationDurationShort = Durations.short2;
 
 /// Duration for normal animation
-const animationDurationNormal = Duration(milliseconds: 250);
+const animationDurationNormal = Durations.medium1;
 
 /// Duration for long animation
-const animationDurationLong = Duration(milliseconds: 500);
+const animationDurationLong = Durations.long2;
 
 /// Duration for tab transition animation
-const animationDurationTabTransition = Duration(milliseconds: 300);
+const animationDurationTabTransition = Durations.medium2;
 
-const heroDurationNormal = Duration(milliseconds: 450);
+const heroDurationNormal = Durations.long1;
 
-const settingsHighlightDuration = Duration(milliseconds: 750);
+const settingsHighlightDuration = Durations.extralong2;
 
 /// Size of the photo/video thumbnails
 ///

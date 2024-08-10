@@ -124,6 +124,13 @@ extension _$DbLocationGroupResultToString on DbLocationGroupResult {
   }
 }
 
+extension _$DbImageLatLngToString on DbImageLatLng {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "DbImageLatLng {lat: ${lat.toStringAsFixed(3)}, lng: ${lng.toStringAsFixed(3)}, fileId: $fileId}";
+  }
+}
+
 extension _$DbFilesSummaryItemToString on DbFilesSummaryItem {
   String _$toString() {
     // ignore: unnecessary_string_interpolations

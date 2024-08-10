@@ -131,6 +131,29 @@ class DbLocationGroupResult {
   final List<DbLocationGroup> countryCode;
 }
 
+@toString
+class DbImageLatLng with EquatableMixin {
+  const DbImageLatLng({
+    required this.lat,
+    required this.lng,
+    required this.fileId,
+  });
+
+  @override
+  String toString() => _$toString();
+
+  @override
+  List<Object?> get props => [
+        lat,
+        lng,
+        fileId,
+      ];
+
+  final double lat;
+  final double lng;
+  final int fileId;
+}
+
 @genCopyWith
 @toString
 class DbFilesSummaryItem with EquatableMixin {
@@ -407,6 +430,15 @@ abstract class NpDb {
     required DbAccount account,
     List<String>? includeRelativeRoots,
     List<String>? excludeRelativeRoots,
+  });
+
+  /// Return the latitude, longitude and the file id of all files
+  Future<List<DbImageLatLng>> getImageLatLngWithFileIds({
+    required DbAccount account,
+    TimeRange? timeRange,
+    List<String>? includeRelativeRoots,
+    List<String>? excludeRelativeRoots,
+    List<String>? mimes,
   });
 
   Future<List<DbNcAlbum>> getNcAlbums({

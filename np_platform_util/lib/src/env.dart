@@ -16,6 +16,7 @@ enum NpPlatform {
   bool get isMobile => this == android || this == iOs;
   bool get isDesktop =>
       this == fuchsia || this == linux || this == macOs || this == windows;
+  bool get isApple => this == iOs || this == macOs;
 }
 
 /// Get the current running platform

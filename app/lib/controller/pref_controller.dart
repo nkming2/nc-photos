@@ -1,11 +1,14 @@
 // ignore_for_file: deprecated_member_use_from_same_package
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/collection/util.dart';
 import 'package:nc_photos/entity/pref.dart';
+import 'package:nc_photos/json_util.dart';
 import 'package:nc_photos/language_util.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/protected_page_handler.dart';
@@ -158,6 +161,21 @@ class PrefController {
         value: value,
       );
 
+  Future<bool> setMapBrowserPrevPosition(MapCoord? value) =>
+      _setOrRemove<MapCoord>(
+        controller: _mapBrowserPrevPositionController,
+        setter: (pref, value) => pref.setMapBrowserPrevPosition(
+            jsonEncode([value.latitude, value.longitude])),
+        remover: (pref) => pref.setMapBrowserPrevPosition(null),
+        value: value,
+      );
+
+  Future<bool> setNewHttpEngine(bool value) => _set<bool>(
+        controller: _isNewHttpEngineController,
+        setter: (pref, value) => pref.setNewHttpEngine(value),
+        value: value,
+      );
+
   Future<bool> _set<T>({
     required BehaviorSubject<T> controller,
     required Future<bool> Function(Pref pref, T value) setter,
@@ -258,6 +276,14 @@ class PrefController {
   @npSubjectAccessor
   late final _isDontShowVideoPreviewHintController =
       BehaviorSubject.seeded(_c.pref.isDontShowVideoPreviewHintOr(false));
+  @npSubjectAccessor
+  late final _mapBrowserPrevPositionController = BehaviorSubject.seeded(_c.pref
+      .getMapBrowserPrevPosition()
+      ?.let(tryJsonDecode)
+      ?.let(_tryMapCoordFromJson));
+  @npSubjectAccessor
+  late final _isNewHttpEngineController =
+      BehaviorSubject.seeded(_c.pref.isNewHttpEngine() ?? false);
 }
 
 @npSubjectAccessor

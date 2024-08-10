@@ -30,6 +30,7 @@ import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/widget/app_intermediate_circular_progress_indicator.dart';
 import 'package:nc_photos/widget/disposable.dart';
 import 'package:nc_photos/widget/handler/remove_selection_handler.dart';
 import 'package:nc_photos/widget/horizontal_page_viewer.dart';
@@ -158,7 +159,7 @@ class _ViewerState extends State<Viewer>
               _pageStates[_viewerController.currentPage]?.hasLoaded != true)
             const Align(
               alignment: Alignment.center,
-              child: CircularProgressIndicator(),
+              child: AppIntermediateCircularProgressIndicator(),
             ),
           HorizontalPageViewer(
             key: _pageViewerKey,

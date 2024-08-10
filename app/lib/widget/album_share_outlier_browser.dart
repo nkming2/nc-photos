@@ -14,6 +14,7 @@ import 'package:nc_photos/entity/share/data_source.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/use_case/create_share.dart';
 import 'package:nc_photos/use_case/remove_share.dart';
+import 'package:nc_photos/widget/app_intermediate_circular_progress_indicator.dart';
 import 'package:nc_photos/widget/empty_list_indicator.dart';
 import 'package:nc_photos/widget/network_thumbnail.dart';
 import 'package:np_codegen/np_codegen.dart';
@@ -291,7 +292,7 @@ class _AlbumShareOutlierBrowserState extends State<AlbumShareOutlierBrowser> {
       child: SizedBox(
         width: 24,
         height: 24,
-        child: CircularProgressIndicator(),
+        child: AppIntermediateCircularProgressIndicator(),
       ),
     );
   }

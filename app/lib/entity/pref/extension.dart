@@ -223,6 +223,8 @@ extension PrefExtension on Pref {
       PrefKey.isVideoPlayerLoop,
       value,
       (key, value) => provider.setBool(key, value));
+
+  bool? isNewHttpEngine() => provider.getBool(PrefKey.isNewHttpEngine);
 }
 
 extension AccountPrefExtension on AccountPref {

@@ -12,6 +12,7 @@ import 'package:nc_photos/help_utils.dart' as help_utils;
 import 'package:nc_photos/legacy/connect.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/url_launcher_util.dart';
+import 'package:nc_photos/widget/app_intermediate_circular_progress_indicator.dart';
 import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/root_picker.dart';
 import 'package:np_codegen/np_codegen.dart';
@@ -52,7 +53,7 @@ class _SignInState extends State<SignIn> {
               child: SizedBox(
                 width: 24,
                 height: 24,
-                child: CircularProgressIndicator(),
+                child: AppIntermediateCircularProgressIndicator(),
               ),
             ),
           ),

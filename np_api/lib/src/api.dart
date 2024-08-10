@@ -4,6 +4,7 @@ import 'package:logging/logging.dart';
 import 'package:np_api/src/type.dart';
 import 'package:np_api/src/util.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_http/np_http.dart';
 import 'package:xml/xml.dart';
 
 part 'api.g.dart';
@@ -65,7 +66,7 @@ class Api {
     }
     _log.finer(req.url);
     final response =
-        await http.Response.fromStream(await http.Client().send(req));
+        await http.Response.fromStream(await getHttpClient().send(req));
     if (!isHttpStatusGood(response.statusCode)) {
       if (response.statusCode == 404) {
         _log.severe(

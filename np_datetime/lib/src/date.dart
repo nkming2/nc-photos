@@ -24,9 +24,6 @@ class Date implements Comparable<Date> {
     return Date(year ?? this.year, month ?? this.month, day ?? this.day);
   }
 
-  DateTime toUtcDateTime() => DateTime.utc(year, month, day);
-  DateTime toLocalDateTime() => DateTime(year, month, day);
-
   @override
   int compareTo(Date other) => toUtcDateTime().compareTo(other.toUtcDateTime());
 
@@ -49,6 +46,9 @@ class Date implements Comparable<Date> {
 }
 
 extension DateExtension on Date {
+  DateTime toUtcDateTime() => DateTime.utc(year, month, day);
+  DateTime toLocalDateTime() => DateTime(year, month, day);
+
   Date add({
     int? year,
     int? month,

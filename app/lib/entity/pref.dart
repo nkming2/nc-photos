@@ -113,6 +113,8 @@ enum PrefKey implements PrefKeyInterface {
   protectedPageAuthPin,
   protectedPageAuthPassword,
   dontShowVideoPreviewHint,
+  mapBrowserPrevPosition,
+  isNewHttpEngine,
   ;
 
   @override
@@ -199,6 +201,10 @@ enum PrefKey implements PrefKeyInterface {
         return "protectedPageAuthPassword";
       case PrefKey.dontShowVideoPreviewHint:
         return "dontShowVideoPreviewHint";
+      case PrefKey.mapBrowserPrevPosition:
+        return "mapBrowserPrevPosition";
+      case PrefKey.isNewHttpEngine:
+        return "isNewHttpEngine";
     }
   }
 }

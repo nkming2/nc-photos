@@ -137,11 +137,6 @@ class _ItemTransformerResult {
   final Set<Date> dates;
 }
 
-class _MemoryCollectionItem {
-  static const width = 96.0;
-  static const height = width * 1.15;
-}
-
 @toString
 class _VisibleDate implements Comparable<_VisibleDate> {
   const _VisibleDate(this.id, this.date);

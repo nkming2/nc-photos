@@ -38,6 +38,8 @@
     "settingsAppLockSetupPasswordDialogTitle",
     "settingsAppLockConfirmPasswordDialogTitle",
     "settingsManageTrustedCertificateTitle",
+    "settingsUseNewHttpEngine",
+    "settingsUseNewHttpEngineDescription",
     "settingsAboutSectionTitle",
     "settingsVersionTitle",
     "settingsServerVersionTitle",
@@ -46,6 +48,7 @@
     "settingsCaptureLogsTitle",
     "settingsCaptureLogsDescription",
     "settingsTranslatorTitle",
+    "settingsRestartNeededDialog",
     "writePreferenceFailureNotification",
     "enableButtonLabel",
     "exifSupportDetails",
@@ -249,6 +252,12 @@
     "trustedCertManagerFailedToRemoveCertError",
     "missingVideoThumbnailHelpDialogTitle",
     "dontShowAgain",
+    "mapBrowserDateRangeLabel",
+    "mapBrowserDateRangeThisMonth",
+    "mapBrowserDateRangePrevMonth",
+    "mapBrowserDateRangeThisYear",
+    "mapBrowserDateRangeCustom",
+    "homeTabMapBrowser",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -274,6 +283,9 @@
     "settingsAppLockSetupPasswordDialogTitle",
     "settingsAppLockConfirmPasswordDialogTitle",
     "settingsManageTrustedCertificateTitle",
+    "settingsUseNewHttpEngine",
+    "settingsUseNewHttpEngineDescription",
+    "settingsRestartNeededDialog",
     "appLockUnlockHint",
     "appLockUnlockWrongPassword",
     "enabledText",
@@ -284,7 +296,13 @@
     "trustedCertManagerNoHttpsServerError",
     "trustedCertManagerFailedToRemoveCertError",
     "missingVideoThumbnailHelpDialogTitle",
-    "dontShowAgain"
+    "dontShowAgain",
+    "mapBrowserDateRangeLabel",
+    "mapBrowserDateRangeThisMonth",
+    "mapBrowserDateRangePrevMonth",
+    "mapBrowserDateRangeThisYear",
+    "mapBrowserDateRangeCustom",
+    "homeTabMapBrowser"
   ],
 
   "de": [
@@ -297,6 +315,9 @@
     "settingsThemePresets",
     "settingsAppLockSetupBiometricFallbackDialogTitle",
     "settingsManageTrustedCertificateTitle",
+    "settingsUseNewHttpEngine",
+    "settingsUseNewHttpEngineDescription",
+    "settingsRestartNeededDialog",
     "fileLastSharedByOthersDescription",
     "multipleFilesLinkShareDialogContent",
     "unshareLinkShareDirDialogContent",
@@ -318,7 +339,13 @@
     "trustedCertManagerNoHttpsServerError",
     "trustedCertManagerFailedToRemoveCertError",
     "missingVideoThumbnailHelpDialogTitle",
-    "dontShowAgain"
+    "dontShowAgain",
+    "mapBrowserDateRangeLabel",
+    "mapBrowserDateRangeThisMonth",
+    "mapBrowserDateRangePrevMonth",
+    "mapBrowserDateRangeThisYear",
+    "mapBrowserDateRangeCustom",
+    "homeTabMapBrowser"
   ],
 
   "el": [
@@ -367,7 +394,10 @@
     "settingsClearCacheDatabaseDescription",
     "settingsClearCacheDatabaseSuccessNotification",
     "settingsManageTrustedCertificateTitle",
+    "settingsUseNewHttpEngine",
+    "settingsUseNewHttpEngineDescription",
     "settingsServerVersionTitle",
+    "settingsRestartNeededDialog",
     "slideshowSetupDialogReverseTitle",
     "shareMethodPreviewTitle",
     "shareMethodPreviewDescription",
@@ -455,7 +485,13 @@
     "trustedCertManagerNoHttpsServerError",
     "trustedCertManagerFailedToRemoveCertError",
     "missingVideoThumbnailHelpDialogTitle",
-    "dontShowAgain"
+    "dontShowAgain",
+    "mapBrowserDateRangeLabel",
+    "mapBrowserDateRangeThisMonth",
+    "mapBrowserDateRangePrevMonth",
+    "mapBrowserDateRangeThisYear",
+    "mapBrowserDateRangeCustom",
+    "homeTabMapBrowser"
   ],
 
   "es": [
@@ -473,6 +509,9 @@
     "settingsAppLockSetupPasswordDialogTitle",
     "settingsAppLockConfirmPasswordDialogTitle",
     "settingsManageTrustedCertificateTitle",
+    "settingsUseNewHttpEngine",
+    "settingsUseNewHttpEngineDescription",
+    "settingsRestartNeededDialog",
     "appLockUnlockHint",
     "appLockUnlockWrongPassword",
     "enabledText",
@@ -483,7 +522,13 @@
     "trustedCertManagerNoHttpsServerError",
     "trustedCertManagerFailedToRemoveCertError",
     "missingVideoThumbnailHelpDialogTitle",
-    "dontShowAgain"
+    "dontShowAgain",
+    "mapBrowserDateRangeLabel",
+    "mapBrowserDateRangeThisMonth",
+    "mapBrowserDateRangePrevMonth",
+    "mapBrowserDateRangeThisYear",
+    "mapBrowserDateRangeCustom",
+    "homeTabMapBrowser"
   ],
 
   "fi": [
@@ -501,6 +546,9 @@
     "settingsAppLockSetupPasswordDialogTitle",
     "settingsAppLockConfirmPasswordDialogTitle",
     "settingsManageTrustedCertificateTitle",
+    "settingsUseNewHttpEngine",
+    "settingsUseNewHttpEngineDescription",
+    "settingsRestartNeededDialog",
     "appLockUnlockHint",
     "appLockUnlockWrongPassword",
     "enabledText",
@@ -511,7 +559,13 @@
     "trustedCertManagerNoHttpsServerError",
     "trustedCertManagerFailedToRemoveCertError",
     "missingVideoThumbnailHelpDialogTitle",
-    "dontShowAgain"
+    "dontShowAgain",
+    "mapBrowserDateRangeLabel",
+    "mapBrowserDateRangeThisMonth",
+    "mapBrowserDateRangePrevMonth",
+    "mapBrowserDateRangeThisYear",
+    "mapBrowserDateRangeCustom",
+    "homeTabMapBrowser"
   ],
 
   "fr": [
@@ -529,6 +583,9 @@
     "settingsAppLockSetupPasswordDialogTitle",
     "settingsAppLockConfirmPasswordDialogTitle",
     "settingsManageTrustedCertificateTitle",
+    "settingsUseNewHttpEngine",
+    "settingsUseNewHttpEngineDescription",
+    "settingsRestartNeededDialog",
     "appLockUnlockHint",
     "appLockUnlockWrongPassword",
     "enabledText",
@@ -539,7 +596,13 @@
     "trustedCertManagerNoHttpsServerError",
     "trustedCertManagerFailedToRemoveCertError",
     "missingVideoThumbnailHelpDialogTitle",
-    "dontShowAgain"
+    "dontShowAgain",
+    "mapBrowserDateRangeLabel",
+    "mapBrowserDateRangeThisMonth",
+    "mapBrowserDateRangePrevMonth",
+    "mapBrowserDateRangeThisYear",
+    "mapBrowserDateRangeCustom",
+    "homeTabMapBrowser"
   ],
 
   "it": [
@@ -559,6 +622,9 @@
     "settingsAppLockSetupPasswordDialogTitle",
     "settingsAppLockConfirmPasswordDialogTitle",
     "settingsManageTrustedCertificateTitle",
+    "settingsUseNewHttpEngine",
+    "settingsUseNewHttpEngineDescription",
+    "settingsRestartNeededDialog",
     "unmuteTooltip",
     "slideshowTooltip",
     "enhanceColorPopTitle",
@@ -572,7 +638,13 @@
     "trustedCertManagerNoHttpsServerError",
     "trustedCertManagerFailedToRemoveCertError",
     "missingVideoThumbnailHelpDialogTitle",
-    "dontShowAgain"
+    "dontShowAgain",
+    "mapBrowserDateRangeLabel",
+    "mapBrowserDateRangeThisMonth",
+    "mapBrowserDateRangePrevMonth",
+    "mapBrowserDateRangeThisYear",
+    "mapBrowserDateRangeCustom",
+    "homeTabMapBrowser"
   ],
 
   "nl": [
@@ -673,6 +745,8 @@
     "settingsClearCacheDatabaseDescription",
     "settingsClearCacheDatabaseSuccessNotification",
     "settingsManageTrustedCertificateTitle",
+    "settingsUseNewHttpEngine",
+    "settingsUseNewHttpEngineDescription",
     "settingsAboutSectionTitle",
     "settingsVersionTitle",
     "settingsServerVersionTitle",
@@ -681,6 +755,7 @@
     "settingsCaptureLogsTitle",
     "settingsCaptureLogsDescription",
     "settingsTranslatorTitle",
+    "settingsRestartNeededDialog",
     "writePreferenceFailureNotification",
     "enableButtonLabel",
     "exifSupportDetails",
@@ -942,6 +1017,12 @@
     "trustedCertManagerFailedToRemoveCertError",
     "missingVideoThumbnailHelpDialogTitle",
     "dontShowAgain",
+    "mapBrowserDateRangeLabel",
+    "mapBrowserDateRangeThisMonth",
+    "mapBrowserDateRangePrevMonth",
+    "mapBrowserDateRangeThisYear",
+    "mapBrowserDateRangeCustom",
+    "homeTabMapBrowser",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -968,6 +1049,9 @@
     "settingsAppLockSetupPasswordDialogTitle",
     "settingsAppLockConfirmPasswordDialogTitle",
     "settingsManageTrustedCertificateTitle",
+    "settingsUseNewHttpEngine",
+    "settingsUseNewHttpEngineDescription",
+    "settingsRestartNeededDialog",
     "enhanceColorPopTitle",
     "imageEditTransformOrientationClockwise",
     "imageEditTransformOrientationCounterclockwise",
@@ -981,7 +1065,13 @@
     "trustedCertManagerNoHttpsServerError",
     "trustedCertManagerFailedToRemoveCertError",
     "missingVideoThumbnailHelpDialogTitle",
-    "dontShowAgain"
+    "dontShowAgain",
+    "mapBrowserDateRangeLabel",
+    "mapBrowserDateRangeThisMonth",
+    "mapBrowserDateRangePrevMonth",
+    "mapBrowserDateRangeThisYear",
+    "mapBrowserDateRangeCustom",
+    "homeTabMapBrowser"
   ],
 
   "pt": [
@@ -1004,7 +1094,10 @@
     "settingsAppLockSetupPasswordDialogTitle",
     "settingsAppLockConfirmPasswordDialogTitle",
     "settingsManageTrustedCertificateTitle",
+    "settingsUseNewHttpEngine",
+    "settingsUseNewHttpEngineDescription",
     "settingsServerVersionTitle",
+    "settingsRestartNeededDialog",
     "searchLandingPeopleListEmptyText2",
     "createCollectionFailureNotification",
     "addItemToCollectionTooltip",
@@ -1029,7 +1122,13 @@
     "trustedCertManagerNoHttpsServerError",
     "trustedCertManagerFailedToRemoveCertError",
     "missingVideoThumbnailHelpDialogTitle",
-    "dontShowAgain"
+    "dontShowAgain",
+    "mapBrowserDateRangeLabel",
+    "mapBrowserDateRangeThisMonth",
+    "mapBrowserDateRangePrevMonth",
+    "mapBrowserDateRangeThisYear",
+    "mapBrowserDateRangeCustom",
+    "homeTabMapBrowser"
   ],
 
   "ru": [
@@ -1047,6 +1146,9 @@
     "settingsAppLockSetupPasswordDialogTitle",
     "settingsAppLockConfirmPasswordDialogTitle",
     "settingsManageTrustedCertificateTitle",
+    "settingsUseNewHttpEngine",
+    "settingsUseNewHttpEngineDescription",
+    "settingsRestartNeededDialog",
     "appLockUnlockHint",
     "appLockUnlockWrongPassword",
     "enabledText",
@@ -1057,12 +1159,25 @@
     "trustedCertManagerNoHttpsServerError",
     "trustedCertManagerFailedToRemoveCertError",
     "missingVideoThumbnailHelpDialogTitle",
-    "dontShowAgain"
+    "dontShowAgain",
+    "mapBrowserDateRangeLabel",
+    "mapBrowserDateRangeThisMonth",
+    "mapBrowserDateRangePrevMonth",
+    "mapBrowserDateRangeThisYear",
+    "mapBrowserDateRangeCustom",
+    "homeTabMapBrowser"
   ],
 
   "tr": [
-    "missingVideoThumbnailHelpDialogTitle",
-    "dontShowAgain"
+    "settingsUseNewHttpEngine",
+    "settingsUseNewHttpEngineDescription",
+    "settingsRestartNeededDialog",
+    "mapBrowserDateRangeLabel",
+    "mapBrowserDateRangeThisMonth",
+    "mapBrowserDateRangePrevMonth",
+    "mapBrowserDateRangeThisYear",
+    "mapBrowserDateRangeCustom",
+    "homeTabMapBrowser"
   ],
 
   "zh": [
@@ -1087,6 +1202,9 @@
     "settingsAppLockSetupPasswordDialogTitle",
     "settingsAppLockConfirmPasswordDialogTitle",
     "settingsManageTrustedCertificateTitle",
+    "settingsUseNewHttpEngine",
+    "settingsUseNewHttpEngineDescription",
+    "settingsRestartNeededDialog",
     "slideshowSetupDialogReverseTitle",
     "enhanceColorPopTitle",
     "enhanceRetouchTitle",
@@ -1121,7 +1239,13 @@
     "trustedCertManagerNoHttpsServerError",
     "trustedCertManagerFailedToRemoveCertError",
     "missingVideoThumbnailHelpDialogTitle",
-    "dontShowAgain"
+    "dontShowAgain",
+    "mapBrowserDateRangeLabel",
+    "mapBrowserDateRangeThisMonth",
+    "mapBrowserDateRangePrevMonth",
+    "mapBrowserDateRangeThisYear",
+    "mapBrowserDateRangeCustom",
+    "homeTabMapBrowser"
   ],
 
   "zh_Hant": [
@@ -1173,7 +1297,10 @@
     "settingsClearCacheDatabaseDescription",
     "settingsClearCacheDatabaseSuccessNotification",
     "settingsManageTrustedCertificateTitle",
+    "settingsUseNewHttpEngine",
+    "settingsUseNewHttpEngineDescription",
     "settingsServerVersionTitle",
+    "settingsRestartNeededDialog",
     "sortOptionFilenameAscendingLabel",
     "sortOptionFilenameDescendingLabel",
     "slideshowSetupDialogReverseTitle",
@@ -1274,6 +1401,12 @@
     "trustedCertManagerNoHttpsServerError",
     "trustedCertManagerFailedToRemoveCertError",
     "missingVideoThumbnailHelpDialogTitle",
-    "dontShowAgain"
+    "dontShowAgain",
+    "mapBrowserDateRangeLabel",
+    "mapBrowserDateRangeThisMonth",
+    "mapBrowserDateRangePrevMonth",
+    "mapBrowserDateRangeThisYear",
+    "mapBrowserDateRangeCustom",
+    "homeTabMapBrowser"
   ]
 }

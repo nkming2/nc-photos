@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:np_gps_map/src/native.dart';
+import 'package:np_gps_map/src/map_coord.dart';
 import 'package:np_gps_map/src/native/google_gps_map.dart'
     if (dart.library.html) 'package:np_gps_map/src/web/google_gps_map.dart';
 import 'package:np_gps_map/src/osm_gps_map.dart';
+import 'package:np_gps_map/src/util.dart';
 import 'package:np_platform_util/np_platform_util.dart';
 
 enum GpsMapProvider {
@@ -20,16 +21,10 @@ class GpsMap extends StatelessWidget {
     this.onTap,
   });
 
-  static void init() {
-    if (getRawPlatform() == NpPlatform.android) {
-      Native.isNewGMapsRenderer().then((value) => _isNewGMapsRenderer = value);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     if (providerHint == GpsMapProvider.osm ||
-        (getRawPlatform() == NpPlatform.android && !_isNewGMapsRenderer)) {
+        (getRawPlatform() == NpPlatform.android && !isNewGMapsRenderer())) {
       return OsmGpsMap(
         center: center,
         zoom: zoom,
@@ -49,9 +44,7 @@ class GpsMap extends StatelessWidget {
   final GpsMapProvider providerHint;
 
   /// A pair of latitude and longitude coordinates, stored as degrees
-  final ({double lat, double lng}) center;
+  final MapCoord center;
   final double zoom;
   final void Function()? onTap;
-
-  static bool _isNewGMapsRenderer = false;
 }

@@ -248,11 +248,6 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
                         label: L10n.global().slideshowTooltip,
                         onPressed: widget.onSlideshowPressed,
                       ),
-                      _DetailPaneButton(
-                        icon: Icons.slideshow_outlined,
-                        label: L10n.global().slideshowTooltip,
-                        onPressed: widget.onSlideshowPressed,
-                      ),
                     ],
                   ),
                 ),
@@ -404,7 +399,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     final lng = exif.gpsLongitudeDeg;
     if (lat != null && lng != null) {
       _log.fine("GPS: ($lat, $lng)");
-      _gps = (lat: lat, lng: lng);
+      _gps = MapCoord(lat, lng);
       _location = _file!.location;
     }
   }
@@ -502,7 +497,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     if (getRawPlatform() == NpPlatform.android) {
       final intent = AndroidIntent(
         action: "action_view",
-        data: Uri.encodeFull("geo:${_gps!.lat},${_gps!.lng}?z=16"),
+        data: Uri.encodeFull("geo:${_gps!.latitude},${_gps!.longitude}?z=16"),
       );
       intent.launch();
     }
@@ -596,7 +591,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
   String? _exposureTime;
   double? _focalLength;
   int? _isoSpeedRatings;
-  ({double lat, double lng})? _gps;
+  MapCoord? _gps;
   ImageLocation? _location;
 
   final _tags = <String>[];
