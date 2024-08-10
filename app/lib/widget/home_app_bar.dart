@@ -8,6 +8,7 @@ import 'package:nc_photos/controller/account_pref_controller.dart';
 import 'package:nc_photos/stream_util.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/account_picker_dialog.dart';
+import 'package:nc_photos/widget/app_bar_circular_progress_indicator.dart';
 import 'package:np_ui/np_ui.dart';
 
 /// AppBar for home screens
@@ -131,7 +132,7 @@ class _ProfileIconView extends StatelessWidget {
       child: Stack(
         children: [
           isProcessing
-              ? const AppBarCircularProgressIndicator()
+              ? const AppBarProgressIndicator()
               : ClipRRect(
                   borderRadius: BorderRadius.circular(_size / 2),
                   child: CachedNetworkImage(

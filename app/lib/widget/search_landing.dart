@@ -23,6 +23,7 @@ import 'package:nc_photos/stream_util.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/use_case/list_location_group.dart';
+import 'package:nc_photos/widget/app_intermediate_circular_progress_indicator.dart';
 import 'package:nc_photos/widget/collection_browser.dart';
 import 'package:nc_photos/widget/network_thumbnail.dart';
 import 'package:nc_photos/widget/people_browser.dart';
@@ -242,7 +243,9 @@ class _PeopleSection extends StatelessWidget {
             if (state.isPersonsLoading) {
               return const SizedBox(
                 height: 48,
-                child: Center(child: CircularProgressIndicator()),
+                child: Center(
+                  child: AppIntermediateCircularProgressIndicator(),
+                ),
               );
             } else {
               if (state.transformedPersonItems.isEmpty) {
@@ -324,7 +327,9 @@ class _PlaceSection extends StatelessWidget {
             if (state.isPlacesLoading) {
               return const SizedBox(
                 height: 48,
-                child: Center(child: CircularProgressIndicator()),
+                child: Center(
+                  child: AppIntermediateCircularProgressIndicator(),
+                ),
               );
             } else {
               if (state.transformedPlaceItems.isEmpty) {

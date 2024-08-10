@@ -1,7 +1,6 @@
 library np_ui;
 
 export 'src/animated_visibility.dart';
-export 'src/app_bar_circular_progress_indicator.dart';
 export 'src/app_bar_title_container.dart';
 export 'src/asset_icon.dart';
 export 'src/fancy_option_picker.dart';

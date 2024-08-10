@@ -16,6 +16,7 @@ import 'package:nc_photos/protected_page_handler.dart';
 import 'package:nc_photos/use_case/compat/v29.dart';
 import 'package:nc_photos/use_case/compat/v46.dart';
 import 'package:nc_photos/use_case/compat/v55.dart';
+import 'package:nc_photos/widget/app_intermediate_circular_progress_indicator.dart';
 import 'package:nc_photos/widget/changelog.dart';
 import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/setup.dart';
@@ -118,7 +119,7 @@ class _SplashState extends State<Splash> {
                         const SizedBox(
                           width: 24,
                           height: 24,
-                          child: CircularProgressIndicator(),
+                          child: AppIntermediateCircularProgressIndicator(),
                         )
                       else
                         LinearProgressIndicator(

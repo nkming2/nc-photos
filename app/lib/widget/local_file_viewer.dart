@@ -8,6 +8,7 @@ import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/local_file.dart';
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/widget/app_intermediate_circular_progress_indicator.dart';
 import 'package:nc_photos/widget/handler/delete_local_selection_handler.dart';
 import 'package:nc_photos/widget/horizontal_page_viewer.dart';
 import 'package:nc_photos/widget/image_viewer.dart';
@@ -83,7 +84,7 @@ class _LocalFileViewerState extends State<LocalFileViewer> {
               !_pageStates[_viewerController.currentPage]!.hasLoaded)
             const Align(
               alignment: Alignment.center,
-              child: CircularProgressIndicator(),
+              child: AppIntermediateCircularProgressIndicator(),
             ),
           HorizontalPageViewer(
             pageCount: widget.streamFiles.length,

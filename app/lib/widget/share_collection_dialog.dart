@@ -22,6 +22,7 @@ import 'package:nc_photos/exception_util.dart' as exception_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/suggester.dart';
 import 'package:nc_photos/toast.dart';
+import 'package:nc_photos/widget/app_intermediate_circular_progress_indicator.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_string/np_string.dart';
 import 'package:to_string/to_string.dart';
@@ -221,7 +222,7 @@ class _ShareView extends StatelessWidget {
         child: SizedBox(
           width: 24,
           height: 24,
-          child: CircularProgressIndicator(),
+          child: AppIntermediateCircularProgressIndicator(),
         ),
       );
     } else {

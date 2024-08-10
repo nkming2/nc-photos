@@ -42,6 +42,7 @@ import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/widget/album_share_outlier_browser.dart';
+import 'package:nc_photos/widget/app_intermediate_circular_progress_indicator.dart';
 import 'package:nc_photos/widget/collection_picker.dart';
 import 'package:nc_photos/widget/draggable_item_list.dart';
 import 'package:nc_photos/widget/export_collection_dialog.dart';
@@ -331,7 +332,7 @@ class _WrappedCollectionBrowserState extends State<_WrappedCollectionBrowser>
                       return Container(
                         color: Colors.black.withOpacity(.5),
                         alignment: Alignment.center,
-                        child: const CircularProgressIndicator(),
+                        child: const AppIntermediateCircularProgressIndicator(),
                       );
                     } else {
                       return const SizedBox.shrink();
