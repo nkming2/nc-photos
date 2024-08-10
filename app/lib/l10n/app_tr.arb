@@ -413,6 +413,8 @@
 	"settingsClearCacheDatabaseDescription": "Önbelleğe alınmış dosya bilgilerini temizler ve sunucu ile tekrar senkronize eder",
 	"settingsClearCacheDatabaseSuccessNotification": "Veritabanı başarıyla temizlendi. Uygulamayı yeniden başlatmanız tavsiye edilir",
 	"settingsManageTrustedCertificateTitle": "Güvenilen Sertifikaları Yönet",
+	"settingsUseNewHttpEngine": "Yeni HTTP işleyiciyi kullan",
+	"settingsUseNewHttpEngineDescription": "HTTP/2* ve HTTP/3 QUIC* gibi yeni HTTP standartlarını destekleyen Chromium tabanlı HTTP işleyicisi.\n\nLimitler:\nKendinden imzalı sertifikalar tarafımızca yönetilemez. CA sertifikalarınızı çalışmaları için sistem güven deposuna içe aktarmanız gerekir.\n\n* HTTP/2 ve HTTP/3 için HTTPS gereklidir",
 	"settingsAboutSectionTitle": "Hakkında",
 	"@settingsAboutSectionTitle": {
 		"description": "Title of the about section in settings widget"
@@ -442,6 +444,7 @@
 	"@settingsTranslatorTitle": {
 		"description": "Title of the translator item"
 	},
+	"settingsRestartNeededDialog": "Değişiklikleri uygulamak için lütfen uygulamayı yeniden başlatın",
 	"writePreferenceFailureNotification": "Yapılandırma klasörü değiştirilemedi",
 	"@writePreferenceFailureNotification": {
 		"description": "Inform user that the preference file cannot be modified"
@@ -1518,5 +1521,14 @@
 	},
 	"trustedCertManagerFailedToRemoveCertError": "Sertifika kaldırılırken bir hata oluştu",
 	"missingVideoThumbnailHelpDialogTitle": "Video önizlemeleriyle ilgili sorun mu yaşıyorsunuz?",
+	"mapBrowserDateRangeLabel": "Tarih aralığı",
+	"@mapBrowserDateRangeLabel": {
+		"description": "Filter photos by date range"
+	},
+	"mapBrowserDateRangeThisMonth": "Bu ay",
+	"mapBrowserDateRangePrevMonth": "Önceki ay",
+	"mapBrowserDateRangeThisYear": "Bu Yıl",
+	"mapBrowserDateRangeCustom": "Özel",
+	"homeTabMapBrowser": "Harita",
 	"dontShowAgain": "Tekrar gösterme"
 }
