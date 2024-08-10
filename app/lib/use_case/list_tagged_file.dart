@@ -24,9 +24,10 @@ class ListTaggedFile {
       taggedFiles.addAll(await _c.taggedFileRepo
           .list(account, File(path: file_util.unstripPath(account, r)), tags));
     }
+    // server bug workaround, filter out repeated files
     final files = await FindFile(_c)(
       account,
-      taggedFiles.map((f) => f.fileId).toList(),
+      taggedFiles.map((f) => f.fileId).toSet(),
       onFileNotFound: (id) {
         // ignore missing file
         _log.warning("[call] Missing file: $id");

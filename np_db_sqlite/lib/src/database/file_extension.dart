@@ -111,7 +111,7 @@ extension SqliteDbFileExtension on SqliteDb {
   /// Returned files are NOT guaranteed to be sorted as [fileIds]
   Future<List<CompleteFile>> queryFilesByFileIds({
     required ByAccount account,
-    required List<int> fileIds,
+    required Iterable<int> fileIds,
   }) {
     _log.info("[queryFilesByFileIds] fileIds: ${fileIds.toReadableString()}");
     return fileIds.withPartition((sublist) {

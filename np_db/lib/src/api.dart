@@ -293,7 +293,7 @@ abstract class NpDb {
   /// Returned files are NOT guaranteed to be sorted as [fileIds]
   Future<List<DbFile>> getFilesByFileIds({
     required DbAccount account,
-    required List<int> fileIds,
+    required Iterable<int> fileIds,
   });
 
   /// Return [DbFile]s by their date time value
