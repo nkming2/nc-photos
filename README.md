@@ -10,9 +10,6 @@ The long-awaited modern gallery app for your Nextcloud server
 Or the [ad-supported version](https://play.google.com/store/apps/details?id=com.nkming.nc_photos&referrer=utm_source%3Drepo)  
 Or download pre-built binary [here](https://gitlab.com/nkming2/nc-photos/-/wikis/Release)
 
-### Web (experimental)
-Please read [this guide](https://gitlab.com/nkming2/nc-photos/-/wikis/help/web-app)
-
 ### Compile yourself
 Please read [this guide](https://gitlab.com/nkming2/nc-photos/-/wikis/development/build)
 
@@ -43,17 +40,24 @@ Screenshots contain photos by:
   - Please read [this guide](https://gitlab.com/nkming2/nc-photos/-/wikis/help/people)
 
 ## Translations (sorted by ISO name)
-- Chinese/中文 (contributed by zerolin)
-- Czech/Čeština (contributed by Skyhawk)
+- Catalan/català (contributed by Arnau Mora)
+- Chinese/中文 (contributed by zerolin, 老兄)
+- Czech/Čeština (contributed by Fjuro, Skyhawk)
+- Dutch/Nederlands (contributed by Micha)
 - Finnish/Suomi (contributed by pHamala)
-- French/Français (contributed by mgreil)
-- German/Deutsch (contributed by PhilProg, Niclas Heinz)
+- French/Français (contributed by mgreil, Fymyte)
+- German/Deutsch (contributed by Andreas, Niclas H, Odious, PhilProg, shagn)
 - Greek/Ελληνικά (contributed by Chris Karasoulis)
-- Polish/Polski (contributed by szymok)
+- Italian/Italiano (contributed by Albe)
+- Polish/Polski (contributed by Shieldziak, szymok)
 - Portuguese/Português (contributed by fernosan)
-- Russian/Русский (contributed by kvasenok, meixnt & eriane)
+- Russian/Русский (contributed by kvasenok, meixnt & eriane, RandomRoot)
 - Spanish/Español (contributed by luckkmaxx)
 - Turkish/Türkçe (contributed by aliyasiny65)
+
+## Special Thanks
+- poeditor (https://poeditor.com/)
+  - A localization management platform free of charge for open source projects, cheers to them!
 
 ## Contributions, troubleshooting and guides
 Please visit the [project wiki](https://gitlab.com/nkming2/nc-photos/-/wikis/home)
