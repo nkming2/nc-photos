@@ -29,6 +29,8 @@ final supportedLanguages = {
   _AppLanguageEnum.systemDefault.index: AppLanguage(
       _AppLanguageEnum.systemDefault.index, "System default", null, null),
   // sorted by alphabetic order of their ISO language names
+  _AppLanguageEnum.catalan.index: AppLanguage(
+      _AppLanguageEnum.catalan.index, "català", "Catalan", const Locale("ca")),
   _AppLanguageEnum.chineseHans.index: AppLanguage(
       _AppLanguageEnum.chineseHans.index,
       "中文 (简体)",
@@ -39,8 +41,6 @@ final supportedLanguages = {
       "中文 (繁體/正體)",
       "Chinese (Traditional)",
       const Locale.fromSubtags(languageCode: "zh", scriptCode: "Hant")),
-  _AppLanguageEnum.catalan.index: AppLanguage(
-      _AppLanguageEnum.catalan.index, "català", "Catalan", const Locale("ca")),
   _AppLanguageEnum.czech.index: AppLanguage(
       _AppLanguageEnum.czech.index, "Čeština", "Czech", const Locale("cs")),
   _AppLanguageEnum.dutch.index: AppLanguage(
