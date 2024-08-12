@@ -10,7 +10,8 @@ class _Changelog670 extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _subSection("Changes"),
-        _bulletGroup(const Text("Added map view")),
+        _bulletGroup(
+            const Text("Added map view that show your photos on a map")),
         _bulletGroup(
           const Text(
               "Added new experimental HTTP engine with HTTP/2 and HTTP/3 QUIC support"),
