@@ -65,7 +65,7 @@ dependencies:
   flutter_background_service:
     git:
       url: https://gitlab.com/nc-photos/flutter_background_service.git
-      ref: v0.2.6-nc-photos-2
+      ref: v0.2.6-nc-photos-3
   flutter_bloc: ^8.1.5
   flutter_cache_manager: any
   flutter_colorpicker: ^1.1.0
