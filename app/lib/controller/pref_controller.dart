@@ -269,10 +269,10 @@ class PrefController {
       BehaviorSubject.seeded(_c.pref.isUseBlackInDarkThemeOr(false));
   @NpSubjectAccessor(type: "Color?")
   late final _seedColorController =
-      BehaviorSubject<Color?>.seeded(_c.pref.getSeedColor()?.run(Color.new));
+      BehaviorSubject<Color?>.seeded(_c.pref.getSeedColor()?.let(Color.new));
   @NpSubjectAccessor(type: "Color?")
   late final _secondarySeedColorController = BehaviorSubject<Color?>.seeded(
-      _c.pref.getSecondarySeedColor()?.run(Color.new));
+      _c.pref.getSecondarySeedColor()?.let(Color.new));
   @npSubjectAccessor
   late final _isDontShowVideoPreviewHintController =
       BehaviorSubject.seeded(_c.pref.isDontShowVideoPreviewHintOr(false));
