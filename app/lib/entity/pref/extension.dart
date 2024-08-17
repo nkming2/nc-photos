@@ -161,11 +161,6 @@ extension PrefExtension on Pref {
       value,
       (key, value) => provider.setBool(key, value));
 
-  int? getFirstRunTime() => provider.getInt(PrefKey.firstRunTime);
-  int getFirstRunTimeOr(int def) => getFirstRunTime() ?? def;
-  Future<bool> setFirstRunTime(int value) => _set<int>(
-      PrefKey.firstRunTime, value, (key, value) => provider.setInt(key, value));
-
   bool? shouldProcessExifWifiOnly() =>
       provider.getBool(PrefKey.shouldProcessExifWifiOnly);
   bool shouldProcessExifWifiOnlyOr([bool def = true]) =>

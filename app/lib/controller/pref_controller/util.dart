@@ -101,6 +101,15 @@ extension on Pref {
 
   Future<bool> setNewHttpEngine(bool value) =>
       provider.setBool(PrefKey.isNewHttpEngine, value);
+
+  int? getFirstRunTime() => provider.getInt(PrefKey.firstRunTime);
+  Future<bool> setFirstRunTime(int? value) {
+    if (value == null) {
+      return provider.remove(PrefKey.firstRunTime);
+    } else {
+      return provider.setInt(PrefKey.firstRunTime, value);
+    }
+  }
 }
 
 MapCoord? _tryMapCoordFromJson(dynamic json) {

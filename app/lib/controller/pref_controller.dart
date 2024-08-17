@@ -9,8 +9,8 @@ import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/collection/util.dart';
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/json_util.dart';
+import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/language_util.dart';
-import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/protected_page_handler.dart';
 import 'package:nc_photos/size.dart';
 import 'package:np_codegen/np_codegen.dart';
@@ -29,6 +29,13 @@ class PrefController {
   Future<bool> setAccounts(List<Account> value) => _set<List<Account>>(
         controller: _accountsController,
         setter: (pref, value) => pref.setAccounts3(value),
+        value: value,
+      );
+
+  Future<bool> setCurrentAccountIndex(int value) => _setOrRemove<int>(
+        controller: _currentAccountIndexController,
+        setter: (pref, value) => pref.setCurrentAccountIndex(value),
+        remover: (pref) => pref.setCurrentAccountIndex(null),
         value: value,
       );
 
@@ -176,6 +183,20 @@ class PrefController {
         value: value,
       );
 
+  Future<bool> setFirstRunTime(DateTime? value) => _setOrRemove<DateTime>(
+        controller: _firstRunTimeController,
+        setter: (pref, value) =>
+            pref.setFirstRunTime(value.millisecondsSinceEpoch),
+        remover: (pref) => pref.setFirstRunTime(null),
+        value: value,
+      );
+
+  Future<bool> setLastVersion(int value) => _set<int>(
+        controller: _lastVersionController,
+        setter: (pref, value) => pref.setLastVersion(value),
+        value: value,
+      );
+
   Future<bool> _set<T>({
     required BehaviorSubject<T> controller,
     required Future<bool> Function(Pref pref, T value) setter,
@@ -216,6 +237,9 @@ class PrefController {
   @npSubjectAccessor
   late final _accountsController =
       BehaviorSubject.seeded(_c.pref.getAccounts3() ?? []);
+  @npSubjectAccessor
+  late final _currentAccountIndexController =
+      BehaviorSubject.seeded(_c.pref.getCurrentAccountIndex());
   @npSubjectAccessor
   late final _languageController =
       BehaviorSubject.seeded(_langIdToAppLanguage(_c.pref.getLanguageOr(0)));
@@ -284,6 +308,25 @@ class PrefController {
   @npSubjectAccessor
   late final _isNewHttpEngineController =
       BehaviorSubject.seeded(_c.pref.isNewHttpEngine() ?? false);
+  @npSubjectAccessor
+  late final _firstRunTimeController = BehaviorSubject.seeded(_c.pref
+      .getFirstRunTime()
+      ?.let((v) => DateTime.fromMillisecondsSinceEpoch(v).toUtc()));
+  @npSubjectAccessor
+  late final _lastVersionController =
+      BehaviorSubject.seeded(_c.pref.getLastVersion() ??
+          // v6 is the last version without saving the version number in pref
+          (_c.pref.getSetupProgress() == null ? k.version : 6));
+}
+
+extension PrefControllerExtension on PrefController {
+  Account? get currentAccountValue {
+    try {
+      return accountsValue[currentAccountIndexValue!];
+    } catch (_) {
+      return null;
+    }
+  }
 }
 
 @npSubjectAccessor

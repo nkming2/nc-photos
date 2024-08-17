@@ -1,13 +1,14 @@
 import 'dart:async';
 
 import 'package:clock/clock.dart';
+import 'package:copy_with/copy_with.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/bloc_util.dart';
+import 'package:nc_photos/controller/pref_controller.dart';
 import 'package:nc_photos/db/entity_converter.dart';
-import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/activity.dart';
@@ -28,120 +29,105 @@ import 'package:np_platform_util/np_platform_util.dart';
 import 'package:to_string/to_string.dart';
 
 part 'splash.g.dart';
+part 'splash/bloc.dart';
+part 'splash/state_event.dart';
+part 'splash/view.dart';
 
-class Splash extends StatefulWidget {
+class Splash extends StatelessWidget {
   static const routeName = "/splash";
 
   const Splash({super.key});
 
   @override
-  createState() => _SplashState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => _Bloc(
+        prefController: context.read(),
+        npDb: context.read(),
+      )..add(const _Init()),
+      child: const _WrappedSplash(),
+    );
+  }
 }
 
 @npLog
-class _SplashState extends State<Splash> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _doWork();
-    });
-  }
-
-  Future<void> _doWork() async {
-    if (!await Permission.hasPostNotifications()) {
-      await requestPostNotificationsForResult();
-    }
-    if (Pref().getFirstRunTime() == null) {
-      await Pref().setFirstRunTime(clock.now().millisecondsSinceEpoch);
-    }
-    if (_shouldUpgrade()) {
-      setState(() {
-        _isUpgrading = true;
-      });
-      await _handleUpgrade();
-      setState(() {
-        _isUpgrading = false;
-      });
-    }
-    _exit();
-  }
+class _WrappedSplash extends StatelessWidget {
+  const _WrappedSplash();
 
   @override
-  build(BuildContext context) {
-    return Scaffold(
-      body: PopScope(
-        canPop: false,
-        child: Builder(builder: (context) => _buildContent(context)),
-      ),
-    );
-  }
-
-  Widget _buildContent(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
+  Widget build(BuildContext context) {
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        body: MultiBlocListener(
+          listeners: [
+            _BlocListenerT<int?>(
+              selector: (state) => state.changelogFromVersion,
+              listener: (context, changelogFromVersion) {
+                if (changelogFromVersion != null) {
+                  Navigator.of(context)
+                      .pushNamed(Changelog.routeName,
+                          arguments: ChangelogArguments(changelogFromVersion))
+                      .whenComplete(() {
+                    if (context.mounted) {
+                      context.addEvent(const _ChangelogDismissed());
+                    }
+                  });
+                }
+              },
+            ),
+            _BlocListenerT<bool>(
+              selector: (state) => state.isDone,
+              listener: (context, isDone) {
+                if (isDone) {
+                  _exit(context);
+                }
+              },
+            ),
+          ],
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Stack(
+              fit: StackFit.expand,
               children: [
-                Icon(
-                  Icons.cloud,
-                  size: 96,
-                  color: Theme.of(context).colorScheme.primary,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.cloud,
+                      size: 96,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      L10n.global().appTitle,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  L10n.global().appTitle,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.headlineMedium,
+                const Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 64,
+                  child: _UpgradeProgressView(),
                 ),
               ],
             ),
           ),
-          if (_isUpgrading)
-            BlocBuilder<_UpgradeCubit, _UpgradeState>(
-              bloc: _upgradeCubit,
-              builder: (context, state) {
-                return Positioned(
-                  left: 0,
-                  right: 0,
-                  bottom: 64,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(state.text),
-                      const SizedBox(height: 8),
-                      if (state.count == null)
-                        const SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: AppIntermediateCircularProgressIndicator(),
-                        )
-                      else
-                        LinearProgressIndicator(
-                          value: state.current / state.count!,
-                        ),
-                    ],
-                  ),
-                );
-              },
-            ),
-        ],
+        ),
       ),
     );
   }
 
-  void _exit() {
+  void _exit(BuildContext context) {
     _log.info("[_exit]");
-    final account = Pref().getCurrentAccount();
+    final account = context.read<PrefController>().currentAccountValue;
     if (isNeedSetup()) {
-      Navigator.pushReplacementNamed(context, Setup.routeName);
+      Navigator.of(context).pushReplacementNamed(Setup.routeName);
     } else if (account == null) {
-      Navigator.pushReplacementNamed(context, SignIn.routeName);
+      Navigator.of(context).pushReplacementNamed(SignIn.routeName);
     } else {
       Navigator.of(context)
           .pushReplacementNamedProtected(Home.routeName,
@@ -150,159 +136,28 @@ class _SplashState extends State<Splash> {
         if (getRawPlatform() == NpPlatform.android) {
           final initialRoute = await Activity.consumeInitialRoute();
           if (initialRoute != null) {
-            unawaited(Navigator.pushNamed(context, initialRoute));
+            unawaited(Navigator.of(context).pushNamed(initialRoute));
           }
         }
       }).onError<ProtectedPageAuthException>((_, __) async {
         _log.warning("[_exit] Auth failed");
         await Future.delayed(const Duration(seconds: 2));
-        _exit();
+        if (context.mounted) {
+          _exit(context);
+        }
         return null;
       });
     }
   }
-
-  bool _shouldUpgrade() {
-    final lastVersion = Pref().getLastVersionOr(k.version);
-    return lastVersion < k.version;
-  }
-
-  Future<void> _handleUpgrade() async {
-    try {
-      final lastVersion = Pref().getLastVersionOr(k.version);
-      unawaited(_showChangelogIfAvailable(lastVersion));
-      // begin upgrade while showing the changelog
-      try {
-        _log.info("[_handleUpgrade] Upgrade: $lastVersion -> ${k.version}");
-        await _upgrade(lastVersion);
-        _log.info("[_handleUpgrade] Upgrade done");
-      } finally {
-        // ensure user has closed the changelog
-        await _changelogCompleter.future;
-      }
-    } catch (e, stackTrace) {
-      _log.shout("[_handleUpgrade] Failed while upgrade", e, stackTrace);
-    } finally {
-      await Pref().setLastVersion(k.version);
-    }
-  }
-
-  Future<void> _upgrade(int lastVersion) async {
-    if (lastVersion < 290) {
-      await _upgrade29(lastVersion);
-    }
-    if (lastVersion < 460) {
-      await _upgrade46(lastVersion);
-    }
-    if (lastVersion < 550) {
-      await _upgrade55(lastVersion);
-    }
-  }
-
-  Future<void> _upgrade29(int lastVersion) async {
-    try {
-      _log.info("[_upgrade29] clearDefaultCache");
-      await CompatV29.clearDefaultCache();
-    } catch (e, stackTrace) {
-      _log.shout("[_upgrade29] Failed while clearDefaultCache", e, stackTrace);
-      // just leave the cache then
-    }
-  }
-
-  Future<void> _upgrade46(int lastVersion) async {
-    try {
-      _log.info("[_upgrade46] insertDbAccounts");
-      final c = KiwiContainer().resolve<DiContainer>();
-      await CompatV46.insertDbAccounts(c.pref, context.read());
-    } catch (e, stackTrace) {
-      _log.shout("[_upgrade46] Failed while clearDefaultCache", e, stackTrace);
-      unawaited(Pref().setAccounts3(null));
-      unawaited(Pref().setCurrentAccountIndex(null));
-      await showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text("Error"),
-          content: const Text(
-              "Failed upgrading app, please sign in to your servers again"),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(MaterialLocalizations.of(context).okButtonLabel),
-            ),
-          ],
-        ),
-      );
-    }
-  }
-
-  Future<void> _upgrade55(int lastVersion) async {
-    final c = KiwiContainer().resolve<DiContainer>();
-    try {
-      _log.info("[_upgrade55] migrate DB");
-      await CompatV55.migrateDb(
-        c.npDb,
-        onProgress: (current, count) {
-          _upgradeCubit.setState(
-            L10n.global().migrateDatabaseProcessingNotification,
-            current,
-            count,
-          );
-        },
-      );
-    } catch (e, stackTrace) {
-      _log.shout("[_upgrade55] Failed while migrateDb", e, stackTrace);
-      final accounts = Pref().getAccounts3Or([]);
-      await context.read<NpDb>().clearAndInitWithAccounts(accounts.toDb());
-    }
-    _upgradeCubit.setIntermediate();
-  }
-
-  Future<void> _showChangelogIfAvailable(int lastVersion) async {
-    if (Changelog.hasContent(lastVersion)) {
-      try {
-        await Navigator.of(context).pushNamed(Changelog.routeName,
-            arguments: ChangelogArguments(lastVersion));
-      } catch (e, stackTrace) {
-        _log.severe(
-            "[_showChangelogIfAvailable] Uncaught exception", e, stackTrace);
-      } finally {
-        _changelogCompleter.complete();
-      }
-    } else {
-      _changelogCompleter.complete();
-    }
-  }
-
-  final _changelogCompleter = Completer();
-  var _isUpgrading = false;
-  late final _upgradeCubit = _UpgradeCubit();
 }
 
-@toString
-class _UpgradeState {
-  const _UpgradeState(String text, int current, int count)
-      : this._(text, current, count);
+// typedef _BlocBuilder = BlocBuilder<_Bloc, _State>;
+// typedef _BlocListener = BlocListener<_Bloc, _State>;
+typedef _BlocListenerT<T> = BlocListenerT<_Bloc, _State, T>;
+typedef _BlocSelector<T> = BlocSelector<_Bloc, _State, T>;
 
-  const _UpgradeState.intermediate([String? text])
-      : this._(text ?? "Updating", 0, null);
-
-  const _UpgradeState._(this.text, this.current, this.count);
-
-  @override
-  String toString() => _$toString();
-
-  final String text;
-  final int current;
-  final int? count;
-}
-
-class _UpgradeCubit extends Cubit<_UpgradeState> {
-  _UpgradeCubit() : super(const _UpgradeState.intermediate());
-
-  void setIntermediate() => emit(const _UpgradeState.intermediate());
-
-  void setState(String text, int current, int count) =>
-      emit(_UpgradeState(text, current, count));
+extension on BuildContext {
+  _Bloc get bloc => read<_Bloc>();
+  // _State get state => bloc.state;
+  void addEvent(_Event event) => bloc.add(event);
 }
