@@ -1168,18 +1168,6 @@
     "homeTabMapBrowser"
   ],
 
-  "tr": [
-    "settingsUseNewHttpEngine",
-    "settingsUseNewHttpEngineDescription",
-    "settingsRestartNeededDialog",
-    "mapBrowserDateRangeLabel",
-    "mapBrowserDateRangeThisMonth",
-    "mapBrowserDateRangePrevMonth",
-    "mapBrowserDateRangeThisYear",
-    "mapBrowserDateRangeCustom",
-    "homeTabMapBrowser"
-  ],
-
   "zh": [
     "settingsMetadataTitle",
     "settingsPersonProviderTitle",
