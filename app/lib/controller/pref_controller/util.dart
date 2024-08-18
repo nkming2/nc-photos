@@ -110,6 +110,15 @@ extension on Pref {
       return provider.setInt(PrefKey.firstRunTime, value);
     }
   }
+
+  int? getCurrentAccountIndex() => provider.getInt(PrefKey.currentAccountIndex);
+  Future<bool> setCurrentAccountIndex(int? value) {
+    if (value == null) {
+      return provider.remove(PrefKey.currentAccountIndex);
+    } else {
+      return provider.setInt(PrefKey.currentAccountIndex, value);
+    }
+  }
 }
 
 MapCoord? _tryMapCoordFromJson(dynamic json) {

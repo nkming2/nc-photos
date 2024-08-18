@@ -5,7 +5,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
-import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/collection/util.dart';
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/json_util.dart';
@@ -24,7 +23,7 @@ part 'pref_controller/util.dart';
 
 @npSubjectAccessor
 class PrefController {
-  PrefController(this._c);
+  PrefController(this.pref);
 
   Future<bool> setAccounts(List<Account> value) => _set<List<Account>>(
         controller: _accountsController,
@@ -32,7 +31,7 @@ class PrefController {
         value: value,
       );
 
-  Future<bool> setCurrentAccountIndex(int value) => _setOrRemove<int>(
+  Future<bool> setCurrentAccountIndex(int? value) => _setOrRemove<int>(
         controller: _currentAccountIndexController,
         setter: (pref, value) => pref.setCurrentAccountIndex(value),
         remover: (pref) => pref.setCurrentAccountIndex(null),
@@ -203,7 +202,7 @@ class PrefController {
     required T value,
   }) =>
       _doSet(
-        pref: _c.pref,
+        pref: pref,
         controller: controller,
         setter: setter,
         value: value,
@@ -217,7 +216,7 @@ class PrefController {
     T? defaultValue,
   }) =>
       _doSetOrRemove(
-        pref: _c.pref,
+        pref: pref,
         controller: controller,
         setter: setter,
         remover: remover,
@@ -233,90 +232,91 @@ class PrefController {
     }
   }
 
-  final DiContainer _c;
+  final Pref pref;
+
   @npSubjectAccessor
   late final _accountsController =
-      BehaviorSubject.seeded(_c.pref.getAccounts3() ?? []);
+      BehaviorSubject.seeded(pref.getAccounts3() ?? []);
   @npSubjectAccessor
   late final _currentAccountIndexController =
-      BehaviorSubject.seeded(_c.pref.getCurrentAccountIndex());
+      BehaviorSubject.seeded(pref.getCurrentAccountIndex());
   @npSubjectAccessor
   late final _languageController =
-      BehaviorSubject.seeded(_langIdToAppLanguage(_c.pref.getLanguageOr(0)));
+      BehaviorSubject.seeded(_langIdToAppLanguage(pref.getLanguageOr(0)));
   @npSubjectAccessor
   late final _homePhotosZoomLevelController =
-      BehaviorSubject.seeded(_c.pref.getHomePhotosZoomLevelOr(0));
+      BehaviorSubject.seeded(pref.getHomePhotosZoomLevelOr(0));
   @npSubjectAccessor
   late final _albumBrowserZoomLevelController =
-      BehaviorSubject.seeded(_c.pref.getAlbumBrowserZoomLevelOr(0));
+      BehaviorSubject.seeded(pref.getAlbumBrowserZoomLevelOr(0));
   @npSubjectAccessor
   late final _homeAlbumsSortController = BehaviorSubject.seeded(
-      CollectionSort.values[_c.pref.getHomeAlbumsSortOr(0)]);
+      CollectionSort.values[pref.getHomeAlbumsSortOr(0)]);
   @npSubjectAccessor
   late final _isEnableExifController =
-      BehaviorSubject.seeded(_c.pref.isEnableExifOr(true));
+      BehaviorSubject.seeded(pref.isEnableExifOr(true));
   @npSubjectAccessor
   late final _shouldProcessExifWifiOnlyController =
-      BehaviorSubject.seeded(_c.pref.shouldProcessExifWifiOnlyOr(true));
+      BehaviorSubject.seeded(pref.shouldProcessExifWifiOnlyOr(true));
   @npSubjectAccessor
   late final _memoriesRangeController =
-      BehaviorSubject.seeded(_c.pref.getMemoriesRangeOr(2));
+      BehaviorSubject.seeded(pref.getMemoriesRangeOr(2));
   @npSubjectAccessor
   late final _viewerScreenBrightnessController =
-      BehaviorSubject.seeded(_c.pref.getViewerScreenBrightnessOr(-1));
+      BehaviorSubject.seeded(pref.getViewerScreenBrightnessOr(-1));
   @npSubjectAccessor
   late final _isViewerForceRotationController =
-      BehaviorSubject.seeded(_c.pref.isViewerForceRotationOr(false));
+      BehaviorSubject.seeded(pref.isViewerForceRotationOr(false));
   @npSubjectAccessor
   late final _gpsMapProviderController = BehaviorSubject.seeded(
-      GpsMapProvider.values[_c.pref.getGpsMapProviderOr(0)]);
+      GpsMapProvider.values[pref.getGpsMapProviderOr(0)]);
   @npSubjectAccessor
   late final _isAlbumBrowserShowDateController =
-      BehaviorSubject.seeded(_c.pref.isAlbumBrowserShowDateOr(false));
+      BehaviorSubject.seeded(pref.isAlbumBrowserShowDateOr(false));
   @npSubjectAccessor
   late final _isDoubleTapExitController =
-      BehaviorSubject.seeded(_c.pref.isDoubleTapExitOr(false));
+      BehaviorSubject.seeded(pref.isDoubleTapExitOr(false));
   @npSubjectAccessor
   late final _isSaveEditResultToServerController =
-      BehaviorSubject.seeded(_c.pref.isSaveEditResultToServerOr(true));
+      BehaviorSubject.seeded(pref.isSaveEditResultToServerOr(true));
   @npSubjectAccessor
   late final _enhanceMaxSizeController = BehaviorSubject.seeded(
-      SizeInt(_c.pref.getEnhanceMaxWidthOr(), _c.pref.getEnhanceMaxHeightOr()));
+      SizeInt(pref.getEnhanceMaxWidthOr(), pref.getEnhanceMaxHeightOr()));
   @npSubjectAccessor
   late final _isDarkThemeController =
-      BehaviorSubject.seeded(_c.pref.isDarkThemeOr(false));
+      BehaviorSubject.seeded(pref.isDarkThemeOr(false));
   @npSubjectAccessor
   late final _isFollowSystemThemeController =
-      BehaviorSubject.seeded(_c.pref.isFollowSystemThemeOr(false));
+      BehaviorSubject.seeded(pref.isFollowSystemThemeOr(false));
   @npSubjectAccessor
   late final _isUseBlackInDarkThemeController =
-      BehaviorSubject.seeded(_c.pref.isUseBlackInDarkThemeOr(false));
+      BehaviorSubject.seeded(pref.isUseBlackInDarkThemeOr(false));
   @NpSubjectAccessor(type: "Color?")
   late final _seedColorController =
-      BehaviorSubject<Color?>.seeded(_c.pref.getSeedColor()?.let(Color.new));
+      BehaviorSubject<Color?>.seeded(pref.getSeedColor()?.let(Color.new));
   @NpSubjectAccessor(type: "Color?")
   late final _secondarySeedColorController = BehaviorSubject<Color?>.seeded(
-      _c.pref.getSecondarySeedColor()?.let(Color.new));
+      pref.getSecondarySeedColor()?.let(Color.new));
   @npSubjectAccessor
   late final _isDontShowVideoPreviewHintController =
-      BehaviorSubject.seeded(_c.pref.isDontShowVideoPreviewHintOr(false));
+      BehaviorSubject.seeded(pref.isDontShowVideoPreviewHintOr(false));
   @npSubjectAccessor
-  late final _mapBrowserPrevPositionController = BehaviorSubject.seeded(_c.pref
+  late final _mapBrowserPrevPositionController = BehaviorSubject.seeded(pref
       .getMapBrowserPrevPosition()
       ?.let(tryJsonDecode)
       ?.let(_tryMapCoordFromJson));
   @npSubjectAccessor
   late final _isNewHttpEngineController =
-      BehaviorSubject.seeded(_c.pref.isNewHttpEngine() ?? false);
+      BehaviorSubject.seeded(pref.isNewHttpEngine() ?? false);
   @npSubjectAccessor
-  late final _firstRunTimeController = BehaviorSubject.seeded(_c.pref
+  late final _firstRunTimeController = BehaviorSubject.seeded(pref
       .getFirstRunTime()
       ?.let((v) => DateTime.fromMillisecondsSinceEpoch(v).toUtc()));
   @npSubjectAccessor
   late final _lastVersionController =
-      BehaviorSubject.seeded(_c.pref.getLastVersion() ??
+      BehaviorSubject.seeded(pref.getLastVersion() ??
           // v6 is the last version without saving the version number in pref
-          (_c.pref.getSetupProgress() == null ? k.version : 6));
+          (pref.getSetupProgress() == null ? k.version : 6));
 }
 
 extension PrefControllerExtension on PrefController {
@@ -331,7 +331,7 @@ extension PrefControllerExtension on PrefController {
 
 @npSubjectAccessor
 class SecurePrefController {
-  SecurePrefController(this._c);
+  SecurePrefController(this.securePref);
 
   Future<bool> setProtectedPageAuthType(ProtectedPageAuthType? value) =>
       _setOrRemove<ProtectedPageAuthType>(
@@ -366,7 +366,7 @@ class SecurePrefController {
     required T value,
   }) =>
       _doSet(
-        pref: _c.securePref,
+        pref: securePref,
         controller: controller,
         setter: setter,
         value: value,
@@ -381,7 +381,7 @@ class SecurePrefController {
     T? defaultValue,
   }) =>
       _doSetOrRemove(
-        pref: _c.securePref,
+        pref: securePref,
         controller: controller,
         setter: setter,
         remover: remover,
@@ -389,18 +389,19 @@ class SecurePrefController {
         defaultValue: defaultValue,
       );
 
-  final DiContainer _c;
+  final Pref securePref;
+
   @npSubjectAccessor
-  late final _protectedPageAuthTypeController = BehaviorSubject.seeded(_c
-      .securePref
-      .getProtectedPageAuthType()
-      ?.let((e) => ProtectedPageAuthType.values[e]));
+  late final _protectedPageAuthTypeController = BehaviorSubject.seeded(
+      securePref
+          .getProtectedPageAuthType()
+          ?.let((e) => ProtectedPageAuthType.values[e]));
   @npSubjectAccessor
   late final _protectedPageAuthPinController =
-      BehaviorSubject.seeded(_c.securePref.getProtectedPageAuthPin()?.toCi());
+      BehaviorSubject.seeded(securePref.getProtectedPageAuthPin()?.toCi());
   @npSubjectAccessor
-  late final _protectedPageAuthPasswordController = BehaviorSubject.seeded(
-      _c.securePref.getProtectedPageAuthPassword()?.toCi());
+  late final _protectedPageAuthPasswordController =
+      BehaviorSubject.seeded(securePref.getProtectedPageAuthPassword()?.toCi());
 }
 
 Future<bool> _doSet<T>({

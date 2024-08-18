@@ -47,7 +47,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
       if (index == -1) {
         throw StateError("Account not found");
       }
-      await _c.pref.setCurrentAccountIndex(index);
+      await prefController.setCurrentAccountIndex(index);
       emit(state.copyWith(newSelectAccount: ev.account));
     });
   }
@@ -60,7 +60,8 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     try {
       await _prefLock.protect(() async {
         final accounts = _c.pref.getAccounts3()!;
-        final currentAccount = accounts[_c.pref.getCurrentAccountIndex()!];
+        final currentAccount =
+            accounts[prefController.currentAccountIndexValue!];
         accounts.remove(ev.account);
         final newAccountIndex = accounts.indexOf(currentAccount);
         if (newAccountIndex == -1) {
@@ -74,7 +75,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
               stackTrace);
         }
         await Pref().setAccounts3(accounts);
-        await Pref().setCurrentAccountIndex(newAccountIndex);
+        await prefController.setCurrentAccountIndex(newAccountIndex);
 
         // check if the same account (server + userId) still exists in known
         // accounts

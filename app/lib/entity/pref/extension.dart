@@ -1,14 +1,6 @@
 part of '../pref.dart';
 
 extension PrefExtension on Pref {
-  Account? getCurrentAccount() {
-    try {
-      return getAccounts3()![getCurrentAccountIndex()!];
-    } catch (_) {
-      return null;
-    }
-  }
-
   List<Account>? getAccounts3() {
     final jsonObjs = provider.getStringList(PrefKey.accounts3);
     return jsonObjs
@@ -33,17 +25,6 @@ extension PrefExtension on Pref {
     } else {
       final jsons = value.map((e) => jsonEncode(e.toJson())).toList();
       return provider.setStringList(PrefKey.accounts3, jsons);
-    }
-  }
-
-  int? getCurrentAccountIndex() => provider.getInt(PrefKey.currentAccountIndex);
-  int getCurrentAccountIndexOr(int def) => getCurrentAccountIndex() ?? def;
-  Future<bool> setCurrentAccountIndex(int? value) {
-    if (value == null) {
-      return _remove(PrefKey.currentAccountIndex);
-    } else {
-      return _set<int>(PrefKey.currentAccountIndex, value,
-          (key, value) => provider.setInt(key, value));
     }
   }
 

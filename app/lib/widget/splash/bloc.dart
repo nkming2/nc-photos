@@ -118,7 +118,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     } catch (e, stackTrace) {
       _log.shout("[_upgrade46] Failed while clearDefaultCache", e, stackTrace);
       unawaited(Pref().setAccounts3(null));
-      unawaited(Pref().setCurrentAccountIndex(null));
+      unawaited(prefController.setCurrentAccountIndex(null));
     }
   }
 

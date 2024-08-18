@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/controller/pref_controller.dart';
 import 'package:nc_photos/db/entity_converter.dart';
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/entity/pref_util.dart' as pref_util;
@@ -183,8 +184,9 @@ class _SignInState extends State<SignIn> {
       _log.shout("[_connect] Failed reading pref for account: $account", e,
           stackTrace);
     }
+    final prefController = context.read<PrefController>();
     unawaited(Pref().setAccounts3(accounts));
-    unawaited(Pref().setCurrentAccountIndex(accounts.indexOf(account)));
+    unawaited(prefController.setCurrentAccountIndex(accounts.indexOf(account)));
   }
 
   final _formKey = GlobalKey<FormState>();
