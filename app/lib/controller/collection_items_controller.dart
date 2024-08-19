@@ -298,13 +298,40 @@ class CollectionItemsController {
   Future<void> _load() async {
     try {
       List<CollectionItem>? items;
-      await for (final r in ListCollectionItem(_c)(account, collection)) {
-        items = r;
-        _dataStreamController.add(CollectionItemStreamData(
-          items: r,
-          rawItems: r,
-          hasNext: true,
-        ));
+      ExceptionEvent? originalException;
+      try {
+        await for (final r in ListCollectionItem(_c)(account, collection)) {
+          items = r;
+          _dataStreamController.add(CollectionItemStreamData(
+            items: r,
+            rawItems: r,
+            hasNext: true,
+          ));
+        }
+      } catch (e, stackTrace) {
+        _log.severe("[_load] Failed while ListCollectionItem, try with local",
+            e, stackTrace);
+        originalException = ExceptionEvent(e, stackTrace);
+      }
+      if (originalException != null) {
+        // try again with local repos
+        try {
+          await for (final r
+              in ListCollectionItem(_c.withLocalRepo())(account, collection)) {
+            items = r;
+            _dataStreamController.add(CollectionItemStreamData(
+              items: r,
+              rawItems: r,
+              hasNext: true,
+            ));
+          }
+        } catch (e, stackTrace) {
+          _log.severe(
+              "[_load] Failed while ListCollectionItem with local repos",
+              e,
+              stackTrace);
+          originalException.throwMe();
+        }
       }
       if (items != null) {
         _dataStreamController.add(CollectionItemStreamData(
@@ -312,10 +339,13 @@ class CollectionItemsController {
           rawItems: items,
           hasNext: false,
         ));
-        final newCollection =
-            await UpdateCollectionPostLoad(_c)(account, collection, items);
-        if (newCollection != null) {
-          onCollectionUpdated(newCollection);
+        if (originalException == null) {
+          // only update if the data is queried from remote
+          final newCollection =
+              await UpdateCollectionPostLoad(_c)(account, collection, items);
+          if (newCollection != null) {
+            onCollectionUpdated(newCollection);
+          }
         }
       }
     } catch (e, stackTrace) {
