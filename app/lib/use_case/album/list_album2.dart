@@ -52,11 +52,23 @@ class ListAlbum2 {
     Account account, {
     ErrorHandler? onError,
   }) async* {
-    final ls = await Ls(_c.fileRepo)(
+    List<File>? ls;
+    var isRemoteGood = true;
+    try {
+      ls = await Ls(_c.fileRepo)(
         account,
-        File(
-          path: remote_storage_util.getRemoteAlbumsDir(account),
-        ));
+        File(path: remote_storage_util.getRemoteAlbumsDir(account)),
+      );
+    } catch (e) {
+      _log.warning("[_call] Failed while Ls", e);
+    }
+    if (ls == null) {
+      isRemoteGood = false;
+      ls = await Ls(_c.fileRepoLocal)(
+        account,
+        File(path: remote_storage_util.getRemoteAlbumsDir(account)),
+      );
+    }
     final List<File?> albumFiles =
         ls.where((element) => element.isCollection != true).toList();
     // migrate files
@@ -71,7 +83,13 @@ class ListAlbum2 {
         albumFiles[i] = null;
       }
     }
-    yield* _c.albumRepo2.getAlbums(account, albumFiles.whereNotNull().toList());
+    if (isRemoteGood) {
+      yield* _c.albumRepo2
+          .getAlbums(account, albumFiles.whereNotNull().toList());
+    } else {
+      yield* _c.albumRepo2Local
+          .getAlbums(account, albumFiles.whereNotNull().toList());
+    }
   }
 
   final DiContainer _c;
