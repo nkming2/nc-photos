@@ -429,6 +429,17 @@ class _ViewerState extends State<Viewer>
       onPause: _onVideoPause,
       isControlVisible: _isShowAppBar && !_isDetailPaneActive,
       canPlay: !_isDetailPaneActive,
+      canZoom: _canZoom(),
+      onZoomStarted: () {
+        setState(() {
+          _isZoomed = true;
+        });
+      },
+      onZoomEnded: () {
+        setState(() {
+          _isZoomed = false;
+        });
+      },
     );
   }
 

@@ -267,6 +267,17 @@ class _TrashbinViewerState extends State<TrashbinViewer> {
       onPlay: _onVideoPlay,
       onPause: _onVideoPause,
       isControlVisible: _isShowVideoControl,
+      canZoom: true,
+      onZoomStarted: () {
+        setState(() {
+          _isZoomed = true;
+        });
+      },
+      onZoomEnded: () {
+        setState(() {
+          _isZoomed = false;
+        });
+      },
     );
   }
 

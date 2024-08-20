@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
@@ -14,6 +13,7 @@ import 'package:nc_photos/mobile/android/content_uri_image_provider.dart';
 import 'package:nc_photos/np_api_util.dart';
 import 'package:nc_photos/widget/cached_network_image_mod.dart' as mod;
 import 'package:nc_photos/widget/network_thumbnail.dart';
+import 'package:nc_photos/widget/zoomable_viewer.dart';
 import 'package:np_codegen/np_codegen.dart';
 
 part 'image_viewer.g.dart';
@@ -239,159 +239,37 @@ class _ImageViewerState extends State<_ImageViewer>
     with TickerProviderStateMixin {
   @override
   build(BuildContext context) {
-    final content = InteractiveViewer(
-      minScale: 1.0,
-      maxScale: 3.5,
-      transformationController: _transformationController,
-      panEnabled: widget.canZoom && _isZoomed,
-      scaleEnabled: widget.canZoom,
-      // allow the image to be zoomed to fill the whole screen
-      child: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        alignment: Alignment.center,
-        child: NotificationListener<SizeChangedLayoutNotification>(
-          onNotification: (_) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (_key.currentContext != null) {
-                widget.onHeightChanged?.call(_key.currentContext!.size!.height);
-              }
-            });
-            return false;
-          },
-          child: SizeChangedLayoutNotifier(
-            key: _key,
-            child: IntrinsicHeight(child: widget.child),
-          ),
+    final content = Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      alignment: Alignment.center,
+      child: NotificationListener<SizeChangedLayoutNotification>(
+        onNotification: (_) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (_key.currentContext != null) {
+              widget.onHeightChanged?.call(_key.currentContext!.size!.height);
+            }
+          });
+          return false;
+        },
+        child: SizeChangedLayoutNotifier(
+          key: _key,
+          child: IntrinsicHeight(child: widget.child),
         ),
       ),
     );
     if (widget.canZoom) {
-      return Listener(
-        onPointerDown: (_) {
-          ++_finger;
-          if (_finger >= 2) {
-            _setIsZooming(true);
-          }
-        },
-        onPointerUp: (event) {
-          --_finger;
-          if (_finger < 2) {
-            _setIsZooming(false);
-          }
-          _prevFingerPosition = event.position;
-        },
-        onPointerCancel: (event) {
-          --_finger;
-          if (_finger < 2) {
-            _setIsZooming(false);
-          }
-        },
-        onPointerSignal: (event) {
-          if (event is PointerScrollEvent &&
-              event.kind == PointerDeviceKind.mouse) {
-            if (event.scrollDelta.dy < 0) {
-              // scroll up
-              _setIsZooming(true);
-            } else if (event.scrollDelta.dy > 0) {
-              // scroll down
-              _setIsZooming(false);
-            }
-          }
-        },
-        child: GestureDetector(
-          onDoubleTap: () {
-            if (_isZoomed) {
-              // restore transformation
-              _autoZoomOut();
-            } else {
-              _autoZoomIn();
-            }
-          },
-          child: content,
-        ),
+      return ZoomableViewer(
+        onZoomStarted: widget.onZoomStarted,
+        onZoomEnded: widget.onZoomEnded,
+        child: content,
       );
     } else {
       return content;
     }
   }
 
-  @override
-  dispose() {
-    super.dispose();
-    _transformationController.dispose();
-  }
-
-  void _setIsZooming(bool flag) {
-    _isZooming = flag;
-    final next = _isZoomed;
-    if (next != _wasZoomed) {
-      _wasZoomed = next;
-      _log.info("[_setIsZooming] Is zoomed: $next");
-      if (next) {
-        widget.onZoomStarted?.call();
-      } else {
-        widget.onZoomEnded?.call();
-      }
-    }
-  }
-
-  bool get _isZoomed =>
-      _isZooming || _transformationController.value.getMaxScaleOnAxis() != 1.0;
-
-  /// Called when double tapping the image to zoom in to the default level
-  void _autoZoomIn() {
-    final animController =
-        AnimationController(duration: k.animationDurationShort, vsync: this);
-    final originX = -_prevFingerPosition.dx / 2;
-    final originY = -_prevFingerPosition.dy / 2;
-    final anim = Matrix4Tween(
-            begin: Matrix4.identity(),
-            end: Matrix4.identity()
-              ..scale(2.0)
-              ..translate(originX, originY))
-        .animate(animController);
-    animController
-      ..addListener(() {
-        _transformationController.value = anim.value;
-      })
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          _setIsZooming(false);
-        }
-      })
-      ..forward();
-    _setIsZooming(true);
-  }
-
-  /// Called when double tapping the zoomed image to zoom out
-  void _autoZoomOut() {
-    final animController =
-        AnimationController(duration: k.animationDurationShort, vsync: this);
-    final anim = Matrix4Tween(
-            begin: _transformationController.value, end: Matrix4.identity())
-        .animate(animController);
-    animController
-      ..addListener(() {
-        _transformationController.value = anim.value;
-      })
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          _setIsZooming(false);
-        }
-      })
-      ..forward();
-    _setIsZooming(true);
-  }
-
   final _key = GlobalKey();
-  final _transformationController = TransformationController();
-
-  var _isZooming = false;
-  var _wasZoomed = false;
-
-  int _finger = 0;
-  var _prevFingerPosition = const Offset(0, 0);
 }
 
 String _getImageUrl(Account account, FileDescriptor file) {

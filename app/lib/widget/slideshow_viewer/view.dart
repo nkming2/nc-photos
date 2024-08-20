@@ -325,6 +325,7 @@ class _VideoPageView extends StatelessWidget {
       },
       isControlVisible: false,
       canLoop: false,
+      canZoom: false,
     );
   }
 
