@@ -527,7 +527,12 @@ class _Bloc extends Bloc<_Event, _State>
     }
     final results = rawItems.where((e) {
       if (e is CollectionFileItem) {
-        return whitelist.contains(e.file.fdId);
+        if (file_util.isNcAlbumFile(account, e.file)) {
+          // file shared with us are not in our db
+          return true;
+        } else {
+          return whitelist.contains(e.file.fdId);
+        }
       } else {
         return true;
       }
