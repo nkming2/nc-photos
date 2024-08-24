@@ -4,6 +4,7 @@ enum PrefMapDefaultRangeType {
   thisMonth(0),
   prevMonth(1),
   thisYear(2),
+  custom(3),
   ;
 
   const PrefMapDefaultRangeType(this.value);

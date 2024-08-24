@@ -197,6 +197,15 @@ extension $PrefControllerNpSubjectAccessor on PrefController {
       mapDefaultRangeType.distinct().skip(1);
   PrefMapDefaultRangeType get mapDefaultRangeTypeValue =>
       _mapDefaultRangeTypeController.value;
+// _mapDefaultCustomRangeController
+  ValueStream<Duration> get mapDefaultCustomRange =>
+      _mapDefaultCustomRangeController.stream;
+  Stream<Duration> get mapDefaultCustomRangeNew =>
+      mapDefaultCustomRange.skip(1);
+  Stream<Duration> get mapDefaultCustomRangeChange =>
+      mapDefaultCustomRange.distinct().skip(1);
+  Duration get mapDefaultCustomRangeValue =>
+      _mapDefaultCustomRangeController.value;
 }
 
 extension $SecurePrefControllerNpSubjectAccessor on SecurePrefController {

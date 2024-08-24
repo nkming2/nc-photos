@@ -125,6 +125,12 @@ extension on Pref {
       ?.let(PrefMapDefaultRangeType.fromValue);
   Future<bool> setMapDefaultRangeType(PrefMapDefaultRangeType value) =>
       provider.setInt(PrefKey.mapDefaultRangeType, value.value);
+
+  Duration? getMapDefaultCustomRange() => provider
+      .getInt(PrefKey.mapDefaultCustomRange)
+      ?.let((v) => Duration(days: v));
+  Future<bool> setMapDefaultCustomRange(Duration value) =>
+      provider.setInt(PrefKey.mapDefaultCustomRange, value.inDays);
 }
 
 MapCoord? _tryMapCoordFromJson(dynamic json) {

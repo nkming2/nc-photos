@@ -259,6 +259,8 @@ enum _DateRangeType {
         return prevMonth;
       case PrefMapDefaultRangeType.thisYear:
         return thisYear;
+      case PrefMapDefaultRangeType.custom:
+        return custom;
     }
   }
 
@@ -284,7 +286,7 @@ enum _DateRangeType {
       case thisYear:
         return PrefMapDefaultRangeType.thisYear;
       case custom:
-        throw ArgumentError("Value not supported");
+        return PrefMapDefaultRangeType.custom;
     }
   }
 }

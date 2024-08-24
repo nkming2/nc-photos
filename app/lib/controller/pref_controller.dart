@@ -204,6 +204,12 @@ class PrefController {
         value: value,
       );
 
+  Future<bool> setMapDefaultCustomRange(Duration value) => _set<Duration>(
+        controller: _mapDefaultCustomRangeController,
+        setter: (pref, value) => pref.setMapDefaultCustomRange(value),
+        value: value,
+      );
+
   Future<bool> _set<T>({
     required BehaviorSubject<T> controller,
     required Future<bool> Function(Pref pref, T value) setter,
@@ -328,6 +334,9 @@ class PrefController {
   @npSubjectAccessor
   late final _mapDefaultRangeTypeController = BehaviorSubject.seeded(
       pref.getMapDefaultRangeType() ?? PrefMapDefaultRangeType.thisMonth);
+  @npSubjectAccessor
+  late final _mapDefaultCustomRangeController = BehaviorSubject.seeded(
+      pref.getMapDefaultCustomRange() ?? const Duration(days: 30));
 }
 
 extension PrefControllerExtension on PrefController {

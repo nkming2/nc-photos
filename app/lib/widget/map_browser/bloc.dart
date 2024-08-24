@@ -54,10 +54,24 @@ class _Bloc extends Bloc<_Event, _State>
   static _State _getInitialState(PrefController prefController) {
     final dateRangeType =
         _DateRangeType.fromPref(prefController.mapDefaultRangeTypeValue);
-    return _State.init(
-      dateRangeType: dateRangeType,
-      localDateRange: _calcDateRange(clock.now().toDate(), dateRangeType),
-    );
+    if (dateRangeType == _DateRangeType.custom) {
+      final today = clock.now().toDate();
+      return _State.init(
+        dateRangeType: dateRangeType,
+        localDateRange: DateRange(
+          from: today.add(
+            day: -prefController.mapDefaultCustomRangeValue.inDays,
+          ),
+          to: today,
+          toBound: TimeRangeBound.inclusive,
+        ),
+      );
+    } else {
+      return _State.init(
+        dateRangeType: dateRangeType,
+        localDateRange: _calcDateRange(clock.now().toDate(), dateRangeType),
+      );
+    }
   }
 
   Future<void> _onLoadData(_LoadData ev, Emitter<_State> emit) async {
@@ -118,6 +132,10 @@ class _Bloc extends Bloc<_Event, _State>
       dateRangeType: _DateRangeType.custom,
       localDateRange: ev.value,
     ));
+    if (prefController.mapDefaultRangeTypeValue ==
+        PrefMapDefaultRangeType.custom) {
+      _updatePrefDefaultCustomRange(ev.value);
+    }
   }
 
   void _onSetPrefDateRangeType(_SetPrefDateRangeType ev, Emitter<_State> emit) {
@@ -128,6 +146,9 @@ class _Bloc extends Bloc<_Event, _State>
   void _onSetAsDefaultRange(_SetAsDefaultRange ev, Emitter<_State> emit) {
     _log.info(ev);
     prefController.setMapDefaultRangeType(state.dateRangeType.toPref());
+    if (state.dateRangeType == _DateRangeType.custom) {
+      _updatePrefDefaultCustomRange(state.localDateRange);
+    }
   }
 
   void _onSetError(_SetError ev, Emitter<_State> emit) {
@@ -171,6 +192,12 @@ class _Bloc extends Bloc<_Event, _State>
           toBound: TimeRangeBound.inclusive,
         );
     }
+  }
+
+  void _updatePrefDefaultCustomRange(DateRange value) {
+    final today = clock.now().toDate();
+    final diff = today.difference(value.from!);
+    prefController.setMapDefaultCustomRange(diff);
   }
 
   final DiContainer _c;

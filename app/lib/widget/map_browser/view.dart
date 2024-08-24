@@ -401,10 +401,12 @@ class _SetAsDefaultSwitch extends StatelessWidget {
     return _BlocBuilder(
       buildWhen: (previous, current) =>
           previous.dateRangeType != current.dateRangeType ||
-          previous.prefDateRangeType != current.prefDateRangeType,
+          previous.prefDateRangeType != current.prefDateRangeType ||
+          previous.localDateRange != current.localDateRange,
       builder: (context, state) {
         final isChecked = state.dateRangeType == state.prefDateRangeType;
-        final isEnabled = state.dateRangeType != _DateRangeType.custom;
+        final isEnabled = state.dateRangeType != _DateRangeType.custom ||
+            state.localDateRange.to == clock.now().toDate();
         return InkWell(
           customBorder:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(64)),
