@@ -12,6 +12,7 @@ import 'package:nc_photos/widget/protected_page_password_auth_dialog.dart';
 import 'package:nc_photos/widget/protected_page_pin_auth_dialog.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_string/np_string.dart';
+import 'package:np_ui/np_ui.dart';
 import 'package:to_string/to_string.dart';
 
 part 'app_lock/bloc.dart';
@@ -71,11 +72,12 @@ class _WrappedAppLockSettings extends StatelessWidget {
                           ? L10n.global().disabledText
                           : L10n.global().enabledText,
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                            color: appLockType == null
-                                ? Theme.of(context).colorScheme.error
-                                : Theme.of(context).colorScheme.primary,
-                          ),
+                      style: Theme.of(context).textStyleColored(
+                        (textTheme) => textTheme.titleSmall,
+                        (colorScheme) => appLockType == null
+                            ? colorScheme.error
+                            : colorScheme.primary,
+                      ),
                     ),
                   ),
                 ),

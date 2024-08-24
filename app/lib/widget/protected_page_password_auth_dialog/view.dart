@@ -100,9 +100,10 @@ class _ErrorNoticeState extends State<_ErrorNotice>
             (t) => Offset(tremblingTransform(3, t) * .05, 0))),
         child: Text(
           widget.text,
-          style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                color: Theme.of(context).colorScheme.error,
-              ),
+          style: Theme.of(context).textStyleColored(
+            (textTheme) => textTheme.bodySmall,
+            (colorScheme) => colorScheme.error,
+          ),
         ),
       ),
     );

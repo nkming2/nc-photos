@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/app_localizations.dart';
-import 'package:nc_photos/theme.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_ui/np_ui.dart';
 
 part 'changelog.g.dart';
 part 'changelog/changelog_550.dart';

@@ -211,9 +211,10 @@ class _VideoViewerState extends State<VideoViewer>
                       valueListenable: _controller,
                       builder: (context, VideoPlayerValue value, child) => Text(
                         _durationToString(value.position),
-                        style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface,
-                            ),
+                        style: Theme.of(context).textStyleColored(
+                          (textTheme) => textTheme.labelLarge,
+                          (colorScheme) => colorScheme.onSurface,
+                        ),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -235,9 +236,10 @@ class _VideoViewerState extends State<VideoViewer>
                     if (_controller.value.duration != Duration.zero)
                       Text(
                         _durationToString(_controller.value.duration),
-                        style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface,
-                            ),
+                        style: Theme.of(context).textStyleColored(
+                          (textTheme) => textTheme.labelLarge,
+                          (colorScheme) => colorScheme.onSurface,
+                        ),
                       ),
                     const SizedBox(width: 4),
                     if (widget.canLoop) _LoopToggle(controller: _controller),
