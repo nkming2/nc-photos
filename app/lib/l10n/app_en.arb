@@ -1499,6 +1499,7 @@
 	"mapBrowserDateRangeThisYear": "This year",
 	"mapBrowserDateRangeCustom": "Custom",
 	"homeTabMapBrowser": "Map",
+	"mapBrowserSetDefaultDateRangeButton": "Set as default",
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {

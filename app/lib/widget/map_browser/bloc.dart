@@ -7,22 +7,23 @@ class _Bloc extends Bloc<_Event, _State>
     this._c, {
     required this.account,
     required this.prefController,
-  }) : super(_State.init(
-          dateRangeType: _DateRangeType.thisMonth,
-          localDateRange:
-              _calcDateRange(clock.now().toDate(), _DateRangeType.thisMonth),
-        )) {
+  }) : super(_Bloc._getInitialState(prefController)) {
     on<_LoadData>(_onLoadData);
     on<_OpenDataRangeControlPanel>(_onOpenDataRangeControlPanel);
     on<_CloseControlPanel>(_onCloseControlPanel);
     on<_SetDateRangeType>(_onSetDateRangeType);
     on<_SetLocalDateRange>(_onSetDateRange);
+    on<_SetPrefDateRangeType>(_onSetPrefDateRangeType);
+    on<_SetAsDefaultRange>(_onSetAsDefaultRange);
     on<_SetError>(_onSetError);
 
     _subscriptions.add(stream
         .distinctByIgnoreFirst((state) => state.localDateRange)
         .listen((state) {
       add(const _LoadData());
+    }));
+    _subscriptions.add(prefController.mapDefaultRangeTypeChange.listen((state) {
+      add(_SetPrefDateRangeType(_DateRangeType.fromPref(state)));
     }));
   }
 
@@ -48,6 +49,15 @@ class _Bloc extends Bloc<_Event, _State>
       _isHandlingError = false;
     }
     super.onError(error, stackTrace);
+  }
+
+  static _State _getInitialState(PrefController prefController) {
+    final dateRangeType =
+        _DateRangeType.fromPref(prefController.mapDefaultRangeTypeValue);
+    return _State.init(
+      dateRangeType: dateRangeType,
+      localDateRange: _calcDateRange(clock.now().toDate(), dateRangeType),
+    );
   }
 
   Future<void> _onLoadData(_LoadData ev, Emitter<_State> emit) async {
@@ -108,6 +118,16 @@ class _Bloc extends Bloc<_Event, _State>
       dateRangeType: _DateRangeType.custom,
       localDateRange: ev.value,
     ));
+  }
+
+  void _onSetPrefDateRangeType(_SetPrefDateRangeType ev, Emitter<_State> emit) {
+    _log.info(ev);
+    emit(state.copyWith(prefDateRangeType: ev.value));
+  }
+
+  void _onSetAsDefaultRange(_SetAsDefaultRange ev, Emitter<_State> emit) {
+    _log.info(ev);
+    prefController.setMapDefaultRangeType(state.dateRangeType.toPref());
   }
 
   void _onSetError(_SetError ev, Emitter<_State> emit) {

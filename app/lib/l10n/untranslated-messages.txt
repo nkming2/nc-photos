@@ -258,6 +258,7 @@
     "mapBrowserDateRangeThisYear",
     "mapBrowserDateRangeCustom",
     "homeTabMapBrowser",
+    "mapBrowserSetDefaultDateRangeButton",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -302,7 +303,8 @@
     "mapBrowserDateRangePrevMonth",
     "mapBrowserDateRangeThisYear",
     "mapBrowserDateRangeCustom",
-    "homeTabMapBrowser"
+    "homeTabMapBrowser",
+    "mapBrowserSetDefaultDateRangeButton"
   ],
 
   "de": [
@@ -345,7 +347,8 @@
     "mapBrowserDateRangePrevMonth",
     "mapBrowserDateRangeThisYear",
     "mapBrowserDateRangeCustom",
-    "homeTabMapBrowser"
+    "homeTabMapBrowser",
+    "mapBrowserSetDefaultDateRangeButton"
   ],
 
   "el": [
@@ -491,7 +494,8 @@
     "mapBrowserDateRangePrevMonth",
     "mapBrowserDateRangeThisYear",
     "mapBrowserDateRangeCustom",
-    "homeTabMapBrowser"
+    "homeTabMapBrowser",
+    "mapBrowserSetDefaultDateRangeButton"
   ],
 
   "es": [
@@ -528,7 +532,8 @@
     "mapBrowserDateRangePrevMonth",
     "mapBrowserDateRangeThisYear",
     "mapBrowserDateRangeCustom",
-    "homeTabMapBrowser"
+    "homeTabMapBrowser",
+    "mapBrowserSetDefaultDateRangeButton"
   ],
 
   "fi": [
@@ -565,7 +570,8 @@
     "mapBrowserDateRangePrevMonth",
     "mapBrowserDateRangeThisYear",
     "mapBrowserDateRangeCustom",
-    "homeTabMapBrowser"
+    "homeTabMapBrowser",
+    "mapBrowserSetDefaultDateRangeButton"
   ],
 
   "fr": [
@@ -602,7 +608,8 @@
     "mapBrowserDateRangePrevMonth",
     "mapBrowserDateRangeThisYear",
     "mapBrowserDateRangeCustom",
-    "homeTabMapBrowser"
+    "homeTabMapBrowser",
+    "mapBrowserSetDefaultDateRangeButton"
   ],
 
   "it": [
@@ -644,7 +651,8 @@
     "mapBrowserDateRangePrevMonth",
     "mapBrowserDateRangeThisYear",
     "mapBrowserDateRangeCustom",
-    "homeTabMapBrowser"
+    "homeTabMapBrowser",
+    "mapBrowserSetDefaultDateRangeButton"
   ],
 
   "nl": [
@@ -1023,6 +1031,7 @@
     "mapBrowserDateRangeThisYear",
     "mapBrowserDateRangeCustom",
     "homeTabMapBrowser",
+    "mapBrowserSetDefaultDateRangeButton",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -1071,7 +1080,8 @@
     "mapBrowserDateRangePrevMonth",
     "mapBrowserDateRangeThisYear",
     "mapBrowserDateRangeCustom",
-    "homeTabMapBrowser"
+    "homeTabMapBrowser",
+    "mapBrowserSetDefaultDateRangeButton"
   ],
 
   "pt": [
@@ -1128,7 +1138,8 @@
     "mapBrowserDateRangePrevMonth",
     "mapBrowserDateRangeThisYear",
     "mapBrowserDateRangeCustom",
-    "homeTabMapBrowser"
+    "homeTabMapBrowser",
+    "mapBrowserSetDefaultDateRangeButton"
   ],
 
   "ru": [
@@ -1165,7 +1176,12 @@
     "mapBrowserDateRangePrevMonth",
     "mapBrowserDateRangeThisYear",
     "mapBrowserDateRangeCustom",
-    "homeTabMapBrowser"
+    "homeTabMapBrowser",
+    "mapBrowserSetDefaultDateRangeButton"
+  ],
+
+  "tr": [
+    "mapBrowserSetDefaultDateRangeButton"
   ],
 
   "zh": [
@@ -1233,7 +1249,8 @@
     "mapBrowserDateRangePrevMonth",
     "mapBrowserDateRangeThisYear",
     "mapBrowserDateRangeCustom",
-    "homeTabMapBrowser"
+    "homeTabMapBrowser",
+    "mapBrowserSetDefaultDateRangeButton"
   ],
 
   "zh_Hant": [
@@ -1395,6 +1412,7 @@
     "mapBrowserDateRangePrevMonth",
     "mapBrowserDateRangeThisYear",
     "mapBrowserDateRangeCustom",
-    "homeTabMapBrowser"
+    "homeTabMapBrowser",
+    "mapBrowserSetDefaultDateRangeButton"
   ]
 }

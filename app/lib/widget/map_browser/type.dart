@@ -251,6 +251,17 @@ enum _DateRangeType {
   custom,
   ;
 
+  static _DateRangeType fromPref(PrefMapDefaultRangeType value) {
+    switch (value) {
+      case PrefMapDefaultRangeType.thisMonth:
+        return thisMonth;
+      case PrefMapDefaultRangeType.prevMonth:
+        return prevMonth;
+      case PrefMapDefaultRangeType.thisYear:
+        return thisYear;
+    }
+  }
+
   String toDisplayString() {
     switch (this) {
       case thisMonth:
@@ -261,6 +272,19 @@ enum _DateRangeType {
         return L10n.global().mapBrowserDateRangeThisYear;
       case custom:
         return L10n.global().mapBrowserDateRangeCustom;
+    }
+  }
+
+  PrefMapDefaultRangeType toPref() {
+    switch (this) {
+      case thisMonth:
+        return PrefMapDefaultRangeType.thisMonth;
+      case prevMonth:
+        return PrefMapDefaultRangeType.prevMonth;
+      case thisYear:
+        return PrefMapDefaultRangeType.thisYear;
+      case custom:
+        throw ArgumentError("Value not supported");
     }
   }
 }

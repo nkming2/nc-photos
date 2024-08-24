@@ -188,6 +188,15 @@ extension $PrefControllerNpSubjectAccessor on PrefController {
   Stream<int> get lastVersionNew => lastVersion.skip(1);
   Stream<int> get lastVersionChange => lastVersion.distinct().skip(1);
   int get lastVersionValue => _lastVersionController.value;
+// _mapDefaultRangeTypeController
+  ValueStream<PrefMapDefaultRangeType> get mapDefaultRangeType =>
+      _mapDefaultRangeTypeController.stream;
+  Stream<PrefMapDefaultRangeType> get mapDefaultRangeTypeNew =>
+      mapDefaultRangeType.skip(1);
+  Stream<PrefMapDefaultRangeType> get mapDefaultRangeTypeChange =>
+      mapDefaultRangeType.distinct().skip(1);
+  PrefMapDefaultRangeType get mapDefaultRangeTypeValue =>
+      _mapDefaultRangeTypeController.value;
 }
 
 extension $SecurePrefControllerNpSubjectAccessor on SecurePrefController {

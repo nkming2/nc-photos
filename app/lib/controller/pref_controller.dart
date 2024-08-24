@@ -19,6 +19,7 @@ import 'package:np_string/np_string.dart';
 import 'package:rxdart/rxdart.dart';
 
 part 'pref_controller.g.dart';
+part 'pref_controller/type.dart';
 part 'pref_controller/util.dart';
 
 @npSubjectAccessor
@@ -196,6 +197,13 @@ class PrefController {
         value: value,
       );
 
+  Future<bool> setMapDefaultRangeType(PrefMapDefaultRangeType value) =>
+      _set<PrefMapDefaultRangeType>(
+        controller: _mapDefaultRangeTypeController,
+        setter: (pref, value) => pref.setMapDefaultRangeType(value),
+        value: value,
+      );
+
   Future<bool> _set<T>({
     required BehaviorSubject<T> controller,
     required Future<bool> Function(Pref pref, T value) setter,
@@ -317,6 +325,9 @@ class PrefController {
       BehaviorSubject.seeded(pref.getLastVersion() ??
           // v6 is the last version without saving the version number in pref
           (pref.getSetupProgress() == null ? k.version : 6));
+  @npSubjectAccessor
+  late final _mapDefaultRangeTypeController = BehaviorSubject.seeded(
+      pref.getMapDefaultRangeType() ?? PrefMapDefaultRangeType.thisMonth);
 }
 
 extension PrefControllerExtension on PrefController {

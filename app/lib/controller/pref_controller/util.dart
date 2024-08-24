@@ -119,6 +119,12 @@ extension on Pref {
       return provider.setInt(PrefKey.currentAccountIndex, value);
     }
   }
+
+  PrefMapDefaultRangeType? getMapDefaultRangeType() => provider
+      .getInt(PrefKey.mapDefaultRangeType)
+      ?.let(PrefMapDefaultRangeType.fromValue);
+  Future<bool> setMapDefaultRangeType(PrefMapDefaultRangeType value) =>
+      provider.setInt(PrefKey.mapDefaultRangeType, value.value);
 }
 
 MapCoord? _tryMapCoordFromJson(dynamic json) {
