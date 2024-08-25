@@ -858,13 +858,15 @@ class _ViewerState extends State<Viewer>
     unawaited(Pref().setSlideshowShuffle(result.isShuffle));
     unawaited(Pref().setSlideshowRepeat(result.isRepeat));
     unawaited(Pref().setSlideshowReverse(result.isReverse));
-    unawaited(
-      Navigator.of(context).pushNamed(
-        SlideshowViewer.routeName,
-        arguments: SlideshowViewerArguments(widget.account, widget.streamFiles,
-            _viewerController.currentPage, result),
-      ),
+    final newIndex = await Navigator.of(context).pushNamed<int>(
+      SlideshowViewer.routeName,
+      arguments: SlideshowViewerArguments(widget.account, widget.streamFiles,
+          _viewerController.currentPage, result),
     );
+    _log.info("[_onSlideshowPressed] Slideshow ended, jump to: $newIndex");
+    if (newIndex != null && context.mounted) {
+      _viewerController.jumpToPage(newIndex);
+    }
   }
 
   double _calcDetailPaneOffset(int index) {

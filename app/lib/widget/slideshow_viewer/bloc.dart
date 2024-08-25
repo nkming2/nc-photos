@@ -22,6 +22,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     on<_NextPage>(_onNextPage);
     on<_ToggleTimeline>(_onToggleTimeline);
     on<_RequestPage>(_onRequestPage);
+    on<_RequestExit>(_onRequestExit);
   }
 
   @override
@@ -177,6 +178,11 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
       nextPage: ev.value,
       shouldAnimateNextPage: false,
     ));
+  }
+
+  void _onRequestExit(_RequestExit ev, Emitter<_State> emit) {
+    _log.info(ev);
+    emit(state.copyWith(hasRequestExit: true));
   }
 
   static ({List<int> shuffled, int initial, int? count}) _parseConfig({

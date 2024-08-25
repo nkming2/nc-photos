@@ -49,7 +49,8 @@ class SlideshowViewerArguments {
 class SlideshowViewer extends StatelessWidget {
   static const routeName = "/slideshow-viewer";
 
-  static Route buildRoute(SlideshowViewerArguments args) => MaterialPageRoute(
+  static Route buildRoute(SlideshowViewerArguments args) =>
+      MaterialPageRoute<int>(
         builder: (context) => SlideshowViewer.fromArgs(args),
       );
 
@@ -116,15 +117,35 @@ class _WrappedSlideshowViewerState extends State<_WrappedSlideshowViewer>
 
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: buildDarkTheme(context),
-      child: const AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle(
-          systemNavigationBarColor: Colors.black,
-          systemNavigationBarIconBrightness: Brightness.dark,
+    return MultiBlocListener(
+      listeners: [
+        _BlocListenerT<bool>(
+          selector: (state) => state.hasRequestExit,
+          listener: (context, hasRequestExit) {
+            if (hasRequestExit) {
+              final pageIndex = context.state.page;
+              final fileIndex = context.bloc.convertPageToFileIndex(pageIndex);
+              Navigator.of(context).pop(fileIndex);
+            }
+          },
         ),
-        child: Scaffold(
-          body: _Body(),
+      ],
+      child: Theme(
+        data: buildDarkTheme(context),
+        child: AnnotatedRegion<SystemUiOverlayStyle>(
+          value: const SystemUiOverlayStyle(
+            systemNavigationBarColor: Colors.black,
+            systemNavigationBarIconBrightness: Brightness.dark,
+          ),
+          child: Scaffold(
+            body: PopScope(
+              canPop: false,
+              onPopInvoked: (_) {
+                context.addEvent(const _RequestExit());
+              },
+              child: const _Body(),
+            ),
+          ),
         ),
       ),
     );

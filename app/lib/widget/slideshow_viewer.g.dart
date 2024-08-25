@@ -25,7 +25,8 @@ abstract class $_StateCopyWithWorker {
       bool? hasPrev,
       bool? hasNext,
       bool? isShowTimeline,
-      bool? hasShownTimeline});
+      bool? hasShownTimeline,
+      bool? hasRequestExit});
 }
 
 class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
@@ -44,7 +45,8 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
       dynamic hasPrev,
       dynamic hasNext,
       dynamic isShowTimeline,
-      dynamic hasShownTimeline}) {
+      dynamic hasShownTimeline,
+      dynamic hasRequestExit}) {
     return _State(
         hasInit: hasInit as bool? ?? that.hasInit,
         page: page as int? ?? that.page,
@@ -58,7 +60,8 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
         hasPrev: hasPrev as bool? ?? that.hasPrev,
         hasNext: hasNext as bool? ?? that.hasNext,
         isShowTimeline: isShowTimeline as bool? ?? that.isShowTimeline,
-        hasShownTimeline: hasShownTimeline as bool? ?? that.hasShownTimeline);
+        hasShownTimeline: hasShownTimeline as bool? ?? that.hasShownTimeline,
+        hasRequestExit: hasRequestExit as bool? ?? that.hasRequestExit);
   }
 
   final _State that;
@@ -101,7 +104,7 @@ extension _$_PageViewNpLog on _PageView {
 extension _$_StateToString on _State {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_State {hasInit: $hasInit, page: $page, nextPage: $nextPage, shouldAnimateNextPage: $shouldAnimateNextPage, currentFile: ${currentFile.fdPath}, isShowUi: $isShowUi, isPlay: $isPlay, isVideoCompleted: $isVideoCompleted, hasPrev: $hasPrev, hasNext: $hasNext, isShowTimeline: $isShowTimeline, hasShownTimeline: $hasShownTimeline}";
+    return "_State {hasInit: $hasInit, page: $page, nextPage: $nextPage, shouldAnimateNextPage: $shouldAnimateNextPage, currentFile: ${currentFile.fdPath}, isShowUi: $isShowUi, isPlay: $isPlay, isVideoCompleted: $isVideoCompleted, hasPrev: $hasPrev, hasNext: $hasNext, isShowTimeline: $isShowTimeline, hasShownTimeline: $hasShownTimeline, hasRequestExit: $hasRequestExit}";
   }
 }
 
@@ -186,5 +189,12 @@ extension _$_RequestPageToString on _RequestPage {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
     return "_RequestPage {value: $value}";
+  }
+}
+
+extension _$_RequestExitToString on _RequestExit {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_RequestExit {}";
   }
 }
