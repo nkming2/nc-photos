@@ -77,7 +77,7 @@ class _VisibleItem implements Comparable<_VisibleItem> {
   const _VisibleItem(this.index, this.item);
 
   @override
-  bool operator ==(Object? other) =>
+  bool operator ==(Object other) =>
       other is _VisibleItem && index == other.index;
 
   @override

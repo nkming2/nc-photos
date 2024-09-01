@@ -142,7 +142,7 @@ class _VisibleDate implements Comparable<_VisibleDate> {
   const _VisibleDate(this.id, this.date);
 
   @override
-  bool operator ==(Object? other) => other is _VisibleDate && id == other.id;
+  bool operator ==(Object other) => other is _VisibleDate && id == other.id;
 
   @override
   int compareTo(_VisibleDate other) => id.compareTo(other.id);

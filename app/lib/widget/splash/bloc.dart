@@ -67,7 +67,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
       try {
         _log.info("[_handleUpgrade] Upgrade: $lastVersion -> ${k.version}");
         await _upgrade(lastVersion, emit);
-        await Future.delayed(Duration(seconds: 5));
+        await Future.delayed(const Duration(seconds: 5));
         _log.info("[_handleUpgrade] Upgrade done");
       } finally {
         // ensure user has closed the changelog

@@ -80,9 +80,10 @@ class Draggable<T extends Object> extends StatelessWidget {
                         return buildIndicator(AlignmentDirectional.centerStart,
                             candidateItems.isNotEmpty);
                       },
-                      onAccept: (item) {
-                        _log.fine("[build] Dropping $item before $data");
-                        onDropBefore!(item);
+                      onAcceptWithDetails: (details) {
+                        _log.fine(
+                            "[build] Dropping ${details.data} before $data");
+                        onDropBefore!(details.data);
                       },
                     ),
                   ),
@@ -93,9 +94,10 @@ class Draggable<T extends Object> extends StatelessWidget {
                         return buildIndicator(AlignmentDirectional.centerEnd,
                             candidateItems.isNotEmpty);
                       },
-                      onAccept: (item) {
-                        _log.fine("[build] Dropping $item after $data");
-                        onDropAfter!(item);
+                      onAcceptWithDetails: (details) {
+                        _log.fine(
+                            "[build] Dropping ${details.data} after $data");
+                        onDropAfter!(details.data);
                       },
                     ),
                   ),
