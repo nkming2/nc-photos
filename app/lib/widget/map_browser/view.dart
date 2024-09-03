@@ -385,9 +385,13 @@ class _DateFieldState extends State<_DateField> {
   }
 
   String _stringify(Date date) {
-    return intl.DateFormat(intl.DateFormat.YEAR_ABBR_MONTH_DAY,
-            Localizations.localeOf(context).languageCode)
-        .format(date.toLocalDateTime());
+    if (date == clock.now().toDate()) {
+      return L10n.global().todayText;
+    } else {
+      return intl.DateFormat(intl.DateFormat.YEAR_ABBR_MONTH_DAY,
+              Localizations.localeOf(context).languageCode)
+          .format(date.toLocalDateTime());
+    }
   }
 
   late final _controller = TextEditingController(text: _stringify(widget.date));

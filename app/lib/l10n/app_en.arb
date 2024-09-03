@@ -1500,6 +1500,7 @@
 	"mapBrowserDateRangeCustom": "Custom",
 	"homeTabMapBrowser": "Map",
 	"mapBrowserSetDefaultDateRangeButton": "Set as default",
+	"todayText": "Today",
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {
