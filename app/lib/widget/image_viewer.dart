@@ -201,7 +201,8 @@ class _RemoteImageViewerState extends State<RemoteImageViewer> {
   }
 
   void _animationListener(AnimationStatus status) {
-    if (status == AnimationStatus.completed) {
+    if (status == AnimationStatus.completed ||
+        status == AnimationStatus.dismissed) {
       _isHeroDone = true;
       if (mounted) {
         setState(() {});
