@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/app_localizations.dart';
-import 'package:nc_photos/theme.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_ui/np_ui.dart';
 
 part 'changelog.g.dart';
 part 'changelog/changelog_550.dart';
@@ -18,6 +18,8 @@ part 'changelog/changelog_650.dart';
 part 'changelog/changelog_660.dart';
 part 'changelog/changelog_662.dart';
 part 'changelog/changelog_663.dart';
+part 'changelog/changelog_670.dart';
+part 'changelog/changelog_680.dart';
 
 class ChangelogArguments {
   const ChangelogArguments(this.fromVersion);
@@ -354,6 +356,8 @@ Widget _subBulletPoint(Widget child) => Row(
     );
 
 final _changelogs = <int, List<Widget> Function(BuildContext)>{
+  680: (_) => const [_Changelog680()],
+  670: (_) => const [_Changelog670()],
   663: (_) => const [_Changelog663()],
   662: (_) => const [_Changelog662()],
   660: (_) => const [_Changelog660()],

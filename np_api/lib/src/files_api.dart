@@ -293,6 +293,7 @@ class ApiFiles {
     }
   }
 
+  // SERVER_BUG: 26 to unknown. path is ignored by server
   Future<Response> report({
     required String path,
     bool? favorite,

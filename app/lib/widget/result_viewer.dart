@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/controller/pref_controller.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
-import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
@@ -84,7 +85,7 @@ class _ResultViewerState extends State<ResultViewer> {
 
   Future<void> _doWork() async {
     _log.info("[_doWork] URL: ${widget.resultUrl}");
-    _account = _c.pref.getCurrentAccount();
+    _account = context.read<PrefController>().currentAccountValue;
     if (_account == null) {
       SnackBarManager().showSnackBar(SnackBar(
         content: Text(L10n.global().errorUnauthenticated),

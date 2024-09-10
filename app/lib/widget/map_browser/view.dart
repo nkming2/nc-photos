@@ -246,74 +246,82 @@ class _DateRangeControlPanel extends StatelessWidget {
           ),
         ],
       ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Text(
-                    L10n.global().mapBrowserDateRangeLabel,
-                    style: Theme.of(context).listTileTheme.titleTextStyle,
-                  ),
-                ),
-                Expanded(
-                  child: _BlocSelector<_DateRangeType>(
-                    selector: (state) => state.dateRangeType,
-                    builder: (context, dateRangeType) =>
-                        DropdownButtonFormField<_DateRangeType>(
-                      items: _DateRangeType.values
-                          .map((e) => DropdownMenuItem(
-                                value: e,
-                                child: Text(e.toDisplayString()),
-                              ))
-                          .toList(),
-                      value: dateRangeType,
-                      onChanged: (value) {
-                        if (value != null) {
-                          context.addEvent(_SetDateRangeType(value));
-                        }
-                      },
+      child: Material(
+        type: MaterialType.transparency,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Text(
+                      L10n.global().mapBrowserDateRangeLabel,
+                      style: Theme.of(context).listTileTheme.titleTextStyle,
                     ),
                   ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: _BlocSelector<DateRange>(
-                    selector: (state) => state.localDateRange,
-                    builder: (context, localDateRange) => _DateField(
-                      localDateRange.from!,
-                      onChanged: (value) {
-                        context.addEvent(_SetLocalDateRange(
-                            localDateRange.copyWith(from: value.toDate())));
-                      },
+                  Expanded(
+                    child: _BlocSelector<_DateRangeType>(
+                      selector: (state) => state.dateRangeType,
+                      builder: (context, dateRangeType) =>
+                          DropdownButtonFormField<_DateRangeType>(
+                        items: _DateRangeType.values
+                            .map((e) => DropdownMenuItem(
+                                  value: e,
+                                  child: Text(e.toDisplayString()),
+                                ))
+                            .toList(),
+                        value: dateRangeType,
+                        onChanged: (value) {
+                          if (value != null) {
+                            context.addEvent(_SetDateRangeType(value));
+                          }
+                        },
+                      ),
                     ),
                   ),
-                ),
-                const Text(" - "),
-                Expanded(
-                  child: _BlocSelector<DateRange>(
-                    selector: (state) => state.localDateRange,
-                    builder: (context, localDateRange) => _DateField(
-                      localDateRange.to!,
-                      onChanged: (value) {
-                        context.addEvent(_SetLocalDateRange(
-                            localDateRange.copyWith(to: value.toDate())));
-                      },
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: _BlocSelector<DateRange>(
+                      selector: (state) => state.localDateRange,
+                      builder: (context, localDateRange) => _DateField(
+                        localDateRange.from!,
+                        onChanged: (value) {
+                          context.addEvent(_SetLocalDateRange(
+                              localDateRange.copyWith(from: value.toDate())));
+                        },
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-          ],
+                  const Text(" - "),
+                  Expanded(
+                    child: _BlocSelector<DateRange>(
+                      selector: (state) => state.localDateRange,
+                      builder: (context, localDateRange) => _DateField(
+                        localDateRange.to!,
+                        onChanged: (value) {
+                          context.addEvent(_SetLocalDateRange(
+                              localDateRange.copyWith(to: value.toDate())));
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              const Align(
+                alignment: Alignment.centerRight,
+                child: _SetAsDefaultSwitch(),
+              ),
+              const SizedBox(height: 8),
+            ],
+          ),
         ),
       ),
     );
@@ -377,10 +385,62 @@ class _DateFieldState extends State<_DateField> {
   }
 
   String _stringify(Date date) {
-    return intl.DateFormat(intl.DateFormat.YEAR_ABBR_MONTH_DAY,
-            Localizations.localeOf(context).languageCode)
-        .format(date.toLocalDateTime());
+    if (date == clock.now().toDate()) {
+      return L10n.global().todayText;
+    } else {
+      return intl.DateFormat(intl.DateFormat.YEAR_ABBR_MONTH_DAY,
+              Localizations.localeOf(context).languageCode)
+          .format(date.toLocalDateTime());
+    }
   }
 
   late final _controller = TextEditingController(text: _stringify(widget.date));
+}
+
+class _SetAsDefaultSwitch extends StatelessWidget {
+  const _SetAsDefaultSwitch();
+
+  @override
+  Widget build(BuildContext context) {
+    return _BlocBuilder(
+      buildWhen: (previous, current) =>
+          previous.dateRangeType != current.dateRangeType ||
+          previous.prefDateRangeType != current.prefDateRangeType ||
+          previous.localDateRange != current.localDateRange,
+      builder: (context, state) {
+        final isChecked = state.dateRangeType == state.prefDateRangeType;
+        final isEnabled = state.dateRangeType != _DateRangeType.custom ||
+            state.localDateRange.to == clock.now().toDate();
+        return InkWell(
+          customBorder:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(64)),
+          onTap: isEnabled && !isChecked
+              ? () {
+                  if (!isChecked) {
+                    context.addEvent(const _SetAsDefaultRange());
+                  }
+                }
+              : null,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(width: 16),
+              Text(
+                L10n.global().mapBrowserSetDefaultDateRangeButton,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: isEnabled ? null : Theme.of(context).disabledColor,
+                    ),
+              ),
+              IgnorePointer(
+                child: Checkbox(
+                  value: isChecked,
+                  onChanged: isEnabled ? (_) {} : null,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 }

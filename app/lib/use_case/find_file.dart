@@ -18,7 +18,7 @@ class FindFile {
   /// [onFileNotFound] is null, a [StateError] will be thrown
   Future<List<File>> call(
     Account account,
-    List<int> fileIds, {
+    Iterable<int> fileIds, {
     void Function(int fileId)? onFileNotFound,
   }) async {
     _log.info("[call] fileIds: ${fileIds.toReadableString()}");

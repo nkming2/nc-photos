@@ -309,8 +309,10 @@ class _ScrollLabel extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: DefaultTextStyle(
-            style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                color: Theme.of(context).colorScheme.onSecondaryContainer),
+            style: Theme.of(context).textStyleColored(
+              (textTheme) => textTheme.titleMedium,
+              (colorScheme) => colorScheme.onSecondaryContainer,
+            )!,
             child: Text(text),
           ),
         );

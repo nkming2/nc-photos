@@ -1,5 +1,4 @@
 import 'package:clock/clock.dart';
-import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/debug_util.dart';
@@ -41,14 +40,17 @@ class PopulateAlbum {
     assert(album.provider is AlbumDirProvider);
     final provider = album.provider as AlbumDirProvider;
     final products = <AlbumItem>[];
+    var hasGood = false;
+    ExceptionEvent? firstException;
     for (final d in provider.dirs) {
       final stream = ScanDir(_c.fileRepo)(account, d);
       await for (final result in stream) {
         if (result is ExceptionEvent) {
-          _log.shout(
+          _log.severe(
               "[_populateDirAlbum] Failed while scanning dir: ${logFilename(d.path)}",
               result.error,
               result.stackTrace);
+          firstException = result;
           continue;
         }
         products.addAll((result as List).cast<File>().map((f) => AlbumFileItem(
@@ -57,7 +59,11 @@ class PopulateAlbum {
               file: f,
               ownerId: f.ownerId ?? account.userId,
             )));
+        hasGood = true;
       }
+    }
+    if (!hasGood && firstException != null) {
+      firstException.throwMe();
     }
     return products;
   }
@@ -67,8 +73,7 @@ class PopulateAlbum {
     assert(album.provider is AlbumTagProvider);
     final provider = album.provider as AlbumTagProvider;
     final products = <AlbumItem>[];
-    final c = KiwiContainer().resolve<DiContainer>();
-    final files = await ListTaggedFile(c)(account, provider.tags);
+    final files = await ListTaggedFile(_c)(account, provider.tags);
     products.addAll(files.map((f) => AlbumFileItem(
           addedBy: account.userId,
           addedAt: clock.now(),

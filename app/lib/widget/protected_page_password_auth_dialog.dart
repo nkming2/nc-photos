@@ -10,6 +10,7 @@ import 'package:nc_photos/k.dart' as k;
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/unique.dart';
 import 'package:np_string/np_string.dart';
+import 'package:np_ui/np_ui.dart';
 import 'package:to_string/to_string.dart';
 
 part 'protected_page_password_auth_dialog.g.dart';

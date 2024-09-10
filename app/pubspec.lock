@@ -463,8 +463,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "v0.2.6-nc-photos-2"
-      resolved-ref: e96fb0128af8c900db5f3d2b7449b21300423627
+      ref: "v0.2.6-nc-photos-3"
+      resolved-ref: "054f4ca1df0b1d7c99ea397b198d181d3d974146"
       url: "https://gitlab.com/nc-photos/flutter_background_service.git"
     source: git
     version: "0.2.6"

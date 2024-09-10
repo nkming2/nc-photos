@@ -33,7 +33,7 @@ class ScanDir {
       _log.info("[call] Cache not found");
       yield ExceptionEvent(e, stackTrace);
     } catch (e, stackTrace) {
-      _log.shout("[call] Failed while listing dir: ${logFilename(root.path)}",
+      _log.severe("[call] Failed while listing dir: ${logFilename(root.path)}",
           e, stackTrace);
       // for some reason exception thrown here can't be caught outside
       // rethrow;

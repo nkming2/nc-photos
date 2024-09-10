@@ -115,6 +115,8 @@ enum PrefKey implements PrefKeyInterface {
   dontShowVideoPreviewHint,
   mapBrowserPrevPosition,
   isNewHttpEngine,
+  mapDefaultRangeType,
+  mapDefaultCustomRange,
   ;
 
   @override
@@ -205,6 +207,10 @@ enum PrefKey implements PrefKeyInterface {
         return "mapBrowserPrevPosition";
       case PrefKey.isNewHttpEngine:
         return "isNewHttpEngine";
+      case PrefKey.mapDefaultRangeType:
+        return "mapDefaultRangeType";
+      case PrefKey.mapDefaultCustomRange:
+        return "mapDefaultCustomRange";
     }
   }
 }

@@ -32,7 +32,7 @@ class _Changelog660 extends StatelessWidget {
         _bulletGroup(
           const Text("Special thanks to the following contributors \u{1f44f}"),
           [
-            const Text("Çeviren"),
+            const Text("Ali Yasin Yeşilyaprak"),
             const Text("Fjuro"),
             const Text("tenJirka"),
             const Text("老兄"),

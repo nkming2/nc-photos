@@ -9,18 +9,21 @@ class _State {
     required this.isShowDataRangeControlPanel,
     required this.dateRangeType,
     required this.localDateRange,
+    required this.prefDateRangeType,
     this.error,
   });
 
   factory _State.init({
     required _DateRangeType dateRangeType,
     required DateRange localDateRange,
+    _DateRangeType? prefDateRangeType,
   }) {
     return _State(
       data: const [],
       isShowDataRangeControlPanel: false,
       dateRangeType: dateRangeType,
       localDateRange: localDateRange,
+      prefDateRangeType: prefDateRangeType ?? dateRangeType,
     );
   }
 
@@ -33,6 +36,7 @@ class _State {
   final bool isShowDataRangeControlPanel;
   final _DateRangeType dateRangeType;
   final DateRange localDateRange;
+  final _DateRangeType prefDateRangeType;
 
   final ExceptionEvent? error;
 }
@@ -83,6 +87,24 @@ class _SetLocalDateRange implements _Event {
   String toString() => _$toString();
 
   final DateRange value;
+}
+
+@toString
+class _SetPrefDateRangeType implements _Event {
+  const _SetPrefDateRangeType(this.value);
+
+  @override
+  String toString() => _$toString();
+
+  final _DateRangeType value;
+}
+
+@toString
+class _SetAsDefaultRange implements _Event {
+  const _SetAsDefaultRange();
+
+  @override
+  String toString() => _$toString();
 }
 
 @toString

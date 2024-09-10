@@ -236,7 +236,7 @@ class NpDbSqlite implements NpDb {
   @override
   Future<List<DbFile>> getFilesByFileIds({
     required DbAccount account,
-    required List<int> fileIds,
+    required Iterable<int> fileIds,
   }) async {
     final sqlObjs = await _db.use((db) async {
       return await db.queryFilesByFileIds(

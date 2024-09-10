@@ -16,6 +16,7 @@ class _State {
     required this.hasNext,
     required this.isShowTimeline,
     required this.hasShownTimeline,
+    required this.hasRequestExit,
   });
 
   factory _State.init({
@@ -34,6 +35,7 @@ class _State {
         hasNext: false,
         isShowTimeline: false,
         hasShownTimeline: false,
+        hasRequestExit: false,
       );
 
   @override
@@ -51,6 +53,7 @@ class _State {
   final bool hasNext;
   final bool isShowTimeline;
   final bool hasShownTimeline;
+  final bool hasRequestExit;
 }
 
 abstract class _Event {}
@@ -157,4 +160,12 @@ class _RequestPage implements _Event {
   String toString() => _$toString();
 
   final int value;
+}
+
+@toString
+class _RequestExit implements _Event {
+  const _RequestExit();
+
+  @override
+  String toString() => _$toString();
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/controller/pref_controller.dart';
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/widget/home.dart';
@@ -97,7 +99,7 @@ class _SetupState extends State<Setup> {
   void _onDonePressed() {
     Pref().setSetupProgress(_PageId.all);
 
-    final account = Pref().getCurrentAccount();
+    final account = context.read<PrefController>().currentAccountValue;
     if (account == null) {
       Navigator.pushReplacementNamed(context, SignIn.routeName);
     } else {

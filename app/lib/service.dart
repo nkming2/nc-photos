@@ -10,6 +10,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_init.dart' as app_init;
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/controller/pref_controller.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
@@ -104,7 +105,8 @@ class _Service {
   }
 
   Future<void> _doWork() async {
-    final account = Pref().getCurrentAccount();
+    final prefController = PrefController(Pref());
+    final account = prefController.currentAccountValue;
     if (account == null) {
       _log.shout("[_doWork] account == null");
       return;

@@ -78,10 +78,10 @@ class MyApp extends StatelessWidget {
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider(
-          create: (_) => PrefController(_c),
+          create: (_) => PrefController(_c.pref),
         ),
         RepositoryProvider(
-          create: (_) => SecurePrefController(_c),
+          create: (_) => SecurePrefController(_c.securePref),
         ),
         RepositoryProvider(
           create: (context) => AccountController(

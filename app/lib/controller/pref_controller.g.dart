@@ -23,6 +23,13 @@ extension $PrefControllerNpSubjectAccessor on PrefController {
   Stream<List<Account>> get accountsNew => accounts.skip(1);
   Stream<List<Account>> get accountsChange => accounts.distinct().skip(1);
   List<Account> get accountsValue => _accountsController.value;
+// _currentAccountIndexController
+  ValueStream<int?> get currentAccountIndex =>
+      _currentAccountIndexController.stream;
+  Stream<int?> get currentAccountIndexNew => currentAccountIndex.skip(1);
+  Stream<int?> get currentAccountIndexChange =>
+      currentAccountIndex.distinct().skip(1);
+  int? get currentAccountIndexValue => _currentAccountIndexController.value;
 // _languageController
   ValueStream<AppLanguage> get language => _languageController.stream;
   Stream<AppLanguage> get languageNew => language.skip(1);
@@ -171,6 +178,34 @@ extension $PrefControllerNpSubjectAccessor on PrefController {
   Stream<bool> get isNewHttpEngineNew => isNewHttpEngine.skip(1);
   Stream<bool> get isNewHttpEngineChange => isNewHttpEngine.distinct().skip(1);
   bool get isNewHttpEngineValue => _isNewHttpEngineController.value;
+// _firstRunTimeController
+  ValueStream<DateTime?> get firstRunTime => _firstRunTimeController.stream;
+  Stream<DateTime?> get firstRunTimeNew => firstRunTime.skip(1);
+  Stream<DateTime?> get firstRunTimeChange => firstRunTime.distinct().skip(1);
+  DateTime? get firstRunTimeValue => _firstRunTimeController.value;
+// _lastVersionController
+  ValueStream<int> get lastVersion => _lastVersionController.stream;
+  Stream<int> get lastVersionNew => lastVersion.skip(1);
+  Stream<int> get lastVersionChange => lastVersion.distinct().skip(1);
+  int get lastVersionValue => _lastVersionController.value;
+// _mapDefaultRangeTypeController
+  ValueStream<PrefMapDefaultRangeType> get mapDefaultRangeType =>
+      _mapDefaultRangeTypeController.stream;
+  Stream<PrefMapDefaultRangeType> get mapDefaultRangeTypeNew =>
+      mapDefaultRangeType.skip(1);
+  Stream<PrefMapDefaultRangeType> get mapDefaultRangeTypeChange =>
+      mapDefaultRangeType.distinct().skip(1);
+  PrefMapDefaultRangeType get mapDefaultRangeTypeValue =>
+      _mapDefaultRangeTypeController.value;
+// _mapDefaultCustomRangeController
+  ValueStream<Duration> get mapDefaultCustomRange =>
+      _mapDefaultCustomRangeController.stream;
+  Stream<Duration> get mapDefaultCustomRangeNew =>
+      mapDefaultCustomRange.skip(1);
+  Stream<Duration> get mapDefaultCustomRangeChange =>
+      mapDefaultCustomRange.distinct().skip(1);
+  Duration get mapDefaultCustomRangeValue =>
+      _mapDefaultCustomRangeController.value;
 }
 
 extension $SecurePrefControllerNpSubjectAccessor on SecurePrefController {

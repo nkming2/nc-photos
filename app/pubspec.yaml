@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.66.3+6630
+version: 1.68.0+6800
 
 environment:
   sdk: ">=3.2.0 <4.0.0"
@@ -65,7 +65,7 @@ dependencies:
   flutter_background_service:
     git:
       url: https://gitlab.com/nc-photos/flutter_background_service.git
-      ref: v0.2.6-nc-photos-2
+      ref: v0.2.6-nc-photos-3
   flutter_bloc: ^8.1.5
   flutter_cache_manager: any
   flutter_colorpicker: ^1.1.0

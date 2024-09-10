@@ -15,6 +15,7 @@ import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/use_case/request_public_link.dart';
 import 'package:nc_photos/widget/disposable.dart';
 import 'package:nc_photos/widget/wakelock_util.dart';
+import 'package:nc_photos/widget/zoomable_viewer.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_platform_util/np_platform_util.dart';
 import 'package:np_ui/np_ui.dart';
@@ -35,6 +36,9 @@ class VideoViewer extends StatefulWidget {
     this.isControlVisible = false,
     this.canPlay = true,
     this.canLoop = true,
+    required this.canZoom,
+    this.onZoomStarted,
+    this.onZoomEnded,
   });
 
   @override
@@ -52,6 +56,10 @@ class VideoViewer extends StatefulWidget {
 
   /// If false, disable the loop control and always stop after playing once
   final bool canLoop;
+
+  final bool canZoom;
+  final VoidCallback? onZoomStarted;
+  final VoidCallback? onZoomEnded;
 }
 
 @npLog
@@ -88,7 +96,7 @@ class _VideoViewerState extends State<VideoViewer>
   }
 
   @override
-  build(BuildContext context) {
+  Widget build(BuildContext context) {
     Widget content;
     if (_isControllerInitialized && _controller.value.isInitialized) {
       content = _buildPlayer(context);
@@ -142,18 +150,28 @@ class _VideoViewerState extends State<VideoViewer>
         _pause();
       });
     }
+    final player = Align(
+      alignment: Alignment.center,
+      child: AspectRatio(
+        key: _key,
+        aspectRatio: _controller.value.aspectRatio,
+        child: IgnorePointer(
+          child: VideoPlayer(_controller),
+        ),
+      ),
+    );
 
     return Stack(
+      fit: StackFit.expand,
       children: [
-        Align(
-          alignment: Alignment.center,
-          child: AspectRatio(
-            key: _key,
-            aspectRatio: _controller.value.aspectRatio,
-            child: IgnorePointer(
-              child: VideoPlayer(_controller),
-            ),
-          ),
+        Positioned.fill(
+          child: widget.canZoom
+              ? ZoomableViewer(
+                  onZoomStarted: widget.onZoomStarted,
+                  onZoomEnded: widget.onZoomEnded,
+                  child: player,
+                )
+              : player,
         ),
         Positioned.fill(
           child: AnimatedVisibility(
@@ -193,9 +211,10 @@ class _VideoViewerState extends State<VideoViewer>
                       valueListenable: _controller,
                       builder: (context, VideoPlayerValue value, child) => Text(
                         _durationToString(value.position),
-                        style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface,
-                            ),
+                        style: Theme.of(context).textStyleColored(
+                          (textTheme) => textTheme.labelLarge,
+                          (colorScheme) => colorScheme.onSurface,
+                        ),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -217,9 +236,10 @@ class _VideoViewerState extends State<VideoViewer>
                     if (_controller.value.duration != Duration.zero)
                       Text(
                         _durationToString(_controller.value.duration),
-                        style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface,
-                            ),
+                        style: Theme.of(context).textStyleColored(
+                          (textTheme) => textTheme.labelLarge,
+                          (colorScheme) => colorScheme.onSurface,
+                        ),
                       ),
                     const SizedBox(width: 4),
                     if (widget.canLoop) _LoopToggle(controller: _controller),

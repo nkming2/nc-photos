@@ -101,6 +101,36 @@ extension on Pref {
 
   Future<bool> setNewHttpEngine(bool value) =>
       provider.setBool(PrefKey.isNewHttpEngine, value);
+
+  int? getFirstRunTime() => provider.getInt(PrefKey.firstRunTime);
+  Future<bool> setFirstRunTime(int? value) {
+    if (value == null) {
+      return provider.remove(PrefKey.firstRunTime);
+    } else {
+      return provider.setInt(PrefKey.firstRunTime, value);
+    }
+  }
+
+  int? getCurrentAccountIndex() => provider.getInt(PrefKey.currentAccountIndex);
+  Future<bool> setCurrentAccountIndex(int? value) {
+    if (value == null) {
+      return provider.remove(PrefKey.currentAccountIndex);
+    } else {
+      return provider.setInt(PrefKey.currentAccountIndex, value);
+    }
+  }
+
+  PrefMapDefaultRangeType? getMapDefaultRangeType() => provider
+      .getInt(PrefKey.mapDefaultRangeType)
+      ?.let(PrefMapDefaultRangeType.fromValue);
+  Future<bool> setMapDefaultRangeType(PrefMapDefaultRangeType value) =>
+      provider.setInt(PrefKey.mapDefaultRangeType, value.value);
+
+  Duration? getMapDefaultCustomRange() => provider
+      .getInt(PrefKey.mapDefaultCustomRange)
+      ?.let((v) => Duration(days: v));
+  Future<bool> setMapDefaultCustomRange(Duration value) =>
+      provider.setInt(PrefKey.mapDefaultCustomRange, value.inDays);
 }
 
 MapCoord? _tryMapCoordFromJson(dynamic json) {

@@ -19,6 +19,7 @@ abstract class $_StateCopyWithWorker {
       bool? isShowDataRangeControlPanel,
       _DateRangeType? dateRangeType,
       DateRange? localDateRange,
+      _DateRangeType? prefDateRangeType,
       ExceptionEvent? error});
 }
 
@@ -32,6 +33,7 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
       dynamic isShowDataRangeControlPanel,
       dynamic dateRangeType,
       dynamic localDateRange,
+      dynamic prefDateRangeType,
       dynamic error = copyWithNull}) {
     return _State(
         data: data as List<_DataPoint>? ?? that.data,
@@ -42,6 +44,8 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
             that.isShowDataRangeControlPanel,
         dateRangeType: dateRangeType as _DateRangeType? ?? that.dateRangeType,
         localDateRange: localDateRange as DateRange? ?? that.localDateRange,
+        prefDateRangeType:
+            prefDateRangeType as _DateRangeType? ?? that.prefDateRangeType,
         error: error == copyWithNull ? that.error : error as ExceptionEvent?);
   }
 
@@ -85,7 +89,7 @@ extension _$_GoogleMarkerBitmapBuilderNpLog on _GoogleMarkerBitmapBuilder {
 extension _$_StateToString on _State {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_State {data: [length: ${data.length}], initialPoint: $initialPoint, isShowDataRangeControlPanel: $isShowDataRangeControlPanel, dateRangeType: ${dateRangeType.name}, localDateRange: $localDateRange, error: $error}";
+    return "_State {data: [length: ${data.length}], initialPoint: $initialPoint, isShowDataRangeControlPanel: $isShowDataRangeControlPanel, dateRangeType: ${dateRangeType.name}, localDateRange: $localDateRange, prefDateRangeType: ${prefDateRangeType.name}, error: $error}";
   }
 }
 
@@ -121,6 +125,20 @@ extension _$_SetLocalDateRangeToString on _SetLocalDateRange {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
     return "_SetLocalDateRange {value: $value}";
+  }
+}
+
+extension _$_SetPrefDateRangeTypeToString on _SetPrefDateRangeType {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_SetPrefDateRangeType {value: ${value.name}}";
+  }
+}
+
+extension _$_SetAsDefaultRangeToString on _SetAsDefaultRange {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_SetAsDefaultRange {}";
   }
 }
 
