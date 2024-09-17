@@ -107,6 +107,21 @@ class _OsmInteractiveMapState extends State<OsmInteractiveMap> {
             source: Text("OpenStreetMap contributors"),
           ),
         ),
+        Align(
+          alignment: AlignmentDirectional.topStart,
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(
+                8, MediaQuery.of(context).padding.top + 8, 8, 0),
+            child: _CompassIcon(
+              mapRotationRadSubject: _mapRotationRadSubject,
+              onTap: () {
+                if (_controller.camera.rotation != 0) {
+                  _controller.rotate(0);
+                }
+              },
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -133,6 +148,42 @@ class _OsmInteractiveMapState extends State<OsmInteractiveMap> {
   late final _controller = MapController();
   final _mapRotationRadSubject = BehaviorSubject.seeded(0.0);
   final _subscriptions = <StreamSubscription>[];
+}
+
+class _CompassIcon extends StatelessWidget {
+  const _CompassIcon({
+    required this.mapRotationRadSubject,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+      stream: mapRotationRadSubject.stream,
+      initialData: mapRotationRadSubject.value,
+      builder: (context, snapshot) => Transform.rotate(
+        angle: snapshot.requireData,
+        child: GestureDetector(
+          onTap: () {
+            onTap?.call();
+          },
+          child: Opacity(
+            opacity: .8,
+            child: Image(
+              image: Theme.of(context).brightness == Brightness.light
+                  ? const AssetImage(
+                      "packages/np_gps_map/assets/map_compass.png")
+                  : const AssetImage(
+                      "packages/np_gps_map/assets/map_compass_dark.png"),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  final BehaviorSubject<double> mapRotationRadSubject;
+  final VoidCallback? onTap;
 }
 
 class _OsmDataPoint extends Marker {
