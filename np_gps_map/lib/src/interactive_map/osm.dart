@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:np_common/object_util.dart';
 import 'package:np_gps_map/src/interactive_map.dart';
 import 'package:np_gps_map/src/map_coord.dart';
+import 'package:rxdart/rxdart.dart';
 
 typedef OsmClusterBuilder = Widget Function(
     BuildContext context, List<DataPoint> dataPoints);
@@ -43,8 +45,21 @@ class _OsmInteractiveMapState extends State<OsmInteractiveMap> {
       if (_parentController == null) {
         _parentController = _ParentController(_controller);
         widget.onMapCreated?.call(_parentController!);
+        _subscriptions.add(_controller.mapEventStream.listen((ev) {
+          _mapRotationRadSubject.add(ev.camera.rotationRad);
+        }));
       }
     });
+  }
+
+  @override
+  void dispose() {
+    for (final s in _subscriptions) {
+      s.cancel();
+    }
+    _mapRotationRadSubject.close();
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -98,13 +113,22 @@ class _OsmInteractiveMapState extends State<OsmInteractiveMap> {
     } else {
       return GestureDetector(
         onTap: widget.onClusterTap?.let((l) => () => l(dataPoints)),
-        child: widget.clusterBuilder!(context, dataPoints),
+        child: StreamBuilder(
+          stream: _mapRotationRadSubject.stream,
+          initialData: _mapRotationRadSubject.value,
+          builder: (context, snapshot) => Transform.rotate(
+            angle: -snapshot.requireData,
+            child: widget.clusterBuilder!(context, dataPoints),
+          ),
+        ),
       );
     }
   }
 
   _ParentController? _parentController;
   late final _controller = MapController();
+  final _mapRotationRadSubject = BehaviorSubject.seeded(0.0);
+  final _subscriptions = <StreamSubscription>[];
 }
 
 class _OsmDataPoint extends Marker {
