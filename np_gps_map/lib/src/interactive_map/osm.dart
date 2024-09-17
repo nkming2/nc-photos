@@ -70,6 +70,10 @@ class _OsmInteractiveMapState extends State<OsmInteractiveMap> {
         initialCenter: widget.initialPosition?.toLatLng() ?? const LatLng(0, 0),
         initialZoom: max(2.5, widget.initialZoom ?? 2.5),
         minZoom: 2.5,
+        interactionOptions: const InteractionOptions(
+          enableMultiFingerGestureRace: true,
+          pinchZoomThreshold: 0.25,
+        ),
       ),
       children: [
         TileLayer(
