@@ -1530,5 +1530,7 @@
 	"mapBrowserDateRangeThisYear": "Bu Yıl",
 	"mapBrowserDateRangeCustom": "Özel",
 	"homeTabMapBrowser": "Harita",
+	"mapBrowserSetDefaultDateRangeButton": "Varsayılan olarak ayarla",
+	"todayText": "Bugün",
 	"dontShowAgain": "Tekrar gösterme"
 }
