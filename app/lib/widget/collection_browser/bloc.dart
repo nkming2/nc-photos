@@ -138,6 +138,7 @@ class _Bloc extends Bloc<_Event, _State>
           );
         },
       ),
+      // do we need this as we already filter files in filesController?
       forEach(
         emit,
         filesController.stream,

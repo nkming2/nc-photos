@@ -54,7 +54,7 @@ class CollectionNcAlbumAdapter
         final f = found.firstWhereOrNull((e) => e.fdId == i.fileId);
         return CollectionFileItemNcAlbumItemAdapter(
           i,
-          // retain the path such that it is correct recognized as part of an
+          // retain the path such that it is correctly recognized as part of an
           // album
           f?.copyWith(
             fdPath: i.path,
