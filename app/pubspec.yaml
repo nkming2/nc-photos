@@ -18,8 +18,8 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.68.0+6800
 
 environment:
-  sdk: ">=3.2.0 <4.0.0"
-  flutter: ">=3.16.0"
+  sdk: ">=3.4.0 <4.0.0"
+  flutter: ">=3.22.0"
 
 dependencies:
   flutter:
@@ -82,7 +82,7 @@ dependencies:
       url: https://gitlab.com/nc-photos/dart_image_size_getter
       ref: 1.0.0-nc-photos-2
       path: library
-  intl: 0.18.1
+  intl: 0.19.0
   kiwi: ^4.1.0
   local_auth: ^2.2.0
   logging: ^1.2.0

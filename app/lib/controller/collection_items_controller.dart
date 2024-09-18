@@ -14,6 +14,7 @@ import 'package:nc_photos/entity/collection/adapter.dart';
 import 'package:nc_photos/entity/collection_item.dart';
 import 'package:nc_photos/entity/collection_item/new_item.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
+import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/rx_extension.dart';
@@ -366,8 +367,13 @@ class CollectionItemsController {
             if (e is CollectionFileItem) {
               final file = ev.dataMap[e.file.fdId];
               if (file == null) {
-                // removed
-                return null;
+                if (file_util.isNcAlbumFile(account, e.file)) {
+                  // file shared with us are not in our db
+                  return e;
+                } else {
+                  // removed
+                  return null;
+                }
               } else {
                 return e.copyWith(file: file);
               }

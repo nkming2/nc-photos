@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:np_common/object_util.dart';
 import 'package:np_gps_map/src/interactive_map.dart';
 import 'package:np_gps_map/src/map_coord.dart';
+import 'package:rxdart/rxdart.dart';
 
 typedef OsmClusterBuilder = Widget Function(
     BuildContext context, List<DataPoint> dataPoints);
@@ -43,8 +45,21 @@ class _OsmInteractiveMapState extends State<OsmInteractiveMap> {
       if (_parentController == null) {
         _parentController = _ParentController(_controller);
         widget.onMapCreated?.call(_parentController!);
+        _subscriptions.add(_controller.mapEventStream.listen((ev) {
+          _mapRotationRadSubject.add(ev.camera.rotationRad);
+        }));
       }
     });
+  }
+
+  @override
+  void dispose() {
+    for (final s in _subscriptions) {
+      s.cancel();
+    }
+    _mapRotationRadSubject.close();
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -55,6 +70,10 @@ class _OsmInteractiveMapState extends State<OsmInteractiveMap> {
         initialCenter: widget.initialPosition?.toLatLng() ?? const LatLng(0, 0),
         initialZoom: max(2.5, widget.initialZoom ?? 2.5),
         minZoom: 2.5,
+        interactionOptions: const InteractionOptions(
+          enableMultiFingerGestureRace: true,
+          pinchZoomThreshold: 0.25,
+        ),
       ),
       children: [
         TileLayer(
@@ -88,6 +107,21 @@ class _OsmInteractiveMapState extends State<OsmInteractiveMap> {
             source: Text("OpenStreetMap contributors"),
           ),
         ),
+        Align(
+          alignment: AlignmentDirectional.topStart,
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(
+                8, MediaQuery.of(context).padding.top + 8, 8, 0),
+            child: _CompassIcon(
+              mapRotationRadSubject: _mapRotationRadSubject,
+              onTap: () {
+                if (_controller.camera.rotation != 0) {
+                  _controller.rotate(0);
+                }
+              },
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -98,13 +132,58 @@ class _OsmInteractiveMapState extends State<OsmInteractiveMap> {
     } else {
       return GestureDetector(
         onTap: widget.onClusterTap?.let((l) => () => l(dataPoints)),
-        child: widget.clusterBuilder!(context, dataPoints),
+        child: StreamBuilder(
+          stream: _mapRotationRadSubject.stream,
+          initialData: _mapRotationRadSubject.value,
+          builder: (context, snapshot) => Transform.rotate(
+            angle: -snapshot.requireData,
+            child: widget.clusterBuilder!(context, dataPoints),
+          ),
+        ),
       );
     }
   }
 
   _ParentController? _parentController;
   late final _controller = MapController();
+  final _mapRotationRadSubject = BehaviorSubject.seeded(0.0);
+  final _subscriptions = <StreamSubscription>[];
+}
+
+class _CompassIcon extends StatelessWidget {
+  const _CompassIcon({
+    required this.mapRotationRadSubject,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+      stream: mapRotationRadSubject.stream,
+      initialData: mapRotationRadSubject.value,
+      builder: (context, snapshot) => Transform.rotate(
+        angle: snapshot.requireData,
+        child: GestureDetector(
+          onTap: () {
+            onTap?.call();
+          },
+          child: Opacity(
+            opacity: .8,
+            child: Image(
+              image: Theme.of(context).brightness == Brightness.light
+                  ? const AssetImage(
+                      "packages/np_gps_map/assets/map_compass.png")
+                  : const AssetImage(
+                      "packages/np_gps_map/assets/map_compass_dark.png"),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  final BehaviorSubject<double> mapRotationRadSubject;
+  final VoidCallback? onTap;
 }
 
 class _OsmDataPoint extends Marker {
