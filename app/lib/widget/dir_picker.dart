@@ -152,7 +152,7 @@ class DirPickerState extends State<DirPicker> {
               : Icons.radio_button_checked;
           iconColor = CheckboxTheme.of(context)
               .fillColor!
-              .resolve({MaterialState.selected});
+              .resolve({WidgetState.selected});
           break;
 
         case _PickState.childPicked:
@@ -161,7 +161,7 @@ class DirPickerState extends State<DirPicker> {
               : Icons.remove_circle_outline;
           iconColor = CheckboxTheme.of(context)
               .fillColor!
-              .resolve({MaterialState.selected});
+              .resolve({WidgetState.selected});
           break;
 
         case _PickState.notPicked:
