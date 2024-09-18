@@ -148,6 +148,10 @@ class FilesController {
       if (hasChange) {
         // load the synced content to stream
         unawaited(_reload());
+      } else {
+        _dataStreamController.addWithValue((value) => value.copyWith(
+              hasNext: false,
+            ));
       }
     } finally {
       _isSyncing = false;
