@@ -11,7 +11,7 @@ class SizeInt {
   SizeInt.square(int dimension) : this(dimension, dimension);
 
   @override
-  bool operator ==(Object? other) {
+  bool operator ==(Object other) {
     return other is SizeInt && width == other.width && height == other.height;
   }
 

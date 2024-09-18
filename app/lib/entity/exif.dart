@@ -15,7 +15,7 @@ class Exif with EquatableMixin {
 
   @override
   // ignore: hash_and_equals
-  bool operator ==(Object? other) => equals(other, isDeep: true);
+  bool operator ==(Object other) => equals(other, isDeep: true);
 
   /// Compare two Exif objects
   ///

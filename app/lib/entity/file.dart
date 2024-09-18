@@ -97,7 +97,7 @@ class Metadata with EquatableMixin {
 
   @override
   // ignore: hash_and_equals
-  bool operator ==(Object? other) => equals(other, isDeep: true);
+  bool operator ==(Object other) => equals(other, isDeep: true);
 
   bool equals(Object? other, {bool isDeep = false}) {
     if (other is Metadata) {
@@ -326,7 +326,7 @@ class File with EquatableMixin implements FileDescriptor {
 
   @override
   // ignore: hash_and_equals
-  bool operator ==(Object? other) => equals(other, isDeep: true);
+  bool operator ==(Object other) => equals(other, isDeep: true);
 
   bool equals(Object? other, {bool isDeep = false}) {
     if (other is File) {
