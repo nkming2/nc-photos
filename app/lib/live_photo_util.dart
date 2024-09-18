@@ -5,6 +5,10 @@ LivePhotoType? getLivePhotoTypeFromFile(FileDescriptor file) {
   final filenameL = file.filename.toLowerCase();
   if (filenameL.startsWith("pxl_") && filenameL.endsWith(".mp.jpg")) {
     return LivePhotoType.googleMp;
+  } else if (filenameL.startsWith("pxl_") &&
+      filenameL.endsWith(".mp.cover.jpg")) {
+    // RAW
+    return LivePhotoType.googleMp;
   } else if (filenameL.startsWith("mvimg_") && filenameL.endsWith(".jpg")) {
     return LivePhotoType.googleMvimg;
   } else {
