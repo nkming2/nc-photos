@@ -375,7 +375,9 @@ class CollectionItemsController {
                   return null;
                 }
               } else {
-                return e.copyWith(file: file);
+                return e.copyWith(
+                  file: file.replacePath(e.file.fdPath),
+                );
               }
             } else {
               return e;

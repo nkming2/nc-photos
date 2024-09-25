@@ -171,6 +171,10 @@ class FileNpDbDataSource implements FileDataSource2 {
   @override
   Future<void> remove(Account account, FileDescriptor f) async {
     _log.info("[remove] ${f.fdPath}");
+    if (file_util.isNcAlbumFile(account, f)) {
+      // removing from albums, not deleting the file
+      return;
+    }
     await db.deleteFile(
       account: account.toDb(),
       file: f.toDbKey(),

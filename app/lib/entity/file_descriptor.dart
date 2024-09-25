@@ -135,6 +135,14 @@ extension FileDescriptorExtension on FileDescriptor {
       isFavorite: fdIsFavorite,
     );
   }
+
+  FileDescriptor replacePath(String newPath) {
+    if (this is File) {
+      return (this as File).copyWith(path: newPath);
+    } else {
+      return copyWith(fdPath: newPath);
+    }
+  }
 }
 
 class FileDescriptorServerIdentityComparator {

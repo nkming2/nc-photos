@@ -56,9 +56,7 @@ class CollectionNcAlbumAdapter
           i,
           // retain the path such that it is correctly recognized as part of an
           // album
-          f?.copyWith(
-            fdPath: i.path,
-          ),
+          f?.replacePath(i.path),
         );
       }).toList();
     });

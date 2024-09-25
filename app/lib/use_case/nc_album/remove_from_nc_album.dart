@@ -5,6 +5,7 @@ import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/collection_item.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
+import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/nc_album.dart';
 import 'package:nc_photos/use_case/remove.dart';
 import 'package:np_codegen/np_codegen.dart';
@@ -41,11 +42,22 @@ class RemoveFromNcAlbum {
           }
         })
         .cast<CollectionFileItem>()
+        // since nextcloud album uses the DELETE method, we must make sure we
+        // are "deleting" with an album path, not the actual file path
+        .where((e) {
+          if (file_util.isNcAlbumFile(account, e.file)) {
+            return true;
+          } else {
+            _log.warning("[call] Wrong path for files in Nextcloud album");
+            return false;
+          }
+        })
         .toList();
     var count = fileItems.length;
     await Remove(_c)(
       account,
       fileItems.map((e) => e.file).toList(),
+      shouldCleanUp: false,
       onError: (i, f, e, stackTrace) {
         --count;
         try {
