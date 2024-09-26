@@ -1,6 +1,6 @@
 {
 	"appTitle": "Fotos",
-	"translator": "Andreas\nPhilProg\nshagn\nOdious\nNiclas H",
+	"translator": "Andreas\nPhilProg\nshagn\nOdious\nNiclas Heinz",
 	"@translator": {
 		"description": "Name of the translator(s) for this language"
 	},
@@ -306,6 +306,10 @@
 	},
 	"settingsShareFolderTitle": "Ordner teilen",
 	"@settingsShareFolderTitle": {
+		"description": "Set the share folder such that it matches the parameter in config.php"
+	},
+	"settingsShareFolderDialogTitle": "Suchen Sie den Freigabeordner",
+	"@settingsShareFolderDialogTitle": {
 		"description": "Set the share folder such that it matches the parameter in config.php"
 	},
 	"settingsServerAppSectionTitle": "Unterstützung Server App",
@@ -865,6 +869,19 @@
 			}
 		}
 	},
+	"fileLastSharedByOthersDescription": "{user} hat dies mit dir am {date} geteilt",
+	"@fileLastSharedByOthersDescription": {
+		"description": "The date when this file was shared with you",
+		"placeholders": {
+			"user": {
+				"example": "Alice"
+			},
+			"date": {
+				"example": "Jan 1, 2021",
+				"description": "The date string is formatted according to the current locale"
+			}
+		}
+	},
 	"albumLastSharedByOthersDescription": "{user} teilte ein Album am {date} mit Ihnen",
 	"@albumLastSharedByOthersDescription": {
 		"description": "The date when this album was shared with you",
@@ -893,6 +910,10 @@
 	"locationLabel": "Ort",
 	"@locationLabel": {
 		"description": "Show where the file is located"
+	},
+	"multipleFilesLinkShareDialogContent": "Nextcloud unterstützt keine Freigabelinks für mehrere Dateien. Die App wird stattdessen die Dateien in einen neuen Ordner kopieren und den Ordner freigeben.",
+	"@multipleFilesLinkShareDialogContent": {
+		"description": "Dialog shown when sharing multiple files as link"
 	},
 	"folderNameInputHint": "Ordnername",
 	"@folderNameInputHint": {
@@ -923,6 +944,10 @@
 	"@unshareLinkShareDirDialogTitle": {
 		"description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
 	},
+	"unshareLinkShareDirDialogContent": "Dieser Ordner wurde von der App erstellt, um mehrere Dateien als Link zu teilen. Er wird nun nicht mehr mit anderen geteilt. Möchten Sie diesen Ordner löschen?",
+	"@unshareLinkShareDirDialogContent": {
+		"description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
+	},
 	"addToCollectionsViewTooltip": "Zu Alben hinzufügen",
 	"@addToCollectionsViewTooltip": {
 		"description": "Albums shared with you are not automatically added to the Collections view, unless you choose to do so, which is what this button does"
@@ -930,6 +955,14 @@
 	"shareAlbumDialogTitle": "Mit Nutzer teilen",
 	"@shareAlbumDialogTitle": {
 		"description": "Dialog to share an album with another user"
+	},
+	"fixTooltip": "Fixieren",
+	"@fixTooltip": {
+		"description": "Fix an issue"
+	},
+	"fixAllTooltip": "Alle Fixieren",
+	"@fixAllTooltip": {
+		"description": "Fix all listed issues"
 	},
 	"missingShareDescription": "Nicht geteilt mit {user}",
 	"@missingShareDescription": {
@@ -1044,6 +1077,10 @@
 	"tagPickerNoTagSelectedNotification": "Bitte mindestens 1 Schlagwort hinzufügen",
 	"@tagPickerNoTagSelectedNotification": {
 		"description": "At least 1 tag is required to create a tag collection. This error is shown when user try to create one without selecting any tags"
+	},
+	"backgroundServiceStopping": "Dienst stoppen",
+	"@backgroundServiceStopping": {
+		"description": "The background service is stopping itself"
 	},
 	"metadataTaskPauseLowBatteryNotification": "Akku ist schwach",
 	"@metadataTaskPauseLowBatteryNotification": {
@@ -1267,6 +1304,10 @@
 	"@imageSaveOptionDialogTitle": {
 		"description": "This dialog asks users to choose between saving the edited/enhanced result on the device or server"
 	},
+	"imageSaveOptionDialogContent": "Wählen Sie aus, wo dieses und zukünftige verarbeitete Bilder gespeichert werden sollen. Wenn Sie den Server ausgewählt haben, die App das Bild aber nicht hochladen konnte, wird es auf Ihrem Gerät gespeichert.",
+	"@imageSaveOptionDialogContent": {
+		"description": "This dialog asks users to choose between saving the edited/enhanced result on the device or server"
+	},
 	"imageSaveOptionDialogDeviceButtonLabel": "GERÄT",
 	"@imageSaveOptionDialogDeviceButtonLabel": {
 		"description": "Save the image on the current device"
@@ -1369,6 +1410,8 @@
 			}
 		}
 	},
+	"settingsThemePrimaryColor": "Primär",
+	"settingsThemeSecondaryColor": "Sekundär",
 	"settingsAppLock": "App Sperre",
 	"@settingsAppLock": {
 		"description": "If enabled, users need to authenticate themselves when opening the app"
@@ -1399,5 +1442,32 @@
 		"description": "Unlock app via selected means (e.g., password) in case app lock is enabled by user"
 	},
 	"enabledText": "Aktiviert",
-	"disabledText": "Deaktiviert"
+	"disabledText": "Deaktiviert",
+	"settingsManageTrustedCertificateTitle": "Verwalte vertrauenswürdige Zertifikate",
+	"trustedCertManagerPageTitle": "vertrauenswürdige Zertifikate",
+	"@trustedCertManagerPageTitle": {
+		"description": "A page to manage trusted certificates"
+	},
+	"trustedCertManagerAlreadyTrustedError": "Bereits vertrauenswürdig",
+	"@trustedCertManagerAlreadyTrustedError": {
+		"description": "The selected cert has been trusted already"
+	},
+	"trustedCertManagerSelectServer": "HTTPS-Server auswählen",
+	"@trustedCertManagerSelectServer": {
+		"description": "Select a server from the account list"
+	},
+	"trustedCertManagerNoHttpsServerError": "Server nicht verfügbar",
+	"@trustedCertManagerNoHttpsServerError": {
+		"description": "There's no HTTPS server in the account list"
+	},
+	"trustedCertManagerFailedToRemoveCertError": "Fehler beim Löschen des Zertifikates",
+	"missingVideoThumbnailHelpDialogTitle": "Probleme mit der Video-Miniaturansichten?",
+	"dontShowAgain": "Nicht mehr erneut anzeigen",
+	"settingsUseNewHttpEngine": "Verwende das neue HTTP Engine",
+	"settingsRestartNeededDialog": "Bitte App neu starten um die Änderungen anzuwenden",
+	"mapBrowserDateRangeThisMonth": "Dieser Monat",
+	"mapBrowserDateRangePrevMonth": "letzten Monat",
+	"mapBrowserDateRangeThisYear": "Dieses Jahr",
+	"mapBrowserDateRangeCustom": "benutzerdefiniert",
+	"homeTabMapBrowser": "Karte"
 }

@@ -1463,5 +1463,72 @@
 				"example": "http://www.example.com"
 			}
 		}
-	}
+	},
+	"settingsThemePrimaryColor": "Primario",
+	"settingsThemeSecondaryColor": "Secundario",
+	"settingsThemePresets": "Predefinidos",
+	"settingsAppLock": "Bloquear la app",
+	"@settingsAppLock": {
+		"description": "If enabled, users need to authenticate themselves when opening the app"
+	},
+	"settingsAppLockTypeBiometric": "Biométrico",
+	"@settingsAppLockTypeBiometric": {
+		"description": "Unlock app with fingerprint, face, etc"
+	},
+	"settingsAppLockTypePin": "PIN",
+	"@settingsAppLockTypePin": {
+		"description": "Unlock app with 4 to 6 digits PIN"
+	},
+	"settingsAppLockTypePassword": "Contraseña",
+	"@settingsAppLockTypePassword": {
+		"description": "Unlock app with password"
+	},
+	"settingsAppLockDescription": "Si se habilita, se te pedirá que te autentifiques cuando antes la aplicación. Esta función NO te protege contra ataques del mundo real.",
+	"settingsAppLockSetupBiometricFallbackDialogTitle": "Elige otra opción cuando biométrico no está disponible",
+	"settingsAppLockSetupPinDialogTitle": "Establece un PIN para desbloquear la aplicación",
+	"settingsAppLockConfirmPinDialogTitle": "Introduce el mismo PIN otra vez",
+	"settingsAppLockSetupPasswordDialogTitle": "Establece una contraseña para desbloquear la aplicación",
+	"settingsAppLockConfirmPasswordDialogTitle": "Introduce la misma contraseña otra vez",
+	"appLockUnlockHint": "Desbloquear la app",
+	"@appLockUnlockHint": {
+		"description": "Unlock app via selected means (e.g., password) in case app lock is enabled by user"
+	},
+	"appLockUnlockWrongPassword": "Contraseña incorrecta",
+	"@appLockUnlockWrongPassword": {
+		"description": "Unlock app via selected means (e.g., password) in case app lock is enabled by user"
+	},
+	"enabledText": "Habilitado",
+	"disabledText": "Deshabilitado",
+	"settingsManageTrustedCertificateTitle": "Administrar certificados de confianza",
+	"trustedCertManagerPageTitle": "Certificados de confianza",
+	"@trustedCertManagerPageTitle": {
+		"description": "A page to manage trusted certificates"
+	},
+	"trustedCertManagerAlreadyTrustedError": "Ya confiables",
+	"@trustedCertManagerAlreadyTrustedError": {
+		"description": "The selected cert has been trusted already"
+	},
+	"trustedCertManagerSelectServer": "Selecciona el servidor HTTPS",
+	"@trustedCertManagerSelectServer": {
+		"description": "Select a server from the account list"
+	},
+	"trustedCertManagerNoHttpsServerError": "No hay servidores disponibles",
+	"@trustedCertManagerNoHttpsServerError": {
+		"description": "There's no HTTPS server in the account list"
+	},
+	"trustedCertManagerFailedToRemoveCertError": "Fallo al quitar certificado",
+	"missingVideoThumbnailHelpDialogTitle": "¿Problemas con las miniaturas de vídeos?",
+	"dontShowAgain": "No mostrar otra vez",
+	"settingsUseNewHttpEngine": "Usar nuevo motor HTTP",
+	"settingsUseNewHttpEngineDescription": "El nuevo motor HTTP basado en Chromium, soporta nuevos estándares como HTTP/2* y HTTP/3 QUIC*.\n\nLimitaciones:\nYa no podemos administrar los certificados autofirmados. Debes importar tus certificados CA al almacén de confianza del sistema para que funcionen.\n\n* HTTPS requerido para HTTP/2 y HTTP/3 QUIC*.",
+	"settingsRestartNeededDialog": "Por favor reinicia la aplicación para aplicar los cambios",
+	"mapBrowserDateRangeLabel": "Rango de fechas",
+	"@mapBrowserDateRangeLabel": {
+		"description": "Filter photos by date range"
+	},
+	"mapBrowserDateRangeThisMonth": "Este mes",
+	"mapBrowserDateRangePrevMonth": "El mes pasado",
+	"mapBrowserDateRangeThisYear": "Este año",
+	"mapBrowserDateRangeCustom": "Personalizado",
+	"homeTabMapBrowser": "Mapa"
 }

@@ -1463,5 +1463,72 @@
 				"example": "http://www.example.com"
 			}
 		}
-	}
+	},
+	"settingsThemePrimaryColor": "Primární",
+	"settingsThemeSecondaryColor": "Sekundární",
+	"settingsThemePresets": "Předvolby",
+	"settingsAppLock": "Zámek aplikace",
+	"@settingsAppLock": {
+		"description": "If enabled, users need to authenticate themselves when opening the app"
+	},
+	"settingsAppLockTypeBiometric": "Biometrika",
+	"@settingsAppLockTypeBiometric": {
+		"description": "Unlock app with fingerprint, face, etc"
+	},
+	"settingsAppLockTypePin": "PIN",
+	"@settingsAppLockTypePin": {
+		"description": "Unlock app with 4 to 6 digits PIN"
+	},
+	"settingsAppLockTypePassword": "Heslo",
+	"@settingsAppLockTypePassword": {
+		"description": "Unlock app with password"
+	},
+	"settingsAppLockDescription": "Při povolení již budete při otevření aplikace dotázáni na přihlášení. Tato funkce vás NEochrání proti reálným útokům.",
+	"settingsAppLockSetupBiometricFallbackDialogTitle": "Vyberte náhradu při nedostupnosti biometriky",
+	"settingsAppLockSetupPinDialogTitle": "Nastavte PIN pro odemčení aplikace",
+	"settingsAppLockConfirmPinDialogTitle": "Znovu zadejte stejný PIN",
+	"settingsAppLockSetupPasswordDialogTitle": "Nastavte heslo pro odemčení aplikace",
+	"settingsAppLockConfirmPasswordDialogTitle": "Znovu zadejte stejné heslo",
+	"appLockUnlockHint": "Odemknout aplikaci",
+	"@appLockUnlockHint": {
+		"description": "Unlock app via selected means (e.g., password) in case app lock is enabled by user"
+	},
+	"appLockUnlockWrongPassword": "Nesprávné heslo",
+	"@appLockUnlockWrongPassword": {
+		"description": "Unlock app via selected means (e.g., password) in case app lock is enabled by user"
+	},
+	"enabledText": "Povoleno",
+	"disabledText": "Zakázáno",
+	"settingsManageTrustedCertificateTitle": "Spravovat důvěryhodné certifikáty",
+	"trustedCertManagerPageTitle": "Důvěryhodné certifikáty",
+	"@trustedCertManagerPageTitle": {
+		"description": "A page to manage trusted certificates"
+	},
+	"trustedCertManagerAlreadyTrustedError": "Již je důvěryhodný",
+	"@trustedCertManagerAlreadyTrustedError": {
+		"description": "The selected cert has been trusted already"
+	},
+	"trustedCertManagerSelectServer": "Vyberte server HTTPS",
+	"@trustedCertManagerSelectServer": {
+		"description": "Select a server from the account list"
+	},
+	"trustedCertManagerNoHttpsServerError": "Není dostupný žádný server",
+	"@trustedCertManagerNoHttpsServerError": {
+		"description": "There's no HTTPS server in the account list"
+	},
+	"trustedCertManagerFailedToRemoveCertError": "Nepodařilo se odstranit certifikát",
+	"missingVideoThumbnailHelpDialogTitle": "Máte problémy s náhledy videí?",
+	"dontShowAgain": "Již nezobrazovat",
+	"settingsUseNewHttpEngine": "Použít nový engine HTTP",
+	"settingsUseNewHttpEngineDescription": "Nový engine HTTP je založený na projektu Chromium a podporuje standardy jako HTTP/2* a HTTP/3 QUIC*.\n\nOmezení:\nCertifikáty podepsané samy sebou již nemohou být spravovány námi. Aby vaše certifikáty CA fungovaly, musíte je importovat do systémového pověřeného úložiště.\n\n* Pro HTTP/2 a HTTP/3 je vyžadováno HTTPS",
+	"settingsRestartNeededDialog": "Restartujte aplikaci pro použití změn",
+	"mapBrowserDateRangeLabel": "Rozsah data",
+	"@mapBrowserDateRangeLabel": {
+		"description": "Filter photos by date range"
+	},
+	"mapBrowserDateRangeThisMonth": "Tento měsíc",
+	"mapBrowserDateRangePrevMonth": "Předchozí měsíc",
+	"mapBrowserDateRangeThisYear": "Tento rok",
+	"mapBrowserDateRangeCustom": "Vlastní",
+	"homeTabMapBrowser": "Mapa"
 }
