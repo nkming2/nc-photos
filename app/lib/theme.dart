@@ -69,8 +69,8 @@ class DarkModeSwitchTheme extends StatelessWidget {
     return Theme(
       data: theme.copyWith(
         switchTheme: SwitchThemeData(
-          trackColor: WidgetStateProperty.all(theme.colorScheme.surface),
-          thumbColor: WidgetStateProperty.all(Colors.black87),
+          trackColor: MaterialStateProperty.all(theme.colorScheme.surface),
+          thumbColor: MaterialStateProperty.all(Colors.black87),
         ),
         colorScheme: theme.colorScheme.copyWith(
           outline: Colors.transparent,
@@ -165,32 +165,32 @@ ThemeData _applyColorScheme(ColorScheme colorScheme) {
     // remove after checkbox supports m3
     // see: https://m3.material.io/components/checkbox/specs
     checkboxTheme: CheckboxThemeData(
-      fillColor: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.disabled)) {
+      fillColor: MaterialStateProperty.resolveWith((states) {
+        if (states.contains(MaterialState.disabled)) {
           return Colors.transparent;
         } else {
-          if (states.contains(WidgetState.selected)) {
+          if (states.contains(MaterialState.selected)) {
             return colorScheme.secondary;
           } else {
             return Colors.transparent;
           }
         }
       }),
-      checkColor: WidgetStateProperty.all(colorScheme.onPrimary),
+      checkColor: MaterialStateProperty.all(colorScheme.onPrimary),
     ),
     // remove after checkbox supports m3
     // see: https://m3.material.io/components/switch/specs
     // the color here is slightly modified to work better with the M2 switch
     switchTheme: SwitchThemeData(
-      trackColor: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.disabled)) {
-          if (states.contains(WidgetState.selected)) {
+      trackColor: MaterialStateProperty.resolveWith((states) {
+        if (states.contains(MaterialState.disabled)) {
+          if (states.contains(MaterialState.selected)) {
             return colorScheme.onSurface.withOpacity(.12);
           } else {
             return colorScheme.surfaceVariant.withOpacity(.12);
           }
         } else {
-          if (states.contains(WidgetState.selected)) {
+          if (states.contains(MaterialState.selected)) {
             // return colorScheme.primary;
             return colorScheme.secondary;
           } else {
@@ -198,16 +198,16 @@ ThemeData _applyColorScheme(ColorScheme colorScheme) {
           }
         }
       }),
-      thumbColor: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.disabled)) {
-          if (states.contains(WidgetState.selected)) {
+      thumbColor: MaterialStateProperty.resolveWith((states) {
+        if (states.contains(MaterialState.disabled)) {
+          if (states.contains(MaterialState.selected)) {
             // return colorScheme.surface;
             return colorScheme.onSurface.withOpacity(.38);
           } else {
             return colorScheme.onSurface.withOpacity(.38);
           }
         } else {
-          if (states.contains(WidgetState.selected)) {
+          if (states.contains(MaterialState.selected)) {
             // return colorScheme.onPrimary;
             return colorScheme.onSecondary;
           } else {
@@ -232,17 +232,17 @@ ThemeData _applyColorScheme(ColorScheme colorScheme) {
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
         backgroundColor:
-            WidgetStateProperty.all(colorScheme.secondaryContainer),
-        foregroundColor: WidgetStateProperty.all(colorScheme.secondary),
+            MaterialStateProperty.all(colorScheme.secondaryContainer),
+        foregroundColor: MaterialStateProperty.all(colorScheme.secondary),
         overlayColor:
-            WidgetStateProperty.all(colorScheme.secondary.withOpacity(.1)),
+            MaterialStateProperty.all(colorScheme.secondary.withOpacity(.1)),
       ),
     ),
     textButtonTheme: TextButtonThemeData(
       style: ButtonStyle(
-        foregroundColor: WidgetStateProperty.all(colorScheme.secondary),
+        foregroundColor: MaterialStateProperty.all(colorScheme.secondary),
         overlayColor:
-            WidgetStateProperty.all(colorScheme.secondary.withOpacity(.1)),
+            MaterialStateProperty.all(colorScheme.secondary.withOpacity(.1)),
       ),
     ),
     textSelectionTheme: TextSelectionThemeData(

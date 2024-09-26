@@ -44,7 +44,7 @@ class _SignInState extends State<SignIn> {
         ),
         textButtonTheme: TextButtonThemeData(
           style: ButtonStyle(
-            foregroundColor: WidgetStateProperty.all(Colors.white),
+            foregroundColor: MaterialStateProperty.all(Colors.white),
           ),
         ),
       ),
