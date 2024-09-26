@@ -3,7 +3,7 @@ test:
   stage: test
   except:
     - triage
-  image: "ghcr.io/cirruslabs/flutter:3.22.3"
+  image: "ghcr.io/cirruslabs/flutter:3.16.9"
   before_script:
     - apt-get update -qq && apt-get install -y -qq libsqlite3-dev
     - flutter pub global activate junitreport
