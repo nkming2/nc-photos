@@ -278,7 +278,7 @@ class _ChangelogBanner extends StatelessWidget {
         child: TextButtonTheme(
           data: TextButtonThemeData(
             style: ButtonStyle(
-              foregroundColor: MaterialStateProperty.all(
+              foregroundColor: WidgetStateProperty.all(
                   Theme.of(context).colorScheme.primary),
             ),
           ),
