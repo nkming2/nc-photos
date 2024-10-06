@@ -76,8 +76,7 @@ class _ResultViewerState extends State<ResultViewer> {
       );
     } else {
       return Viewer(
-        account: _account!,
-        streamFiles: [_file!],
+        fileIds: [_file!.fdId],
         startIndex: 0,
       );
     }

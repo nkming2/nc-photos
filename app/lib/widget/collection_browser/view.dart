@@ -73,19 +73,12 @@ class _ContentListBody extends StatelessWidget {
           Navigator.of(context).pushNamed(
             Viewer.routeName,
             arguments: ViewerArguments(
-              context.bloc.account,
               state.transformedItems
                   .whereType<_FileItem>()
-                  .map((e) => e.file)
+                  .map((e) => e.file.fdId)
                   .toList(),
               actualIndex,
-              fromCollection: ViewerCollectionData(
-                state.collection,
-                state.transformedItems
-                    .whereType<_ActualItem>()
-                    .map((e) => e.original)
-                    .toList(),
-              ),
+              collectionId: state.collection.id,
             ),
           );
         },

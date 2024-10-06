@@ -131,6 +131,24 @@ extension on Pref {
       ?.let((v) => Duration(days: v));
   Future<bool> setMapDefaultCustomRange(Duration value) =>
       provider.setInt(PrefKey.mapDefaultCustomRange, value.inDays);
+
+  Duration? getSlideshowDuration() => provider
+      .getInt(PrefKey.slideshowDuration)
+      ?.let((v) => Duration(seconds: v));
+  Future<bool> setSlideshowDuration(Duration value) =>
+      provider.setInt(PrefKey.slideshowDuration, value.inSeconds);
+
+  bool? isSlideshowShuffle() => provider.getBool(PrefKey.isSlideshowShuffle);
+  Future<bool> setSlideshowShuffle(bool value) =>
+      provider.setBool(PrefKey.isSlideshowShuffle, value);
+
+  bool? isSlideshowRepeat() => provider.getBool(PrefKey.isSlideshowRepeat);
+  Future<bool> setSlideshowRepeat(bool value) =>
+      provider.setBool(PrefKey.isSlideshowRepeat, value);
+
+  bool? isSlideshowReverse() => provider.getBool(PrefKey.isSlideshowReverse);
+  Future<bool> setSlideshowReverse(bool value) =>
+      provider.setBool(PrefKey.isSlideshowReverse, value);
 }
 
 MapCoord? _tryMapCoordFromJson(dynamic json) {

@@ -87,11 +87,12 @@ class _HomeSearchState extends State<HomeSearch>
   @override
   onItemTap(SelectableItem item, int index) {
     item.as<PhotoListFileItem>()?.run((fileItem) {
-      Navigator.pushNamed(
-        context,
+      Navigator.of(context).pushNamed(
         Viewer.routeName,
-        arguments:
-            ViewerArguments(widget.account, _backingFiles, fileItem.fileIndex),
+        arguments: ViewerArguments(
+          _backingFiles.map((e) => e.fdId).toList(),
+          fileItem.fileIndex,
+        ),
       );
     });
   }

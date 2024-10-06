@@ -210,6 +210,30 @@ class PrefController {
         value: value,
       );
 
+  Future<bool> setSlideshowDuration(Duration value) => _set<Duration>(
+        controller: _slideshowDurationController,
+        setter: (pref, value) => pref.setSlideshowDuration(value),
+        value: value,
+      );
+
+  Future<bool> setSlideshowShuffle(bool value) => _set<bool>(
+        controller: _isSlideshowShuffleController,
+        setter: (pref, value) => pref.setSlideshowShuffle(value),
+        value: value,
+      );
+
+  Future<bool> setSlideshowRepeat(bool value) => _set<bool>(
+        controller: _isSlideshowRepeatController,
+        setter: (pref, value) => pref.setSlideshowRepeat(value),
+        value: value,
+      );
+
+  Future<bool> setSlideshowReverse(bool value) => _set<bool>(
+        controller: _isSlideshowReverseController,
+        setter: (pref, value) => pref.setSlideshowReverse(value),
+        value: value,
+      );
+
   Future<bool> _set<T>({
     required BehaviorSubject<T> controller,
     required Future<bool> Function(Pref pref, T value) setter,
@@ -337,6 +361,18 @@ class PrefController {
   @npSubjectAccessor
   late final _mapDefaultCustomRangeController = BehaviorSubject.seeded(
       pref.getMapDefaultCustomRange() ?? const Duration(days: 30));
+  @npSubjectAccessor
+  late final _slideshowDurationController = BehaviorSubject.seeded(
+      pref.getSlideshowDuration() ?? const Duration(seconds: 5));
+  @npSubjectAccessor
+  late final _isSlideshowShuffleController =
+      BehaviorSubject.seeded(pref.isSlideshowShuffle() ?? false);
+  @npSubjectAccessor
+  late final _isSlideshowRepeatController =
+      BehaviorSubject.seeded(pref.isSlideshowRepeat() ?? false);
+  @npSubjectAccessor
+  late final _isSlideshowReverseController =
+      BehaviorSubject.seeded(pref.isSlideshowReverse() ?? false);
 }
 
 extension PrefControllerExtension on PrefController {

@@ -11,6 +11,7 @@ import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
+import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/progress_util.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/rx_extension.dart';
@@ -90,6 +91,8 @@ class FilesController {
   /// callers must sort it by themselves if the ordering is important
   ValueStream<FilesStreamEvent> get stream => _dataStreamController.stream;
 
+  Stream<ExceptionEvent> get errorStream => _dataErrorStreamController.stream;
+
   /// Return a stream of file summaries associated with [account]
   ///
   /// File summary contains the number of files grouped by their dates
@@ -106,6 +109,9 @@ class FilesController {
   /// This stream is typically used for the photo timeline
   ValueStream<TimelineStreamEvent> get timelineStream =>
       _timelineStreamController.stream;
+
+  Stream<ExceptionEvent> get timelineErrorStream =>
+      _timelineErrorStreamController.stream;
 
   Future<void> syncRemote({
     void Function(Progress progress)? onProgressUpdate,
@@ -166,7 +172,7 @@ class FilesController {
     OrNull<DateTime>? overrideDateTime,
     bool? isFavorite,
     OrNull<ImageLocation>? location,
-    Exception? Function(List<int> fileIds) errorBuilder =
+    Exception? Function(List<FileDescriptor> files) errorBuilder =
         UpdatePropertyFailureError.new,
   }) async {
     final dataBackups = <int, FileDescriptor>{};
@@ -287,8 +293,8 @@ class FilesController {
         }
         return value.copyWith(data: next);
       });
-      errorBuilder(failures.map((e) => e.fdId).toList())
-          ?.let(_dataStreamController.addError);
+      errorBuilder(failures)
+          ?.let((e) => _dataErrorStreamController.add(ExceptionEvent(e)));
     }
 
     // TODO query outdated
@@ -299,7 +305,7 @@ class FilesController {
 
   Future<void> remove(
     List<FileDescriptor> files, {
-    Exception? Function(List<int> fileIds) errorBuilder =
+    Exception? Function(List<FileDescriptor> files) errorBuilder =
         RemoveFailureError.new,
   }) async {
     final dataBackups = <int, FileDescriptor>{};
@@ -391,8 +397,8 @@ class FilesController {
         }
         return value.copyWith(data: next);
       });
-      errorBuilder(failures.map((e) => e.fdId).toList())
-          ?.let(_dataStreamController.addError);
+      errorBuilder(failures)
+          ?.let((e) => _dataErrorStreamController.add(ExceptionEvent(e)));
     }
   }
 
@@ -447,7 +453,7 @@ class FilesController {
             files: v.files.addedAll(data),
           ));
     } catch (e, stackTrace) {
-      _dataStreamController.addError(e, stackTrace);
+      _dataErrorStreamController.add(ExceptionEvent(e, stackTrace));
     }
   }
 
@@ -462,7 +468,7 @@ class FilesController {
             files: v.files.addedAll(data),
           ));
     } catch (e, stackTrace) {
-      _dataStreamController.addError(e, stackTrace);
+      _dataErrorStreamController.add(ExceptionEvent(e, stackTrace));
     }
   }
 
@@ -483,7 +489,7 @@ class FilesController {
           ));
       _addTimelineDateRange(dateRange);
     } catch (e, stackTrace) {
-      _timelineStreamController.addError(e, stackTrace);
+      _timelineErrorStreamController.add(ExceptionEvent(e, stackTrace));
     }
   }
 
@@ -663,6 +669,8 @@ class FilesController {
       hasNext: true,
     ),
   );
+  final _dataErrorStreamController =
+      StreamController<ExceptionEvent>.broadcast();
 
   var _isSummaryStreamInited = false;
   final _summaryStreamController = BehaviorSubject<FilesSummaryStreamEvent>();
@@ -670,6 +678,8 @@ class FilesController {
   final _timelineStreamController = BehaviorSubject.seeded(
     const TimelineStreamEvent(data: {}, isDummy: true),
   );
+  final _timelineErrorStreamController =
+      StreamController<ExceptionEvent>.broadcast();
   // sorted in descending order
   var _timelineQueriedRanges = <DateRange>[];
 
@@ -680,22 +690,22 @@ class FilesController {
 
 @toString
 class UpdatePropertyFailureError implements Exception {
-  const UpdatePropertyFailureError(this.fileIds);
+  const UpdatePropertyFailureError(this.files);
 
   @override
   String toString() => _$toString();
 
-  final List<int> fileIds;
+  final List<FileDescriptor> files;
 }
 
 @toString
 class RemoveFailureError implements Exception {
-  const RemoveFailureError(this.fileIds);
+  const RemoveFailureError(this.files);
 
   @override
   String toString() => _$toString();
 
-  final List<int> fileIds;
+  final List<FileDescriptor> files;
 }
 
 class _MockResult {

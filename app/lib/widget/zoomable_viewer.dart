@@ -87,7 +87,9 @@ class _ZoomableViewerState extends State<ZoomableViewer>
   }
 
   void _setIsZooming(bool flag) {
-    _isZooming = flag;
+    setState(() {
+      _isZooming = flag;
+    });
     final next = _isZoomed;
     if (next != _wasZoomed) {
       _wasZoomed = next;

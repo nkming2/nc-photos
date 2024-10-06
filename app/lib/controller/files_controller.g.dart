@@ -77,13 +77,13 @@ extension _$FilesControllerNpLog on FilesController {
 extension _$UpdatePropertyFailureErrorToString on UpdatePropertyFailureError {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "UpdatePropertyFailureError {fileIds: [length: ${fileIds.length}]}";
+    return "UpdatePropertyFailureError {files: [length: ${files.length}]}";
   }
 }
 
 extension _$RemoveFailureErrorToString on RemoveFailureError {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "RemoveFailureError {fileIds: [length: ${fileIds.length}]}";
+    return "RemoveFailureError {files: [length: ${files.length}]}";
   }
 }
