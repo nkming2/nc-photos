@@ -163,7 +163,7 @@ class _PageViewState extends State<_PageView> {
       });
     } else {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) {
+        if (mounted && _scrollController.hasClients) {
           _scrollController.jumpTo(0);
         }
       });
