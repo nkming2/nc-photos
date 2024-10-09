@@ -29,58 +29,8 @@ class _AppBar extends StatelessWidget {
         centerTitle: isTitleCentered,
         actions: !state.isDetailPaneActive && !state.isZoomed
             ? [
-                _BlocBuilder(
-                  buildWhen: (previous, current) =>
-                      previous.currentFile != current.currentFile ||
-                      previous.currentFileState != current.currentFileState,
-                  builder: (context, state) {
-                    if (state.currentFile?.let(getLivePhotoTypeFromFile) !=
-                        null) {
-                      if (state.currentFileState?.shouldPlayLivePhoto ??
-                          false) {
-                        return IconButton(
-                          icon: const Icon(Icons.motion_photos_pause_outlined),
-                          onPressed: () {
-                            context.state.currentFile?.fdId.let(
-                                (id) => context.addEvent(_PauseLivePhoto(id)));
-                          },
-                        );
-                      } else {
-                        return IconButton(
-                          icon: const PngIcon(icMotionPhotosPlay24dp),
-                          onPressed: () {
-                            context.state.currentFile?.fdId.let(
-                                (id) => context.addEvent(_PlayLivePhoto(id)));
-                          },
-                        );
-                      }
-                    } else {
-                      return const SizedBox.shrink();
-                    }
-                  },
-                ),
-                _BlocSelector(
-                  selector: (state) => state.currentFile,
-                  builder: (context, currentFile) => currentFile
-                              ?.fdIsFavorite ==
-                          true
-                      ? IconButton(
-                          icon: const Icon(Icons.star),
-                          tooltip: L10n.global().unfavoriteTooltip,
-                          onPressed: () {
-                            context.state.currentFile?.fdId
-                                .let((id) => context.addEvent(_Unfavorite(id)));
-                          },
-                        )
-                      : IconButton(
-                          icon: const Icon(Icons.star_border),
-                          tooltip: L10n.global().favoriteTooltip,
-                          onPressed: () {
-                            context.state.currentFile?.fdId
-                                .let((id) => context.addEvent(_Favorite(id)));
-                          },
-                        ),
-                ),
+                const _AppBarLivePhotoButton(),
+                const _AppBarFavoriteButton(),
                 IconButton(
                   icon: const Icon(Icons.more_vert),
                   tooltip: L10n.global().detailsTooltip,
@@ -155,51 +105,15 @@ class _BottomAppBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
           children: [
-            IconButton(
-              icon: const Icon(Icons.share_outlined),
-              tooltip: L10n.global().shareTooltip,
-              onPressed: () {
-                context.state.currentFile?.fdId
-                    .let((id) => context.addEvent(_Share(id)));
-              },
-            ),
+            const _AppBarShareButton(),
             if (features.isSupportEnhancement &&
                 state.currentFile?.let(ImageEnhancer.isSupportedFormat) ==
                     true) ...[
-              IconButton(
-                icon: const Icon(Icons.tune_outlined),
-                tooltip: L10n.global().editTooltip,
-                onPressed: () {
-                  context.state.currentFile?.fdId
-                      .let((id) => context.addEvent(_Edit(id)));
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.auto_fix_high_outlined),
-                tooltip: L10n.global().enhanceTooltip,
-                onPressed: () {
-                  context.state.currentFile?.fdId
-                      .let((id) => context.addEvent(_Enhance(id)));
-                },
-              ),
+              const _AppBarEditButton(),
+              const _AppBarEnhanceButton(),
             ],
-            IconButton(
-              icon: const Icon(Icons.download_outlined),
-              tooltip: L10n.global().downloadTooltip,
-              onPressed: () {
-                context.state.currentFile?.fdId
-                    .let((id) => context.addEvent(_Download(id)));
-              },
-            ),
-            if (state.collection == null)
-              IconButton(
-                icon: const Icon(Icons.delete_outlined),
-                tooltip: L10n.global().deleteTooltip,
-                onPressed: () {
-                  context.state.currentFile?.fdId
-                      .let((id) => context.addEvent(_Delete(id)));
-                },
-              ),
+            const _AppBarDownloadButton(),
+            if (state.collection == null) const _AppBarDeleteButton(),
           ]
               .map((e) => Expanded(
                     flex: 1,

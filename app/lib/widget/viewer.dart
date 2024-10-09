@@ -52,13 +52,14 @@ import 'package:np_common/unique.dart';
 import 'package:np_platform_util/np_platform_util.dart';
 import 'package:to_string/to_string.dart';
 
+part 'viewer.g.dart';
 part 'viewer/app_bar.dart';
+part 'viewer/app_bar_buttons.dart';
 part 'viewer/bloc.dart';
 part 'viewer/detail_pane.dart';
 part 'viewer/state_event.dart';
 part 'viewer/type.dart';
 part 'viewer/view.dart';
-part 'viewer.g.dart';
 
 class ViewerArguments {
   const ViewerArguments(
