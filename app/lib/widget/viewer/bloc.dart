@@ -18,6 +18,8 @@ class _Bloc extends Bloc<_Event, _State>
           index: startIndex,
           currentFile:
               filesController.stream.value.dataMap[fileIds[startIndex]]!,
+          appBarButtons: prefController.viewerAppBarButtonsValue,
+          bottomAppBarButtons: prefController.viewerBottomAppBarButtonsValue,
         )) {
     on<_Init>(_onInit);
     on<_SetIndex>(_onSetIndex);
@@ -28,6 +30,8 @@ class _Bloc extends Bloc<_Event, _State>
     on<_ToggleAppBar>(_onToggleAppBar);
     on<_ShowAppBar>(_onShowAppBar);
     on<_HideAppBar>(_onHideAppBar);
+    on<_SetAppBarButtons>(_onAppBarButtons);
+    on<_SetBottomAppBarButtons>(_onBottomAppBarButtons);
     on<_PauseLivePhoto>(_onPauseLivePhoto);
     on<_PlayLivePhoto>(_onPlayLivePhoto);
     on<_Unfavorite>(_onUnfavorite);
@@ -74,6 +78,13 @@ class _Bloc extends Bloc<_Event, _State>
         _collectionItemsSubscription?.cancel();
       }));
     }
+    _subscriptions.add(prefController.viewerAppBarButtonsChange.listen((event) {
+      add(_SetAppBarButtons(event));
+    }));
+    _subscriptions
+        .add(prefController.viewerBottomAppBarButtonsChange.listen((event) {
+      add(_SetBottomAppBarButtons(event));
+    }));
 
     add(_SetIndex(startIndex));
   }
@@ -187,6 +198,16 @@ class _Bloc extends Bloc<_Event, _State>
     _log.info(ev);
     emit(state.copyWith(isShowAppBar: false));
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+  }
+
+  void _onAppBarButtons(_SetAppBarButtons ev, _Emitter emit) {
+    _log.info(ev);
+    emit(state.copyWith(appBarButtons: ev.value));
+  }
+
+  void _onBottomAppBarButtons(_SetBottomAppBarButtons ev, _Emitter emit) {
+    _log.info(ev);
+    emit(state.copyWith(bottomAppBarButtons: ev.value));
   }
 
   void _onPauseLivePhoto(_PauseLivePhoto ev, _Emitter emit) {

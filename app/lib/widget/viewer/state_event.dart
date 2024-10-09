@@ -19,8 +19,10 @@ class _State {
     required this.openDetailPaneRequest,
     required this.closeDetailPane,
     required this.isZoomed,
-    required this.isShowAppBar,
     required this.isInitialLoad,
+    required this.isShowAppBar,
+    required this.appBarButtons,
+    required this.bottomAppBarButtons,
     required this.pendingRemovePage,
     required this.imageEditorRequest,
     required this.imageEnhancerRequest,
@@ -33,6 +35,8 @@ class _State {
     required List<int> fileIds,
     required int index,
     required FileDescriptor currentFile,
+    required List<ViewerAppBarButtonType> appBarButtons,
+    required List<ViewerAppBarButtonType> bottomAppBarButtons,
   }) =>
       _State(
         fileIdOrders: fileIds,
@@ -46,8 +50,10 @@ class _State {
         openDetailPaneRequest: Unique(const _OpenDetailPaneRequest(false)),
         closeDetailPane: Unique(false),
         isZoomed: false,
-        isShowAppBar: true,
         isInitialLoad: true,
+        isShowAppBar: true,
+        appBarButtons: appBarButtons,
+        bottomAppBarButtons: bottomAppBarButtons,
         pendingRemovePage: Unique(null),
         imageEditorRequest: Unique(null),
         imageEnhancerRequest: Unique(null),
@@ -76,8 +82,11 @@ class _State {
   final Unique<_OpenDetailPaneRequest> openDetailPaneRequest;
   final Unique<bool> closeDetailPane;
   final bool isZoomed;
-  final bool isShowAppBar;
   final bool isInitialLoad;
+
+  final bool isShowAppBar;
+  final List<ViewerAppBarButtonType> appBarButtons;
+  final List<ViewerAppBarButtonType> bottomAppBarButtons;
 
   final Unique<int?> pendingRemovePage;
 
@@ -187,6 +196,26 @@ class _HideAppBar implements _Event {
 
   @override
   String toString() => _$toString();
+}
+
+@toString
+class _SetAppBarButtons implements _Event {
+  const _SetAppBarButtons(this.value);
+
+  @override
+  String toString() => _$toString();
+
+  final List<ViewerAppBarButtonType> value;
+}
+
+@toString
+class _SetBottomAppBarButtons implements _Event {
+  const _SetBottomAppBarButtons(this.value);
+
+  @override
+  String toString() => _$toString();
+
+  final List<ViewerAppBarButtonType> value;
 }
 
 @toString

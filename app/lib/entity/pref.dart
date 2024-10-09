@@ -117,6 +117,8 @@ enum PrefKey implements PrefKeyInterface {
   isNewHttpEngine,
   mapDefaultRangeType,
   mapDefaultCustomRange,
+  viewerAppBarButtons,
+  viewerBottomAppBarButtons,
   ;
 
   @override
@@ -211,6 +213,10 @@ enum PrefKey implements PrefKeyInterface {
         return "mapDefaultRangeType";
       case PrefKey.mapDefaultCustomRange:
         return "mapDefaultCustomRange";
+      case PrefKey.viewerAppBarButtons:
+        return "viewerAppBarButtons";
+      case PrefKey.viewerBottomAppBarButtons:
+        return "viewerBottomAppBarButtons";
     }
   }
 }
@@ -259,6 +265,9 @@ abstract class PrefProvider {
 
   List<String>? getStringList(PrefKeyInterface key);
   Future<bool> setStringList(PrefKeyInterface key, List<String> value);
+
+  List<int>? getIntList(PrefKeyInterface key);
+  Future<bool> setIntList(PrefKeyInterface key, List<int> value);
 
   Future<bool> remove(PrefKeyInterface key);
   Future<bool> clear();

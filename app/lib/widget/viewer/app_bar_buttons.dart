@@ -1,5 +1,20 @@
 part of '../viewer.dart';
 
+enum ViewerAppBarButtonType {
+  // the order must not be changed
+  livePhoto,
+  favorite,
+  share,
+  edit,
+  enhance,
+  download,
+  delete,
+  ;
+
+  static ViewerAppBarButtonType fromValue(int value) =>
+      ViewerAppBarButtonType.values[value];
+}
+
 class _AppBarLivePhotoButton extends StatelessWidget {
   const _AppBarLivePhotoButton();
 

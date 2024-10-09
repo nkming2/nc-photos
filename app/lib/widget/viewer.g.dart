@@ -29,8 +29,10 @@ abstract class $_StateCopyWithWorker {
       Unique<_OpenDetailPaneRequest>? openDetailPaneRequest,
       Unique<bool>? closeDetailPane,
       bool? isZoomed,
-      bool? isShowAppBar,
       bool? isInitialLoad,
+      bool? isShowAppBar,
+      List<ViewerAppBarButtonType>? appBarButtons,
+      List<ViewerAppBarButtonType>? bottomAppBarButtons,
       Unique<int?>? pendingRemovePage,
       Unique<ImageEditorArguments?>? imageEditorRequest,
       Unique<ImageEnhancerArguments?>? imageEnhancerRequest,
@@ -59,8 +61,10 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
       dynamic openDetailPaneRequest,
       dynamic closeDetailPane,
       dynamic isZoomed,
-      dynamic isShowAppBar,
       dynamic isInitialLoad,
+      dynamic isShowAppBar,
+      dynamic appBarButtons,
+      dynamic bottomAppBarButtons,
       dynamic pendingRemovePage,
       dynamic imageEditorRequest,
       dynamic imageEnhancerRequest,
@@ -98,8 +102,13 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
         closeDetailPane:
             closeDetailPane as Unique<bool>? ?? that.closeDetailPane,
         isZoomed: isZoomed as bool? ?? that.isZoomed,
-        isShowAppBar: isShowAppBar as bool? ?? that.isShowAppBar,
         isInitialLoad: isInitialLoad as bool? ?? that.isInitialLoad,
+        isShowAppBar: isShowAppBar as bool? ?? that.isShowAppBar,
+        appBarButtons: appBarButtons as List<ViewerAppBarButtonType>? ??
+            that.appBarButtons,
+        bottomAppBarButtons:
+            bottomAppBarButtons as List<ViewerAppBarButtonType>? ??
+                that.bottomAppBarButtons,
         pendingRemovePage:
             pendingRemovePage as Unique<int?>? ?? that.pendingRemovePage,
         imageEditorRequest:
@@ -193,7 +202,7 @@ extension _$_PageViewStateNpLog on _PageViewState {
 extension _$_StateToString on _State {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_State {fileIdOrders: $fileIdOrders, files: {length: ${files.length}}, fileStates: {length: ${fileStates.length}}, index: $index, currentFile: ${currentFile == null ? null : "${currentFile!.fdPath}"}, currentFileState: $currentFileState, collection: $collection, collectionItemsController: $collectionItemsController, collectionItems: ${collectionItems == null ? null : "{length: ${collectionItems!.length}}"}, isShowDetailPane: $isShowDetailPane, isClosingDetailPane: $isClosingDetailPane, isDetailPaneActive: $isDetailPaneActive, openDetailPaneRequest: $openDetailPaneRequest, closeDetailPane: $closeDetailPane, isZoomed: $isZoomed, isShowAppBar: $isShowAppBar, isInitialLoad: $isInitialLoad, pendingRemovePage: $pendingRemovePage, imageEditorRequest: $imageEditorRequest, imageEnhancerRequest: $imageEnhancerRequest, shareRequest: $shareRequest, slideshowRequest: $slideshowRequest, error: $error}";
+    return "_State {fileIdOrders: $fileIdOrders, files: {length: ${files.length}}, fileStates: {length: ${fileStates.length}}, index: $index, currentFile: ${currentFile == null ? null : "${currentFile!.fdPath}"}, currentFileState: $currentFileState, collection: $collection, collectionItemsController: $collectionItemsController, collectionItems: ${collectionItems == null ? null : "{length: ${collectionItems!.length}}"}, isShowDetailPane: $isShowDetailPane, isClosingDetailPane: $isClosingDetailPane, isDetailPaneActive: $isDetailPaneActive, openDetailPaneRequest: $openDetailPaneRequest, closeDetailPane: $closeDetailPane, isZoomed: $isZoomed, isInitialLoad: $isInitialLoad, isShowAppBar: $isShowAppBar, appBarButtons: [length: ${appBarButtons.length}], bottomAppBarButtons: [length: ${bottomAppBarButtons.length}], pendingRemovePage: $pendingRemovePage, imageEditorRequest: $imageEditorRequest, imageEnhancerRequest: $imageEnhancerRequest, shareRequest: $shareRequest, slideshowRequest: $slideshowRequest, error: $error}";
   }
 }
 
@@ -257,6 +266,20 @@ extension _$_HideAppBarToString on _HideAppBar {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
     return "_HideAppBar {}";
+  }
+}
+
+extension _$_SetAppBarButtonsToString on _SetAppBarButtons {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_SetAppBarButtons {value: [length: ${value.length}]}";
+  }
+}
+
+extension _$_SetBottomAppBarButtonsToString on _SetBottomAppBarButtons {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_SetBottomAppBarButtons {value: [length: ${value.length}]}";
   }
 }
 

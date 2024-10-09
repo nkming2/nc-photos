@@ -234,6 +234,24 @@ extension $PrefControllerNpSubjectAccessor on PrefController {
   Stream<bool> get isSlideshowReverseChange =>
       isSlideshowReverse.distinct().skip(1);
   bool get isSlideshowReverseValue => _isSlideshowReverseController.value;
+// _viewerAppBarButtonsController
+  ValueStream<List<ViewerAppBarButtonType>> get viewerAppBarButtons =>
+      _viewerAppBarButtonsController.stream;
+  Stream<List<ViewerAppBarButtonType>> get viewerAppBarButtonsNew =>
+      viewerAppBarButtons.skip(1);
+  Stream<List<ViewerAppBarButtonType>> get viewerAppBarButtonsChange =>
+      viewerAppBarButtons.distinct().skip(1);
+  List<ViewerAppBarButtonType> get viewerAppBarButtonsValue =>
+      _viewerAppBarButtonsController.value;
+// _viewerBottomAppBarButtonsController
+  ValueStream<List<ViewerAppBarButtonType>> get viewerBottomAppBarButtons =>
+      _viewerBottomAppBarButtonsController.stream;
+  Stream<List<ViewerAppBarButtonType>> get viewerBottomAppBarButtonsNew =>
+      viewerBottomAppBarButtons.skip(1);
+  Stream<List<ViewerAppBarButtonType>> get viewerBottomAppBarButtonsChange =>
+      viewerBottomAppBarButtons.distinct().skip(1);
+  List<ViewerAppBarButtonType> get viewerBottomAppBarButtonsValue =>
+      _viewerBottomAppBarButtonsController.value;
 }
 
 extension $SecurePrefControllerNpSubjectAccessor on SecurePrefController {

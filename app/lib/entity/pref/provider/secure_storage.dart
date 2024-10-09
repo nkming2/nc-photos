@@ -72,6 +72,16 @@ class PrefSecureStorageProvider implements PrefProvider {
       setString(key, jsonEncode(value));
 
   @override
+  List<int>? getIntList(PrefKeyInterface key) {
+    final value = _rawData[key.toStringKey()];
+    return (value?.let(jsonDecode) as List).cast<int>();
+  }
+
+  @override
+  Future<bool> setIntList(PrefKeyInterface key, List<int> value) =>
+      setString(key, jsonEncode(value));
+
+  @override
   Future<bool> remove(PrefKeyInterface key) async {
     try {
       await _storage.delete(key: key.toStringKey());
