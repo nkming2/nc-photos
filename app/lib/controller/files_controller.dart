@@ -322,7 +322,7 @@ class FilesController {
       _summaryStreamController.addWithValue((value) {
         final next = Map.of(value.summary.items);
         for (final f in files) {
-          final key = f.fdDateTime.toDate();
+          final key = f.fdDateTime.toLocal().toDate();
           final original = next[key];
           if (original == null) {
             continue;
