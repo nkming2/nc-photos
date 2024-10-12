@@ -30,7 +30,7 @@ class _AppBar extends StatelessWidget {
         ),
         titleSpacing: 0,
         centerTitle: isTitleCentered,
-        actions: !state.isDetailPaneActive && !state.isZoomed
+        actions: !state.isDetailPaneActive && state.canOpenDetailPane
             ? [
                 ...state.appBarButtons
                     .map((e) => _buildAppBarButton(
