@@ -86,4 +86,6 @@ extension ListExtension<T> on List<T> {
   List<T> added(T value) => toList()..add(value);
 
   List<T> removed(T value) => toList()..remove(value);
+
+  List<T> removedAt(int index) => toList()..removeAt(index);
 }

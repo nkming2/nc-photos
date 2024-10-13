@@ -48,6 +48,15 @@ class PrefSharedPreferencesProvider extends PrefProvider {
       _pref.setStringList(key.toStringKey(), value);
 
   @override
+  List<int>? getIntList(PrefKeyInterface key) =>
+      _pref.getStringList(key.toStringKey())?.map(int.parse).toList();
+
+  @override
+  Future<bool> setIntList(PrefKeyInterface key, List<int> value) =>
+      _pref.setStringList(
+          key.toStringKey(), value.map((e) => e.toString()).toList());
+
+  @override
   Future<bool> remove(PrefKeyInterface key) => _pref.remove(key.toStringKey());
 
   @override

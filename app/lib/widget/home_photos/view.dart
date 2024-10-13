@@ -87,10 +87,9 @@ class _ContentListBody extends StatelessWidget {
           Navigator.of(context).pushNamed(
             Viewer.routeName,
             arguments: ViewerArguments(
-              context.bloc.account,
               state.transformedItems
                   .whereType<_FileItem>()
-                  .map((e) => e.file)
+                  .map((e) => e.file.fdId)
                   .toList(),
               actualIndex,
             ),

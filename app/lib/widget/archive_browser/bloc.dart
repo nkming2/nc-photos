@@ -59,21 +59,24 @@ class _Bloc extends Bloc<_Event, _State>
   Future<void> _onLoad(_LoadItems ev, Emitter<_State> emit) {
     _log.info(ev);
     unawaited(filesController.queryByArchived());
-    return forEach(
-      emit,
-      filesController.stream,
-      onData: (data) => state.copyWith(
-        files: data.data,
-        isLoading: data.hasNext || _itemTransformerQueue.isProcessing,
+    return Future.wait([
+      forEach(
+        emit,
+        filesController.stream,
+        onData: (data) => state.copyWith(
+          files: data.data,
+          isLoading: data.hasNext || _itemTransformerQueue.isProcessing,
+        ),
       ),
-      onError: (e, stackTrace) {
-        _log.severe("[_onLoad] Uncaught exception", e, stackTrace);
-        return state.copyWith(
+      forEach(
+        emit,
+        filesController.errorStream,
+        onData: (data) => state.copyWith(
           isLoading: _itemTransformerQueue.isProcessing,
-          error: ExceptionEvent(e, stackTrace),
-        );
-      },
-    );
+          error: ExceptionEvent(data.error, data.stackTrace),
+        ),
+      ),
+    ]);
   }
 
   void _onTransformItems(_TransformItems ev, Emitter<_State> emit) {

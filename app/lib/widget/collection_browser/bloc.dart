@@ -149,13 +149,14 @@ class _Bloc extends Bloc<_Event, _State>
             itemsWhitelist: whitelist,
           );
         },
-        onError: (e, stackTrace) {
-          _log.severe("[_onLoad] Uncaught exception", e, stackTrace);
-          return state.copyWith(
-            isLoading: false,
-            error: ExceptionEvent(e, stackTrace),
-          );
-        },
+      ),
+      forEach(
+        emit,
+        filesController.errorStream,
+        onData: (data) => state.copyWith(
+          isLoading: false,
+          error: ExceptionEvent(data.error, data.stackTrace),
+        ),
       ),
     ]);
   }

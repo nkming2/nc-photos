@@ -82,27 +82,6 @@ extension PrefExtension on Pref {
   Future<bool> setLanguage(int value) => _set<int>(
       PrefKey.language, value, (key, value) => provider.setInt(key, value));
 
-  int? getSlideshowDuration() => provider.getInt(PrefKey.slideshowDuration);
-  int getSlideshowDurationOr(int def) => getSlideshowDuration() ?? def;
-  Future<bool> setSlideshowDuration(int value) => _set<int>(
-      PrefKey.slideshowDuration,
-      value,
-      (key, value) => provider.setInt(key, value));
-
-  bool? isSlideshowShuffle() => provider.getBool(PrefKey.isSlideshowShuffle);
-  bool isSlideshowShuffleOr(bool def) => isSlideshowShuffle() ?? def;
-  Future<bool> setSlideshowShuffle(bool value) => _set<bool>(
-      PrefKey.isSlideshowShuffle,
-      value,
-      (key, value) => provider.setBool(key, value));
-
-  bool? isSlideshowRepeat() => provider.getBool(PrefKey.isSlideshowRepeat);
-  bool isSlideshowRepeatOr(bool def) => isSlideshowRepeat() ?? def;
-  Future<bool> setSlideshowRepeat(bool value) => _set<bool>(
-      PrefKey.isSlideshowRepeat,
-      value,
-      (key, value) => provider.setBool(key, value));
-
   bool? isAlbumBrowserShowDate() =>
       provider.getBool(PrefKey.isAlbumBrowserShowDate);
   bool isAlbumBrowserShowDateOr([bool def = false]) =>
@@ -176,13 +155,6 @@ extension PrefExtension on Pref {
       hasShownSaveEditResultDialog() ?? def;
   Future<bool> setHasShownSaveEditResultDialog(bool value) => _set<bool>(
       PrefKey.hasShownSaveEditResultDialog,
-      value,
-      (key, value) => provider.setBool(key, value));
-
-  bool? isSlideshowReverse() => provider.getBool(PrefKey.isSlideshowReverse);
-  bool isSlideshowReverseOr(bool def) => isSlideshowReverse() ?? def;
-  Future<bool> setSlideshowReverse(bool value) => _set<bool>(
-      PrefKey.isSlideshowReverse,
       value,
       (key, value) => provider.setBool(key, value));
 

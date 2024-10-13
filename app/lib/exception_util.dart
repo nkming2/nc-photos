@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/controller/files_controller.dart';
+import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/navigation_manager.dart';
 import 'package:nc_photos/widget/trusted_cert_manager.dart';
@@ -57,6 +59,11 @@ String toUserString(Object? exception) {
             .getNavigator()
             ?.pushNamed(TrustedCertManager.routeName),
       ),
+    );
+  } else if (exception is UpdatePropertyFailureError) {
+    return (
+      "Failed to update files: ${exception.files.map((f) => f.filename).join(", ")}",
+      null
     );
   }
   return (exception?.toString() ?? "Unknown error", null);

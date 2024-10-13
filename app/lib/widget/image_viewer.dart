@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
 import 'package:flutter/widgets.dart';
 import 'package:logging/logging.dart';
@@ -152,40 +151,17 @@ class _RemoteImageViewerState extends State<RemoteImageViewer> {
                   toHeroContext,
                 );
               },
-              child: CachedNetworkImage(
-                fit: BoxFit.contain,
-                cacheManager: ThumbnailCacheManager.inst,
-                imageUrl: NetworkRectThumbnail.imageUrlForFile(
-                    widget.account, widget.file),
-                httpHeaders: {
-                  "Authorization":
-                      AuthUtil.fromAccount(widget.account).toHeaderValue(),
-                },
-                fadeInDuration: const Duration(),
-                filterQuality: FilterQuality.high,
-                imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
+              child: _PreviewImage(
+                account: widget.account,
+                file: widget.file,
               ),
             ),
           ),
           if (_isHeroDone)
-            mod.CachedNetworkImage(
-              fit: BoxFit.contain,
-              cacheManager: LargeImageCacheManager.inst,
-              imageUrl: _getImageUrl(widget.account, widget.file),
-              httpHeaders: {
-                "Authorization":
-                    AuthUtil.fromAccount(widget.account).toHeaderValue(),
-              },
-              fadeInDuration: const Duration(),
-              filterQuality: FilterQuality.high,
-              imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
-              imageBuilder: (context, child, imageProvider) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  _onItemLoaded();
-                });
-                const SizeChangedLayoutNotification().dispatch(context);
-                return child;
-              },
+            _FullSizedImage(
+              account: widget.account,
+              file: widget.file,
+              onItemLoaded: _onItemLoaded,
             ),
         ],
       ),
@@ -285,4 +261,67 @@ String _getImageUrl(Account account, FileDescriptor file) {
       isKeepAspectRatio: true,
     );
   }
+}
+
+class _PreviewImage extends StatelessWidget {
+  const _PreviewImage({
+    required this.account,
+    required this.file,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return mod.CachedNetworkImage(
+      fit: BoxFit.contain,
+      cacheManager: ThumbnailCacheManager.inst,
+      imageUrl: NetworkRectThumbnail.imageUrlForFile(account, file),
+      httpHeaders: {
+        "Authorization": AuthUtil.fromAccount(account).toHeaderValue(),
+      },
+      fadeInDuration: const Duration(),
+      filterQuality: FilterQuality.high,
+      imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
+      imageBuilder: (context, child, imageProvider) {
+        const SizeChangedLayoutNotification().dispatch(context);
+        return child;
+      },
+    );
+  }
+
+  final Account account;
+  final FileDescriptor file;
+}
+
+class _FullSizedImage extends StatelessWidget {
+  const _FullSizedImage({
+    required this.account,
+    required this.file,
+    this.onItemLoaded,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return mod.CachedNetworkImage(
+      fit: BoxFit.contain,
+      cacheManager: LargeImageCacheManager.inst,
+      imageUrl: _getImageUrl(account, file),
+      httpHeaders: {
+        "Authorization": AuthUtil.fromAccount(account).toHeaderValue(),
+      },
+      fadeInDuration: const Duration(),
+      filterQuality: FilterQuality.high,
+      imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
+      imageBuilder: (context, child, imageProvider) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          onItemLoaded?.call();
+        });
+        const SizeChangedLayoutNotification().dispatch(context);
+        return child;
+      },
+    );
+  }
+
+  final Account account;
+  final FileDescriptor file;
+  final VoidCallback? onItemLoaded;
 }

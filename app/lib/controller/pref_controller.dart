@@ -12,6 +12,7 @@ import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/language_util.dart';
 import 'package:nc_photos/protected_page_handler.dart';
 import 'package:nc_photos/size.dart';
+import 'package:nc_photos/widget/viewer.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/object_util.dart';
 import 'package:np_gps_map/np_gps_map.dart';
@@ -210,6 +211,45 @@ class PrefController {
         value: value,
       );
 
+  Future<bool> setSlideshowDuration(Duration value) => _set<Duration>(
+        controller: _slideshowDurationController,
+        setter: (pref, value) => pref.setSlideshowDuration(value),
+        value: value,
+      );
+
+  Future<bool> setSlideshowShuffle(bool value) => _set<bool>(
+        controller: _isSlideshowShuffleController,
+        setter: (pref, value) => pref.setSlideshowShuffle(value),
+        value: value,
+      );
+
+  Future<bool> setSlideshowRepeat(bool value) => _set<bool>(
+        controller: _isSlideshowRepeatController,
+        setter: (pref, value) => pref.setSlideshowRepeat(value),
+        value: value,
+      );
+
+  Future<bool> setSlideshowReverse(bool value) => _set<bool>(
+        controller: _isSlideshowReverseController,
+        setter: (pref, value) => pref.setSlideshowReverse(value),
+        value: value,
+      );
+
+  Future<bool> setViewerAppBarButtons(List<ViewerAppBarButtonType> value) =>
+      _set<List<ViewerAppBarButtonType>>(
+        controller: _viewerAppBarButtonsController,
+        setter: (pref, value) => pref.setViewerAppBarButtons(value),
+        value: value,
+      );
+
+  Future<bool> setViewerBottomAppBarButtons(
+          List<ViewerAppBarButtonType> value) =>
+      _set<List<ViewerAppBarButtonType>>(
+        controller: _viewerBottomAppBarButtonsController,
+        setter: (pref, value) => pref.setViewerBottomAppBarButtons(value),
+        value: value,
+      );
+
   Future<bool> _set<T>({
     required BehaviorSubject<T> controller,
     required Future<bool> Function(Pref pref, T value) setter,
@@ -337,6 +377,35 @@ class PrefController {
   @npSubjectAccessor
   late final _mapDefaultCustomRangeController = BehaviorSubject.seeded(
       pref.getMapDefaultCustomRange() ?? const Duration(days: 30));
+  @npSubjectAccessor
+  late final _slideshowDurationController = BehaviorSubject.seeded(
+      pref.getSlideshowDuration() ?? const Duration(seconds: 5));
+  @npSubjectAccessor
+  late final _isSlideshowShuffleController =
+      BehaviorSubject.seeded(pref.isSlideshowShuffle() ?? false);
+  @npSubjectAccessor
+  late final _isSlideshowRepeatController =
+      BehaviorSubject.seeded(pref.isSlideshowRepeat() ?? false);
+  @npSubjectAccessor
+  late final _isSlideshowReverseController =
+      BehaviorSubject.seeded(pref.isSlideshowReverse() ?? false);
+  @npSubjectAccessor
+  late final _viewerAppBarButtonsController =
+      BehaviorSubject.seeded(pref.getViewerAppBarButtons() ??
+          const [
+            ViewerAppBarButtonType.livePhoto,
+            ViewerAppBarButtonType.favorite,
+          ]);
+  @npSubjectAccessor
+  late final _viewerBottomAppBarButtonsController =
+      BehaviorSubject.seeded(pref.getViewerBottomAppBarButtons() ??
+          const [
+            ViewerAppBarButtonType.share,
+            ViewerAppBarButtonType.edit,
+            ViewerAppBarButtonType.enhance,
+            ViewerAppBarButtonType.download,
+            ViewerAppBarButtonType.delete,
+          ]);
 }
 
 extension PrefControllerExtension on PrefController {

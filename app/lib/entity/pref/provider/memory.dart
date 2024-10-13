@@ -32,6 +32,12 @@ class PrefMemoryProvider extends PrefProvider {
       _set(key, value);
 
   @override
+  List<int>? getIntList(PrefKeyInterface key) => _get<List<int>>(key);
+  @override
+  Future<bool> setIntList(PrefKeyInterface key, List<int> value) =>
+      _set(key, value);
+
+  @override
   Future<bool> remove(PrefKeyInterface key) async {
     _data.remove(key.toStringKey());
     return true;
