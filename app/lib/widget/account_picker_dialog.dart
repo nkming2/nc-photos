@@ -6,7 +6,6 @@ import 'package:clock/clock.dart';
 import 'package:copy_with/copy_with.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:mutex/mutex.dart';
 import 'package:nc_photos/account.dart';
@@ -16,7 +15,6 @@ import 'package:nc_photos/bloc_util.dart';
 import 'package:nc_photos/controller/account_controller.dart';
 import 'package:nc_photos/controller/pref_controller.dart';
 import 'package:nc_photos/db/entity_converter.dart';
-import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/entity/server_status.dart';
 import 'package:nc_photos/exception_event.dart';
@@ -49,7 +47,6 @@ class AccountPickerDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => _Bloc(
-        container: KiwiContainer().resolve(),
         accountController: context.read(),
         prefController: context.read(),
         db: context.read(),
