@@ -1,41 +1,67 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
+import 'package:copy_with/copy_with.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/bloc_util.dart';
 import 'package:nc_photos/controller/pref_controller.dart';
 import 'package:nc_photos/db/entity_converter.dart';
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/entity/pref_util.dart' as pref_util;
-import 'package:nc_photos/legacy/sign_in.dart' as legacy;
+import 'package:nc_photos/exception_event.dart';
+import 'package:nc_photos/legacy/connect.dart' as legacy;
+import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/app_intermediate_circular_progress_indicator.dart';
 import 'package:nc_photos/widget/connect.dart';
+import 'package:nc_photos/widget/expandable_container.dart';
 import 'package:nc_photos/widget/home.dart';
+import 'package:nc_photos/widget/page_visibility_mixin.dart';
 import 'package:nc_photos/widget/root_picker.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_collection/np_collection.dart';
 import 'package:np_db/np_db.dart';
 import 'package:np_string/np_string.dart';
+import 'package:to_string/to_string.dart';
 
 part 'sign_in.g.dart';
+part 'sign_in/bloc.dart';
+part 'sign_in/state_event.dart';
+part 'sign_in/type.dart';
+part 'sign_in/view.dart';
 
-class SignIn extends StatefulWidget {
+class SignIn extends StatelessWidget {
   static const routeName = "/sign-in";
 
   const SignIn({super.key});
 
   @override
-  createState() => _SignInState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => _Bloc(
+        npDb: context.read(),
+        prefController: context.read(),
+      ),
+      child: const _WrappedSignIn(),
+    );
+  }
+}
+
+class _WrappedSignIn extends StatefulWidget {
+  const _WrappedSignIn();
+
+  @override
+  State<StatefulWidget> createState() => _WrappedSignInState();
 }
 
 @npLog
-class _SignInState extends State<SignIn> {
+class _WrappedSignInState extends State<_WrappedSignIn>
+    with RouteAware, PageVisibilityMixin {
   @override
-  build(BuildContext context) {
+  Widget build(BuildContext context) {
     return Theme(
       data: buildDarkTheme(context).copyWith(
         scaffoldBackgroundColor: Colors.transparent,
@@ -51,346 +77,126 @@ class _SignInState extends State<SignIn> {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          const _SingInBackground(),
+          const _Background(),
           Scaffold(
-            body: Builder(builder: (context) => _buildContent(context)),
+            body: MultiBlocListener(
+              listeners: [
+                _BlocListenerT(
+                  selector: (state) => state.connectArg,
+                  listener: (context, connectArg) {
+                    if (connectArg == null) {
+                      return;
+                    }
+                    if (connectArg.username != null &&
+                        connectArg.password != null) {
+                      _onLegacyConnect(context, connectArg);
+                    } else {
+                      final uri = Uri.parse(
+                          "${connectArg.scheme}://${connectArg.address}");
+                      _onConnect(context, uri);
+                    }
+                  },
+                ),
+                _BlocListenerT(
+                  selector: (state) => state.isCompleted,
+                  listener: (context, isCompleted) {
+                    if (isCompleted) {
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        Home.routeName,
+                        (route) => false,
+                        arguments:
+                            HomeArguments(context.state.connectedAccount!),
+                      );
+                    }
+                  },
+                ),
+                _BlocListenerT(
+                  selector: (state) => state.error,
+                  listener: (context, error) {
+                    if (error != null && isPageVisible()) {
+                      SnackBarManager().showSnackBarForException(error.error);
+                    }
+                  },
+                ),
+              ],
+              child: _BlocSelector(
+                selector: (state) => state.isConnecting,
+                builder: (context, isConnecting) =>
+                    isConnecting ? const _ConnectingBody() : const _Body(),
+              ),
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildContent(BuildContext context) {
-    if (_isConnecting) {
-      return const Stack(
-        children: [
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 64,
-            child: Center(
-              child: SizedBox(
-                width: 24,
-                height: 24,
-                child: AppIntermediateCircularProgressIndicator(),
-              ),
-            ),
-          ),
-        ],
-      );
-    } else {
-      return Form(
-        key: _formKey,
-        child: Center(
-          child: Container(
-            constraints: BoxConstraints(
-              maxWidth: Theme.of(context).widthLimitedContentMaxWidth,
-            ),
-            child: Column(
-              children: [
-                Expanded(
-                  child: Center(
-                    child: SingleChildScrollView(
-                      child: _SignInBody(
-                        onSchemeSaved: (scheme) {
-                          _formValue.scheme = scheme;
-                        },
-                        onServerUrlSaved: (url) {
-                          _formValue.address = url;
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      if (!ModalRoute.of(context)!.isFirst)
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: Text(MaterialLocalizations.of(context)
-                              .cancelButtonLabel),
-                        )
-                      else
-                        Container(),
-                      ElevatedButton(
-                        onPressed: () {
-                          if (_formKey.currentState?.validate() == true) {
-                            _connect();
-                          }
-                        },
-                        child: Text(L10n.global().connectButtonLabel),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    }
-  }
-
-  Future<void> _connect() async {
-    _formKey.currentState!.save();
-    Uri url = Uri.parse("${_formValue.scheme}://${_formValue.address}");
-    _log.info("[_connect] Try connecting with url: $url");
-    Account? account = await Navigator.pushNamed<Account>(
-        context, Connect.routeName,
-        arguments: ConnectArguments(url));
+  Future<void> _onConnect(BuildContext context, Uri connectUri) async {
+    var account = await Navigator.pushNamed<Account>(
+      context,
+      Connect.routeName,
+      arguments: ConnectArguments(connectUri),
+    );
     if (account == null) {
       // connection failed
       return;
     }
-    account = await Navigator.pushNamed<Account>(context, RootPicker.routeName,
-        arguments: RootPickerArguments(account));
+    account = await Navigator.pushNamed<Account>(
+      context,
+      RootPicker.routeName,
+      arguments: RootPickerArguments(account),
+    );
     if (account == null) {
       // ???
       return;
     }
     // we've got a good account
-    setState(() {
-      _isConnecting = true;
-    });
-    try {
-      await _persistAccount(account);
-      unawaited(
-        Navigator.pushNamedAndRemoveUntil(
-            context, Home.routeName, (route) => false,
-            arguments: HomeArguments(account)),
-      );
-    } catch (_) {
-      setState(() {
-        _isConnecting = false;
-      });
-      rethrow;
+    context.addEvent(_SetConnectedAccount(account));
+  }
+
+  Future<void> _onLegacyConnect(BuildContext context, _ConnectArg arg) async {
+    Account? account = Account(
+      id: Account.newId(),
+      scheme: arg.scheme,
+      address: arg.address,
+      userId: arg.username!.toCi(),
+      username2: arg.username!,
+      password: arg.password!,
+      roots: [""],
+    );
+    _log.info("[_onLegacyConnect] Try connecting with account: $account");
+    account = await Navigator.pushNamed<Account>(
+      context,
+      legacy.Connect.routeName,
+      arguments: legacy.ConnectArguments(account),
+    );
+    if (account == null) {
+      // connection failed
+      return;
     }
-  }
-
-  Future<void> _persistAccount(Account account) async {
-    await context.read<NpDb>().addAccounts([account.toDb()]);
-    // only signing in with app password would trigger distinct
-    final accounts = (Pref().getAccounts3Or([])..add(account)).distinct();
-    try {
-      AccountPref.setGlobalInstance(
-          account, await pref_util.loadAccountPref(account));
-    } catch (e, stackTrace) {
-      _log.shout("[_connect] Failed reading pref for account: $account", e,
-          stackTrace);
+    account = await Navigator.pushNamed<Account>(
+      context,
+      RootPicker.routeName,
+      arguments: RootPickerArguments(account),
+    );
+    if (account == null) {
+      // ???
+      return;
     }
-    final prefController = context.read<PrefController>();
-    unawaited(Pref().setAccounts3(accounts));
-    unawaited(prefController.setCurrentAccountIndex(accounts.indexOf(account)));
-  }
-
-  final _formKey = GlobalKey<FormState>();
-  var _isConnecting = false;
-
-  final _formValue = _FormValue();
-}
-
-/// A nice background that matches Nextcloud without breaking any copyright law
-class _SingInBackground extends StatelessWidget {
-  const _SingInBackground();
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        ColoredBox(color: Theme.of(context).nextcloudBlue),
-        const Positioned(
-          bottom: 60,
-          left: -200,
-          child: Opacity(
-            opacity: .22,
-            child: Icon(
-              Icons.circle_outlined,
-              color: Colors.white,
-              size: 340,
-            ),
-          ),
-        ),
-        const Positioned(
-          top: -120,
-          left: -180,
-          right: 0,
-          child: Opacity(
-            opacity: .1,
-            child: Icon(
-              Icons.circle_outlined,
-              color: Colors.white,
-              size: 620,
-            ),
-          ),
-        ),
-        const Positioned(
-          bottom: -50,
-          right: -120,
-          child: Opacity(
-            opacity: .27,
-            child: Icon(
-              Icons.circle_outlined,
-              color: Colors.white,
-              size: 400,
-            ),
-          ),
-        ),
-      ],
-    );
+    // we've got a good account
+    context.addEvent(_SetConnectedAccount(account));
   }
 }
 
-class _SignInBody extends StatelessWidget {
-  const _SignInBody({
-    this.onSchemeSaved,
-    this.onServerUrlSaved,
-  });
+// typedef _BlocBuilder = BlocBuilder<_Bloc, _State>;
+// typedef _BlocListener = BlocListener<_Bloc, _State>;
+typedef _BlocListenerT<T> = BlocListenerT<_Bloc, _State, T>;
+typedef _BlocSelector<T> = BlocSelector<_Bloc, _State, T>;
+typedef _Emitter = Emitter<_State>;
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 32),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            L10n.global().signInHeaderText2,
-            style: Theme.of(context).textTheme.displayLarge!.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w100,
-                ),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              SizedBox(
-                width: 64,
-                child: _SchemeDropdown(
-                  onSaved: onSchemeSaved,
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 4),
-                child: Text("://"),
-              ),
-              Expanded(
-                child: _ServerUrlInput(
-                  onSaved: onServerUrlSaved,
-                ),
-              ),
-            ],
-          ),
-          if (kDebugMode) ...[
-            const SizedBox(height: 8),
-            InkWell(
-              onTap: () {
-                Navigator.pushReplacementNamed(
-                    context, legacy.SignIn.routeName);
-              },
-              child: const Text(
-                "Legacy sign in",
-                style: TextStyle(decoration: TextDecoration.underline),
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-
-  final void Function(String scheme)? onSchemeSaved;
-  final void Function(String url)? onServerUrlSaved;
-}
-
-enum _Scheme {
-  http,
-  https;
-
-  String toValueString() {
-    switch (this) {
-      case http:
-        return "http";
-
-      case https:
-        return "https";
-    }
-  }
-}
-
-class _SchemeDropdown extends StatefulWidget {
-  const _SchemeDropdown({
-    this.onSaved,
-  });
-
-  @override
-  State<StatefulWidget> createState() => _SchemeDropdownState();
-
-  final void Function(String scheme)? onSaved;
-}
-
-class _SchemeDropdownState extends State<_SchemeDropdown> {
-  @override
-  Widget build(BuildContext context) {
-    return DropdownButtonHideUnderline(
-      child: DropdownButtonFormField<_Scheme>(
-        value: _scheme,
-        items: _Scheme.values
-            .map((e) => DropdownMenuItem<_Scheme>(
-                  value: e,
-                  child: Text(e.toValueString()),
-                ))
-            .toList(),
-        onChanged: (newValue) {
-          setState(() {
-            _scheme = newValue!;
-          });
-        },
-        onSaved: (value) {
-          widget.onSaved?.call(value!.toValueString());
-        },
-      ),
-    );
-  }
-
-  var _scheme = _Scheme.https;
-}
-
-class _ServerUrlInput extends StatelessWidget {
-  const _ServerUrlInput({
-    this.onSaved,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      decoration: InputDecoration(
-        hintText: L10n.global().serverAddressInputHint,
-      ),
-      keyboardType: TextInputType.url,
-      validator: (value) {
-        if (value!.trim().trimRightAny("/").isEmpty) {
-          return L10n.global().serverAddressInputInvalidEmpty;
-        }
-        return null;
-      },
-      onSaved: (value) {
-        onSaved?.call(value!.trim().trimRightAny("/"));
-      },
-    );
-  }
-
-  final void Function(String url)? onSaved;
-}
-
-class _FormValue {
-  late String scheme;
-  late String address;
+extension on BuildContext {
+  _Bloc get bloc => read<_Bloc>();
+  _State get state => bloc.state;
+  void addEvent(_Event event) => bloc.add(event);
 }

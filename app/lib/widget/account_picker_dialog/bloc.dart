@@ -3,13 +3,11 @@ part of '../account_picker_dialog.dart';
 @npLog
 class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   _Bloc({
-    required DiContainer container,
     required this.accountController,
     required this.prefController,
     required this.db,
-  })  : _c = container,
-        super(_State.init(
-          accounts: container.pref.getAccounts3Or([]),
+  }) : super(_State.init(
+          accounts: prefController.accountsValue,
         )) {
     on<_ToggleDropdown>(_onToggleDropdown);
     on<_SwitchAccount>(_onSwitchAccount);
@@ -59,7 +57,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     ));
     try {
       await _prefLock.protect(() async {
-        final accounts = _c.pref.getAccounts3()!;
+        final accounts = prefController.accountsValue;
         final currentAccount =
             accounts[prefController.currentAccountIndexValue!];
         accounts.remove(ev.account);
@@ -74,7 +72,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
           _log.shout("[_onDeleteAccount] Failed while removing account pref", e,
               stackTrace);
         }
-        await Pref().setAccounts3(accounts);
+        await prefController.setAccounts(accounts);
         await prefController.setCurrentAccountIndex(newAccountIndex);
 
         // check if the same account (server + userId) still exists in known
@@ -109,7 +107,6 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     }
   }
 
-  final DiContainer _c;
   final AccountController accountController;
   final PrefController prefController;
   final NpDb db;
