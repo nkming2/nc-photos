@@ -3,12 +3,11 @@ part of '../account_settings.dart';
 @npLog
 class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   _Bloc({
-    required DiContainer container,
     required Account account,
+    required this.prefController,
     required this.accountPrefController,
     this.highlight,
-  })  : _c = container,
-        super(_State.init(
+  }) : super(_State.init(
           account: account,
           label: accountPrefController.accountLabelValue,
           shareFolder: accountPrefController.shareFolderValue,
@@ -95,7 +94,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     ));
     final revert = state.account;
     try {
-      final accounts = _c.pref.getAccounts3()!;
+      final accounts = prefController.accountsValue;
       if (accounts.contains(ev.account)) {
         // conflict with another account. This normally won't happen because
         // the app passwords are unique to each entry, but just in case
@@ -109,7 +108,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
       }
 
       accounts[index] = ev.account;
-      if (!await _c.pref.setAccounts3(accounts)) {
+      if (!await prefController.setAccounts(accounts)) {
         _log.severe("[_onSetAccount] Failed while setAccounts3: ${ev.account}");
         throw const _WritePrefError();
       }
@@ -153,7 +152,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     emit(state.copyWith(error: ExceptionEvent(ev.error, ev.stackTrace)));
   }
 
-  final DiContainer _c;
+  final PrefController prefController;
   final AccountPrefController accountPrefController;
   final AccountSettingsOption? highlight;
 

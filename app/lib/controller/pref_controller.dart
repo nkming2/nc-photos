@@ -27,9 +27,10 @@ part 'pref_controller/util.dart';
 class PrefController {
   PrefController(this.pref);
 
-  Future<bool> setAccounts(List<Account> value) => _set<List<Account>>(
+  Future<bool> setAccounts(List<Account>? value) => _setOrRemove<List<Account>>(
         controller: _accountsController,
         setter: (pref, value) => pref.setAccounts3(value),
+        remover: (pref) => pref.setAccounts3(null),
         value: value,
       );
 

@@ -1,6 +1,15 @@
 part of '../pref_controller.dart';
 
 extension on Pref {
+  Future<bool> setAccounts3(List<Account>? value) {
+    if (value == null) {
+      return provider.remove(PrefKey.accounts3);
+    } else {
+      final jsons = value.map((e) => jsonEncode(e.toJson())).toList();
+      return provider.setStringList(PrefKey.accounts3, jsons);
+    }
+  }
+
   int? getHomeAlbumsSort() => provider.getInt(PrefKey.homeAlbumsSort);
   int getHomeAlbumsSortOr(int def) => getHomeAlbumsSort() ?? def;
   Future<bool> setHomeAlbumsSort(int value) =>

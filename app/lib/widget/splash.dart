@@ -9,7 +9,6 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc_util.dart';
 import 'package:nc_photos/controller/pref_controller.dart';
 import 'package:nc_photos/db/entity_converter.dart';
-import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/activity.dart';
 import 'package:nc_photos/mobile/android/permission_util.dart';

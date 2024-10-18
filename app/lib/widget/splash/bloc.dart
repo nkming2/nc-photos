@@ -116,7 +116,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
       await CompatV46.insertDbAccounts(prefController, npDb);
     } catch (e, stackTrace) {
       _log.shout("[_upgrade46] Failed while clearDefaultCache", e, stackTrace);
-      unawaited(Pref().setAccounts3(null));
+      unawaited(prefController.setAccounts(null));
       unawaited(prefController.setCurrentAccountIndex(null));
     }
   }

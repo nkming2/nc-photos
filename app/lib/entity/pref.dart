@@ -29,8 +29,6 @@ class Pref {
           Future<bool> Function(PrefKey key, T value) setFn) =>
       setFn(key, value);
 
-  Future<bool> _remove(PrefKey key) => provider.remove(key);
-
   final PrefProvider provider;
 
   static Pref? _inst;

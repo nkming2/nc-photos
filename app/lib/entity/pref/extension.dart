@@ -19,14 +19,6 @@ extension PrefExtension on Pref {
   }
 
   List<Account> getAccounts3Or(List<Account> def) => getAccounts3() ?? def;
-  Future<bool> setAccounts3(List<Account>? value) {
-    if (value == null) {
-      return _remove(PrefKey.accounts3);
-    } else {
-      final jsons = value.map((e) => jsonEncode(e.toJson())).toList();
-      return provider.setStringList(PrefKey.accounts3, jsons);
-    }
-  }
 
   int? getHomePhotosZoomLevel() => provider.getInt(PrefKey.homePhotosZoomLevel);
   int getHomePhotosZoomLevelOr(int def) => getHomePhotosZoomLevel() ?? def;
