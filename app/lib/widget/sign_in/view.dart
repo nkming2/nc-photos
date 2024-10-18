@@ -173,6 +173,35 @@ class _SignInBody extends StatelessWidget {
               ),
             ],
           ),
+          const SizedBox(height: 8),
+          Stack(
+            children: [
+              _BlocSelector(
+                selector: (state) => state.isAltMode,
+                builder: (context, isAltMode) => ExpandableContainer(
+                  isShow: isAltMode,
+                  child: const _LegacySignInForm(),
+                ),
+              ),
+              _BlocSelector(
+                selector: (state) => state.isAltMode,
+                builder: (context, isAltMode) => Visibility(
+                  visible: !isAltMode,
+                  child: InkWell(
+                    onTap: () {
+                      context.addEvent(const _SetAltMode(true));
+                    },
+                    child: Text(
+                      L10n.global().alternativeSignIn,
+                      style: const TextStyle(
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -225,6 +254,73 @@ class _ServerUrlInput extends StatelessWidget {
       onChanged: (value) {
         context.addEvent(_SetServerUrl(value));
       },
+    );
+  }
+}
+
+class _LegacySignInForm extends StatelessWidget {
+  const _LegacySignInForm();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        TextFormField(
+          decoration: InputDecoration(
+            hintText: L10n.global().usernameInputHint,
+          ),
+          keyboardType: TextInputType.text,
+          validator: (value) {
+            if (!context.state.isAltMode) {
+              return null;
+            }
+            if (value!.trim().isEmpty) {
+              return L10n.global().usernameInputInvalidEmpty;
+            }
+            return null;
+          },
+          onChanged: (value) {
+            context.addEvent(_SetUsername(value));
+          },
+        ),
+        const SizedBox(height: 8),
+        _BlocSelector(
+          selector: (state) => state.shouldObscurePassword,
+          builder: (context, shouldObscurePassword) => TextFormField(
+            decoration: InputDecoration(
+              hintText: L10n.global().passwordInputHint,
+              suffixIcon: shouldObscurePassword
+                  ? IconButton(
+                      icon: const Icon(Icons.visibility_off_outlined),
+                      onPressed: () {
+                        context.addEvent(const _SetObscurePassword(false));
+                      },
+                    )
+                  : IconButton(
+                      icon: const Icon(Icons.visibility_outlined),
+                      onPressed: () {
+                        context.addEvent(const _SetObscurePassword(true));
+                      },
+                    ),
+            ),
+            keyboardType: TextInputType.text,
+            obscureText: shouldObscurePassword,
+            validator: (value) {
+              if (!context.state.isAltMode) {
+                return null;
+              }
+              if (value!.trim().isEmpty) {
+                return L10n.global().passwordInputInvalidEmpty;
+              }
+              return null;
+            },
+            onChanged: (value) {
+              context.addEvent(_SetPassword(value));
+            },
+          ),
+        ),
+      ],
     );
   }
 }

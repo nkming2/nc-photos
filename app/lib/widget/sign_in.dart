@@ -12,16 +12,17 @@ import 'package:nc_photos/db/entity_converter.dart';
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/entity/pref_util.dart' as pref_util;
 import 'package:nc_photos/exception_event.dart';
+import 'package:nc_photos/legacy/connect.dart' as legacy;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/app_intermediate_circular_progress_indicator.dart';
 import 'package:nc_photos/widget/connect.dart';
+import 'package:nc_photos/widget/expandable_container.dart';
 import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
 import 'package:nc_photos/widget/root_picker.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_collection/np_collection.dart';
-import 'package:np_common/unique.dart';
 import 'package:np_db/np_db.dart';
 import 'package:np_string/np_string.dart';
 import 'package:to_string/to_string.dart';
@@ -49,7 +50,6 @@ class SignIn extends StatelessWidget {
   }
 }
 
-@npLog
 class _WrappedSignIn extends StatefulWidget {
   const _WrappedSignIn();
 
@@ -57,6 +57,7 @@ class _WrappedSignIn extends StatefulWidget {
   State<StatefulWidget> createState() => _WrappedSignInState();
 }
 
+@npLog
 class _WrappedSignInState extends State<_WrappedSignIn>
     with RouteAware, PageVisibilityMixin {
   @override
@@ -81,10 +82,18 @@ class _WrappedSignInState extends State<_WrappedSignIn>
             body: MultiBlocListener(
               listeners: [
                 _BlocListenerT(
-                  selector: (state) => state.connectUri,
-                  listener: (context, connectUri) {
-                    if (connectUri != null) {
-                      _onConnect(context, connectUri.value);
+                  selector: (state) => state.connectArg,
+                  listener: (context, connectArg) {
+                    if (connectArg == null) {
+                      return;
+                    }
+                    if (connectArg.username != null &&
+                        connectArg.password != null) {
+                      _onLegacyConnect(context, connectArg);
+                    } else {
+                      final uri = Uri.parse(
+                          "${connectArg.scheme}://${connectArg.address}");
+                      _onConnect(context, uri);
                     }
                   },
                 ),
@@ -128,6 +137,39 @@ class _WrappedSignInState extends State<_WrappedSignIn>
       context,
       Connect.routeName,
       arguments: ConnectArguments(connectUri),
+    );
+    if (account == null) {
+      // connection failed
+      return;
+    }
+    account = await Navigator.pushNamed<Account>(
+      context,
+      RootPicker.routeName,
+      arguments: RootPickerArguments(account),
+    );
+    if (account == null) {
+      // ???
+      return;
+    }
+    // we've got a good account
+    context.addEvent(_SetConnectedAccount(account));
+  }
+
+  Future<void> _onLegacyConnect(BuildContext context, _ConnectArg arg) async {
+    Account? account = Account(
+      id: Account.newId(),
+      scheme: arg.scheme,
+      address: arg.address,
+      userId: arg.username!.toCi(),
+      username2: arg.username!,
+      password: arg.password!,
+      roots: [""],
+    );
+    _log.info("[_onLegacyConnect] Try connecting with account: $account");
+    account = await Navigator.pushNamed<Account>(
+      context,
+      legacy.Connect.routeName,
+      arguments: legacy.ConnectArguments(account),
     );
     if (account == null) {
       // connection failed

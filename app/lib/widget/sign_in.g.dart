@@ -16,10 +16,14 @@ abstract class $_StateCopyWithWorker {
   _State call(
       {_Scheme? scheme,
       String? serverUrl,
-      Unique<Uri>? connectUri,
+      String? username,
+      String? password,
+      bool? shouldObscurePassword,
+      _ConnectArg? connectArg,
       Account? connectedAccount,
       bool? isConnecting,
       bool? isCompleted,
+      bool? isAltMode,
       ExceptionEvent? error});
 }
 
@@ -30,22 +34,31 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
   _State call(
       {dynamic scheme,
       dynamic serverUrl,
-      dynamic connectUri = copyWithNull,
+      dynamic username,
+      dynamic password,
+      dynamic shouldObscurePassword,
+      dynamic connectArg = copyWithNull,
       dynamic connectedAccount = copyWithNull,
       dynamic isConnecting,
       dynamic isCompleted,
+      dynamic isAltMode,
       dynamic error = copyWithNull}) {
     return _State(
         scheme: scheme as _Scheme? ?? that.scheme,
         serverUrl: serverUrl as String? ?? that.serverUrl,
-        connectUri: connectUri == copyWithNull
-            ? that.connectUri
-            : connectUri as Unique<Uri>?,
+        username: username as String? ?? that.username,
+        password: password as String? ?? that.password,
+        shouldObscurePassword:
+            shouldObscurePassword as bool? ?? that.shouldObscurePassword,
+        connectArg: connectArg == copyWithNull
+            ? that.connectArg
+            : connectArg as _ConnectArg?,
         connectedAccount: connectedAccount == copyWithNull
             ? that.connectedAccount
             : connectedAccount as Account?,
         isConnecting: isConnecting as bool? ?? that.isConnecting,
         isCompleted: isCompleted as bool? ?? that.isCompleted,
+        isAltMode: isAltMode as bool? ?? that.isAltMode,
         error: error == copyWithNull ? that.error : error as ExceptionEvent?);
   }
 
@@ -61,11 +74,11 @@ extension $_StateCopyWith on _State {
 // NpLogGenerator
 // **************************************************************************
 
-extension _$_WrappedSignInNpLog on _WrappedSignIn {
+extension _$_WrappedSignInStateNpLog on _WrappedSignInState {
   // ignore: unused_element
   Logger get _log => log;
 
-  static final log = Logger("widget.sign_in._WrappedSignIn");
+  static final log = Logger("widget.sign_in._WrappedSignInState");
 }
 
 extension _$_BlocNpLog on _Bloc {
@@ -82,7 +95,7 @@ extension _$_BlocNpLog on _Bloc {
 extension _$_StateToString on _State {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_State {scheme: ${scheme.name}, serverUrl: $serverUrl, connectUri: $connectUri, connectedAccount: $connectedAccount, isConnecting: $isConnecting, isCompleted: $isCompleted, error: $error}";
+    return "_State {scheme: ${scheme.name}, serverUrl: $serverUrl, username: $username, password: $password, shouldObscurePassword: $shouldObscurePassword, connectArg: $connectArg, connectedAccount: $connectedAccount, isConnecting: $isConnecting, isCompleted: $isCompleted, isAltMode: $isAltMode, error: $error}";
   }
 }
 
@@ -114,9 +127,44 @@ extension _$_SetConnectedAccountToString on _SetConnectedAccount {
   }
 }
 
+extension _$_SetAltModeToString on _SetAltMode {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_SetAltMode {value: $value}";
+  }
+}
+
+extension _$_SetUsernameToString on _SetUsername {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_SetUsername {value: $value}";
+  }
+}
+
+extension _$_SetPasswordToString on _SetPassword {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_SetPassword {value: $value}";
+  }
+}
+
+extension _$_SetObscurePasswordToString on _SetObscurePassword {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_SetObscurePassword {value: $value}";
+  }
+}
+
 extension _$_SetErrorToString on _SetError {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
     return "_SetError {error: $error, stackTrace: $stackTrace}";
+  }
+}
+
+extension _$_ConnectArgToString on _ConnectArg {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_ConnectArg {scheme: $scheme, address: $address, username: $username, password: $password}";
   }
 }

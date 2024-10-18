@@ -260,6 +260,7 @@
     "homeTabMapBrowser",
     "mapBrowserSetDefaultDateRangeButton",
     "todayText",
+    "alternativeSignIn",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -272,7 +273,8 @@
 
   "cs": [
     "mapBrowserSetDefaultDateRangeButton",
-    "todayText"
+    "todayText",
+    "alternativeSignIn"
   ],
 
   "de": [
@@ -292,7 +294,8 @@
     "searchLandingPeopleListEmptyText2",
     "mapBrowserDateRangeLabel",
     "mapBrowserSetDefaultDateRangeButton",
-    "todayText"
+    "todayText",
+    "alternativeSignIn"
   ],
 
   "el": [
@@ -440,12 +443,14 @@
     "mapBrowserDateRangeCustom",
     "homeTabMapBrowser",
     "mapBrowserSetDefaultDateRangeButton",
-    "todayText"
+    "todayText",
+    "alternativeSignIn"
   ],
 
   "es": [
     "mapBrowserSetDefaultDateRangeButton",
-    "todayText"
+    "todayText",
+    "alternativeSignIn"
   ],
 
   "fi": [
@@ -484,7 +489,8 @@
     "mapBrowserDateRangeCustom",
     "homeTabMapBrowser",
     "mapBrowserSetDefaultDateRangeButton",
-    "todayText"
+    "todayText",
+    "alternativeSignIn"
   ],
 
   "fr": [
@@ -523,7 +529,8 @@
     "mapBrowserDateRangeCustom",
     "homeTabMapBrowser",
     "mapBrowserSetDefaultDateRangeButton",
-    "todayText"
+    "todayText",
+    "alternativeSignIn"
   ],
 
   "it": [
@@ -567,7 +574,8 @@
     "mapBrowserDateRangeCustom",
     "homeTabMapBrowser",
     "mapBrowserSetDefaultDateRangeButton",
-    "todayText"
+    "todayText",
+    "alternativeSignIn"
   ],
 
   "nl": [
@@ -948,6 +956,7 @@
     "homeTabMapBrowser",
     "mapBrowserSetDefaultDateRangeButton",
     "todayText",
+    "alternativeSignIn",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -998,7 +1007,8 @@
     "mapBrowserDateRangeCustom",
     "homeTabMapBrowser",
     "mapBrowserSetDefaultDateRangeButton",
-    "todayText"
+    "todayText",
+    "alternativeSignIn"
   ],
 
   "pt": [
@@ -1057,7 +1067,8 @@
     "mapBrowserDateRangeCustom",
     "homeTabMapBrowser",
     "mapBrowserSetDefaultDateRangeButton",
-    "todayText"
+    "todayText",
+    "alternativeSignIn"
   ],
 
   "ru": [
@@ -1096,7 +1107,12 @@
     "mapBrowserDateRangeCustom",
     "homeTabMapBrowser",
     "mapBrowserSetDefaultDateRangeButton",
-    "todayText"
+    "todayText",
+    "alternativeSignIn"
+  ],
+
+  "tr": [
+    "alternativeSignIn"
   ],
 
   "zh": [
@@ -1166,7 +1182,8 @@
     "mapBrowserDateRangeCustom",
     "homeTabMapBrowser",
     "mapBrowserSetDefaultDateRangeButton",
-    "todayText"
+    "todayText",
+    "alternativeSignIn"
   ],
 
   "zh_Hant": [
@@ -1330,6 +1347,7 @@
     "mapBrowserDateRangeCustom",
     "homeTabMapBrowser",
     "mapBrowserSetDefaultDateRangeButton",
-    "todayText"
+    "todayText",
+    "alternativeSignIn"
   ]
 }

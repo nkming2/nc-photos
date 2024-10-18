@@ -6,18 +6,26 @@ class _State {
   const _State({
     required this.scheme,
     required this.serverUrl,
-    this.connectUri,
+    required this.username,
+    required this.password,
+    required this.shouldObscurePassword,
+    this.connectArg,
     this.connectedAccount,
     required this.isConnecting,
     required this.isCompleted,
+    required this.isAltMode,
     this.error,
   });
 
   factory _State.init() => const _State(
         scheme: _Scheme.https,
         serverUrl: "",
+        username: "",
+        password: "",
+        shouldObscurePassword: true,
         isConnecting: false,
         isCompleted: false,
+        isAltMode: false,
       );
 
   @override
@@ -25,10 +33,15 @@ class _State {
 
   final _Scheme scheme;
   final String serverUrl;
-  final Unique<Uri>? connectUri;
+  final String username;
+  final String password;
+  final bool shouldObscurePassword;
+  final _ConnectArg? connectArg;
   final Account? connectedAccount;
   final bool isConnecting;
   final bool isCompleted;
+
+  final bool isAltMode;
 
   final ExceptionEvent? error;
 }
@@ -71,6 +84,46 @@ class _SetConnectedAccount implements _Event {
   String toString() => _$toString();
 
   final Account value;
+}
+
+@toString
+class _SetAltMode implements _Event {
+  const _SetAltMode(this.value);
+
+  @override
+  String toString() => _$toString();
+
+  final bool value;
+}
+
+@toString
+class _SetUsername implements _Event {
+  const _SetUsername(this.value);
+
+  @override
+  String toString() => _$toString();
+
+  final String value;
+}
+
+@toString
+class _SetPassword implements _Event {
+  const _SetPassword(this.value);
+
+  @override
+  String toString() => _$toString();
+
+  final String value;
+}
+
+@toString
+class _SetObscurePassword implements _Event {
+  const _SetObscurePassword(this.value);
+
+  @override
+  String toString() => _$toString();
+
+  final bool value;
 }
 
 @toString

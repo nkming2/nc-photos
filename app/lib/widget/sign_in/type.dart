@@ -14,3 +14,21 @@ enum _Scheme {
     }
   }
 }
+
+@toString
+class _ConnectArg {
+  const _ConnectArg({
+    required this.scheme,
+    required this.address,
+    this.username,
+    this.password,
+  });
+
+  @override
+  String toString() => _$toString();
+
+  final String scheme;
+  final String address;
+  final String? username;
+  final String? password;
+}

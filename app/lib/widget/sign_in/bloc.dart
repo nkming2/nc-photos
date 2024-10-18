@@ -10,6 +10,10 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     on<_SetServerUrl>(_onSetServerUrl);
     on<_Connect>(_onConnect);
     on<_SetConnectedAccount>(_onSetConnectedAccount);
+    on<_SetAltMode>(_onSetAltMode);
+    on<_SetUsername>(_onSetUsername);
+    on<_SetPassword>(_onSetPassword);
+    on<_SetObscurePassword>(_onSetObscurePassword);
 
     on<_SetError>(_onSetError);
   }
@@ -44,9 +48,22 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     _log.info(ev);
     final scheme = state.scheme.toValueString();
     final serverUrl = state.serverUrl.trim().trimRightAny("/");
-    final uri = Uri.parse("$scheme://$serverUrl");
-    _log.info("[_onConnect] Try connecting with url: $uri");
-    emit(state.copyWith(connectUri: Unique(uri)));
+    final _ConnectArg arg;
+    if (!state.isAltMode) {
+      arg = _ConnectArg(
+        scheme: scheme,
+        address: serverUrl,
+      );
+    } else {
+      arg = _ConnectArg(
+        scheme: scheme,
+        address: serverUrl,
+        username: state.username,
+        password: state.password,
+      );
+    }
+    _log.info("[_onConnect] Try connecting: $arg");
+    emit(state.copyWith(connectArg: arg));
   }
 
   Future<void> _onSetConnectedAccount(
@@ -63,6 +80,26 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
       emit(state.copyWith(isConnecting: false));
       rethrow;
     }
+  }
+
+  void _onSetAltMode(_SetAltMode ev, Emitter<_State> emit) {
+    _log.info(ev);
+    emit(state.copyWith(isAltMode: ev.value));
+  }
+
+  void _onSetUsername(_SetUsername ev, Emitter<_State> emit) {
+    _log.info(ev);
+    emit(state.copyWith(username: ev.value));
+  }
+
+  void _onSetPassword(_SetPassword ev, Emitter<_State> emit) {
+    _log.info(ev);
+    emit(state.copyWith(password: ev.value));
+  }
+
+  void _onSetObscurePassword(_SetObscurePassword ev, Emitter<_State> emit) {
+    _log.info(ev);
+    emit(state.copyWith(shouldObscurePassword: ev.value));
   }
 
   void _onSetError(_SetError ev, Emitter<_State> emit) {
