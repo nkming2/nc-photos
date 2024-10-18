@@ -17,7 +17,6 @@ import 'package:nc_photos/controller/trusted_cert_controller.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/legacy/connect.dart' as legacy;
-import 'package:nc_photos/legacy/sign_in.dart' as legacy;
 import 'package:nc_photos/mobile/self_signed_cert_manager.dart';
 import 'package:nc_photos/navigation_manager.dart';
 import 'package:nc_photos/protected_page_handler.dart';
@@ -206,9 +205,6 @@ class _WrappedAppState extends State<_WrappedApp>
             ),
         Splash.routeName: () => MaterialPageRoute(
               builder: (context) => const Splash(),
-            ),
-        legacy.SignIn.routeName: () => MaterialPageRoute(
-              builder: (context) => const legacy.SignIn(),
             ),
         CollectionPicker.routeName: CollectionPicker.buildRoute,
         LanguageSettings.routeName: LanguageSettings.buildRoute,
