@@ -1530,5 +1530,7 @@
 	"mapBrowserDateRangePrevMonth": "Předchozí měsíc",
 	"mapBrowserDateRangeThisYear": "Tento rok",
 	"mapBrowserDateRangeCustom": "Vlastní",
-	"homeTabMapBrowser": "Mapa"
+	"homeTabMapBrowser": "Mapa",
+	"mapBrowserSetDefaultDateRangeButton": "Nastavit jako výchozí",
+	"todayText": "Dnes"
 }

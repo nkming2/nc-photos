@@ -1530,5 +1530,7 @@
 	"mapBrowserDateRangePrevMonth": "El mes pasado",
 	"mapBrowserDateRangeThisYear": "Este año",
 	"mapBrowserDateRangeCustom": "Personalizado",
-	"homeTabMapBrowser": "Mapa"
+	"homeTabMapBrowser": "Mapa",
+	"mapBrowserSetDefaultDateRangeButton": "Usar por defecto",
+	"todayText": "Hoy"
 }
