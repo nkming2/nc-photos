@@ -312,6 +312,14 @@
 	"@settingsShareFolderDialogTitle": {
 		"description": "Set the share folder such that it matches the parameter in config.php"
 	},
+	"settingsShareFolderDialogDescription": "Diese Einstellung entspricht dem Parameter **share_folder** in der **config.php**. Die beiden Werte MÜSSEN identisch sein.\n\nBitte suchen Sie denselben Ordner, der auch in der **config.php** festgelegt ist.",
+	"@settingsShareFolderDialogDescription": {
+		"description": "Set the share folder such that it matches the parameter in config.php"
+	},
+	"settingsShareFolderPickerDescription": "Bitte suchen Sie denselben Ordner, der in der **config.php** festgelegt ist. Drücken Sie \"Standard\", falls Sie den Parameter nicht festgelegt haben.",
+	"@settingsShareFolderPickerDescription": {
+		"description": "Set the share folder such that it matches the parameter in config.php"
+	},
 	"settingsServerAppSectionTitle": "Unterstützung Server App",
 	"@settingsServerAppSectionTitle": {
 		"description": "Enable/disable various server apps"
@@ -956,6 +964,28 @@
 	"@shareAlbumDialogTitle": {
 		"description": "Dialog to share an album with another user"
 	},
+	"shareAlbumSuccessWithErrorNotification": "Album mit {user} geteilt, aber einige Dateien konnten nicht geteilt werden.",
+	"@shareAlbumSuccessWithErrorNotification": {
+		"description": "Shared an album with another user successfully, but some files inside the album cannot be shared",
+		"placeholders": {
+			"user": {
+				"example": "Alice"
+			}
+		}
+	},
+	"unshareAlbumSuccessWithErrorNotification": "Album mit {user} nicht mehr geteilt, aber das Aufheben der Freigabe einiger Dateien ist fehlgeschlagen.",
+	"@unshareAlbumSuccessWithErrorNotification": {
+		"description": "Unshared an album with another user successfully, but some files inside the album cannot be unshared",
+		"placeholders": {
+			"user": {
+				"example": "Alice"
+			}
+		}
+	},
+	"fixSharesTooltip": "Freigaben reparieren",
+	"@fixSharesTooltip": {
+		"description": "Fix file shares in an album. Due to limitation of the server API, album and its files are shared separately, but they are both needed for shared album to work correctly. This button will attempt to synchronize them"
+	},
 	"fixTooltip": "Fixieren",
 	"@fixTooltip": {
 		"description": "Fix an issue"
@@ -986,6 +1016,10 @@
 	"addUserInputHint": "Benutzer hinzufügen",
 	"@addUserInputHint": {
 		"description": "Input a user name to share this album with"
+	},
+	"sharedAlbumInfoDialogTitle": "Einführung in geteilte Alben",
+	"@sharedAlbumInfoDialogTitle": {
+		"description": "This dialog is shown when user first open a shared album"
 	},
 	"sharedAlbumInfoDialogContent": "Geteilte Alben erlauben mehreren Nutzern auf dem gleichen Server auf das gleiche Album zuzugreifen. Bitte lesen Sie die Einschränkungen sorgfältig durch, bevor Sie fortfahren",
 	"@sharedAlbumInfoDialogContent": {
@@ -1025,6 +1059,10 @@
 	"createCollectionDialogAlbumLabel": "Album",
 	"@createCollectionDialogAlbumLabel": {
 		"description": "Create an album as collection"
+	},
+	"createCollectionDialogAlbumDescription": "Fotos anzeigen, die von Ihnen von überall auf dem Server hinzugefügt wurden",
+	"@createCollectionDialogAlbumDescription": {
+		"description": "Describe how an album collection works"
 	},
 	"createCollectionDialogFolderLabel": "Ordner",
 	"@createCollectionDialogFolderLabel": {
@@ -1137,7 +1175,15 @@
 	"@enhanceStyleTransferNoStyleSelectedNotification": {
 		"description": "Show this error if users did not pick a reference image"
 	},
+	"enhanceColorPopTitle": "Farben hervorheben",
+	"@enhanceColorPopTitle": {
+		"description": "Desaturate the background of a photo"
+	},
 	"enhanceColorPopDescription": "Entsättigen Sie den Hintergrund Ihrer Fotos, am besten geeignet für Porträts",
+	"enhanceGenericParamWeightLabel": "Gewicht",
+	"@enhanceGenericParamWeightLabel": {
+		"description": "This generic parameter sets the weight of the applied effect. The effect will be more obvious when the weight is high."
+	},
 	"enhanceRetouchTitle": "Autoretusche",
 	"@enhanceRetouchTitle": {
 		"description": "Automatically improve your photo"
@@ -1387,6 +1433,10 @@
 	"@settingsMetadataTitle": {
 		"description": "Metadata (e.g., date, resolution, GPS, etc)"
 	},
+	"settingsPersonProviderTitle": "Personenanbieter",
+	"@settingsPersonProviderTitle": {
+		"description": "Select the server app for face recognition"
+	},
 	"settingsSeedColorSystemColorDescription": "Systemfarbe verwenden",
 	"@settingsSeedColorSystemColorDescription": {
 		"description": "Use color provided by the OS, i.e., Material You"
@@ -1394,6 +1444,10 @@
 	"settingsSeedColorPickerSystemColorButtonLabel": "Verwende Systemfarben",
 	"@settingsSeedColorPickerSystemColorButtonLabel": {
 		"description": "Use color provided by the OS, i.e., Material You"
+	},
+	"searchLandingPeopleListEmptyText2": "Drücken Sie auf \"Einstellungen\", um den Anbieter zu wechseln, oder auf \"Hilfe\", um mehr zu erfahren.",
+	"@searchLandingPeopleListEmptyText2": {
+		"description": "Shown in the search landing page under the People section when there are no people"
 	},
 	"accountSettingsTooltip": "Kontoeinstellungen",
 	"contributorsTooltip": "Mitwirkende",
@@ -1412,6 +1466,7 @@
 	},
 	"settingsThemePrimaryColor": "Primär",
 	"settingsThemeSecondaryColor": "Sekundär",
+	"settingsThemePresets": "Voreinstellungen",
 	"settingsAppLock": "App Sperre",
 	"@settingsAppLock": {
 		"description": "If enabled, users need to authenticate themselves when opening the app"
@@ -1429,6 +1484,7 @@
 		"description": "Unlock app with password"
 	},
 	"settingsAppLockDescription": "Wenn diese Funktion aktiviert ist, werden Sie beim Öffnen der App aufgefordert, sich zu authentifizieren. Diese Funktion schützt Sie NICHT vor Angriffen aus der realen Welt.",
+	"settingsAppLockSetupBiometricFallbackDialogTitle": "Wählen Sie die alternative Methode, wenn biometrische Daten nicht verfügbar sind.",
 	"settingsAppLockSetupPinDialogTitle": "PIN zum Entsperren der App einrichten",
 	"settingsAppLockConfirmPinDialogTitle": "Geben Sie den selben PIN nochmals ein",
 	"settingsAppLockSetupPasswordDialogTitle": "Setzen Sie das Password für die Entsperrung",
@@ -1464,10 +1520,17 @@
 	"missingVideoThumbnailHelpDialogTitle": "Probleme mit der Video-Miniaturansichten?",
 	"dontShowAgain": "Nicht mehr erneut anzeigen",
 	"settingsUseNewHttpEngine": "Verwende das neue HTTP Engine",
+	"settingsUseNewHttpEngineDescription": "Neuer HTTP-Engine basierend auf Chromium, der neue Standards wie HTTP/2* und HTTP/3 QUIC* unterstützt.\n\nEinschränkungen: \nSelbstsignierte Zertifikate können von uns nicht mehr verwaltet werden. Sie müssen Ihre CA-Zertifikate in den Systemvertrauensspeicher importieren, damit sie funktionieren.\n\n* HTTPS ist erforderlich für HTTP/2 und HTTP/3.",
 	"settingsRestartNeededDialog": "Bitte App neu starten um die Änderungen anzuwenden",
+	"mapBrowserDateRangeLabel": "Zeitspanne",
+	"@mapBrowserDateRangeLabel": {
+		"description": "Filter photos by date range"
+	},
 	"mapBrowserDateRangeThisMonth": "Dieser Monat",
 	"mapBrowserDateRangePrevMonth": "letzten Monat",
 	"mapBrowserDateRangeThisYear": "Dieses Jahr",
 	"mapBrowserDateRangeCustom": "benutzerdefiniert",
-	"homeTabMapBrowser": "Karte"
+	"homeTabMapBrowser": "Karte",
+	"mapBrowserSetDefaultDateRangeButton": "Als Standardwerrt setzen",
+	"todayText": "Heute"
 }
