@@ -157,6 +157,7 @@ dependencies:
   uuid: ^4.5.1
   video_player:
   video_player_platform_interface:
+  # later versions broken with flutter 3.22, do not upgrade
   visibility_detector: 0.3.3
   wakelock_plus: ^1.1.1
   woozy_search: ^2.0.3

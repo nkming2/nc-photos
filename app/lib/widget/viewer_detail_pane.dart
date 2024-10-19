@@ -129,7 +129,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
       }
     }
     await _initTags();
-    // update tages
+    // update tags
     if (mounted) {
       setState(() {});
     } else {
