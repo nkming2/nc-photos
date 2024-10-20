@@ -272,29 +272,10 @@
   ],
 
   "cs": [
-    "mapBrowserSetDefaultDateRangeButton",
-    "todayText",
     "alternativeSignIn"
   ],
 
   "de": [
-    "settingsShareFolderDialogDescription",
-    "settingsShareFolderPickerDescription",
-    "settingsPersonProviderTitle",
-    "settingsThemePresets",
-    "settingsAppLockSetupBiometricFallbackDialogTitle",
-    "settingsUseNewHttpEngineDescription",
-    "shareAlbumSuccessWithErrorNotification",
-    "unshareAlbumSuccessWithErrorNotification",
-    "fixSharesTooltip",
-    "sharedAlbumInfoDialogTitle",
-    "createCollectionDialogAlbumDescription",
-    "enhanceColorPopTitle",
-    "enhanceGenericParamWeightLabel",
-    "searchLandingPeopleListEmptyText2",
-    "mapBrowserDateRangeLabel",
-    "mapBrowserSetDefaultDateRangeButton",
-    "todayText",
     "alternativeSignIn"
   ],
 
@@ -448,8 +429,6 @@
   ],
 
   "es": [
-    "mapBrowserSetDefaultDateRangeButton",
-    "todayText",
     "alternativeSignIn"
   ],
 
