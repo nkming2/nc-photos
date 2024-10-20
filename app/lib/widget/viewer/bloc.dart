@@ -45,6 +45,7 @@ class _Bloc extends Bloc<_Event, _State>
     on<_Delete>(_onDelete);
     on<_RemoveFromCollection>(_onRemoveFromCollection);
     on<_StartSlideshow>(_onStartSlideshow);
+    on<_SetAs>(_onSetAs);
 
     on<_OpenDetailPane>(_onOpenDetailPane);
     on<_CloseDetailPane>(_onCloseDetailPane);
@@ -348,6 +349,20 @@ class _Bloc extends Bloc<_Event, _State>
           .let((i) => i == -1 ? 0 : i),
     );
     emit(state.copyWith(slideshowRequest: Unique(req)));
+  }
+
+  void _onSetAs(_SetAs ev, _Emitter emit) {
+    _log.info(ev);
+    final f = state.files[ev.fileId];
+    if (f == null) {
+      _log.severe("[_onSetAs] file is null: ${ev.fileId}");
+      return;
+    }
+    final req = _SetAsRequest(
+      account: account,
+      file: f,
+    );
+    emit(state.copyWith(setAsRequest: Unique(req)));
   }
 
   void _onOpenDetailPane(_OpenDetailPane ev, _Emitter emit) {

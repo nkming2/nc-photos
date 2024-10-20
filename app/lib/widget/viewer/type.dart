@@ -23,3 +23,13 @@ class _SlideshowRequest {
   final List<FileDescriptor> files;
   final int startIndex;
 }
+
+class _SetAsRequest {
+  const _SetAsRequest({
+    required this.account,
+    required this.file,
+  });
+
+  final Account account;
+  final FileDescriptor file;
+}

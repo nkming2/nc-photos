@@ -161,5 +161,13 @@ Widget? _buildAppBarButton(
       return const _AppBarDownloadButton();
     case ViewerAppBarButtonType.delete:
       return collection == null ? const _AppBarDeleteButton() : null;
+    case ViewerAppBarButtonType.archive:
+      return currentFile?.fdIsArchived == true
+          ? const _AppBarUnarchiveButton()
+          : const _AppBarArchiveButton();
+    case ViewerAppBarButtonType.slideshow:
+      return const _AppBarSlideshowButton();
+    case ViewerAppBarButtonType.setAs:
+      return const _AppBarSetAsButton();
   }
 }

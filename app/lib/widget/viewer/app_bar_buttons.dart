@@ -9,6 +9,9 @@ enum ViewerAppBarButtonType {
   enhance,
   download,
   delete,
+  archive,
+  slideshow,
+  setAs,
   ;
 
   static ViewerAppBarButtonType fromValue(int value) =>
@@ -154,6 +157,70 @@ class _AppBarDeleteButton extends StatelessWidget {
       onPressed: () {
         context.state.currentFile?.fdId
             .let((id) => context.addEvent(_Delete(id)));
+      },
+    );
+  }
+}
+
+class _AppBarUnarchiveButton extends StatelessWidget {
+  const _AppBarUnarchiveButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.unarchive_outlined),
+      tooltip: L10n.global().unarchiveTooltip,
+      onPressed: () {
+        context.state.currentFile?.fdId
+            .let((id) => context.addEvent(_Unarchive(id)));
+      },
+    );
+  }
+}
+
+class _AppBarArchiveButton extends StatelessWidget {
+  const _AppBarArchiveButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.archive_outlined),
+      tooltip: L10n.global().archiveTooltip,
+      onPressed: () {
+        context.state.currentFile?.fdId
+            .let((id) => context.addEvent(_Archive(id)));
+      },
+    );
+  }
+}
+
+class _AppBarSlideshowButton extends StatelessWidget {
+  const _AppBarSlideshowButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.slideshow_outlined),
+      tooltip: L10n.global().slideshowTooltip,
+      onPressed: () {
+        context.state.currentFile?.fdId
+            .let((id) => context.addEvent(_StartSlideshow(id)));
+      },
+    );
+  }
+}
+
+class _AppBarSetAsButton extends StatelessWidget {
+  const _AppBarSetAsButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.launch),
+      tooltip: L10n.global().setAsTooltip,
+      onPressed: () {
+        context.state.currentFile?.fdId
+            .let((id) => context.addEvent(_SetAs(id)));
       },
     );
   }

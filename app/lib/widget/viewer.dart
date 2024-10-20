@@ -29,6 +29,7 @@ import 'package:nc_photos/flutter_util.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/live_photo_util.dart';
 import 'package:nc_photos/platform/features.dart' as features;
+import 'package:nc_photos/set_as_handler.dart';
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
@@ -184,6 +185,10 @@ class _WrappedViewerState extends State<_WrappedViewer>
               listener: _onSlideshowRequest,
             ),
             _BlocListenerT(
+              selector: (state) => state.setAsRequest,
+              listener: _onSetAsRequest,
+            ),
+            _BlocListenerT(
               selector: (state) => state.error,
               listener: (context, error) {
                 if (error != null && isPageVisible()) {
@@ -256,6 +261,19 @@ class _WrappedViewerState extends State<_WrappedViewer>
     if (newIndex != null && context.mounted) {
       context.addEvent(_RequestPage(newIndex));
     }
+  }
+
+  void _onSetAsRequest(
+    BuildContext context,
+    Unique<_SetAsRequest?> setAsRequest,
+  ) {
+    if (setAsRequest.value == null) {
+      return;
+    }
+    SetAsHandler(
+      KiwiContainer().resolve(),
+      context: context,
+    ).setAsFile(setAsRequest.value!.account, setAsRequest.value!.file);
   }
 }
 

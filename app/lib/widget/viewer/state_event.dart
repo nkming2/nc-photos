@@ -28,6 +28,7 @@ class _State {
     required this.imageEnhancerRequest,
     required this.shareRequest,
     required this.slideshowRequest,
+    required this.setAsRequest,
     this.error,
   });
 
@@ -59,6 +60,7 @@ class _State {
         imageEnhancerRequest: Unique(null),
         shareRequest: Unique(null),
         slideshowRequest: Unique(null),
+        setAsRequest: Unique(null),
       );
 
   @override
@@ -94,6 +96,7 @@ class _State {
   final Unique<ImageEnhancerArguments?> imageEnhancerRequest;
   final Unique<_ShareRequest?> shareRequest;
   final Unique<_SlideshowRequest?> slideshowRequest;
+  final Unique<_SetAsRequest?> setAsRequest;
 
   final ExceptionEvent? error;
 }
@@ -341,6 +344,16 @@ class _RemoveFromCollection implements _Event {
 @toString
 class _StartSlideshow implements _Event {
   const _StartSlideshow(this.fileId);
+
+  @override
+  String toString() => _$toString();
+
+  final int fileId;
+}
+
+@toString
+class _SetAs implements _Event {
+  const _SetAs(this.fileId);
 
   @override
   String toString() => _$toString();

@@ -38,6 +38,7 @@ abstract class $_StateCopyWithWorker {
       Unique<ImageEnhancerArguments?>? imageEnhancerRequest,
       Unique<_ShareRequest?>? shareRequest,
       Unique<_SlideshowRequest?>? slideshowRequest,
+      Unique<_SetAsRequest?>? setAsRequest,
       ExceptionEvent? error});
 }
 
@@ -70,6 +71,7 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
       dynamic imageEnhancerRequest,
       dynamic shareRequest,
       dynamic slideshowRequest,
+      dynamic setAsRequest,
       dynamic error = copyWithNull}) {
     return _State(
         fileIdOrders: fileIdOrders as List<int>? ?? that.fileIdOrders,
@@ -121,6 +123,8 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
             shareRequest as Unique<_ShareRequest?>? ?? that.shareRequest,
         slideshowRequest: slideshowRequest as Unique<_SlideshowRequest?>? ??
             that.slideshowRequest,
+        setAsRequest:
+            setAsRequest as Unique<_SetAsRequest?>? ?? that.setAsRequest,
         error: error == copyWithNull ? that.error : error as ExceptionEvent?);
   }
 
@@ -202,7 +206,7 @@ extension _$_PageViewStateNpLog on _PageViewState {
 extension _$_StateToString on _State {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_State {fileIdOrders: $fileIdOrders, files: {length: ${files.length}}, fileStates: {length: ${fileStates.length}}, index: $index, currentFile: ${currentFile == null ? null : "${currentFile!.fdPath}"}, currentFileState: $currentFileState, collection: $collection, collectionItemsController: $collectionItemsController, collectionItems: ${collectionItems == null ? null : "{length: ${collectionItems!.length}}"}, isShowDetailPane: $isShowDetailPane, isClosingDetailPane: $isClosingDetailPane, isDetailPaneActive: $isDetailPaneActive, openDetailPaneRequest: $openDetailPaneRequest, closeDetailPane: $closeDetailPane, isZoomed: $isZoomed, isInitialLoad: $isInitialLoad, isShowAppBar: $isShowAppBar, appBarButtons: [length: ${appBarButtons.length}], bottomAppBarButtons: [length: ${bottomAppBarButtons.length}], pendingRemovePage: $pendingRemovePage, imageEditorRequest: $imageEditorRequest, imageEnhancerRequest: $imageEnhancerRequest, shareRequest: $shareRequest, slideshowRequest: $slideshowRequest, error: $error}";
+    return "_State {fileIdOrders: $fileIdOrders, files: {length: ${files.length}}, fileStates: {length: ${fileStates.length}}, index: $index, currentFile: ${currentFile == null ? null : "${currentFile!.fdPath}"}, currentFileState: $currentFileState, collection: $collection, collectionItemsController: $collectionItemsController, collectionItems: ${collectionItems == null ? null : "{length: ${collectionItems!.length}}"}, isShowDetailPane: $isShowDetailPane, isClosingDetailPane: $isClosingDetailPane, isDetailPaneActive: $isDetailPaneActive, openDetailPaneRequest: $openDetailPaneRequest, closeDetailPane: $closeDetailPane, isZoomed: $isZoomed, isInitialLoad: $isInitialLoad, isShowAppBar: $isShowAppBar, appBarButtons: [length: ${appBarButtons.length}], bottomAppBarButtons: [length: ${bottomAppBarButtons.length}], pendingRemovePage: $pendingRemovePage, imageEditorRequest: $imageEditorRequest, imageEnhancerRequest: $imageEnhancerRequest, shareRequest: $shareRequest, slideshowRequest: $slideshowRequest, setAsRequest: $setAsRequest, error: $error}";
   }
 }
 
@@ -371,6 +375,13 @@ extension _$_StartSlideshowToString on _StartSlideshow {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
     return "_StartSlideshow {fileId: $fileId}";
+  }
+}
+
+extension _$_SetAsToString on _SetAs {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_SetAs {fileId: $fileId}";
   }
 }
 
