@@ -32,6 +32,7 @@ class PrefController {
         setter: (pref, value) => pref.setAccounts3(value),
         remover: (pref) => pref.setAccounts3(null),
         value: value,
+        defaultValue: _accountsDefault,
       );
 
   Future<bool> setCurrentAccountIndex(int? value) => _setOrRemove<int>(
@@ -39,6 +40,7 @@ class PrefController {
         setter: (pref, value) => pref.setCurrentAccountIndex(value),
         remover: (pref) => pref.setCurrentAccountIndex(null),
         value: value,
+        defaultValue: null,
       );
 
   Future<bool> setAppLanguage(AppLanguage value) => _set<AppLanguage>(
@@ -154,6 +156,7 @@ class PrefController {
         setter: (pref, value) => pref.setSeedColor(value.withAlpha(0xFF).value),
         remover: (pref) => pref.setSeedColor(null),
         value: value,
+        defaultValue: null,
       );
 
   Future<bool> setSecondarySeedColor(Color? value) => _setOrRemove<Color>(
@@ -162,6 +165,7 @@ class PrefController {
             pref.setSecondarySeedColor(value.withAlpha(0xFF).value),
         remover: (pref) => pref.setSecondarySeedColor(null),
         value: value,
+        defaultValue: null,
       );
 
   Future<bool> setDontShowVideoPreviewHint(bool value) => _set<bool>(
@@ -177,6 +181,7 @@ class PrefController {
             jsonEncode([value.latitude, value.longitude])),
         remover: (pref) => pref.setMapBrowserPrevPosition(null),
         value: value,
+        defaultValue: null,
       );
 
   Future<bool> setNewHttpEngine(bool value) => _set<bool>(
@@ -191,6 +196,7 @@ class PrefController {
             pref.setFirstRunTime(value.millisecondsSinceEpoch),
         remover: (pref) => pref.setFirstRunTime(null),
         value: value,
+        defaultValue: null,
       );
 
   Future<bool> setLastVersion(int value) => _set<int>(
@@ -268,7 +274,7 @@ class PrefController {
     required Future<bool> Function(Pref pref, T value) setter,
     required Future<bool> Function(Pref pref) remover,
     required T? value,
-    T? defaultValue,
+    required T? defaultValue,
   }) =>
       _doSetOrRemove(
         pref: pref,
@@ -291,7 +297,7 @@ class PrefController {
 
   @npSubjectAccessor
   late final _accountsController =
-      BehaviorSubject.seeded(pref.getAccounts3() ?? []);
+      BehaviorSubject.seeded(pref.getAccounts3() ?? _accountsDefault);
   @npSubjectAccessor
   late final _currentAccountIndexController =
       BehaviorSubject.seeded(pref.getCurrentAccountIndex());
@@ -429,6 +435,7 @@ class SecurePrefController {
         setter: (pref, value) => pref.setProtectedPageAuthType(value.index),
         remover: (pref) => pref.setProtectedPageAuthType(null),
         value: value,
+        defaultValue: null,
       );
 
   Future<bool> setProtectedPageAuthPin(CiString? value) =>
@@ -438,6 +445,7 @@ class SecurePrefController {
             pref.setProtectedPageAuthPin(value.toCaseInsensitiveString()),
         remover: (pref) => pref.setProtectedPageAuthPin(null),
         value: value,
+        defaultValue: null,
       );
 
   Future<bool> setProtectedPageAuthPassword(CiString? value) =>
@@ -447,6 +455,7 @@ class SecurePrefController {
             pref.setProtectedPageAuthPassword(value.toCaseInsensitiveString()),
         remover: (pref) => pref.setProtectedPageAuthPassword(null),
         value: value,
+        defaultValue: null,
       );
 
   // ignore: unused_element
@@ -468,7 +477,7 @@ class SecurePrefController {
     required Future<bool> Function(Pref pref, T value) setter,
     required Future<bool> Function(Pref pref) remover,
     required T? value,
-    T? defaultValue,
+    required T? defaultValue,
   }) =>
       _doSetOrRemove(
         pref: securePref,
@@ -522,7 +531,7 @@ Future<bool> _doSetOrRemove<T>({
   required Future<bool> Function(Pref pref, T value) setter,
   required Future<bool> Function(Pref pref) remover,
   required T? value,
-  T? defaultValue,
+  required T? defaultValue,
 }) async {
   final backup = controller.value;
   controller.add(value ?? defaultValue);
@@ -546,6 +555,8 @@ Future<bool> _doSetOrRemove<T>({
     return false;
   }
 }
+
+const _accountsDefault = <Account>[];
 
 @npLog
 // ignore: camel_case_types
