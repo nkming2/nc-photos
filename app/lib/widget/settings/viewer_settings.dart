@@ -9,6 +9,7 @@ import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/gps_map_util.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
+import 'package:nc_photos/widget/settings/viewer_app_bar_settings.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_gps_map/np_gps_map.dart';
 import 'package:np_platform_util/np_platform_util.dart';
@@ -113,6 +114,28 @@ class _WrappedViewerSettingsState extends State<_WrappedViewerSettings>
                         title: Text(L10n.global().settingsMapProviderTitle),
                         subtitle: Text(state.toUserString()),
                         onTap: () => _onMapProviderTap(context),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    title:
+                        Text(L10n.global().settingsViewerCustomizeAppBarTitle),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const ViewerAppBarSettings(),
+                        ),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    title: Text(
+                        L10n.global().settingsViewerCustomizeBottomAppBarTitle),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const ViewerBottomAppBarSettings(),
+                        ),
                       );
                     },
                   ),

@@ -356,6 +356,8 @@
 	"settingsForceRotationTitle": "Ignore rotation lock",
 	"settingsForceRotationDescription": "Rotate the screen even when auto rotation is disabled",
 	"settingsMapProviderTitle": "Map provider",
+	"settingsViewerCustomizeAppBarTitle": "Customize app bar",
+	"settingsViewerCustomizeBottomAppBarTitle": "Customize bottom app bar",
 	"settingsShowDateInAlbumTitle": "Group photos by date",
 	"settingsShowDateInAlbumDescription": "Apply only when the album is sorted by time",
 	"settingsImageEditTitle": "Editor",
@@ -1504,6 +1506,11 @@
 	"alternativeSignIn": "Alternative sign in with username and password",
 	"@alternativeSignIn": {
 		"description": "Sign in using username and password instead of the recommended Nextcloud login flow"
+	},
+	"livePhotoTooltip": "Live photo",
+	"dragAndDropRearrangeButtons": "Drag and drop to rearrange buttons",
+	"@dragAndDropRearrangeButtons": {
+		"description": "Instruction to customize buttons layout"
 	},
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",

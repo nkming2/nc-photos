@@ -163,18 +163,28 @@ extension on Pref {
       .getIntList(PrefKey.viewerAppBarButtons)
       ?.map(ViewerAppBarButtonType.fromValue)
       .toList();
-  Future<bool> setViewerAppBarButtons(List<ViewerAppBarButtonType> value) =>
-      provider.setIntList(
+  Future<bool> setViewerAppBarButtons(List<ViewerAppBarButtonType>? value) {
+    if (value == null) {
+      return provider.remove(PrefKey.viewerAppBarButtons);
+    } else {
+      return provider.setIntList(
           PrefKey.viewerAppBarButtons, value.map((e) => e.index).toList());
+    }
+  }
 
   List<ViewerAppBarButtonType>? getViewerBottomAppBarButtons() => provider
       .getIntList(PrefKey.viewerBottomAppBarButtons)
       ?.map(ViewerAppBarButtonType.fromValue)
       .toList();
   Future<bool> setViewerBottomAppBarButtons(
-          List<ViewerAppBarButtonType> value) =>
-      provider.setIntList(PrefKey.viewerBottomAppBarButtons,
+      List<ViewerAppBarButtonType>? value) {
+    if (value == null) {
+      return provider.remove(PrefKey.viewerBottomAppBarButtons);
+    } else {
+      return provider.setIntList(PrefKey.viewerBottomAppBarButtons,
           value.map((e) => e.index).toList());
+    }
+  }
 }
 
 MapCoord? _tryMapCoordFromJson(dynamic json) {

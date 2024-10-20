@@ -14,6 +14,8 @@
     "settingsForceRotationTitle",
     "settingsForceRotationDescription",
     "settingsMapProviderTitle",
+    "settingsViewerCustomizeAppBarTitle",
+    "settingsViewerCustomizeBottomAppBarTitle",
     "settingsShowDateInAlbumTitle",
     "settingsShowDateInAlbumDescription",
     "settingsImageEditTitle",
@@ -261,6 +263,8 @@
     "mapBrowserSetDefaultDateRangeButton",
     "todayText",
     "alternativeSignIn",
+    "livePhotoTooltip",
+    "dragAndDropRearrangeButtons",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -272,11 +276,19 @@
   ],
 
   "cs": [
-    "alternativeSignIn"
+    "settingsViewerCustomizeAppBarTitle",
+    "settingsViewerCustomizeBottomAppBarTitle",
+    "alternativeSignIn",
+    "livePhotoTooltip",
+    "dragAndDropRearrangeButtons"
   ],
 
   "de": [
-    "alternativeSignIn"
+    "settingsViewerCustomizeAppBarTitle",
+    "settingsViewerCustomizeBottomAppBarTitle",
+    "alternativeSignIn",
+    "livePhotoTooltip",
+    "dragAndDropRearrangeButtons"
   ],
 
   "el": [
@@ -294,6 +306,8 @@
     "settingsPhotosDescription",
     "settingsMemoriesRangeTitle",
     "settingsMemoriesRangeValueText",
+    "settingsViewerCustomizeAppBarTitle",
+    "settingsViewerCustomizeBottomAppBarTitle",
     "settingsImageEditTitle",
     "settingsImageEditDescription",
     "settingsEnhanceMaxResolutionTitle2",
@@ -425,14 +439,22 @@
     "homeTabMapBrowser",
     "mapBrowserSetDefaultDateRangeButton",
     "todayText",
-    "alternativeSignIn"
+    "alternativeSignIn",
+    "livePhotoTooltip",
+    "dragAndDropRearrangeButtons"
   ],
 
   "es": [
-    "alternativeSignIn"
+    "settingsViewerCustomizeAppBarTitle",
+    "settingsViewerCustomizeBottomAppBarTitle",
+    "alternativeSignIn",
+    "livePhotoTooltip",
+    "dragAndDropRearrangeButtons"
   ],
 
   "fi": [
+    "settingsViewerCustomizeAppBarTitle",
+    "settingsViewerCustomizeBottomAppBarTitle",
     "settingsThemePrimaryColor",
     "settingsThemeSecondaryColor",
     "settingsThemePresets",
@@ -469,10 +491,14 @@
     "homeTabMapBrowser",
     "mapBrowserSetDefaultDateRangeButton",
     "todayText",
-    "alternativeSignIn"
+    "alternativeSignIn",
+    "livePhotoTooltip",
+    "dragAndDropRearrangeButtons"
   ],
 
   "fr": [
+    "settingsViewerCustomizeAppBarTitle",
+    "settingsViewerCustomizeBottomAppBarTitle",
     "settingsThemePrimaryColor",
     "settingsThemeSecondaryColor",
     "settingsThemePresets",
@@ -509,11 +535,15 @@
     "homeTabMapBrowser",
     "mapBrowserSetDefaultDateRangeButton",
     "todayText",
-    "alternativeSignIn"
+    "alternativeSignIn",
+    "livePhotoTooltip",
+    "dragAndDropRearrangeButtons"
   ],
 
   "it": [
     "settingsPersonProviderTitle",
+    "settingsViewerCustomizeAppBarTitle",
+    "settingsViewerCustomizeBottomAppBarTitle",
     "settingsImageEditTitle",
     "settingsThemePrimaryColor",
     "settingsThemeSecondaryColor",
@@ -554,7 +584,9 @@
     "homeTabMapBrowser",
     "mapBrowserSetDefaultDateRangeButton",
     "todayText",
-    "alternativeSignIn"
+    "alternativeSignIn",
+    "livePhotoTooltip",
+    "dragAndDropRearrangeButtons"
   ],
 
   "nl": [
@@ -611,6 +643,8 @@
     "settingsForceRotationTitle",
     "settingsForceRotationDescription",
     "settingsMapProviderTitle",
+    "settingsViewerCustomizeAppBarTitle",
+    "settingsViewerCustomizeBottomAppBarTitle",
     "settingsShowDateInAlbumTitle",
     "settingsShowDateInAlbumDescription",
     "settingsImageEditTitle",
@@ -936,6 +970,8 @@
     "mapBrowserSetDefaultDateRangeButton",
     "todayText",
     "alternativeSignIn",
+    "livePhotoTooltip",
+    "dragAndDropRearrangeButtons",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -948,6 +984,8 @@
 
   "pl": [
     "settingsMemoriesRangeValueText",
+    "settingsViewerCustomizeAppBarTitle",
+    "settingsViewerCustomizeBottomAppBarTitle",
     "settingsThemePrimaryColor",
     "settingsThemeSecondaryColor",
     "settingsThemePresets",
@@ -987,13 +1025,17 @@
     "homeTabMapBrowser",
     "mapBrowserSetDefaultDateRangeButton",
     "todayText",
-    "alternativeSignIn"
+    "alternativeSignIn",
+    "livePhotoTooltip",
+    "dragAndDropRearrangeButtons"
   ],
 
   "pt": [
     "nameInputInvalidEmpty",
     "settingsMetadataTitle",
     "settingsPersonProviderTitle",
+    "settingsViewerCustomizeAppBarTitle",
+    "settingsViewerCustomizeBottomAppBarTitle",
     "settingsSeedColorSystemColorDescription",
     "settingsThemePrimaryColor",
     "settingsThemeSecondaryColor",
@@ -1047,10 +1089,14 @@
     "homeTabMapBrowser",
     "mapBrowserSetDefaultDateRangeButton",
     "todayText",
-    "alternativeSignIn"
+    "alternativeSignIn",
+    "livePhotoTooltip",
+    "dragAndDropRearrangeButtons"
   ],
 
   "ru": [
+    "settingsViewerCustomizeAppBarTitle",
+    "settingsViewerCustomizeBottomAppBarTitle",
     "settingsThemePrimaryColor",
     "settingsThemeSecondaryColor",
     "settingsThemePresets",
@@ -1087,17 +1133,25 @@
     "homeTabMapBrowser",
     "mapBrowserSetDefaultDateRangeButton",
     "todayText",
-    "alternativeSignIn"
+    "alternativeSignIn",
+    "livePhotoTooltip",
+    "dragAndDropRearrangeButtons"
   ],
 
   "tr": [
-    "alternativeSignIn"
+    "settingsViewerCustomizeAppBarTitle",
+    "settingsViewerCustomizeBottomAppBarTitle",
+    "alternativeSignIn",
+    "livePhotoTooltip",
+    "dragAndDropRearrangeButtons"
   ],
 
   "zh": [
     "settingsMetadataTitle",
     "settingsPersonProviderTitle",
     "settingsMemoriesRangeValueText",
+    "settingsViewerCustomizeAppBarTitle",
+    "settingsViewerCustomizeBottomAppBarTitle",
     "settingsSeedColorDescription",
     "settingsSeedColorSystemColorDescription",
     "settingsThemePrimaryColor",
@@ -1162,7 +1216,9 @@
     "homeTabMapBrowser",
     "mapBrowserSetDefaultDateRangeButton",
     "todayText",
-    "alternativeSignIn"
+    "alternativeSignIn",
+    "livePhotoTooltip",
+    "dragAndDropRearrangeButtons"
   ],
 
   "zh_Hant": [
@@ -1180,6 +1236,8 @@
     "settingsPhotosDescription",
     "settingsMemoriesRangeTitle",
     "settingsMemoriesRangeValueText",
+    "settingsViewerCustomizeAppBarTitle",
+    "settingsViewerCustomizeBottomAppBarTitle",
     "settingsImageEditTitle",
     "settingsImageEditDescription",
     "settingsEnhanceMaxResolutionTitle2",
@@ -1327,6 +1385,8 @@
     "homeTabMapBrowser",
     "mapBrowserSetDefaultDateRangeButton",
     "todayText",
-    "alternativeSignIn"
+    "alternativeSignIn",
+    "livePhotoTooltip",
+    "dragAndDropRearrangeButtons"
   ]
 }

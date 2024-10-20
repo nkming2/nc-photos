@@ -242,19 +242,23 @@ class PrefController {
         value: value,
       );
 
-  Future<bool> setViewerAppBarButtons(List<ViewerAppBarButtonType> value) =>
-      _set<List<ViewerAppBarButtonType>>(
+  Future<bool> setViewerAppBarButtons(List<ViewerAppBarButtonType>? value) =>
+      _setOrRemove<List<ViewerAppBarButtonType>>(
         controller: _viewerAppBarButtonsController,
         setter: (pref, value) => pref.setViewerAppBarButtons(value),
+        remover: (pref) => pref.setViewerAppBarButtons(null),
         value: value,
+        defaultValue: _viewerAppBarButtonsDefault,
       );
 
   Future<bool> setViewerBottomAppBarButtons(
-          List<ViewerAppBarButtonType> value) =>
-      _set<List<ViewerAppBarButtonType>>(
+          List<ViewerAppBarButtonType>? value) =>
+      _setOrRemove<List<ViewerAppBarButtonType>>(
         controller: _viewerBottomAppBarButtonsController,
         setter: (pref, value) => pref.setViewerBottomAppBarButtons(value),
+        remover: (pref) => pref.setViewerBottomAppBarButtons(null),
         value: value,
+        defaultValue: _viewerBottomAppBarButtonsDefault,
       );
 
   Future<bool> _set<T>({
@@ -397,22 +401,11 @@ class PrefController {
   late final _isSlideshowReverseController =
       BehaviorSubject.seeded(pref.isSlideshowReverse() ?? false);
   @npSubjectAccessor
-  late final _viewerAppBarButtonsController =
-      BehaviorSubject.seeded(pref.getViewerAppBarButtons() ??
-          const [
-            ViewerAppBarButtonType.livePhoto,
-            ViewerAppBarButtonType.favorite,
-          ]);
+  late final _viewerAppBarButtonsController = BehaviorSubject.seeded(
+      pref.getViewerAppBarButtons() ?? _viewerAppBarButtonsDefault);
   @npSubjectAccessor
-  late final _viewerBottomAppBarButtonsController =
-      BehaviorSubject.seeded(pref.getViewerBottomAppBarButtons() ??
-          const [
-            ViewerAppBarButtonType.share,
-            ViewerAppBarButtonType.edit,
-            ViewerAppBarButtonType.enhance,
-            ViewerAppBarButtonType.download,
-            ViewerAppBarButtonType.delete,
-          ]);
+  late final _viewerBottomAppBarButtonsController = BehaviorSubject.seeded(
+      pref.getViewerBottomAppBarButtons() ?? _viewerBottomAppBarButtonsDefault);
 }
 
 extension PrefControllerExtension on PrefController {
@@ -557,6 +550,17 @@ Future<bool> _doSetOrRemove<T>({
 }
 
 const _accountsDefault = <Account>[];
+const _viewerAppBarButtonsDefault = [
+  ViewerAppBarButtonType.livePhoto,
+  ViewerAppBarButtonType.favorite,
+];
+const _viewerBottomAppBarButtonsDefault = [
+  ViewerAppBarButtonType.share,
+  ViewerAppBarButtonType.edit,
+  ViewerAppBarButtonType.enhance,
+  ViewerAppBarButtonType.download,
+  ViewerAppBarButtonType.delete,
+];
 
 @npLog
 // ignore: camel_case_types
