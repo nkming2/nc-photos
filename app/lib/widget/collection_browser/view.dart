@@ -113,9 +113,13 @@ class _EditContentList extends StatelessWidget {
                     .getThumbSize(zoomLevel.requireData)
                     .toDouble(),
                 items: state.editTransformedItems ?? state.transformedItems,
-                itemBuilder: (context, _, item) => item.buildWidget(context),
+                itemBuilder: (context, _, item) => Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: item.buildWidget(context),
+                ),
                 itemDragFeedbackBuilder: (context, _, item) =>
-                    item.buildDragFeedbackWidget(context),
+                    item.buildDragFeedbackWidget(context) ??
+                    item.buildWidget(context),
                 staggeredTileBuilder: (_, item) => item.staggeredTile,
                 onDragResult: (results) {
                   context.addEvent(_EditManualSort(results));

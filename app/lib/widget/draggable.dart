@@ -41,32 +41,29 @@ class Draggable<T extends Object> extends StatelessWidget {
     return Stack(
       fit: StackFit.expand,
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: LongPressDraggable<T>(
-            data: data,
-            dragAnchorStrategy: pointerDragAnchorStrategy,
-            onDragStarted: onDragStarted,
-            onDragEnd: (_) => onDragEndedAny?.call(),
-            onDragCompleted: onDragEndedAny,
-            onDraggableCanceled: (v, o) => onDragEndedAny?.call(),
-            feedback: FractionalTranslation(
-              translation: const Offset(-.5, -.5),
-              child: SizedBox(
-                width: feedbackSize?.width ?? 128,
-                height: feedbackSize?.height ?? 128,
-                child: Opacity(
-                  opacity: .5,
-                  child: feedback ?? child,
-                ),
+        LongPressDraggable<T>(
+          data: data,
+          dragAnchorStrategy: pointerDragAnchorStrategy,
+          onDragStarted: onDragStarted,
+          onDragEnd: (_) => onDragEndedAny?.call(),
+          onDragCompleted: onDragEndedAny,
+          onDraggableCanceled: (v, o) => onDragEndedAny?.call(),
+          feedback: FractionalTranslation(
+            translation: const Offset(-.5, -.5),
+            child: SizedBox(
+              width: feedbackSize?.width ?? 128,
+              height: feedbackSize?.height ?? 128,
+              child: Opacity(
+                opacity: .5,
+                child: feedback ?? child,
               ),
             ),
-            childWhenDragging: Opacity(
-              opacity: .25,
-              child: child,
-            ),
+          ),
+          childWhenDragging: Opacity(
+            opacity: .25,
             child: child,
           ),
+          child: child,
         ),
         if (onDropBefore != null || onDropAfter != null)
           Positioned.fill(
