@@ -35,6 +35,8 @@ dependencies:
     path: ../np_db
   np_geocoder:
     path: ../np_geocoder
+  np_log:
+    path: ../np_log
   np_platform_lock:
     path: ../np_platform_lock
   np_platform_util:

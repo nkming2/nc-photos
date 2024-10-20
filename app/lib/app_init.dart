@@ -93,7 +93,7 @@ void initLog() {
   }
 
   np_log.initLog(
-    isDebugMode: kDebugMode,
+    isDebugMode: np_log.isDevMode,
     print: (log) => debugPrint(log, wrapWidth: 1024),
   );
 }

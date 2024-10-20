@@ -1,8 +1,8 @@
 import 'package:collection/collection.dart';
-import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_collection/np_collection.dart';
+import 'package:np_log/np_log.dart';
 import 'package:np_string/np_string.dart';
 import 'package:woozy_search/woozy_search.dart';
 
@@ -24,7 +24,7 @@ class Suggester<T> {
 
   List<T> search(CiString phrase) {
     final results = _searcher.search(phrase.toCaseInsensitiveString());
-    if (kDebugMode) {
+    if (isDevMode) {
       final str = results.map((e) => "${e.score}: ${e.text}").join("\n");
       _log.info("[search] Search '$phrase':\n$str");
     }

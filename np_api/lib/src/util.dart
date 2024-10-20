@@ -5,7 +5,7 @@ bool isHttpStatusGood(int status) => status ~/ 100 == 2;
 
 void initLog() {
   np_log.initLog(
-    isDebugMode: kDebugMode,
+    isDebugMode: np_log.isDevMode,
     print: (log) => debugPrint(log, wrapWidth: 1024),
   );
 }

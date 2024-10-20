@@ -78,6 +78,6 @@ extension _$AccountUpgraderV1NpLog on AccountUpgraderV1 {
 extension _$AccountToString on Account {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "Account {id: $id, scheme: $scheme, address: ${kDebugMode ? address : '***'}, userId: ${kDebugMode ? userId : '***'}, username2: ${kDebugMode ? username2 : '***'}, password: ${password.isNotEmpty ? (kDebugMode ? password : '***') : null}, roots: ${roots.toReadableString()}}";
+    return "Account {id: $id, scheme: $scheme, address: ${isDevMode ? address : '***'}, userId: ${isDevMode ? userId : '***'}, username2: ${isDevMode ? username2 : '***'}, password: ${password.isNotEmpty ? (isDevMode ? password : '***') : null}, roots: ${roots.toReadableString()}}";
   }
 }

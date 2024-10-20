@@ -16,13 +16,13 @@ extension _$InitiateLoginResponseToString on InitiateLoginResponse {
 extension _$InitiateLoginPollOptionsToString on InitiateLoginPollOptions {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "InitiateLoginPollOptions {token: ${kDebugMode ? token : '***'}, endpoint: $endpoint, _validUntil: $_validUntil}";
+    return "InitiateLoginPollOptions {token: ${isDevMode ? token : '***'}, endpoint: $endpoint, _validUntil: $_validUntil}";
   }
 }
 
 extension _$AppPasswordSuccessToString on AppPasswordSuccess {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "AppPasswordSuccess {server: $server, loginName: $loginName, appPassword: ${kDebugMode ? appPassword : '***'}}";
+    return "AppPasswordSuccess {server: $server, loginName: $loginName, appPassword: ${isDevMode ? appPassword : '***'}}";
   }
 }

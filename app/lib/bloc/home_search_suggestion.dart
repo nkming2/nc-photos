@@ -17,6 +17,7 @@ import 'package:nc_photos/use_case/list_tag.dart';
 import 'package:nc_photos/use_case/person/list_person.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_collection/np_collection.dart';
+import 'package:np_log/np_log.dart';
 import 'package:np_string/np_string.dart';
 import 'package:to_string/to_string.dart';
 import 'package:woozy_search/woozy_search.dart';
@@ -162,7 +163,7 @@ class HomeSearchSuggestionBloc
     emit(HomeSearchSuggestionBlocLoading(state.results));
     // doesn't work with upper case
     final results = _search.search(ev.phrase.toCaseInsensitiveString());
-    if (kDebugMode) {
+    if (isDevMode) {
       final str = results.map((e) => "${e.score}: ${e.text}").join("\n");
       _log.fine("[_onEventSearch] Search '${ev.phrase}':\n$str");
     }

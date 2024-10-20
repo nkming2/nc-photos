@@ -57,7 +57,7 @@ extension SqliteDbCompatExtension on SqliteDb {
 
     _log.info(
         "[migrateV55] ${dateTimeUpdates.length} rows require updating, ${imageRemoves.length} rows require removing");
-    if (kDebugMode) {
+    if (isDevMode) {
       _log.fine(
           "[migrateV55] dateTimeUpdates: ${dateTimeUpdates.map((e) => e.rowId).toReadableString()}");
       _log.fine(

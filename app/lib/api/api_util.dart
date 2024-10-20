@@ -2,13 +2,13 @@
 import 'dart:convert';
 
 import 'package:clock/clock.dart';
-import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception.dart';
 import 'package:np_api/np_api.dart' hide NcAlbumItem;
+import 'package:np_log/np_log.dart';
 import 'package:to_string/to_string.dart';
 
 part 'api_util.g.dart';
@@ -46,7 +46,8 @@ String getFilePreviewUrlRelative(
     // We can't use the generic file preview url because collaborative albums do
     // not create a file share for photos not belonging to you, that means you
     // can only access the file view the Photos API
-    url = "index.php/apps/photos/api/v1/preview/${file.fdId}?x=$width&y=$height";
+    url =
+        "index.php/apps/photos/api/v1/preview/${file.fdId}?x=$width&y=$height";
   } else {
     if (file_util.isTrash(account, file)) {
       // trashbin does not support preview.png endpoint
@@ -225,7 +226,7 @@ class InitiateLoginPollOptions {
     return clock.now().isBefore(_validUntil);
   }
 
-  @Format(r"${kDebugMode ? $? : '***'}")
+  @Format(r"${isDevMode ? $? : '***'}")
   final String token;
   final Uri endpoint;
   final DateTime _validUntil;
@@ -255,7 +256,7 @@ class AppPasswordSuccess implements AppPasswordResponse {
 
   final Uri server;
   final String loginName;
-  @Format(r"${kDebugMode ? appPassword : '***'}")
+  @Format(r"${isDevMode ? appPassword : '***'}")
   final String appPassword;
 }
 

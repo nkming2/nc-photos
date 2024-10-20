@@ -30,7 +30,7 @@ extension _$AppPasswordExchangeBlocSuccessToString
     on AppPasswordExchangeBlocSuccess {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "AppPasswordExchangeBlocSuccess {password: ${kDebugMode ? password : '***'}}";
+    return "AppPasswordExchangeBlocSuccess {password: ${isDevMode ? password : '***'}}";
   }
 }
 

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:nc_photos/mobile/platform.dart'
     if (dart.library.html) 'package:nc_photos/web/platform.dart' as platform;
 import 'package:np_log/np_log.dart';
@@ -39,8 +38,11 @@ class LogCapturer {
   static LogCapturer? _inst;
 }
 
-String logFilename(String? filename) {
-  if (shouldLogFileName || filename == null) {
+String logFilename(
+  String? filename, {
+  bool? shouldLogFileName,
+}) {
+  if ((shouldLogFileName ?? isDevMode) || filename == null) {
     return "$filename";
   }
   try {
@@ -55,6 +57,3 @@ String logFilename(String? filename) {
     return "***";
   }
 }
-
-@visibleForTesting
-bool shouldLogFileName = kDebugMode;

@@ -3,11 +3,11 @@ import 'dart:math';
 import 'package:clock/clock.dart';
 import 'package:copy_with/copy_with.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_collection/np_collection.dart';
 import 'package:np_common/type.dart';
+import 'package:np_log/np_log.dart';
 import 'package:np_string/np_string.dart';
 import 'package:to_string/to_string.dart';
 
@@ -82,15 +82,15 @@ class Account with EquatableMixin {
 
   final String id;
   final String scheme;
-  @Format(r"${kDebugMode ? $? : '***'}")
+  @Format(r"${isDevMode ? $? : '***'}")
   final String address;
   // For non LDAP users, this is the username used to sign in
-  @Format(r"${kDebugMode ? $? : '***'}")
+  @Format(r"${isDevMode ? $? : '***'}")
   final CiString userId;
   // Username used to sign in. For non-LDAP users, this is identical to userId
-  @Format(r"${kDebugMode ? $? : '***'}")
+  @Format(r"${isDevMode ? $? : '***'}")
   final String username2;
-  @Format(r"${$?.isNotEmpty ? (kDebugMode ? $? : '***') : null}")
+  @Format(r"${$?.isNotEmpty ? (isDevMode ? $? : '***') : null}")
   final String password;
 
   @deepCopy
