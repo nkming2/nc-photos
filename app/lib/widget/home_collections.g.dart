@@ -85,6 +85,13 @@ extension _$_BlocNpLog on _Bloc {
   static final log = Logger("widget.home_collections._Bloc");
 }
 
+extension _$_NavBarNewButtonNpLog on _NavBarNewButton {
+  // ignore: unused_element
+  Logger get _log => log;
+
+  static final log = Logger("widget.home_collections._NavBarNewButton");
+}
+
 extension _$_ItemNpLog on _Item {
   // ignore: unused_element
   Logger get _log => log;

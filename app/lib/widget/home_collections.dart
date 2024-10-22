@@ -21,10 +21,12 @@ import 'package:nc_photos/entity/collection/content_provider/album.dart';
 import 'package:nc_photos/entity/collection/content_provider/nc_album.dart';
 import 'package:nc_photos/entity/collection/util.dart' as collection_util;
 import 'package:nc_photos/exception_event.dart';
+import 'package:nc_photos/exception_util.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/np_api_util.dart';
 import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/snack_bar_manager.dart';
+import 'package:nc_photos/stream_util.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/theme/dimension.dart';
 import 'package:nc_photos/widget/album_importer.dart';
@@ -49,6 +51,7 @@ import 'package:to_string/to_string.dart';
 part 'home_collections.g.dart';
 part 'home_collections/app_bar.dart';
 part 'home_collections/bloc.dart';
+part 'home_collections/navigation_bar.dart';
 part 'home_collections/state_event.dart';
 part 'home_collections/type.dart';
 part 'home_collections/view.dart';
@@ -138,41 +141,7 @@ class _WrappedHomeCollectionsState extends State<_WrappedHomeCollections>
                       ? const _AppBar()
                       : const _SelectionAppBar(),
                 ),
-                SliverPadding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  sliver: _BlocBuilder(
-                    buildWhen: (previous, current) =>
-                        previous.selectedItems.isEmpty !=
-                        current.selectedItems.isEmpty,
-                    builder: (context, state) => _ButtonGrid(
-                      account: _bloc.account,
-                      isEnabled: state.selectedItems.isEmpty,
-                      onSharingPressed: () {
-                        Navigator.of(context).pushNamed(
-                            SharingBrowser.routeName,
-                            arguments: SharingBrowserArguments(_bloc.account));
-                      },
-                      onEnhancedPhotosPressed: () {
-                        Navigator.of(context).pushNamed(
-                            EnhancedPhotoBrowser.routeName,
-                            arguments:
-                                const EnhancedPhotoBrowserArguments(null));
-                      },
-                      onArchivePressed: () {
-                        Navigator.of(context)
-                            .pushNamed(ArchiveBrowser.routeName);
-                      },
-                      onTrashbinPressed: () {
-                        Navigator.of(context).pushNamed(
-                            TrashbinBrowser.routeName,
-                            arguments: TrashbinBrowserArguments(_bloc.account));
-                      },
-                      onNewCollectionPressed: () {
-                        _onNewCollectionPressed(context);
-                      },
-                    ),
-                  ),
-                ),
+                const _NavigationBar(),
                 const SliverToBoxAdapter(
                   child: SizedBox(height: 8),
                 ),
@@ -238,36 +207,6 @@ class _WrappedHomeCollectionsState extends State<_WrappedHomeCollections>
       );
     } else {
       return content;
-    }
-  }
-
-  Future<void> _onNewCollectionPressed(BuildContext context) async {
-    try {
-      final collection = await showDialog<Collection>(
-        context: context,
-        builder: (_) => NewCollectionDialog(
-          account: _bloc.account,
-        ),
-      );
-      if (collection == null) {
-        return;
-      }
-      // Right now we don't have a way to add photos inside the
-      // CollectionBrowser, eventually we should add that and remove this
-      // branching
-      if (collection.isDynamicCollection) {
-        // open the newly created collection
-        unawaited(Navigator.of(context).pushNamed(
-          CollectionBrowser.routeName,
-          arguments: CollectionBrowserArguments(collection),
-        ));
-      }
-    } catch (e, stacktrace) {
-      _log.shout("[_onNewCollectionPressed] Failed", e, stacktrace);
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.global().createCollectionFailureNotification),
-        duration: k.snackBarDurationNormal,
-      ));
     }
   }
 
