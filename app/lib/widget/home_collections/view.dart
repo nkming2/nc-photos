@@ -28,7 +28,10 @@ class _ButtonGrid extends StatelessWidget {
           _ButtonGridItemView(
             icon: Icons.share_outlined,
             label: L10n.global().collectionSharingLabel,
-            isShowIndicator: AccountPref.of(account).hasNewSharedAlbumOr(),
+            isShowIndicator: context
+                .read<AccountController>()
+                .accountPrefController
+                .hasNewSharedAlbumValue,
             isEnabled: isEnabled,
             onTap: () {
               onSharingPressed?.call();

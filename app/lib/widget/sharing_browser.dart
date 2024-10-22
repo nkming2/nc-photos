@@ -19,10 +19,8 @@ import 'package:nc_photos/entity/album/data_source.dart';
 import 'package:nc_photos/entity/collection/builder.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file/data_source.dart';
-import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/exception_event.dart';
-import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/use_case/import_potential_shared_album.dart';
 import 'package:nc_photos/widget/collection_browser.dart';
@@ -40,10 +38,6 @@ part 'sharing_browser.g.dart';
 part 'sharing_browser/bloc.dart';
 part 'sharing_browser/state_event.dart';
 part 'sharing_browser/type.dart';
-
-typedef _BlocBuilder = BlocBuilder<_Bloc, _State>;
-typedef _BlocListener = BlocListener<_Bloc, _State>;
-// typedef _BlocSelector<T> = BlocSelector<_Bloc, _State, T>;
 
 class SharingBrowserArguments {
   SharingBrowserArguments(this.account);
@@ -86,14 +80,12 @@ class _WrappedSharingBrowser extends StatefulWidget {
 class _WrappedSharingBrowserState extends State<_WrappedSharingBrowser>
     with RouteAware, PageVisibilityMixin {
   @override
-  initState() {
+  void initState() {
     super.initState();
     _bloc.add(const _Init());
-    AccountPref.of(_bloc.account).run((obj) {
-      if (obj.hasNewSharedAlbumOr()) {
-        obj.setNewSharedAlbum(false);
-      }
-    });
+    if (context.bloc.accountPrefController.hasNewSharedAlbumValue) {
+      context.bloc.accountPrefController.setNewSharedAlbum(false);
+    }
   }
 
   @override
@@ -360,3 +352,14 @@ const _leadingSize = 56.0;
 DateFormat _getDateFormat(BuildContext context) => DateFormat(
     DateFormat.YEAR_ABBR_MONTH_DAY,
     Localizations.localeOf(context).languageCode);
+
+typedef _BlocBuilder = BlocBuilder<_Bloc, _State>;
+typedef _BlocListener = BlocListener<_Bloc, _State>;
+// typedef _BlocListenerT<T> = BlocListenerT<_Bloc, _State, T>;
+// typedef _BlocSelector<T> = BlocSelector<_Bloc, _State, T>;
+
+extension on BuildContext {
+  _Bloc get bloc => read<_Bloc>();
+  // _State get state => bloc.state;
+  // void addEvent(_Event event) => bloc.add(event);
+}

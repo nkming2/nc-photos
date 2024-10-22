@@ -61,11 +61,17 @@ class Home extends StatefulWidget {
 @npLog
 class _HomeState extends State<Home> with TickerProviderStateMixin {
   @override
-  initState() {
+  void initState() {
     super.initState();
+    final accountController = context.read<AccountController>();
     _importPotentialSharedAlbum().then((value) {
       if (value.isNotEmpty) {
-        AccountPref.of(widget.account).setNewSharedAlbum(true);
+        // check if account changed
+        if (accountController.account.compareServerIdentity(widget.account)) {
+          accountController.accountPrefController.setNewSharedAlbum(true);
+        } else {
+          AccountPref.of(widget.account).setNewSharedAlbum(true);
+        }
       }
     });
     _animationController.value = 1;

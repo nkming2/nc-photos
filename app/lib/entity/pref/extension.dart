@@ -175,9 +175,6 @@ extension AccountPrefExtension on AccountPref {
       value,
       (key, value) => provider.setString(key, value));
 
-  bool? hasNewSharedAlbum() =>
-      provider.getBool(AccountPrefKey.hasNewSharedAlbum);
-  bool hasNewSharedAlbumOr([bool def = false]) => hasNewSharedAlbum() ?? def;
   Future<bool> setNewSharedAlbum(bool value) => _set<bool>(
       AccountPrefKey.hasNewSharedAlbum,
       value,

@@ -110,7 +110,7 @@ extension AccountExtension on Account {
   ///
   /// Return true if two Accounts point to the same user on server. Be careful
   /// that this does NOT mean that the two Accounts are identical (e.g., they
-  /// can have difference password)
+  /// can have different password)
   bool compareServerIdentity(Account other) {
     return scheme == other.scheme &&
         address == other.address &&
