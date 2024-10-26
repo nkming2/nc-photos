@@ -8,6 +8,7 @@ import 'package:nc_photos/controller/pref_controller.dart';
 import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
+import 'package:nc_photos/widget/settings/collections_nav_bar_settings.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:to_string/to_string.dart';
 
@@ -82,6 +83,17 @@ class _WrappedAlbumSettingsState extends State<_WrappedAlbumSettings>
                         onChanged: (value) {
                           _bloc.add(_SetBrowserShowDate(value));
                         },
+                      );
+                    },
+                  ),
+                  ListTile(
+                    title: Text(L10n.global()
+                        .settingsCollectionsCustomizeNavigationBarTitle),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const CollectionsNavBarSettings(),
+                        ),
                       );
                     },
                   ),

@@ -185,6 +185,16 @@ extension on Pref {
           value.map((e) => e.index).toList());
     }
   }
+
+  String? getHomeCollectionsNavBarButtonsJson() =>
+      provider.getString(PrefKey.homeCollectionsNavBarButtons);
+  Future<bool> setHomeCollectionsNavBarButtonsJson(String? value) {
+    if (value == null) {
+      return provider.remove(PrefKey.homeCollectionsNavBarButtons);
+    } else {
+      return provider.setString(PrefKey.homeCollectionsNavBarButtons, value);
+    }
+  }
 }
 
 MapCoord? _tryMapCoordFromJson(dynamic json) {

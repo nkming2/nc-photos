@@ -18,6 +18,7 @@
     "settingsViewerCustomizeBottomAppBarTitle",
     "settingsShowDateInAlbumTitle",
     "settingsShowDateInAlbumDescription",
+    "settingsCollectionsCustomizeNavigationBarTitle",
     "settingsImageEditTitle",
     "settingsImageEditDescription",
     "settingsEnhanceMaxResolutionTitle2",
@@ -265,6 +266,7 @@
     "alternativeSignIn",
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
+    "customizeCollectionsNavBarDescription",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -278,17 +280,21 @@
   "cs": [
     "settingsViewerCustomizeAppBarTitle",
     "settingsViewerCustomizeBottomAppBarTitle",
+    "settingsCollectionsCustomizeNavigationBarTitle",
     "alternativeSignIn",
     "livePhotoTooltip",
-    "dragAndDropRearrangeButtons"
+    "dragAndDropRearrangeButtons",
+    "customizeCollectionsNavBarDescription"
   ],
 
   "de": [
     "settingsViewerCustomizeAppBarTitle",
     "settingsViewerCustomizeBottomAppBarTitle",
+    "settingsCollectionsCustomizeNavigationBarTitle",
     "alternativeSignIn",
     "livePhotoTooltip",
-    "dragAndDropRearrangeButtons"
+    "dragAndDropRearrangeButtons",
+    "customizeCollectionsNavBarDescription"
   ],
 
   "el": [
@@ -308,6 +314,7 @@
     "settingsMemoriesRangeValueText",
     "settingsViewerCustomizeAppBarTitle",
     "settingsViewerCustomizeBottomAppBarTitle",
+    "settingsCollectionsCustomizeNavigationBarTitle",
     "settingsImageEditTitle",
     "settingsImageEditDescription",
     "settingsEnhanceMaxResolutionTitle2",
@@ -441,20 +448,24 @@
     "todayText",
     "alternativeSignIn",
     "livePhotoTooltip",
-    "dragAndDropRearrangeButtons"
+    "dragAndDropRearrangeButtons",
+    "customizeCollectionsNavBarDescription"
   ],
 
   "es": [
     "settingsViewerCustomizeAppBarTitle",
     "settingsViewerCustomizeBottomAppBarTitle",
+    "settingsCollectionsCustomizeNavigationBarTitle",
     "alternativeSignIn",
     "livePhotoTooltip",
-    "dragAndDropRearrangeButtons"
+    "dragAndDropRearrangeButtons",
+    "customizeCollectionsNavBarDescription"
   ],
 
   "fi": [
     "settingsViewerCustomizeAppBarTitle",
     "settingsViewerCustomizeBottomAppBarTitle",
+    "settingsCollectionsCustomizeNavigationBarTitle",
     "settingsThemePrimaryColor",
     "settingsThemeSecondaryColor",
     "settingsThemePresets",
@@ -493,12 +504,14 @@
     "todayText",
     "alternativeSignIn",
     "livePhotoTooltip",
-    "dragAndDropRearrangeButtons"
+    "dragAndDropRearrangeButtons",
+    "customizeCollectionsNavBarDescription"
   ],
 
   "fr": [
     "settingsViewerCustomizeAppBarTitle",
     "settingsViewerCustomizeBottomAppBarTitle",
+    "settingsCollectionsCustomizeNavigationBarTitle",
     "settingsThemePrimaryColor",
     "settingsThemeSecondaryColor",
     "settingsThemePresets",
@@ -537,13 +550,15 @@
     "todayText",
     "alternativeSignIn",
     "livePhotoTooltip",
-    "dragAndDropRearrangeButtons"
+    "dragAndDropRearrangeButtons",
+    "customizeCollectionsNavBarDescription"
   ],
 
   "it": [
     "settingsPersonProviderTitle",
     "settingsViewerCustomizeAppBarTitle",
     "settingsViewerCustomizeBottomAppBarTitle",
+    "settingsCollectionsCustomizeNavigationBarTitle",
     "settingsImageEditTitle",
     "settingsThemePrimaryColor",
     "settingsThemeSecondaryColor",
@@ -586,7 +601,8 @@
     "todayText",
     "alternativeSignIn",
     "livePhotoTooltip",
-    "dragAndDropRearrangeButtons"
+    "dragAndDropRearrangeButtons",
+    "customizeCollectionsNavBarDescription"
   ],
 
   "nl": [
@@ -647,6 +663,7 @@
     "settingsViewerCustomizeBottomAppBarTitle",
     "settingsShowDateInAlbumTitle",
     "settingsShowDateInAlbumDescription",
+    "settingsCollectionsCustomizeNavigationBarTitle",
     "settingsImageEditTitle",
     "settingsImageEditDescription",
     "settingsEnhanceMaxResolutionTitle2",
@@ -972,6 +989,7 @@
     "alternativeSignIn",
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
+    "customizeCollectionsNavBarDescription",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -986,6 +1004,7 @@
     "settingsMemoriesRangeValueText",
     "settingsViewerCustomizeAppBarTitle",
     "settingsViewerCustomizeBottomAppBarTitle",
+    "settingsCollectionsCustomizeNavigationBarTitle",
     "settingsThemePrimaryColor",
     "settingsThemeSecondaryColor",
     "settingsThemePresets",
@@ -1027,7 +1046,8 @@
     "todayText",
     "alternativeSignIn",
     "livePhotoTooltip",
-    "dragAndDropRearrangeButtons"
+    "dragAndDropRearrangeButtons",
+    "customizeCollectionsNavBarDescription"
   ],
 
   "pt": [
@@ -1036,6 +1056,7 @@
     "settingsPersonProviderTitle",
     "settingsViewerCustomizeAppBarTitle",
     "settingsViewerCustomizeBottomAppBarTitle",
+    "settingsCollectionsCustomizeNavigationBarTitle",
     "settingsSeedColorSystemColorDescription",
     "settingsThemePrimaryColor",
     "settingsThemeSecondaryColor",
@@ -1091,12 +1112,14 @@
     "todayText",
     "alternativeSignIn",
     "livePhotoTooltip",
-    "dragAndDropRearrangeButtons"
+    "dragAndDropRearrangeButtons",
+    "customizeCollectionsNavBarDescription"
   ],
 
   "ru": [
     "settingsViewerCustomizeAppBarTitle",
     "settingsViewerCustomizeBottomAppBarTitle",
+    "settingsCollectionsCustomizeNavigationBarTitle",
     "settingsThemePrimaryColor",
     "settingsThemeSecondaryColor",
     "settingsThemePresets",
@@ -1135,15 +1158,18 @@
     "todayText",
     "alternativeSignIn",
     "livePhotoTooltip",
-    "dragAndDropRearrangeButtons"
+    "dragAndDropRearrangeButtons",
+    "customizeCollectionsNavBarDescription"
   ],
 
   "tr": [
     "settingsViewerCustomizeAppBarTitle",
     "settingsViewerCustomizeBottomAppBarTitle",
+    "settingsCollectionsCustomizeNavigationBarTitle",
     "alternativeSignIn",
     "livePhotoTooltip",
-    "dragAndDropRearrangeButtons"
+    "dragAndDropRearrangeButtons",
+    "customizeCollectionsNavBarDescription"
   ],
 
   "zh": [
@@ -1152,6 +1178,7 @@
     "settingsMemoriesRangeValueText",
     "settingsViewerCustomizeAppBarTitle",
     "settingsViewerCustomizeBottomAppBarTitle",
+    "settingsCollectionsCustomizeNavigationBarTitle",
     "settingsSeedColorDescription",
     "settingsSeedColorSystemColorDescription",
     "settingsThemePrimaryColor",
@@ -1218,7 +1245,8 @@
     "todayText",
     "alternativeSignIn",
     "livePhotoTooltip",
-    "dragAndDropRearrangeButtons"
+    "dragAndDropRearrangeButtons",
+    "customizeCollectionsNavBarDescription"
   ],
 
   "zh_Hant": [
@@ -1238,6 +1266,7 @@
     "settingsMemoriesRangeValueText",
     "settingsViewerCustomizeAppBarTitle",
     "settingsViewerCustomizeBottomAppBarTitle",
+    "settingsCollectionsCustomizeNavigationBarTitle",
     "settingsImageEditTitle",
     "settingsImageEditDescription",
     "settingsEnhanceMaxResolutionTitle2",
@@ -1387,6 +1416,7 @@
     "todayText",
     "alternativeSignIn",
     "livePhotoTooltip",
-    "dragAndDropRearrangeButtons"
+    "dragAndDropRearrangeButtons",
+    "customizeCollectionsNavBarDescription"
   ]
 }

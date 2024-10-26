@@ -360,6 +360,7 @@
 	"settingsViewerCustomizeBottomAppBarTitle": "Customize bottom app bar",
 	"settingsShowDateInAlbumTitle": "Group photos by date",
 	"settingsShowDateInAlbumDescription": "Apply only when the album is sorted by time",
+	"settingsCollectionsCustomizeNavigationBarTitle": "Customize navigation bar",
 	"settingsImageEditTitle": "Editor",
 	"@settingsImageEditTitle": {
 		"description": "Include settings for image enhancements and the image editor"
@@ -1511,6 +1512,10 @@
 	"dragAndDropRearrangeButtons": "Drag and drop to rearrange buttons",
 	"@dragAndDropRearrangeButtons": {
 		"description": "Instruction to customize buttons layout"
+	},
+	"customizeCollectionsNavBarDescription": "Drag and drop to rearrange buttons, tap the buttons above to minimize them",
+	"@customizeCollectionsNavBarDescription": {
+		"description": "Instruction to customize navigation bar buttons in the Collections page"
 	},
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",

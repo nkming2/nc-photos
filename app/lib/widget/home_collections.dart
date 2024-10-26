@@ -51,6 +51,7 @@ import 'package:to_string/to_string.dart';
 part 'home_collections.g.dart';
 part 'home_collections/app_bar.dart';
 part 'home_collections/bloc.dart';
+part 'home_collections/nav_bar_buttons.dart';
 part 'home_collections/navigation_bar.dart';
 part 'home_collections/state_event.dart';
 part 'home_collections/type.dart';
@@ -226,6 +227,7 @@ typedef _BlocBuilder = BlocBuilder<_Bloc, _State>;
 typedef _BlocListener = BlocListener<_Bloc, _State>;
 // typedef _BlocListenerT<T> = BlocListenerT<_Bloc, _State, T>;
 typedef _BlocSelector<T> = BlocSelector<_Bloc, _State, T>;
+typedef _Emitter = Emitter<_State>;
 
 extension on BuildContext {
   _Bloc get bloc => read<_Bloc>();
