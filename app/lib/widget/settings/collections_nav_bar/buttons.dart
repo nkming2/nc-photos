@@ -5,12 +5,29 @@ class _NewButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return HomeCollectionsNavBarButton(
-      icon: const Icon(Icons.add_outlined),
-      label: L10n.global().createCollectionTooltip,
-      isMinimized: true,
-      isUseTooltipWhenMinimized: false,
-      onPressed: () {},
+    return GestureDetector(
+      onTap: () {
+        SnackBarManager().showSnackBar(SnackBar(
+          content: Text(L10n.global().customizeButtonsUnsupportedWarning),
+          duration: k.snackBarDurationNormal,
+        ));
+      },
+      onLongPress: () {
+        SnackBarManager().showSnackBar(SnackBar(
+          content: Text(L10n.global().customizeButtonsUnsupportedWarning),
+          duration: k.snackBarDurationNormal,
+        ));
+      },
+      child: AbsorbPointer(
+        absorbing: true,
+        child: HomeCollectionsNavBarButton(
+          icon: const Icon(Icons.add_outlined),
+          label: L10n.global().createCollectionTooltip,
+          isMinimized: true,
+          isUseTooltipWhenMinimized: false,
+          onPressed: () {},
+        ),
+      ),
     );
   }
 }

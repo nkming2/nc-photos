@@ -267,6 +267,7 @@
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
+    "customizeButtonsUnsupportedWarning",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -284,7 +285,8 @@
     "alternativeSignIn",
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
-    "customizeCollectionsNavBarDescription"
+    "customizeCollectionsNavBarDescription",
+    "customizeButtonsUnsupportedWarning"
   ],
 
   "de": [
@@ -294,7 +296,8 @@
     "alternativeSignIn",
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
-    "customizeCollectionsNavBarDescription"
+    "customizeCollectionsNavBarDescription",
+    "customizeButtonsUnsupportedWarning"
   ],
 
   "el": [
@@ -449,7 +452,8 @@
     "alternativeSignIn",
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
-    "customizeCollectionsNavBarDescription"
+    "customizeCollectionsNavBarDescription",
+    "customizeButtonsUnsupportedWarning"
   ],
 
   "es": [
@@ -459,7 +463,8 @@
     "alternativeSignIn",
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
-    "customizeCollectionsNavBarDescription"
+    "customizeCollectionsNavBarDescription",
+    "customizeButtonsUnsupportedWarning"
   ],
 
   "fi": [
@@ -505,7 +510,8 @@
     "alternativeSignIn",
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
-    "customizeCollectionsNavBarDescription"
+    "customizeCollectionsNavBarDescription",
+    "customizeButtonsUnsupportedWarning"
   ],
 
   "fr": [
@@ -551,7 +557,8 @@
     "alternativeSignIn",
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
-    "customizeCollectionsNavBarDescription"
+    "customizeCollectionsNavBarDescription",
+    "customizeButtonsUnsupportedWarning"
   ],
 
   "it": [
@@ -602,7 +609,8 @@
     "alternativeSignIn",
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
-    "customizeCollectionsNavBarDescription"
+    "customizeCollectionsNavBarDescription",
+    "customizeButtonsUnsupportedWarning"
   ],
 
   "nl": [
@@ -990,6 +998,7 @@
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
+    "customizeButtonsUnsupportedWarning",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -1047,7 +1056,8 @@
     "alternativeSignIn",
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
-    "customizeCollectionsNavBarDescription"
+    "customizeCollectionsNavBarDescription",
+    "customizeButtonsUnsupportedWarning"
   ],
 
   "pt": [
@@ -1113,7 +1123,8 @@
     "alternativeSignIn",
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
-    "customizeCollectionsNavBarDescription"
+    "customizeCollectionsNavBarDescription",
+    "customizeButtonsUnsupportedWarning"
   ],
 
   "ru": [
@@ -1159,7 +1170,8 @@
     "alternativeSignIn",
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
-    "customizeCollectionsNavBarDescription"
+    "customizeCollectionsNavBarDescription",
+    "customizeButtonsUnsupportedWarning"
   ],
 
   "tr": [
@@ -1169,7 +1181,8 @@
     "alternativeSignIn",
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
-    "customizeCollectionsNavBarDescription"
+    "customizeCollectionsNavBarDescription",
+    "customizeButtonsUnsupportedWarning"
   ],
 
   "zh": [
@@ -1246,7 +1259,8 @@
     "alternativeSignIn",
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
-    "customizeCollectionsNavBarDescription"
+    "customizeCollectionsNavBarDescription",
+    "customizeButtonsUnsupportedWarning"
   ],
 
   "zh_Hant": [
@@ -1417,6 +1431,7 @@
     "alternativeSignIn",
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
-    "customizeCollectionsNavBarDescription"
+    "customizeCollectionsNavBarDescription",
+    "customizeButtonsUnsupportedWarning"
   ]
 }

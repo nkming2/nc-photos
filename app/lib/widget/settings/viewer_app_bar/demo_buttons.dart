@@ -15,6 +15,35 @@ class _DemoButton extends StatelessWidget {
   final Widget icon;
 }
 
+class _DemoMoreButton extends StatelessWidget {
+  const _DemoMoreButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        SnackBarManager().showSnackBar(SnackBar(
+          content: Text(L10n.global().customizeButtonsUnsupportedWarning),
+          duration: k.snackBarDurationNormal,
+        ));
+      },
+      onLongPress: () {
+        SnackBarManager().showSnackBar(SnackBar(
+          content: Text(L10n.global().customizeButtonsUnsupportedWarning),
+          duration: k.snackBarDurationNormal,
+        ));
+      },
+      child: AbsorbPointer(
+        absorbing: true,
+        child: IconButton(
+          onPressed: () {},
+          icon: Icon(Icons.adaptive.more),
+        ),
+      ),
+    );
+  }
+}
+
 class _DemoLivePhotoButton extends StatelessWidget {
   const _DemoLivePhotoButton();
 

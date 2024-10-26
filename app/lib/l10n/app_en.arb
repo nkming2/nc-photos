@@ -1517,6 +1517,10 @@
 	"@customizeCollectionsNavBarDescription": {
 		"description": "Instruction to customize navigation bar buttons in the Collections page"
 	},
+	"customizeButtonsUnsupportedWarning": "This button cannot be customized",
+	"@customizeButtonsUnsupportedWarning": {
+		"description": "Some button can't be removed. This message will be shown instead when user try to do so"
+	},
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {
