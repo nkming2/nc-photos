@@ -10,12 +10,14 @@ class _State {
     required this.transformedItems,
     required this.selectedItems,
     required this.itemCounts,
+    required this.navBarButtons,
     this.error,
     required this.removeError,
   });
 
   factory _State.init({
     required collection_util.CollectionSort sort,
+    required List<PrefHomeCollectionsNavButton> navBarButtons,
   }) {
     return _State(
       collections: [],
@@ -24,6 +26,7 @@ class _State {
       transformedItems: [],
       selectedItems: {},
       itemCounts: {},
+      navBarButtons: navBarButtons,
       removeError: null,
     );
   }
@@ -37,6 +40,8 @@ class _State {
   final List<_Item> transformedItems;
   final Set<_Item> selectedItems;
   final Map<String, int> itemCounts;
+
+  final List<PrefHomeCollectionsNavButton> navBarButtons;
 
   final ExceptionEvent? error;
   final ExceptionEvent? removeError;
@@ -126,6 +131,16 @@ class _SetItemCount implements _Event {
 
   final Collection collection;
   final int value;
+}
+
+@toString
+class _SetNavBarButtons implements _Event {
+  const _SetNavBarButtons(this.value);
+
+  @override
+  String toString() => _$toString();
+
+  final List<PrefHomeCollectionsNavButton> value;
 }
 
 @toString

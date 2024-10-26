@@ -20,6 +20,7 @@ abstract class $_StateCopyWithWorker {
       List<_Item>? transformedItems,
       Set<_Item>? selectedItems,
       Map<String, int>? itemCounts,
+      List<PrefHomeCollectionsNavButton>? navBarButtons,
       ExceptionEvent? error,
       ExceptionEvent? removeError});
 }
@@ -35,6 +36,7 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
       dynamic transformedItems,
       dynamic selectedItems,
       dynamic itemCounts,
+      dynamic navBarButtons,
       dynamic error = copyWithNull,
       dynamic removeError = copyWithNull}) {
     return _State(
@@ -45,6 +47,8 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
             transformedItems as List<_Item>? ?? that.transformedItems,
         selectedItems: selectedItems as Set<_Item>? ?? that.selectedItems,
         itemCounts: itemCounts as Map<String, int>? ?? that.itemCounts,
+        navBarButtons: navBarButtons as List<PrefHomeCollectionsNavButton>? ??
+            that.navBarButtons,
         error: error == copyWithNull ? that.error : error as ExceptionEvent?,
         removeError: removeError == copyWithNull
             ? that.removeError
@@ -85,6 +89,13 @@ extension _$_BlocNpLog on _Bloc {
   static final log = Logger("widget.home_collections._Bloc");
 }
 
+extension _$_NavBarNewButtonNpLog on _NavBarNewButton {
+  // ignore: unused_element
+  Logger get _log => log;
+
+  static final log = Logger("widget.home_collections._NavBarNewButton");
+}
+
 extension _$_ItemNpLog on _Item {
   // ignore: unused_element
   Logger get _log => log;
@@ -99,7 +110,7 @@ extension _$_ItemNpLog on _Item {
 extension _$_StateToString on _State {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_State {collections: [length: ${collections.length}], sort: ${sort.name}, isLoading: $isLoading, transformedItems: [length: ${transformedItems.length}], selectedItems: {length: ${selectedItems.length}}, itemCounts: {length: ${itemCounts.length}}, error: $error, removeError: $removeError}";
+    return "_State {collections: [length: ${collections.length}], sort: ${sort.name}, isLoading: $isLoading, transformedItems: [length: ${transformedItems.length}], selectedItems: {length: ${selectedItems.length}}, itemCounts: {length: ${itemCounts.length}}, navBarButtons: [length: ${navBarButtons.length}], error: $error, removeError: $removeError}";
   }
 }
 
@@ -156,6 +167,13 @@ extension _$_SetItemCountToString on _SetItemCount {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
     return "_SetItemCount {collection: $collection, value: $value}";
+  }
+}
+
+extension _$_SetNavBarButtonsToString on _SetNavBarButtons {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_SetNavBarButtons {value: [length: ${value.length}]}";
   }
 }
 

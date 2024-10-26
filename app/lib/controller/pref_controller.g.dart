@@ -252,6 +252,18 @@ extension $PrefControllerNpSubjectAccessor on PrefController {
       viewerBottomAppBarButtons.distinct().skip(1);
   List<ViewerAppBarButtonType> get viewerBottomAppBarButtonsValue =>
       _viewerBottomAppBarButtonsController.value;
+// _homeCollectionsNavBarButtonsController
+  ValueStream<List<PrefHomeCollectionsNavButton>>
+      get homeCollectionsNavBarButtons =>
+          _homeCollectionsNavBarButtonsController.stream;
+  Stream<List<PrefHomeCollectionsNavButton>>
+      get homeCollectionsNavBarButtonsNew =>
+          homeCollectionsNavBarButtons.skip(1);
+  Stream<List<PrefHomeCollectionsNavButton>>
+      get homeCollectionsNavBarButtonsChange =>
+          homeCollectionsNavBarButtons.distinct().skip(1);
+  List<PrefHomeCollectionsNavButton> get homeCollectionsNavBarButtonsValue =>
+      _homeCollectionsNavBarButtonsController.value;
 }
 
 extension $SecurePrefControllerNpSubjectAccessor on SecurePrefController {

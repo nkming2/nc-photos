@@ -8,6 +8,12 @@ import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/navigation_manager.dart';
 import 'package:nc_photos/widget/trusted_cert_manager.dart';
 
+class AppMessageException implements Exception {
+  const AppMessageException(this.message);
+
+  final String message;
+}
+
 /// Convert an exception to a user-facing string
 ///
 /// Typically used with SnackBar to show a proper error message
@@ -65,6 +71,8 @@ String toUserString(Object? exception) {
       "Failed to update files: ${exception.files.map((f) => f.filename).join(", ")}",
       null
     );
+  } else if (exception is AppMessageException) {
+    return (exception.message, null);
   }
   return (exception?.toString() ?? "Unknown error", null);
 }

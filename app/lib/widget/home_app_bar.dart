@@ -20,6 +20,7 @@ class HomeSliverAppBar extends StatelessWidget {
     this.menuActions,
     this.onSelectedMenuActions,
     this.isShowProgressIcon = false,
+    this.bottom,
   });
 
   @override
@@ -39,6 +40,7 @@ class HomeSliverAppBar extends StatelessWidget {
       blurFilter: Theme.of(context).appBarBlurFilter,
       floating: true,
       automaticallyImplyLeading: false,
+      bottom: bottom,
       actions: [
         ...actions ?? [],
         if (menuActions?.isNotEmpty == true)
@@ -70,6 +72,7 @@ class HomeSliverAppBar extends StatelessWidget {
 
   /// Screen specific action buttons
   final List<Widget>? actions;
+  final PreferredSizeWidget? bottom;
 
   /// Screen specific actions under the overflow menu. The value of each item
   /// much >= 0

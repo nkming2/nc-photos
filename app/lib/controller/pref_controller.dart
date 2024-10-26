@@ -12,9 +12,11 @@ import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/language_util.dart';
 import 'package:nc_photos/protected_page_handler.dart';
 import 'package:nc_photos/size.dart';
+import 'package:nc_photos/widget/home_collections.dart';
 import 'package:nc_photos/widget/viewer.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/object_util.dart';
+import 'package:np_common/type.dart';
 import 'package:np_gps_map/np_gps_map.dart';
 import 'package:np_string/np_string.dart';
 import 'package:rxdart/rxdart.dart';
@@ -261,6 +263,17 @@ class PrefController {
         defaultValue: _viewerBottomAppBarButtonsDefault,
       );
 
+  Future<bool> setHomeCollectionsNavBarButtons(
+          List<PrefHomeCollectionsNavButton>? value) =>
+      _setOrRemove(
+        controller: _homeCollectionsNavBarButtonsController,
+        setter: (pref, value) => pref.setHomeCollectionsNavBarButtonsJson(
+            jsonEncode(value.map((e) => e.toJson()).toList())),
+        remover: (pref) => pref.setHomeCollectionsNavBarButtonsJson(null),
+        value: value,
+        defaultValue: _homeCollectionsNavBarButtonsDefault,
+      );
+
   Future<bool> _set<T>({
     required BehaviorSubject<T> controller,
     required Future<bool> Function(Pref pref, T value) setter,
@@ -406,6 +419,14 @@ class PrefController {
   @npSubjectAccessor
   late final _viewerBottomAppBarButtonsController = BehaviorSubject.seeded(
       pref.getViewerBottomAppBarButtons() ?? _viewerBottomAppBarButtonsDefault);
+  @npSubjectAccessor
+  late final _homeCollectionsNavBarButtonsController = BehaviorSubject.seeded(
+      pref.getHomeCollectionsNavBarButtonsJson()?.let((s) =>
+              (jsonDecode(s) as List)
+                  .cast<JsonObj>()
+                  .map(PrefHomeCollectionsNavButton.fromJson)
+                  .toList()) ??
+          _homeCollectionsNavBarButtonsDefault);
 }
 
 extension PrefControllerExtension on PrefController {
@@ -560,6 +581,24 @@ const _viewerBottomAppBarButtonsDefault = [
   ViewerAppBarButtonType.enhance,
   ViewerAppBarButtonType.download,
   ViewerAppBarButtonType.delete,
+];
+const _homeCollectionsNavBarButtonsDefault = [
+  PrefHomeCollectionsNavButton(
+    type: HomeCollectionsNavBarButtonType.sharing,
+    isMinimized: false,
+  ),
+  PrefHomeCollectionsNavButton(
+    type: HomeCollectionsNavBarButtonType.edited,
+    isMinimized: false,
+  ),
+  PrefHomeCollectionsNavButton(
+    type: HomeCollectionsNavBarButtonType.archive,
+    isMinimized: false,
+  ),
+  PrefHomeCollectionsNavButton(
+    type: HomeCollectionsNavBarButtonType.trash,
+    isMinimized: false,
+  ),
 ];
 
 @npLog

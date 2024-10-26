@@ -41,13 +41,7 @@ class _DemoView extends StatelessWidget {
                         child: _DemoButtonDelegate(e),
                       ),
                     )),
-                IgnorePointer(
-                  ignoring: true,
-                  child: IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.adaptive.more),
-                  ),
-                ),
+                const _DemoMoreButton(),
               ],
             );
             if (buttons.isEmpty) {

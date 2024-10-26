@@ -4,7 +4,6 @@ import 'package:copy_with/copy_with.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc_util.dart';
@@ -12,39 +11,22 @@ import 'package:nc_photos/controller/pref_controller.dart';
 import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
-import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/draggable.dart' as my;
+import 'package:nc_photos/widget/fade_out_list.dart';
+import 'package:nc_photos/widget/home_collections.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
-import 'package:nc_photos/widget/viewer.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_collection/np_collection.dart';
-import 'package:np_platform_util/np_platform_util.dart';
 import 'package:to_string/to_string.dart';
 
-part 'viewer_app_bar/bloc.dart';
-part 'viewer_app_bar/demo_buttons.dart';
-part 'viewer_app_bar/grid_buttons.dart';
-part 'viewer_app_bar/state_event.dart';
-part 'viewer_app_bar/view.dart';
-part 'viewer_app_bar_settings.g.dart';
+part 'collections_nav_bar/bloc.dart';
+part 'collections_nav_bar/buttons.dart';
+part 'collections_nav_bar/state_event.dart';
+part 'collections_nav_bar/view.dart';
+part 'collections_nav_bar_settings.g.dart';
 
-class ViewerAppBarSettings extends StatelessWidget {
-  const ViewerAppBarSettings({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => _Bloc(
-        isBottom: false,
-        prefController: context.read(),
-      ),
-      child: const _WrappedViewerAppBarSettings(isBottom: false),
-    );
-  }
-}
-
-class ViewerBottomAppBarSettings extends StatelessWidget {
-  const ViewerBottomAppBarSettings({super.key});
+class CollectionsNavBarSettings extends StatelessWidget {
+  const CollectionsNavBarSettings({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -53,25 +35,22 @@ class ViewerBottomAppBarSettings extends StatelessWidget {
         isBottom: true,
         prefController: context.read(),
       ),
-      child: const _WrappedViewerAppBarSettings(isBottom: true),
+      child: const _WrappedCollectionsNavBarSettings(),
     );
   }
 }
 
-class _WrappedViewerAppBarSettings extends StatefulWidget {
-  const _WrappedViewerAppBarSettings({
-    required this.isBottom,
-  });
+class _WrappedCollectionsNavBarSettings extends StatefulWidget {
+  const _WrappedCollectionsNavBarSettings();
 
   @override
-  State<StatefulWidget> createState() => _WrappedViewerAppBarSettingsState();
-
-  final bool isBottom;
+  State<StatefulWidget> createState() =>
+      _WrappedCollectionsNavBarSettingsState();
 }
 
 @npLog
-class _WrappedViewerAppBarSettingsState
-    extends State<_WrappedViewerAppBarSettings>
+class _WrappedCollectionsNavBarSettingsState
+    extends State<_WrappedCollectionsNavBarSettings>
     with RouteAware, PageVisibilityMixin {
   @override
   Widget build(BuildContext context) {
@@ -79,24 +58,17 @@ class _WrappedViewerAppBarSettingsState
       canPop: true,
       onPopInvoked: (_) {
         final prefController = context.bloc.prefController;
-        final from = widget.isBottom
-            ? prefController.viewerBottomAppBarButtonsValue
-            : prefController.viewerAppBarButtonsValue;
+        final from = prefController.homeCollectionsNavBarButtonsValue;
         final to = context.state.buttons;
         if (!listEquals(from, to)) {
           _log.info("[build] Updated: ${to.toReadableString()}");
-          if (widget.isBottom) {
-            prefController.setViewerBottomAppBarButtons(to);
-          } else {
-            prefController.setViewerAppBarButtons(to);
-          }
+          prefController.setHomeCollectionsNavBarButtons(to);
         }
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(widget.isBottom
-              ? L10n.global().settingsViewerCustomizeBottomAppBarTitle
-              : L10n.global().settingsViewerCustomizeAppBarTitle),
+          title: Text(
+              L10n.global().settingsCollectionsCustomizeNavigationBarTitle),
           actions: [
             TextButton(
               onPressed: () {
@@ -121,11 +93,12 @@ class _WrappedViewerAppBarSettingsState
           ],
           child: Column(
             children: [
-              widget.isBottom ? const _DemoBottomView() : const _DemoView(),
+              const _DemoView(),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                child: Text(L10n.global().dragAndDropRearrangeButtons),
+                child:
+                    Text(L10n.global().customizeCollectionsNavBarDescription),
               ),
               const Expanded(child: _CandidateGrid()),
             ],

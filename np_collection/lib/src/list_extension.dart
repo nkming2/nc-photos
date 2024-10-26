@@ -88,4 +88,7 @@ extension ListExtension<T> on List<T> {
   List<T> removed(T value) => toList()..remove(value);
 
   List<T> removedAt(int index) => toList()..removeAt(index);
+
+  List<T> removedWhere(bool Function(T element) test) =>
+      toList()..removeWhere(test);
 }
