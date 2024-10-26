@@ -37,6 +37,7 @@ import 'package:nc_photos/widget/enhanced_photo_browser.dart';
 import 'package:nc_photos/widget/fade_out_list.dart';
 import 'package:nc_photos/widget/handler/double_tap_exit_handler.dart';
 import 'package:nc_photos/widget/home_app_bar.dart';
+import 'package:nc_photos/widget/map_browser.dart';
 import 'package:nc_photos/widget/navigation_bar_blur_filter.dart';
 import 'package:nc_photos/widget/new_collection_dialog.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';

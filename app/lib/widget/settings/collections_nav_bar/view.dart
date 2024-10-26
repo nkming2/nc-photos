@@ -137,6 +137,13 @@ class _DemoButtonDelegate extends StatelessWidget {
             context.addEvent(_ToggleMinimized(type));
           },
         );
+      case HomeCollectionsNavBarButtonType.map:
+        return _MapButton(
+          isMinimized: isMinimized,
+          onPressed: () {
+            context.addEvent(_ToggleMinimized(type));
+          },
+        );
     }
   }
 
@@ -209,6 +216,8 @@ class _CandidateButtonDelegate extends StatelessWidget {
         return const _ArchiveButton(isMinimized: false);
       case HomeCollectionsNavBarButtonType.trash:
         return const _TrashButton(isMinimized: false);
+      case HomeCollectionsNavBarButtonType.map:
+        return const _MapButton(isMinimized: false);
     }
   }
 

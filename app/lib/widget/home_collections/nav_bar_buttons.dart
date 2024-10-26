@@ -242,3 +242,23 @@ class _NavBarTrashButton extends StatelessWidget {
 
   final bool isMinimized;
 }
+
+class _NavBarMapButton extends StatelessWidget {
+  const _NavBarMapButton({
+    required this.isMinimized,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return _NavBarButton(
+      icon: const Icon(Icons.map_outlined),
+      label: L10n.global().homeTabMapBrowser,
+      isMinimized: isMinimized,
+      onPressed: () {
+        Navigator.of(context).pushNamed(MapBrowser.routeName);
+      },
+    );
+  }
+
+  final bool isMinimized;
+}

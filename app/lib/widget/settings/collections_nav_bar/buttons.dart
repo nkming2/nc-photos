@@ -123,3 +123,26 @@ class _TrashButton extends StatelessWidget {
   final bool isMinimized;
   final VoidCallback? onPressed;
 }
+
+class _MapButton extends StatelessWidget {
+  const _MapButton({
+    required this.isMinimized,
+    this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return HomeCollectionsNavBarButton(
+      icon: const Icon(Icons.map_outlined),
+      label: L10n.global().homeTabMapBrowser,
+      isMinimized: isMinimized,
+      isUseTooltipWhenMinimized: false,
+      onPressed: () {
+        onPressed?.call();
+      },
+    );
+  }
+
+  final bool isMinimized;
+  final VoidCallback? onPressed;
+}

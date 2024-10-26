@@ -6,6 +6,7 @@ enum HomeCollectionsNavBarButtonType {
   edited,
   archive,
   trash,
+  map,
   ;
 
   static HomeCollectionsNavBarButtonType fromValue(int value) =>
@@ -76,6 +77,8 @@ class _NavigationBarState extends State<_NavigationBar> {
         return _NavBarArchiveButton(isMinimized: btn.isMinimized);
       case HomeCollectionsNavBarButtonType.trash:
         return _NavBarTrashButton(isMinimized: btn.isMinimized);
+      case HomeCollectionsNavBarButtonType.map:
+        return _NavBarMapButton(isMinimized: btn.isMinimized);
     }
   }
 

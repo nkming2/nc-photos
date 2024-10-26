@@ -584,6 +584,10 @@ const _viewerBottomAppBarButtonsDefault = [
 ];
 const _homeCollectionsNavBarButtonsDefault = [
   PrefHomeCollectionsNavButton(
+    type: HomeCollectionsNavBarButtonType.map,
+    isMinimized: false,
+  ),
+  PrefHomeCollectionsNavButton(
     type: HomeCollectionsNavBarButtonType.sharing,
     isMinimized: false,
   ),

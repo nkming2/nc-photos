@@ -22,7 +22,6 @@ import 'package:nc_photos/use_case/import_potential_shared_album.dart';
 import 'package:nc_photos/widget/home_collections.dart';
 import 'package:nc_photos/widget/home_photos2.dart';
 import 'package:nc_photos/widget/home_search.dart';
-import 'package:nc_photos/widget/map_browser.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/or_null.dart';
 
@@ -121,11 +120,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
           selectedIcon: const Icon(Icons.grid_view_sharp),
           label: L10n.global().collectionsTooltip,
         ),
-        NavigationDestination(
-          icon: const Icon(Icons.map_outlined),
-          selectedIcon: const Icon(Icons.map),
-          label: L10n.global().homeTabMapBrowser,
-        ),
       ],
       selectedIndex: _nextPage,
       onDestinationSelected: _onTapNavItem,
@@ -137,7 +131,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     return PageView.builder(
       controller: _pageController,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: 4,
+      itemCount: 3,
       itemBuilder: (context, index) => SlideTransition(
         position: Tween(
           begin: const Offset(0, .05),
@@ -163,9 +157,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 
       case 2:
         return const HomeCollections();
-
-      case 3:
-        return const MapBrowser();
 
       default:
         throw ArgumentError("Invalid page index: $index");

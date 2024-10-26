@@ -27,10 +27,8 @@ import 'package:nc_photos/np_api_util.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/stream_extension.dart';
 import 'package:nc_photos/stream_util.dart';
-import 'package:nc_photos/theme/dimension.dart';
 import 'package:nc_photos/widget/collection_browser.dart';
 import 'package:nc_photos/widget/measure.dart';
-import 'package:nc_photos/widget/navigation_bar_blur_filter.dart';
 import 'package:nc_photos/widget/network_thumbnail.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/object_util.dart';
@@ -46,6 +44,12 @@ part 'map_browser/type.dart';
 part 'map_browser/view.dart';
 
 class MapBrowser extends StatelessWidget {
+  static const routeName = "/map-browser";
+
+  static Route buildRoute() => MaterialPageRoute(
+        builder: (_) => const MapBrowser(),
+      );
+
   const MapBrowser({super.key});
 
   @override
@@ -77,47 +81,43 @@ class _WrappedMapBrowser extends StatelessWidget {
           },
         ),
       ],
-      child: Stack(
-        children: [
-          const _MapView(),
-          Positioned.directional(
-            textDirection: Directionality.of(context),
-            top: MediaQuery.of(context).padding.top + 8,
-            end: 8,
-            child: const _DateRangeToggle(),
-          ),
-          _BlocSelector<bool>(
-            selector: (state) => state.isShowDataRangeControlPanel,
-            builder: (context, isShowAnyPanel) => Positioned.fill(
-              child: isShowAnyPanel
-                  ? GestureDetector(
-                      onTap: () {
-                        context.addEvent(const _CloseControlPanel());
-                      },
-                    )
-                  : const SizedBox.shrink(),
+      child: Scaffold(
+        body: Stack(
+          children: [
+            const _MapView(),
+            Positioned.directional(
+              textDirection: Directionality.of(context),
+              top: MediaQuery.of(context).padding.top + 8,
+              end: 8,
+              child: const _DateRangeToggle(),
             ),
-          ),
-          Positioned(
-            left: 8,
-            right: 8,
-            top: MediaQuery.of(context).padding.top + 8,
-            child: _BlocSelector<bool>(
+            _BlocSelector<bool>(
               selector: (state) => state.isShowDataRangeControlPanel,
-              builder: (context, isShowDataRangeControlPanel) =>
-                  _PanelContainer(
-                isShow: isShowDataRangeControlPanel,
-                child: const _DateRangeControlPanel(),
+              builder: (context, isShowAnyPanel) => Positioned.fill(
+                child: isShowAnyPanel
+                    ? GestureDetector(
+                        onTap: () {
+                          context.addEvent(const _CloseControlPanel());
+                        },
+                      )
+                    : const SizedBox.shrink(),
               ),
             ),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: NavigationBarBlurFilter(
-              height: AppDimension.of(context).homeBottomAppBarHeight,
+            Positioned(
+              left: 8,
+              right: 8,
+              top: MediaQuery.of(context).padding.top + 8,
+              child: _BlocSelector<bool>(
+                selector: (state) => state.isShowDataRangeControlPanel,
+                builder: (context, isShowDataRangeControlPanel) =>
+                    _PanelContainer(
+                  isShow: isShowDataRangeControlPanel,
+                  child: const _DateRangeControlPanel(),
+                ),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
