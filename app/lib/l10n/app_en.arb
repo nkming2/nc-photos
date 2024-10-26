@@ -1503,7 +1503,7 @@
 	"homeTabMapBrowser": "Map",
 	"mapBrowserSetDefaultDateRangeButton": "Set as default",
 	"todayText": "Today",
-	"alternativeSignIn": "Alternative sign in with username and password",
+	"alternativeSignIn": "Sign in with username and password instead",
 	"@alternativeSignIn": {
 		"description": "Sign in using username and password instead of the recommended Nextcloud login flow"
 	},
