@@ -15,12 +15,11 @@ class Draggable<T extends Object> extends StatelessWidget {
     this.onDropAfter,
     this.onDragStarted,
     this.onDragEndedAny,
-    this.feedbackSize,
   });
 
   @override
-  build(BuildContext context) {
-    buildIndicator(alignment, isActive) {
+  Widget build(BuildContext context) {
+    Widget buildIndicator(alignment, isActive) {
       return Stack(
         children: [
           Container(),
@@ -39,7 +38,7 @@ class Draggable<T extends Object> extends StatelessWidget {
     }
 
     return Stack(
-      fit: StackFit.expand,
+      fit: StackFit.passthrough,
       children: [
         LongPressDraggable<T>(
           data: data,
@@ -48,11 +47,10 @@ class Draggable<T extends Object> extends StatelessWidget {
           onDragEnd: (_) => onDragEndedAny?.call(),
           onDragCompleted: onDragEndedAny,
           onDraggableCanceled: (v, o) => onDragEndedAny?.call(),
-          feedback: FractionalTranslation(
-            translation: const Offset(-.5, -.5),
-            child: SizedBox(
-              width: feedbackSize?.width ?? 128,
-              height: feedbackSize?.height ?? 128,
+          feedback: Material(
+            type: MaterialType.transparency,
+            child: FractionalTranslation(
+              translation: const Offset(-.5, -.5),
               child: Opacity(
                 opacity: .5,
                 child: feedback ?? child,
@@ -122,9 +120,4 @@ class Draggable<T extends Object> extends StatelessWidget {
   ///
   /// The callback might be called multiple times per each drag event
   final VoidCallback? onDragEndedAny;
-
-  /// Size of the feedback widget that appears under the pointer.
-  ///
-  /// Right now a translucent version of [child] is being shown
-  final Size? feedbackSize;
 }

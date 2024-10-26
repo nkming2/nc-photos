@@ -63,7 +63,11 @@ class _DraggableItemListState<T extends DraggableItemMetadata>
         if (meta.isDraggable) {
           return my.Draggable<_DraggableData>(
             data: _DraggableData(i, meta),
-            feedback: widget.itemDragFeedbackBuilder?.call(context, i, meta),
+            feedback: SizedBox(
+              width: widget.maxCrossAxisExtent * .65,
+              height: widget.maxCrossAxisExtent * .65,
+              child: widget.itemDragFeedbackBuilder?.call(context, i, meta),
+            ),
             onDropBefore: (data) => _onMoved(data.index, i, true),
             onDropAfter: (data) => _onMoved(data.index, i, false),
             onDragStarted: () {
@@ -72,8 +76,6 @@ class _DraggableItemListState<T extends DraggableItemMetadata>
             onDragEndedAny: () {
               widget.onDraggingChanged?.call(false);
             },
-            feedbackSize: Size(widget.maxCrossAxisExtent * .65,
-                widget.maxCrossAxisExtent * .65),
             child: widget.itemBuilder(context, i, meta),
           );
         } else {

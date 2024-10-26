@@ -26,7 +26,6 @@ class _DemoView extends StatelessWidget {
                         feedback: _DraggingButton(
                           child: _DemoButtonDelegate(e),
                         ),
-                        feedbackSize: const Size.square(48),
                         onDropBefore: (data) {
                           context.addEvent(_MoveButton.before(
                             which: data,
@@ -148,7 +147,6 @@ class _DemoBottomView extends StatelessWidget {
                               feedback: _DraggingButton(
                                 child: _DemoButtonDelegate(e),
                               ),
-                              feedbackSize: const Size.square(48),
                               onDropBefore: (data) {
                                 context.addEvent(_MoveButton.before(
                                   which: data,
@@ -232,7 +230,6 @@ class _CandidateGrid extends StatelessWidget {
                         feedback: _DraggingButton(
                           child: _DemoButtonDelegate(e),
                         ),
-                        feedbackSize: const Size.square(48),
                         child: _CandidateButtonDelegate(e),
                       ))
                   .toList(),
