@@ -44,19 +44,22 @@ class HomeCollectionsNavBarButton extends StatelessWidget {
         ),
       );
     } else {
-      return ActionChip(
-        avatar: icon,
-        label: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(label),
-            if (isShowIndicator) ...const [
-              SizedBox(width: 4),
-              _NavBarButtonIndicator(),
+      return Theme(
+        data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
+        child: ActionChip(
+          avatar: icon,
+          label: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(label),
+              if (isShowIndicator) ...const [
+                SizedBox(width: 4),
+                _NavBarButtonIndicator(),
+              ],
             ],
-          ],
+          ),
+          onPressed: isEnabled ? onPressed : null,
         ),
-        onPressed: isEnabled ? onPressed : null,
       );
     }
   }

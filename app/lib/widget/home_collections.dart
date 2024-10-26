@@ -142,7 +142,6 @@ class _WrappedHomeCollectionsState extends State<_WrappedHomeCollections>
                       ? const _AppBar()
                       : const _SelectionAppBar(),
                 ),
-                const _NavigationBar(),
                 const SliverToBoxAdapter(
                   child: SizedBox(height: 8),
                 ),

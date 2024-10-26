@@ -37,88 +37,62 @@ class _NavigationBarState extends State<_NavigationBar> {
 
   @override
   Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: SizedBox(
-        height: 48,
-        child: Row(
-          children: [
-            Expanded(
-              child: Stack(
-                children: [
-                  _BlocSelector(
-                    selector: (state) => state.navBarButtons,
-                    builder: (context, navBarButtons) {
-                      final buttons = navBarButtons
-                          .map((e) => _buildButton(context, e))
-                          .nonNulls
-                          .toList();
-                      return ListView.separated(
-                        controller: _scrollController,
-                        scrollDirection: Axis.horizontal,
-                        padding: const EdgeInsets.only(left: 16),
-                        itemCount: buttons.length,
-                        itemBuilder: (context, i) => Center(
-                          child: buttons[i],
-                        ),
-                        separatorBuilder: (context, _) =>
-                            const SizedBox(width: 12),
-                      );
-                    },
-                  ),
-                  if (_hasLeftContent)
-                    Positioned(
-                      left: 0,
-                      top: 0,
-                      bottom: 0,
-                      child: IgnorePointer(
-                        ignoring: true,
-                        child: Container(
-                          width: 32,
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                Theme.of(context).colorScheme.background,
-                                Theme.of(context)
-                                    .colorScheme
-                                    .background
-                                    .withOpacity(0),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
+    return SizedBox(
+      height: 48,
+      child: Row(
+        children: [
+          Expanded(
+            child: ShaderMask(
+              shaderCallback: (rect) {
+                final colors = <Color>[];
+                final stops = <double>[];
+                if (_hasLeftContent) {
+                  colors.addAll([Colors.white, Colors.transparent]);
+                  stops.addAll([0, .1]);
+                } else {
+                  colors.add(Colors.transparent);
+                  stops.add(0);
+                }
+                if (_hasRightContent) {
+                  colors.addAll([Colors.transparent, Colors.white]);
+                  stops.addAll([.9, 1]);
+                } else {
+                  colors.add(Colors.transparent);
+                  stops.add(1);
+                }
+                return LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: colors,
+                  stops: stops,
+                ).createShader(rect);
+              },
+              blendMode: BlendMode.dstOut,
+              child: _BlocSelector(
+                selector: (state) => state.navBarButtons,
+                builder: (context, navBarButtons) {
+                  final buttons = navBarButtons
+                      .map((e) => _buildButton(context, e))
+                      .nonNulls
+                      .toList();
+                  return ListView.separated(
+                    controller: _scrollController,
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.only(left: 16),
+                    itemCount: buttons.length,
+                    itemBuilder: (context, i) => Center(
+                      child: buttons[i],
                     ),
-                  if (_hasRightContent)
-                    Positioned(
-                      right: 0,
-                      top: 0,
-                      bottom: 0,
-                      child: IgnorePointer(
-                        ignoring: true,
-                        child: Container(
-                          width: 32,
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                Theme.of(context)
-                                    .colorScheme
-                                    .background
-                                    .withOpacity(0),
-                                Theme.of(context).colorScheme.background,
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                ],
+                    separatorBuilder: (context, _) => const SizedBox(width: 12),
+                  );
+                },
               ),
             ),
-            const SizedBox(width: 8),
-            const _NavBarNewButton(),
-            const SizedBox(width: 16),
-          ],
-        ),
+          ),
+          const SizedBox(width: 8),
+          const _NavBarNewButton(),
+          const SizedBox(width: 16),
+        ],
       ),
     );
   }

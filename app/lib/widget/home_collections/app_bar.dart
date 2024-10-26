@@ -31,6 +31,10 @@ class _AppBar extends StatelessWidget {
               break;
           }
         },
+        bottom: const PreferredSize(
+          preferredSize: Size.fromHeight(48),
+          child: _NavigationBar(),
+        ),
       ),
     );
   }
