@@ -21,15 +21,6 @@ class _NavigationBar extends StatefulWidget {
 
 class _NavigationBarState extends State<_NavigationBar> {
   @override
-  void initState() {
-    super.initState();
-    _scrollController = ScrollController();
-    _scrollController
-        .addListener(() => _updateButtonScroll(_scrollController.position));
-    _ensureUpdateButtonScroll();
-  }
-
-  @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
@@ -42,32 +33,8 @@ class _NavigationBarState extends State<_NavigationBar> {
       child: Row(
         children: [
           Expanded(
-            child: ShaderMask(
-              shaderCallback: (rect) {
-                final colors = <Color>[];
-                final stops = <double>[];
-                if (_hasLeftContent) {
-                  colors.addAll([Colors.white, Colors.transparent]);
-                  stops.addAll([0, .1]);
-                } else {
-                  colors.add(Colors.transparent);
-                  stops.add(0);
-                }
-                if (_hasRightContent) {
-                  colors.addAll([Colors.transparent, Colors.white]);
-                  stops.addAll([.9, 1]);
-                } else {
-                  colors.add(Colors.transparent);
-                  stops.add(1);
-                }
-                return LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                  colors: colors,
-                  stops: stops,
-                ).createShader(rect);
-              },
-              blendMode: BlendMode.dstOut,
+            child: FadeOutListContainer(
+              scrollController: _scrollController,
               child: _BlocSelector(
                 selector: (state) => state.navBarButtons,
                 builder: (context, navBarButtons) {
@@ -112,56 +79,7 @@ class _NavigationBarState extends State<_NavigationBar> {
     }
   }
 
-  bool _updateButtonScroll(ScrollPosition pos) {
-    if (!pos.hasContentDimensions || !pos.hasPixels) {
-      return false;
-    }
-    if (pos.pixels <= pos.minScrollExtent) {
-      if (_hasLeftContent) {
-        setState(() {
-          _hasLeftContent = false;
-        });
-      }
-    } else {
-      if (!_hasLeftContent) {
-        setState(() {
-          _hasLeftContent = true;
-        });
-      }
-    }
-    if (pos.pixels >= pos.maxScrollExtent) {
-      if (_hasRightContent) {
-        setState(() {
-          _hasRightContent = false;
-        });
-      }
-    } else {
-      if (!_hasRightContent) {
-        setState(() {
-          _hasRightContent = true;
-        });
-      }
-    }
-    _hasFirstScrollUpdate = true;
-    return true;
-  }
-
-  void _ensureUpdateButtonScroll() {
-    if (_hasFirstScrollUpdate || !mounted) {
-      return;
-    }
-    if (_scrollController.hasClients) {
-      if (_updateButtonScroll(_scrollController.position)) {
-        return;
-      }
-    }
-    Timer(const Duration(milliseconds: 100), _ensureUpdateButtonScroll);
-  }
-
-  late final ScrollController _scrollController;
-  var _hasFirstScrollUpdate = false;
-  var _hasLeftContent = false;
-  var _hasRightContent = false;
+  final _scrollController = ScrollController();
 }
 
 class _NavBarButtonIndicator extends StatelessWidget {

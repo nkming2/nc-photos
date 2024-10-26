@@ -1,7 +1,18 @@
 part of '../collections_nav_bar_settings.dart';
 
-class _DemoView extends StatelessWidget {
+class _DemoView extends StatefulWidget {
   const _DemoView();
+
+  @override
+  State<StatefulWidget> createState() => _DemoViewState();
+}
+
+class _DemoViewState extends State<_DemoView> {
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,38 +24,42 @@ class _DemoView extends StatelessWidget {
           child: Row(
             children: [
               Expanded(
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.only(left: 16 - 6),
-                  itemCount: buttons.length,
-                  itemBuilder: (context, i) {
-                    final btn = buttons[i];
-                    return my.Draggable<HomeCollectionsNavBarButtonType>(
-                      data: btn.type,
-                      feedback: _CandidateButtonDelegate(btn.type),
-                      onDropBefore: (data) {
-                        context.addEvent(_MoveButton.before(
-                          which: data,
-                          target: btn.type,
-                        ));
-                      },
-                      onDropAfter: (data) {
-                        context.addEvent(_MoveButton.after(
-                          which: data,
-                          target: btn.type,
-                        ));
-                      },
-                      child: Center(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 6),
-                          child: _DemoButtonDelegate(
-                            btn.type,
-                            isMinimized: btn.isMinimized,
+                child: FadeOutListContainer(
+                  scrollController: _scrollController,
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.only(left: 16 - 6),
+                    itemCount: buttons.length,
+                    itemBuilder: (context, i) {
+                      final btn = buttons[i];
+                      return my.Draggable<HomeCollectionsNavBarButtonType>(
+                        data: btn.type,
+                        feedback: _CandidateButtonDelegate(btn.type),
+                        onDropBefore: (data) {
+                          context.addEvent(_MoveButton.before(
+                            which: data,
+                            target: btn.type,
+                          ));
+                        },
+                        onDropAfter: (data) {
+                          context.addEvent(_MoveButton.after(
+                            which: data,
+                            target: btn.type,
+                          ));
+                        },
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 6),
+                            child: _DemoButtonDelegate(
+                              btn.type,
+                              isMinimized: btn.isMinimized,
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
               ),
               const SizedBox(width: 8),
@@ -81,6 +96,8 @@ class _DemoView extends StatelessWidget {
       },
     );
   }
+
+  final _scrollController = ScrollController();
 }
 
 class _DemoButtonDelegate extends StatelessWidget {
