@@ -38,8 +38,18 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   String get tag => _log.fullName;
 
   /// Convert the page index to the corresponding item index
-  int convertPageToFileIndex(int pageIndex) =>
-      _shuffledIndex[pageIndex % files.length];
+  int convertPageToFileIndex(int pageIndex) {
+    if (config.isShuffle) {
+      final i = pageIndex ~/ files.length;
+      if (!_shuffledIndex.containsKey(i)) {
+        final index = [for (var i = 0; i < files.length; ++i) i];
+        _shuffledIndex[i] = index..shuffle();
+      }
+      return _shuffledIndex[i]![pageIndex % files.length];
+    } else {
+      return _shuffledIndex[0]![pageIndex % files.length];
+    }
+  }
 
   FileDescriptor getFileByPageIndex(int pageIndex) =>
       files[convertPageToFileIndex(pageIndex)];
@@ -51,7 +61,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
       startIndex: startIndex,
       config: config,
     );
-    _shuffledIndex = parsedConfig.shuffled;
+    _shuffledIndex = {0: parsedConfig.shuffled};
     initialPage = parsedConfig.initial;
     pageCount = parsedConfig.count;
     emit(state.copyWith(
@@ -259,7 +269,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   final int startIndex;
   final SlideshowConfig config;
 
-  late final List<int> _shuffledIndex;
+  late final Map<int, List<int>> _shuffledIndex;
   late final int initialPage;
   late final int? pageCount;
   Timer? _pageChangeTimer;
