@@ -118,6 +118,8 @@ class CollectionItemsController {
       if (toAdd.isEmpty) {
         return;
       }
+      _countStreamController
+          .addWithValue((value) => (value ?? 0) + files.length);
     }
 
     ExceptionEvent? error;
