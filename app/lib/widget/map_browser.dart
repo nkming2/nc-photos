@@ -46,8 +46,9 @@ part 'map_browser/view.dart';
 class MapBrowser extends StatelessWidget {
   static const routeName = "/map-browser";
 
-  static Route buildRoute() => MaterialPageRoute(
+  static Route buildRoute(RouteSettings settings) => MaterialPageRoute(
         builder: (_) => const MapBrowser(),
+        settings: settings,
       );
 
   const MapBrowser({super.key});

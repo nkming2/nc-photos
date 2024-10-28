@@ -33,9 +33,11 @@ class AlbumShareOutlierBrowserArguments {
 class AlbumShareOutlierBrowser extends StatefulWidget {
   static const routeName = "/album-share-outlier-browser";
 
-  static Route buildRoute(AlbumShareOutlierBrowserArguments args) =>
+  static Route buildRoute(
+          AlbumShareOutlierBrowserArguments args, RouteSettings settings) =>
       MaterialPageRoute(
         builder: (context) => AlbumShareOutlierBrowser.fromArgs(args),
+        settings: settings,
       );
 
   const AlbumShareOutlierBrowser({

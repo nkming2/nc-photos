@@ -38,8 +38,11 @@ class SharedFileViewerArguments {
 class SharedFileViewer extends StatefulWidget {
   static const routeName = "/shared-file-viewer";
 
-  static Route buildRoute(SharedFileViewerArguments args) => MaterialPageRoute(
+  static Route buildRoute(
+          SharedFileViewerArguments args, RouteSettings settings) =>
+      MaterialPageRoute(
         builder: (context) => SharedFileViewer.fromArgs(args),
+        settings: settings,
       );
 
   const SharedFileViewer({

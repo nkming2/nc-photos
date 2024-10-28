@@ -49,8 +49,9 @@ class SharingBrowserArguments {
 class SharingBrowser extends StatelessWidget {
   static const routeName = "/sharing-browser";
 
-  static Route buildRoute() => MaterialPageRoute(
+  static Route buildRoute(RouteSettings settings) => MaterialPageRoute(
         builder: (_) => const SharingBrowser(),
+        settings: settings,
       );
 
   const SharingBrowser({super.key});

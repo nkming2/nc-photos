@@ -23,8 +23,9 @@ typedef _BlocListener = BlocListener<_Bloc, _State>;
 class LanguageSettings extends StatelessWidget {
   static const routeName = "/language-settings";
 
-  static Route buildRoute() => MaterialPageRoute(
+  static Route buildRoute(RouteSettings settings) => MaterialPageRoute(
         builder: (_) => const LanguageSettings(),
+        settings: settings,
       );
 
   const LanguageSettings({super.key});

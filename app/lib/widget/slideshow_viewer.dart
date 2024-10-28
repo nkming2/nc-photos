@@ -49,9 +49,11 @@ class SlideshowViewerArguments {
 class SlideshowViewer extends StatelessWidget {
   static const routeName = "/slideshow-viewer";
 
-  static Route buildRoute(SlideshowViewerArguments args) =>
+  static Route buildRoute(
+          SlideshowViewerArguments args, RouteSettings settings) =>
       MaterialPageRoute<int>(
         builder: (context) => SlideshowViewer.fromArgs(args),
+        settings: settings,
       );
 
   const SlideshowViewer({

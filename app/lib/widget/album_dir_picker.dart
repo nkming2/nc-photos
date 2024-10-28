@@ -22,9 +22,11 @@ class AlbumDirPickerArguments {
 class AlbumDirPicker extends StatefulWidget {
   static const routeName = "/album-dir-picker";
 
-  static Route buildRoute(AlbumDirPickerArguments args) =>
+  static Route buildRoute(
+          AlbumDirPickerArguments args, RouteSettings settings) =>
       MaterialPageRoute<List<File>>(
         builder: (context) => AlbumDirPicker.fromArgs(args),
+        settings: settings,
       );
 
   const AlbumDirPicker({

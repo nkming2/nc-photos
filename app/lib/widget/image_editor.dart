@@ -36,8 +36,10 @@ class ImageEditorArguments {
 class ImageEditor extends StatefulWidget {
   static const routeName = "/image-editor";
 
-  static Route buildRoute(ImageEditorArguments args) => MaterialPageRoute(
+  static Route buildRoute(ImageEditorArguments args, RouteSettings settings) =>
+      MaterialPageRoute(
         builder: (context) => ImageEditor.fromArgs(args),
+        settings: settings,
       );
 
   const ImageEditor({

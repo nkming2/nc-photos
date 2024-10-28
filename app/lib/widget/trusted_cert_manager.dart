@@ -34,8 +34,9 @@ part 'trusted_cert_manager/view.dart';
 class TrustedCertManager extends StatelessWidget {
   static const routeName = "/trusted-cert-manager";
 
-  static Route buildRoute() => MaterialPageRoute(
+  static Route buildRoute(RouteSettings settings) => MaterialPageRoute(
         builder: (_) => const TrustedCertManager(),
+        settings: settings,
       );
 
   const TrustedCertManager({super.key});

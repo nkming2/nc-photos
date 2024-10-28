@@ -35,6 +35,11 @@ part 'splash/view.dart';
 class Splash extends StatelessWidget {
   static const routeName = "/splash";
 
+  static Route buildRoute(RouteSettings settings) => MaterialPageRoute(
+        builder: (context) => const Splash(),
+        settings: settings,
+      );
+
   const Splash({super.key});
 
   @override

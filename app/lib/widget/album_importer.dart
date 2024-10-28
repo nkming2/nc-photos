@@ -36,8 +36,11 @@ class AlbumImporterArguments {
 class AlbumImporter extends StatefulWidget {
   static const routeName = "/album-importer";
 
-  static Route buildRoute(AlbumImporterArguments args) => MaterialPageRoute(
+  static Route buildRoute(
+          AlbumImporterArguments args, RouteSettings settings) =>
+      MaterialPageRoute(
         builder: (context) => AlbumImporter.fromArgs(args),
+        settings: settings,
       );
 
   const AlbumImporter({

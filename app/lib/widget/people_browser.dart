@@ -35,8 +35,9 @@ typedef _BlocListener = BlocListener<_Bloc, _State>;
 class PeopleBrowser extends StatelessWidget {
   static const routeName = "/people-browser";
 
-  static Route buildRoute() => MaterialPageRoute(
+  static Route buildRoute(RouteSettings settings) => MaterialPageRoute(
         builder: (_) => const PeopleBrowser(),
+        settings: settings,
       );
 
   const PeopleBrowser({super.key});

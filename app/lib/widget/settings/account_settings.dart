@@ -49,8 +49,11 @@ class AccountSettingsArguments {
 class AccountSettings extends StatelessWidget {
   static const routeName = "/settings/account";
 
-  static Route buildRoute(AccountSettingsArguments? args) => MaterialPageRoute(
+  static Route buildRoute(
+          AccountSettingsArguments? args, RouteSettings settings) =>
+      MaterialPageRoute(
         builder: (_) => AccountSettings.fromArgs(args),
+        settings: settings,
       );
 
   const AccountSettings({

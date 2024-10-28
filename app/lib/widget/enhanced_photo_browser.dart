@@ -42,9 +42,11 @@ class EnhancedPhotoBrowserArguments {
 class EnhancedPhotoBrowser extends StatefulWidget {
   static const routeName = "/enhanced-photo-browser";
 
-  static Route buildRoute(EnhancedPhotoBrowserArguments args) =>
+  static Route buildRoute(
+          EnhancedPhotoBrowserArguments args, RouteSettings settings) =>
       MaterialPageRoute(
         builder: (context) => EnhancedPhotoBrowser.fromArgs(args),
+        settings: settings,
       );
 
   const EnhancedPhotoBrowser({

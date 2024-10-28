@@ -38,8 +38,10 @@ class ResultViewer extends StatefulWidget {
           resultUrl: args.resultUrl,
         );
 
-  static Route buildRoute(ResultViewerArguments args) => MaterialPageRoute(
+  static Route buildRoute(ResultViewerArguments args, RouteSettings settings) =>
+      MaterialPageRoute(
         builder: (_) => ResultViewer.fromArgs(args),
+        settings: settings,
       );
 
   @override

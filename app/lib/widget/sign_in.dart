@@ -36,6 +36,11 @@ part 'sign_in/view.dart';
 class SignIn extends StatelessWidget {
   static const routeName = "/sign-in";
 
+  static Route buildRoute(RouteSettings settings) => MaterialPageRoute(
+        builder: (context) => const SignIn(),
+        settings: settings,
+      );
+
   const SignIn({super.key});
 
   @override

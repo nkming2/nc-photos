@@ -37,8 +37,9 @@ typedef _BlocListener = BlocListener<_Bloc, _State>;
 class PlacesBrowser extends StatelessWidget {
   static const routeName = "/places-browser";
 
-  static Route buildRoute() => MaterialPageRoute(
+  static Route buildRoute(RouteSettings settings) => MaterialPageRoute(
         builder: (_) => const PlacesBrowser(),
+        settings: settings,
       );
 
   const PlacesBrowser({super.key});

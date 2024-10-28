@@ -36,8 +36,10 @@ class ChangelogArguments {
 class Changelog extends StatelessWidget {
   static const routeName = "/changelog";
 
-  static Route buildRoute(ChangelogArguments args) => MaterialPageRoute(
+  static Route buildRoute(ChangelogArguments args, RouteSettings settings) =>
+      MaterialPageRoute(
         builder: (context) => Changelog.fromArgs(args),
+        settings: settings,
       );
 
   static bool hasContent(int fromVersion) =>

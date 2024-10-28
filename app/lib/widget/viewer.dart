@@ -77,11 +77,12 @@ class ViewerArguments {
 class Viewer extends StatelessWidget {
   static const routeName = "/viewer";
 
-  static Route buildRoute(ViewerArguments args) =>
+  static Route buildRoute(ViewerArguments args, RouteSettings settings) =>
       CustomizableMaterialPageRoute(
         transitionDuration: k.heroDurationNormal,
         reverseTransitionDuration: k.heroDurationNormal,
         builder: (_) => Viewer.fromArgs(args),
+        settings: settings,
       );
 
   const Viewer({

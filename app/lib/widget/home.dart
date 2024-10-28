@@ -36,8 +36,10 @@ class HomeArguments {
 class Home extends StatefulWidget {
   static const routeName = "/home";
 
-  static Route buildRoute(HomeArguments args) => MaterialPageRoute(
+  static Route buildRoute(HomeArguments args, RouteSettings settings) =>
+      MaterialPageRoute(
         builder: (context) => Home.fromArgs(args),
+        settings: settings,
       );
 
   const Home({

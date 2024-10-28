@@ -33,8 +33,9 @@ part 'settings.g.dart';
 class Settings extends StatefulWidget {
   static const routeName = "/settings";
 
-  static Route buildRoute() => MaterialPageRoute(
+  static Route buildRoute(RouteSettings settings) => MaterialPageRoute(
         builder: (_) => const Settings(),
+        settings: settings,
       );
 
   const Settings({super.key});

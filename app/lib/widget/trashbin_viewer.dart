@@ -36,8 +36,11 @@ class TrashbinViewerArguments {
 class TrashbinViewer extends StatefulWidget {
   static const routeName = "/trashbin-viewer";
 
-  static Route buildRoute(TrashbinViewerArguments args) => MaterialPageRoute(
+  static Route buildRoute(
+          TrashbinViewerArguments args, RouteSettings settings) =>
+      MaterialPageRoute(
         builder: (context) => TrashbinViewer.fromArgs(args),
+        settings: settings,
       );
 
   const TrashbinViewer({

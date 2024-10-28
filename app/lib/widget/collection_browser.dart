@@ -82,8 +82,11 @@ class CollectionBrowserArguments {
 class CollectionBrowser extends StatelessWidget {
   static const routeName = "/collection-browser";
 
-  static Route buildRoute(CollectionBrowserArguments args) => MaterialPageRoute(
+  static Route buildRoute(
+          CollectionBrowserArguments args, RouteSettings settings) =>
+      MaterialPageRoute(
         builder: (context) => CollectionBrowser.fromArgs(args),
+        settings: settings,
       );
 
   const CollectionBrowser({
