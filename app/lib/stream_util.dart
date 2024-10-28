@@ -16,7 +16,7 @@ class ValueStreamBuilderEx<T> extends StreamBuilder<T> {
   ValueStreamBuilderEx({
     super.key,
     ValueStream<T>? stream,
-    required StreamWidgetBuilder builder,
+    required StreamWidgetBuilder<T> builder,
   }) : super(
           stream: stream,
           initialData: stream?.value,

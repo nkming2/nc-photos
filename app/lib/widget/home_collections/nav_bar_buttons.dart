@@ -152,7 +152,7 @@ class _NavBarSharingButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ValueStreamBuilderEx(
+    return ValueStreamBuilderEx<bool>(
       stream: context
           .read<AccountController>()
           .accountPrefController
