@@ -35,7 +35,7 @@ class _State {
   factory _State.init({
     required List<int> fileIds,
     required int index,
-    required FileDescriptor currentFile,
+    required FileDescriptor? currentFile,
     required List<ViewerAppBarButtonType> appBarButtons,
     required List<ViewerAppBarButtonType> bottomAppBarButtons,
   }) =>

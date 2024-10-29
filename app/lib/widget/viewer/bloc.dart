@@ -17,7 +17,7 @@ class _Bloc extends Bloc<_Event, _State>
           fileIds: fileIds,
           index: startIndex,
           currentFile:
-              filesController.stream.value.dataMap[fileIds[startIndex]]!,
+              filesController.stream.value.dataMap[fileIds[startIndex]],
           appBarButtons: prefController.viewerAppBarButtonsValue,
           bottomAppBarButtons: prefController.viewerBottomAppBarButtonsValue,
         )) {
@@ -139,15 +139,19 @@ class _Bloc extends Bloc<_Event, _State>
     _log.info(ev);
     final fileId = state.fileIdOrders[ev.index];
     final fileState = state.fileStates[fileId] ?? _PageState.create();
+    final file = state.files[fileId];
     emit(state.copyWith(
       index: ev.index,
-      currentFile: state.files[fileId],
+      currentFile: file,
       fileStates: state.fileStates[fileId] == null
           ? state.fileStates.addedAll({fileId: fileState})
           : null,
       currentFileState: fileState,
       isInitialLoad: false,
     ));
+    if (file == null) {
+      filesController.queryByFileId([fileId]);
+    }
   }
 
   void _onRequestPage(_RequestPage ev, _Emitter emit) {

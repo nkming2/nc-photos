@@ -229,7 +229,7 @@ class _PageViewState extends State<_PageView> {
         builder: (context, file) {
           if (file == null) {
             return const Center(
-              child: Text("File not found"),
+              child: AppIntermediateCircularProgressIndicator(),
             );
           } else {
             return FractionallySizedBox(

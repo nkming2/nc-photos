@@ -33,6 +33,7 @@ import 'package:nc_photos/set_as_handler.dart';
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
+import 'package:nc_photos/widget/app_intermediate_circular_progress_indicator.dart';
 import 'package:nc_photos/widget/disposable.dart';
 import 'package:nc_photos/widget/file_content_view.dart';
 import 'package:nc_photos/widget/handler/remove_selection_handler.dart';
