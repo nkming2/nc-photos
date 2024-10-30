@@ -15,11 +15,11 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.68.0+6800
+version: 1.71.0+7100
 
 environment:
-  sdk: ">=3.4.0 <4.0.0"
-  flutter: ">=3.22.0"
+  sdk: ">=3.3.0 <4.0.0"
+  flutter: ">=3.19.0"
 
 dependencies:
   flutter:
@@ -34,7 +34,7 @@ dependencies:
       ref: android_intent_plus-v3.1.1-nc-photos-1
       path: packages/android_intent_plus
   battery_plus: ^4.0.1
-  bloc_concurrency: ^0.2.2
+  bloc_concurrency: ^0.2.5
   cached_network_image: ^3.3.1
   cached_network_image_platform_interface: any
   circular_reveal_animation: ^2.0.1
@@ -48,7 +48,7 @@ dependencies:
       ref: copy_with-1.3.0
   crypto: ^3.0.3
   devicelocale: ^0.7.1
-  device_info_plus: ^9.0.1
+  device_info_plus: ^10.1.2
   draggable_scrollbar:
     git:
       url: https://gitlab.com/nc-photos/flutter-draggable-scrollbar
@@ -76,13 +76,14 @@ dependencies:
       url: https://gitlab.com/nc-photos/flutter_staggered_grid_view
       ref: v0.4.0-nc-photos-2
   flutter_typeahead: ^4.0.0
+  google_maps_flutter: 2.5.3
   http: ^1.1.2
   image_size_getter:
     git:
       url: https://gitlab.com/nc-photos/dart_image_size_getter
       ref: 1.0.0-nc-photos-2
       path: library
-  intl: 0.19.0
+  intl: 0.18.1
   kiwi: ^4.1.0
   local_auth: ^2.2.0
   logging: ^1.2.0
@@ -153,14 +154,13 @@ dependencies:
       ref: to_string-1.0.0
       path: to_string
   url_launcher: ^6.2.6
-  uuid: ^3.0.7
+  uuid: ^4.5.1
   video_player:
   video_player_platform_interface:
-  visibility_detector: ^0.4.0+2
+  # later versions broken with flutter 3.22, do not upgrade
+  visibility_detector: 0.3.3
   wakelock_plus: ^1.1.1
   woozy_search: ^2.0.3
-
-  google_maps_flutter: 2.5.3
 
 dependency_overrides:
   video_player:
@@ -186,7 +186,6 @@ dev_dependencies:
   test: ^1.22.1
   bloc_test: any
   build_runner: ^2.4.9
-  build_runner_core: ">=7.2.9"
   copy_with_build:
     git:
       url: https://gitlab.com/nkming2/dart-copy-with

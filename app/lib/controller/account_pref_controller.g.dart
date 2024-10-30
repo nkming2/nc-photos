@@ -43,4 +43,11 @@ extension $AccountPrefControllerNpSubjectAccessor on AccountPrefController {
   Stream<bool> get isEnableMemoryAlbumChange =>
       isEnableMemoryAlbum.distinct().skip(1);
   bool get isEnableMemoryAlbumValue => _isEnableMemoryAlbumController.value;
+// _hasNewSharedAlbumController
+  ValueStream<bool> get hasNewSharedAlbum =>
+      _hasNewSharedAlbumController.stream;
+  Stream<bool> get hasNewSharedAlbumNew => hasNewSharedAlbum.skip(1);
+  Stream<bool> get hasNewSharedAlbumChange =>
+      hasNewSharedAlbum.distinct().skip(1);
+  bool get hasNewSharedAlbumValue => _hasNewSharedAlbumController.value;
 }

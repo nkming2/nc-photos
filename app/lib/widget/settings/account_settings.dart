@@ -3,16 +3,14 @@ import 'dart:async';
 import 'package:copy_with/copy_with.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc_util.dart';
 import 'package:nc_photos/controller/account_controller.dart';
 import 'package:nc_photos/controller/account_pref_controller.dart';
-import 'package:nc_photos/di_container.dart';
+import 'package:nc_photos/controller/pref_controller.dart';
 import 'package:nc_photos/entity/person.dart';
-import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/help_utils.dart' as help_util;
 import 'package:nc_photos/k.dart' as k;
@@ -51,8 +49,11 @@ class AccountSettingsArguments {
 class AccountSettings extends StatelessWidget {
   static const routeName = "/settings/account";
 
-  static Route buildRoute(AccountSettingsArguments? args) => MaterialPageRoute(
+  static Route buildRoute(
+          AccountSettingsArguments? args, RouteSettings settings) =>
+      MaterialPageRoute(
         builder: (_) => AccountSettings.fromArgs(args),
+        settings: settings,
       );
 
   const AccountSettings({
@@ -71,8 +72,8 @@ class AccountSettings extends StatelessWidget {
     final accountController = context.read<AccountController>();
     return BlocProvider(
       create: (_) => _Bloc(
-        container: KiwiContainer().resolve(),
         account: accountController.account,
+        prefController: context.read(),
         accountPrefController: accountController.accountPrefController,
         highlight: highlight,
       ),

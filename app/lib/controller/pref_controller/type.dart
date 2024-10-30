@@ -14,3 +14,24 @@ enum PrefMapDefaultRangeType {
 
   final int value;
 }
+
+class PrefHomeCollectionsNavButton {
+  const PrefHomeCollectionsNavButton({
+    required this.type,
+    required this.isMinimized,
+  });
+
+  static PrefHomeCollectionsNavButton fromJson(JsonObj json) =>
+      PrefHomeCollectionsNavButton(
+        type: HomeCollectionsNavBarButtonType.fromValue(json["type"]),
+        isMinimized: json["isMinimized"],
+      );
+
+  JsonObj toJson() => {
+        "type": type.index,
+        "isMinimized": isMinimized,
+      };
+
+  final HomeCollectionsNavBarButtonType type;
+  final bool isMinimized;
+}

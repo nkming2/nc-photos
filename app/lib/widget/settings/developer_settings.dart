@@ -1,5 +1,4 @@
 import 'package:copy_with/copy_with.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiwi/kiwi.dart';
@@ -13,6 +12,7 @@ import 'package:nc_photos/mobile/self_signed_cert_manager.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_log/np_log.dart';
 import 'package:np_platform_util/np_platform_util.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:to_string/to_string.dart';
@@ -90,7 +90,7 @@ class _WrappedDeveloperSettingsState extends State<_WrappedDeveloperSettings>
                       context.read<_Bloc>().add(const _VacuumDb());
                     },
                   ),
-                  if (kDebugMode) ...[
+                  if (isDevMode) ...[
                     ListTile(
                       title: const Text("Export SQLite DB"),
                       onTap: () {

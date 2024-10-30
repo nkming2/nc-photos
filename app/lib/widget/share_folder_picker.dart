@@ -23,9 +23,11 @@ class ShareFolderPickerArguments {
 class ShareFolderPicker extends StatefulWidget {
   static const routeName = "/share-folder-picker";
 
-  static Route buildRoute(ShareFolderPickerArguments args) =>
+  static Route buildRoute(
+          ShareFolderPickerArguments args, RouteSettings settings) =>
       MaterialPageRoute<String>(
         builder: (context) => ShareFolderPicker.fromArgs(args),
+        settings: settings,
       );
 
   const ShareFolderPicker({

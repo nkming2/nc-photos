@@ -44,8 +44,11 @@ class TrashbinBrowserArguments {
 class TrashbinBrowser extends StatefulWidget {
   static const routeName = "/trashbin-browser";
 
-  static Route buildRoute(TrashbinBrowserArguments args) => MaterialPageRoute(
+  static Route buildRoute(
+          TrashbinBrowserArguments args, RouteSettings settings) =>
+      MaterialPageRoute(
         builder: (context) => TrashbinBrowser.fromArgs(args),
+        settings: settings,
       );
 
   const TrashbinBrowser({

@@ -26,8 +26,11 @@ class LocalFileViewerArguments {
 class LocalFileViewer extends StatefulWidget {
   static const routeName = "/local-file-viewer";
 
-  static Route buildRoute(LocalFileViewerArguments args) => MaterialPageRoute(
+  static Route buildRoute(
+          LocalFileViewerArguments args, RouteSettings settings) =>
+      MaterialPageRoute(
         builder: (context) => LocalFileViewer.fromArgs(args),
+        settings: settings,
       );
 
   const LocalFileViewer({

@@ -1,6 +1,15 @@
 part of '../pref_controller.dart';
 
 extension on Pref {
+  Future<bool> setAccounts3(List<Account>? value) {
+    if (value == null) {
+      return provider.remove(PrefKey.accounts3);
+    } else {
+      final jsons = value.map((e) => jsonEncode(e.toJson())).toList();
+      return provider.setStringList(PrefKey.accounts3, jsons);
+    }
+  }
+
   int? getHomeAlbumsSort() => provider.getInt(PrefKey.homeAlbumsSort);
   int getHomeAlbumsSortOr(int def) => getHomeAlbumsSort() ?? def;
   Future<bool> setHomeAlbumsSort(int value) =>
@@ -131,6 +140,61 @@ extension on Pref {
       ?.let((v) => Duration(days: v));
   Future<bool> setMapDefaultCustomRange(Duration value) =>
       provider.setInt(PrefKey.mapDefaultCustomRange, value.inDays);
+
+  Duration? getSlideshowDuration() => provider
+      .getInt(PrefKey.slideshowDuration)
+      ?.let((v) => Duration(seconds: v));
+  Future<bool> setSlideshowDuration(Duration value) =>
+      provider.setInt(PrefKey.slideshowDuration, value.inSeconds);
+
+  bool? isSlideshowShuffle() => provider.getBool(PrefKey.isSlideshowShuffle);
+  Future<bool> setSlideshowShuffle(bool value) =>
+      provider.setBool(PrefKey.isSlideshowShuffle, value);
+
+  bool? isSlideshowRepeat() => provider.getBool(PrefKey.isSlideshowRepeat);
+  Future<bool> setSlideshowRepeat(bool value) =>
+      provider.setBool(PrefKey.isSlideshowRepeat, value);
+
+  bool? isSlideshowReverse() => provider.getBool(PrefKey.isSlideshowReverse);
+  Future<bool> setSlideshowReverse(bool value) =>
+      provider.setBool(PrefKey.isSlideshowReverse, value);
+
+  List<ViewerAppBarButtonType>? getViewerAppBarButtons() => provider
+      .getIntList(PrefKey.viewerAppBarButtons)
+      ?.map(ViewerAppBarButtonType.fromValue)
+      .toList();
+  Future<bool> setViewerAppBarButtons(List<ViewerAppBarButtonType>? value) {
+    if (value == null) {
+      return provider.remove(PrefKey.viewerAppBarButtons);
+    } else {
+      return provider.setIntList(
+          PrefKey.viewerAppBarButtons, value.map((e) => e.index).toList());
+    }
+  }
+
+  List<ViewerAppBarButtonType>? getViewerBottomAppBarButtons() => provider
+      .getIntList(PrefKey.viewerBottomAppBarButtons)
+      ?.map(ViewerAppBarButtonType.fromValue)
+      .toList();
+  Future<bool> setViewerBottomAppBarButtons(
+      List<ViewerAppBarButtonType>? value) {
+    if (value == null) {
+      return provider.remove(PrefKey.viewerBottomAppBarButtons);
+    } else {
+      return provider.setIntList(PrefKey.viewerBottomAppBarButtons,
+          value.map((e) => e.index).toList());
+    }
+  }
+
+  String? getHomeCollectionsNavBarButtonsJson() =>
+      provider.getString(PrefKey.homeCollectionsNavBarButtons);
+  Future<bool> setHomeCollectionsNavBarButtonsJson(String? value) {
+    if (value == null) {
+      return provider.remove(PrefKey.homeCollectionsNavBarButtons);
+    } else {
+      return provider.setString(PrefKey.homeCollectionsNavBarButtons, value);
+    }
+  }
 }
 
 MapCoord? _tryMapCoordFromJson(dynamic json) {

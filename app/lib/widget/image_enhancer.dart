@@ -46,8 +46,11 @@ class ImageEnhancerArguments {
 class ImageEnhancer extends StatefulWidget {
   static const routeName = "/image-enhancer";
 
-  static Route buildRoute(ImageEnhancerArguments args) => MaterialPageRoute(
+  static Route buildRoute(
+          ImageEnhancerArguments args, RouteSettings settings) =>
+      MaterialPageRoute(
         builder: (context) => ImageEnhancer.fromArgs(args),
+        settings: settings,
       );
 
   static bool isSupportedFormat(FileDescriptor file) =>

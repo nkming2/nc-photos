@@ -6,6 +6,7 @@ import 'package:np_codegen/np_codegen.dart';
 import 'package:rxdart/rxdart.dart';
 
 part 'account_pref_controller.g.dart';
+part 'account_pref_controller/util.dart';
 
 @npLog
 @npSubjectAccessor
@@ -45,6 +46,12 @@ class AccountPrefController {
         value: value,
       );
 
+  Future<void> setNewSharedAlbum(bool value) => _set<bool>(
+        controller: _hasNewSharedAlbumController,
+        setter: (pref, value) => pref.setNewSharedAlbum(value),
+        value: value,
+      );
+
   Future<void> _set<T>({
     required BehaviorSubject<T> controller,
     required Future<bool> Function(AccountPref pref, T value) setter,
@@ -79,4 +86,7 @@ class AccountPrefController {
   @npSubjectAccessor
   late final _isEnableMemoryAlbumController =
       BehaviorSubject.seeded(_accountPref.isEnableMemoryAlbumOr(true));
+  @npSubjectAccessor
+  late final _hasNewSharedAlbumController =
+      BehaviorSubject.seeded(_accountPref.hasNewSharedAlbum() ?? false);
 }

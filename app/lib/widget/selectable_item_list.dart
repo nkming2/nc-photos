@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/app_localizations.dart';
@@ -80,9 +81,19 @@ class _SelectableItemListState<T extends SelectableItemMetadata>
   Widget build(BuildContext context) {
     if (getRawPlatform() == NpPlatform.web) {
       // support shift+click group selection on web
-      return RawKeyboardListener(
-        onKey: (ev) {
-          _isKeyboardRangeSelecting = ev.isShiftPressed;
+      return KeyboardListener(
+        onKeyEvent: (ev) {
+          if (ev is KeyDownEvent) {
+            if (ev.logicalKey == LogicalKeyboardKey.shiftLeft ||
+                ev.logicalKey == LogicalKeyboardKey.shiftRight) {
+              _isKeyboardRangeSelecting = true;
+            }
+          } else if (ev is KeyUpEvent) {
+            if (ev.logicalKey == LogicalKeyboardKey.shiftLeft ||
+                ev.logicalKey == LogicalKeyboardKey.shiftRight) {
+              _isKeyboardRangeSelecting = false;
+            }
+          }
         },
         focusNode: _keyboardFocus,
         child: _buildBody(context),

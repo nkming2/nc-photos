@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:np_api/src/util.dart';
+import 'package:np_log/np_log.dart';
 import 'package:np_string/np_string.dart';
 import 'package:to_string/to_string.dart';
 
@@ -23,7 +23,7 @@ class Response {
   /// Content of the response body, String if isResponseString == true during
   /// request, Uint8List otherwise
   @Format(
-      r"${kDebugMode ? $?.toString().replaceAll(RegExp(r'\n\t'), '').slice(0, 200) : '...'}")
+      r"${isDevMode ? $?.toString().replaceAll(RegExp(r'\n\t'), '').slice(0, 200) : '...'}")
   final dynamic body;
 }
 

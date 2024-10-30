@@ -73,6 +73,7 @@ class _OsmInteractiveMapState extends State<OsmInteractiveMap> {
         interactionOptions: const InteractionOptions(
           enableMultiFingerGestureRace: true,
           pinchZoomThreshold: 0.25,
+          rotationThreshold: 15,
         ),
       ),
       children: [

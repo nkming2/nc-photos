@@ -11,12 +11,10 @@ class _Error {
 @npLog
 class _Bloc extends Bloc<_Event, _State>
     with BlocLogger, BlocForEachMixin<_Event, _State> {
-  _Bloc(
-    DiContainer c, {
+  _Bloc({
     required this.db,
     required this.prefController,
-  })  : _c = c,
-        super(_State.init(
+  }) : super(_State.init(
           isNewHttpEngine: prefController.isNewHttpEngineValue,
         )) {
     on<_Init>(_onInit);
@@ -42,7 +40,7 @@ class _Bloc extends Bloc<_Event, _State>
       _ClearCacheDatabase ev, Emitter<_State> emit) async {
     _log.info(ev);
     try {
-      final accounts = _c.pref.getAccounts3Or([]);
+      final accounts = prefController.accountsValue;
       await db.clearAndInitWithAccounts(accounts.toDb());
       emit(state.copyWith(lastSuccessful: ev));
     } catch (e, stackTrace) {
@@ -56,7 +54,6 @@ class _Bloc extends Bloc<_Event, _State>
     prefController.setNewHttpEngine(ev.value);
   }
 
-  final DiContainer _c;
   final NpDb db;
   final PrefController prefController;
 

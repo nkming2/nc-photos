@@ -34,8 +34,10 @@ class ConnectArguments {
 class Connect extends StatefulWidget {
   static const routeName = "/connect";
 
-  static Route buildRoute(ConnectArguments args) => MaterialPageRoute<Account>(
+  static Route buildRoute(ConnectArguments args, RouteSettings settings) =>
+      MaterialPageRoute<Account>(
         builder: (context) => Connect.fromArgs(args),
+        settings: settings,
       );
 
   const Connect({

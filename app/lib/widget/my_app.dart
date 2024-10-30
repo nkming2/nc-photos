@@ -17,7 +17,6 @@ import 'package:nc_photos/controller/trusted_cert_controller.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/legacy/connect.dart' as legacy;
-import 'package:nc_photos/legacy/sign_in.dart' as legacy;
 import 'package:nc_photos/mobile/self_signed_cert_manager.dart';
 import 'package:nc_photos/navigation_manager.dart';
 import 'package:nc_photos/protected_page_handler.dart';
@@ -37,6 +36,7 @@ import 'package:nc_photos/widget/home.dart';
 import 'package:nc_photos/widget/image_editor.dart';
 import 'package:nc_photos/widget/image_enhancer.dart';
 import 'package:nc_photos/widget/local_file_viewer.dart';
+import 'package:nc_photos/widget/map_browser.dart';
 import 'package:nc_photos/widget/people_browser.dart';
 import 'package:nc_photos/widget/places_browser.dart';
 import 'package:nc_photos/widget/result_viewer.dart';
@@ -63,6 +63,7 @@ import 'package:to_string/to_string.dart';
 part 'my_app.g.dart';
 part 'my_app/app_lock.dart';
 part 'my_app/bloc.dart';
+part 'my_app/logger.dart';
 part 'my_app/state_event.dart';
 
 typedef _BlocBuilder = BlocBuilder<_Bloc, _State>;
@@ -165,6 +166,7 @@ class _WrappedAppState extends State<_WrappedApp>
             onGenerateRoute: _onGenerateRoute,
             navigatorObservers: [
               MyApp.routeObserver,
+              _NavigatorLogger(),
             ],
             navigatorKey: _navigatorKey,
             scaffoldMessengerKey: _scaffoldMessengerKey,
@@ -197,19 +199,10 @@ class _WrappedAppState extends State<_WrappedApp>
   @override
   getNavigator() => _navigatorKey.currentState;
 
-  Map<String, Route Function()> _getRouter() => {
-        Setup.routeName: () => MaterialPageRoute(
-              builder: (context) => const Setup(),
-            ),
-        SignIn.routeName: () => MaterialPageRoute(
-              builder: (context) => const SignIn(),
-            ),
-        Splash.routeName: () => MaterialPageRoute(
-              builder: (context) => const Splash(),
-            ),
-        legacy.SignIn.routeName: () => MaterialPageRoute(
-              builder: (context) => const legacy.SignIn(),
-            ),
+  Map<String, Route Function(RouteSettings)> _getRouter() => {
+        Setup.routeName: Setup.buildRoute,
+        SignIn.routeName: SignIn.buildRoute,
+        Splash.routeName: Splash.buildRoute,
         CollectionPicker.routeName: CollectionPicker.buildRoute,
         LanguageSettings.routeName: LanguageSettings.buildRoute,
         PeopleBrowser.routeName: PeopleBrowser.buildRoute,
@@ -219,6 +212,7 @@ class _WrappedAppState extends State<_WrappedApp>
         PlacesBrowser.routeName: PlacesBrowser.buildRoute,
         ArchiveBrowser.routeName: ArchiveBrowser.buildRoute,
         TrustedCertManager.routeName: TrustedCertManager.buildRoute,
+        MapBrowser.routeName: MapBrowser.buildRoute,
       };
 
   Route<dynamic>? _onGenerateRoute(RouteSettings settings) {
@@ -252,7 +246,7 @@ class _WrappedAppState extends State<_WrappedApp>
   Route<dynamic>? _handleBasicRoute(RouteSettings settings) {
     for (final e in _getRouter().entries) {
       if (e.key == settings.name) {
-        return e.value();
+        return e.value(settings);
       }
     }
     return null;
@@ -262,7 +256,7 @@ class _WrappedAppState extends State<_WrappedApp>
     try {
       if (settings.name == Viewer.routeName && settings.arguments != null) {
         final args = settings.arguments as ViewerArguments;
-        return Viewer.buildRoute(args);
+        return Viewer.buildRoute(args, settings);
       }
     } catch (e) {
       _log.severe("[_handleViewerRoute] Failed while handling route", e);
@@ -274,7 +268,7 @@ class _WrappedAppState extends State<_WrappedApp>
     try {
       if (settings.name == Connect.routeName && settings.arguments != null) {
         final args = settings.arguments as ConnectArguments;
-        return Connect.buildRoute(args);
+        return Connect.buildRoute(args, settings);
       }
     } catch (e) {
       _log.severe("[_handleConnectRoute] Failed while handling route", e);
@@ -287,7 +281,7 @@ class _WrappedAppState extends State<_WrappedApp>
       if (settings.name == legacy.Connect.routeName &&
           settings.arguments != null) {
         final args = settings.arguments as legacy.ConnectArguments;
-        return legacy.Connect.buildRoute(args);
+        return legacy.Connect.buildRoute(args, settings);
       }
     } catch (e) {
       _log.severe("[_handleConnectLegacyRoute] Failed while handling route", e);
@@ -301,7 +295,7 @@ class _WrappedAppState extends State<_WrappedApp>
         final args = settings.arguments as HomeArguments;
         // move this elsewhere later
         context.read<AccountController>().setCurrentAccount(args.account);
-        return Home.buildRoute(args);
+        return Home.buildRoute(args, settings);
       }
     } catch (e) {
       _log.severe("[_handleHomeRoute] Failed while handling route", e);
@@ -313,7 +307,7 @@ class _WrappedAppState extends State<_WrappedApp>
     try {
       if (settings.name == RootPicker.routeName && settings.arguments != null) {
         final args = settings.arguments as RootPickerArguments;
-        return RootPicker.buildRoute(args);
+        return RootPicker.buildRoute(args, settings);
       }
     } catch (e) {
       _log.severe("[_handleRootPickerRoute] Failed while handling route", e);
@@ -326,7 +320,7 @@ class _WrappedAppState extends State<_WrappedApp>
       if (settings.name == AlbumDirPicker.routeName &&
           settings.arguments != null) {
         final args = settings.arguments as AlbumDirPickerArguments;
-        return AlbumDirPicker.buildRoute(args);
+        return AlbumDirPicker.buildRoute(args, settings);
       }
     } catch (e) {
       _log.severe(
@@ -340,7 +334,7 @@ class _WrappedAppState extends State<_WrappedApp>
       if (settings.name == AlbumImporter.routeName &&
           settings.arguments != null) {
         final args = settings.arguments as AlbumImporterArguments;
-        return AlbumImporter.buildRoute(args);
+        return AlbumImporter.buildRoute(args, settings);
       }
     } catch (e) {
       _log.severe("[_handleAlbumImporterRoute] Failed while handling route", e);
@@ -353,7 +347,7 @@ class _WrappedAppState extends State<_WrappedApp>
       if (settings.name == TrashbinBrowser.routeName &&
           settings.arguments != null) {
         final args = settings.arguments as TrashbinBrowserArguments;
-        return TrashbinBrowser.buildRoute(args);
+        return TrashbinBrowser.buildRoute(args, settings);
       }
     } catch (e) {
       _log.severe(
@@ -367,7 +361,7 @@ class _WrappedAppState extends State<_WrappedApp>
       if (settings.name == TrashbinViewer.routeName &&
           settings.arguments != null) {
         final args = settings.arguments as TrashbinViewerArguments;
-        return TrashbinViewer.buildRoute(args);
+        return TrashbinViewer.buildRoute(args, settings);
       }
     } catch (e) {
       _log.severe(
@@ -381,7 +375,7 @@ class _WrappedAppState extends State<_WrappedApp>
       if (settings.name == SlideshowViewer.routeName &&
           settings.arguments != null) {
         final args = settings.arguments as SlideshowViewerArguments;
-        return SlideshowViewer.buildRoute(args);
+        return SlideshowViewer.buildRoute(args, settings);
       }
     } catch (e) {
       _log.severe(
@@ -395,7 +389,7 @@ class _WrappedAppState extends State<_WrappedApp>
       if (settings.name == SharedFileViewer.routeName &&
           settings.arguments != null) {
         final args = settings.arguments as SharedFileViewerArguments;
-        return SharedFileViewer.buildRoute(args);
+        return SharedFileViewer.buildRoute(args, settings);
       }
     } catch (e) {
       _log.severe(
@@ -409,7 +403,7 @@ class _WrappedAppState extends State<_WrappedApp>
       if (settings.name == AlbumShareOutlierBrowser.routeName &&
           settings.arguments != null) {
         final args = settings.arguments as AlbumShareOutlierBrowserArguments;
-        return AlbumShareOutlierBrowser.buildRoute(args);
+        return AlbumShareOutlierBrowser.buildRoute(args, settings);
       }
     } catch (e) {
       _log.severe(
@@ -424,7 +418,7 @@ class _WrappedAppState extends State<_WrappedApp>
       if (settings.name == ShareFolderPicker.routeName &&
           settings.arguments != null) {
         final args = settings.arguments as ShareFolderPickerArguments;
-        return ShareFolderPicker.buildRoute(args);
+        return ShareFolderPicker.buildRoute(args, settings);
       }
     } catch (e) {
       _log.severe(
@@ -438,13 +432,13 @@ class _WrappedAppState extends State<_WrappedApp>
       if (settings.name == EnhancedPhotoBrowser.routeName &&
           settings.arguments != null) {
         final args = settings.arguments as EnhancedPhotoBrowserArguments;
-        return EnhancedPhotoBrowser.buildRoute(args);
+        return EnhancedPhotoBrowser.buildRoute(args, settings);
       } else if (settings.name
               ?.startsWith("${EnhancedPhotoBrowser.routeName}?") ==
           true) {
         final queries = Uri.parse(settings.name!).queryParameters;
         final args = EnhancedPhotoBrowserArguments(queries["filename"]);
-        return EnhancedPhotoBrowser.buildRoute(args);
+        return EnhancedPhotoBrowser.buildRoute(args, settings);
       }
     } catch (e) {
       _log.severe(
@@ -458,7 +452,7 @@ class _WrappedAppState extends State<_WrappedApp>
       if (settings.name == LocalFileViewer.routeName &&
           settings.arguments != null) {
         final args = settings.arguments as LocalFileViewerArguments;
-        return LocalFileViewer.buildRoute(args);
+        return LocalFileViewer.buildRoute(args, settings);
       }
     } catch (e) {
       _log.severe(
@@ -472,7 +466,7 @@ class _WrappedAppState extends State<_WrappedApp>
       if (settings.name == ImageEditor.routeName &&
           settings.arguments != null) {
         final args = settings.arguments as ImageEditorArguments;
-        return ImageEditor.buildRoute(args);
+        return ImageEditor.buildRoute(args, settings);
       }
     } catch (e) {
       _log.severe("[_handleImageEditorRoute] Failed while handling route", e);
@@ -485,7 +479,7 @@ class _WrappedAppState extends State<_WrappedApp>
       if (settings.name == Changelog.routeName) {
         if (settings.arguments != null) {
           final args = settings.arguments as ChangelogArguments;
-          return Changelog.buildRoute(args);
+          return Changelog.buildRoute(args, settings);
         } else {
           return MaterialPageRoute(builder: (_) => const Changelog());
         }
@@ -501,12 +495,12 @@ class _WrappedAppState extends State<_WrappedApp>
       if (settings.name == ResultViewer.routeName &&
           settings.arguments != null) {
         final args = settings.arguments as ResultViewerArguments;
-        return ResultViewer.buildRoute(args);
+        return ResultViewer.buildRoute(args, settings);
       } else if (settings.name?.startsWith("${ResultViewer.routeName}?") ==
           true) {
         final queries = Uri.parse(settings.name!).queryParameters;
         final args = ResultViewerArguments(queries["url"]!);
-        return ResultViewer.buildRoute(args);
+        return ResultViewer.buildRoute(args, settings);
       }
     } catch (e, stackTrace) {
       _log.severe("[_handleResultViewerRoute] Failed while handling route", e,
@@ -520,7 +514,7 @@ class _WrappedAppState extends State<_WrappedApp>
       if (settings.name == ImageEnhancer.routeName &&
           settings.arguments != null) {
         final args = settings.arguments as ImageEnhancerArguments;
-        return ImageEnhancer.buildRoute(args);
+        return ImageEnhancer.buildRoute(args, settings);
       }
     } catch (e) {
       _log.severe("[_handleImageEnhancerRoute] Failed while handling route", e);
@@ -533,7 +527,7 @@ class _WrappedAppState extends State<_WrappedApp>
       if (settings.name == CollectionBrowser.routeName &&
           settings.arguments != null) {
         final args = settings.arguments as CollectionBrowserArguments;
-        return CollectionBrowser.buildRoute(args);
+        return CollectionBrowser.buildRoute(args, settings);
       }
     } catch (e) {
       _log.severe(
@@ -546,7 +540,7 @@ class _WrappedAppState extends State<_WrappedApp>
     try {
       if (settings.name == AccountSettings.routeName) {
         final args = settings.arguments as AccountSettingsArguments?;
-        return AccountSettings.buildRoute(args);
+        return AccountSettings.buildRoute(args, settings);
       }
     } catch (e) {
       _log.severe(

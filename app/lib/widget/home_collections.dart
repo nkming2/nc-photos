@@ -12,6 +12,7 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc_util.dart';
 import 'package:nc_photos/cache_manager_util.dart';
 import 'package:nc_photos/controller/account_controller.dart';
+import 'package:nc_photos/controller/account_pref_controller.dart';
 import 'package:nc_photos/controller/collections_controller.dart';
 import 'package:nc_photos/controller/pref_controller.dart';
 import 'package:nc_photos/entity/album/provider.dart';
@@ -19,21 +20,24 @@ import 'package:nc_photos/entity/collection.dart';
 import 'package:nc_photos/entity/collection/content_provider/album.dart';
 import 'package:nc_photos/entity/collection/content_provider/nc_album.dart';
 import 'package:nc_photos/entity/collection/util.dart' as collection_util;
-import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/exception_event.dart';
+import 'package:nc_photos/exception_util.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/np_api_util.dart';
 import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/snack_bar_manager.dart';
+import 'package:nc_photos/stream_util.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/theme/dimension.dart';
 import 'package:nc_photos/widget/album_importer.dart';
 import 'package:nc_photos/widget/archive_browser.dart';
 import 'package:nc_photos/widget/collection_browser.dart';
 import 'package:nc_photos/widget/collection_grid_item.dart';
+import 'package:nc_photos/widget/double_tap_exit_container/double_tap_exit_container.dart';
 import 'package:nc_photos/widget/enhanced_photo_browser.dart';
-import 'package:nc_photos/widget/handler/double_tap_exit_handler.dart';
+import 'package:nc_photos/widget/fade_out_list.dart';
 import 'package:nc_photos/widget/home_app_bar.dart';
+import 'package:nc_photos/widget/map_browser.dart';
 import 'package:nc_photos/widget/navigation_bar_blur_filter.dart';
 import 'package:nc_photos/widget/new_collection_dialog.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
@@ -42,13 +46,14 @@ import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos/widget/sharing_browser.dart';
 import 'package:nc_photos/widget/trashbin_browser.dart';
 import 'package:np_codegen/np_codegen.dart';
-import 'package:np_platform_util/np_platform_util.dart';
 import 'package:np_ui/np_ui.dart';
 import 'package:to_string/to_string.dart';
 
 part 'home_collections.g.dart';
 part 'home_collections/app_bar.dart';
 part 'home_collections/bloc.dart';
+part 'home_collections/nav_bar_buttons.dart';
+part 'home_collections/navigation_bar.dart';
 part 'home_collections/state_event.dart';
 part 'home_collections/type.dart';
 part 'home_collections/view.dart';
@@ -90,7 +95,7 @@ class _WrappedHomeCollectionsState extends State<_WrappedHomeCollections>
 
   @override
   Widget build(BuildContext context) {
-    final content = MultiBlocListener(
+    return MultiBlocListener(
       listeners: [
         _BlocListener(
           listenWhen: (previous, current) =>
@@ -121,172 +126,113 @@ class _WrappedHomeCollectionsState extends State<_WrappedHomeCollections>
           },
         ),
       ],
-      child: Stack(
-        children: [
-          RefreshIndicator(
-            onRefresh: () async {
-              _bloc.add(const _ReloadCollections());
-              await _bloc.stream.first;
-            },
-            child: CustomScrollView(
-              slivers: [
-                _BlocBuilder(
-                  buildWhen: (previous, current) =>
-                      previous.selectedItems.isEmpty !=
-                      current.selectedItems.isEmpty,
-                  builder: (context, state) => state.selectedItems.isEmpty
-                      ? const _AppBar()
-                      : const _SelectionAppBar(),
-                ),
-                SliverPadding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  sliver: _BlocBuilder(
-                    buildWhen: (previous, current) =>
-                        previous.selectedItems.isEmpty !=
-                        current.selectedItems.isEmpty,
-                    builder: (context, state) => _ButtonGrid(
-                      account: _bloc.account,
-                      isEnabled: state.selectedItems.isEmpty,
-                      onSharingPressed: () {
-                        Navigator.of(context).pushNamed(
-                            SharingBrowser.routeName,
-                            arguments: SharingBrowserArguments(_bloc.account));
-                      },
-                      onEnhancedPhotosPressed: () {
-                        Navigator.of(context).pushNamed(
-                            EnhancedPhotoBrowser.routeName,
-                            arguments:
-                                const EnhancedPhotoBrowserArguments(null));
-                      },
-                      onArchivePressed: () {
-                        Navigator.of(context)
-                            .pushNamed(ArchiveBrowser.routeName);
-                      },
-                      onTrashbinPressed: () {
-                        Navigator.of(context).pushNamed(
-                            TrashbinBrowser.routeName,
-                            arguments: TrashbinBrowserArguments(_bloc.account));
-                      },
-                      onNewCollectionPressed: () {
-                        _onNewCollectionPressed(context);
-                      },
-                    ),
-                  ),
-                ),
-                const SliverToBoxAdapter(
-                  child: SizedBox(height: 8),
-                ),
-                _BlocBuilder(
-                  buildWhen: (previous, current) =>
-                      previous.transformedItems != current.transformedItems ||
-                      previous.selectedItems != current.selectedItems,
-                  builder: (context, state) => SliverPadding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    sliver: SelectableItemList(
-                      maxCrossAxisExtent: 256,
-                      childBorderRadius: BorderRadius.zero,
-                      indicatorAlignment: const Alignment(-.92, -.92),
-                      items: state.transformedItems,
-                      itemBuilder: (_, __, item) {
-                        return _BlocSelector<int?>(
-                          selector: (state) =>
-                              state.itemCounts[item.collection.id],
-                          builder: (context, itemCount) => _ItemView(
-                            account: _bloc.account,
-                            item: item,
-                            collectionItemCountOverride: itemCount,
-                          ),
-                        );
-                      },
-                      staggeredTileBuilder: (_, __) =>
-                          const StaggeredTile.count(1, 1),
-                      selectedItems: state.selectedItems,
-                      onSelectionChange: (_, selected) {
-                        _bloc.add(_SetSelectedItems(items: selected.cast()));
-                      },
-                      onItemTap: (context, _, item) {
-                        Navigator.of(context).pushNamed(
-                          CollectionBrowser.routeName,
-                          arguments:
-                              CollectionBrowserArguments(item.collection),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-                SliverToBoxAdapter(
-                  child: SizedBox(
-                    height: AppDimension.of(context).homeBottomAppBarHeight,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: NavigationBarBlurFilter(
-              height: AppDimension.of(context).homeBottomAppBarHeight,
-            ),
-          ),
-        ],
+      child: _BlocSelector(
+        selector: (state) => state.selectedItems.isEmpty,
+        builder: (context, isSelectedEmpty) => isSelectedEmpty
+            ? const DoubleTapExitContainer(
+                child: _BodyView(),
+              )
+            : PopScope(
+                canPop: false,
+                onPopInvoked: (_) {
+                  context.addEvent(const _SetSelectedItems(items: {}));
+                },
+                child: const _BodyView(),
+              ),
       ),
     );
-    if (getRawPlatform() == NpPlatform.android) {
-      return WillPopScope(
-        onWillPop: () => _onBackButtonPressed(context),
-        child: content,
-      );
-    } else {
-      return content;
-    }
-  }
-
-  Future<void> _onNewCollectionPressed(BuildContext context) async {
-    try {
-      final collection = await showDialog<Collection>(
-        context: context,
-        builder: (_) => NewCollectionDialog(
-          account: _bloc.account,
-        ),
-      );
-      if (collection == null) {
-        return;
-      }
-      // Right now we don't have a way to add photos inside the
-      // CollectionBrowser, eventually we should add that and remove this
-      // branching
-      if (collection.isDynamicCollection) {
-        // open the newly created collection
-        unawaited(Navigator.of(context).pushNamed(
-          CollectionBrowser.routeName,
-          arguments: CollectionBrowserArguments(collection),
-        ));
-      }
-    } catch (e, stacktrace) {
-      _log.shout("[_onNewCollectionPressed] Failed", e, stacktrace);
-      SnackBarManager().showSnackBar(SnackBar(
-        content: Text(L10n.global().createCollectionFailureNotification),
-        duration: k.snackBarDurationNormal,
-      ));
-    }
-  }
-
-  Future<bool> _onBackButtonPressed(BuildContext context) async {
-    if (context.state.selectedItems.isEmpty) {
-      return DoubleTapExitHandler()();
-    } else {
-      context.addEvent(const _SetSelectedItems(items: {}));
-      return false;
-    }
   }
 
   late final _Bloc _bloc = context.read();
+}
+
+class _BodyView extends StatelessWidget {
+  const _BodyView();
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        RefreshIndicator(
+          onRefresh: () async {
+            context.addEvent(const _ReloadCollections());
+            await context.bloc.stream.first;
+          },
+          child: CustomScrollView(
+            slivers: [
+              _BlocBuilder(
+                buildWhen: (previous, current) =>
+                    previous.selectedItems.isEmpty !=
+                    current.selectedItems.isEmpty,
+                builder: (context, state) => state.selectedItems.isEmpty
+                    ? const _AppBar()
+                    : const _SelectionAppBar(),
+              ),
+              const SliverToBoxAdapter(
+                child: SizedBox(height: 8),
+              ),
+              _BlocBuilder(
+                buildWhen: (previous, current) =>
+                    previous.transformedItems != current.transformedItems ||
+                    previous.selectedItems != current.selectedItems,
+                builder: (context, state) => SliverPadding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  sliver: SelectableItemList(
+                    maxCrossAxisExtent: 256,
+                    childBorderRadius: BorderRadius.zero,
+                    indicatorAlignment: const Alignment(-.92, -.92),
+                    items: state.transformedItems,
+                    itemBuilder: (_, __, item) {
+                      return _BlocSelector<int?>(
+                        selector: (state) =>
+                            state.itemCounts[item.collection.id],
+                        builder: (context, itemCount) => _ItemView(
+                          account: context.bloc.account,
+                          item: item,
+                          collectionItemCountOverride: itemCount,
+                        ),
+                      );
+                    },
+                    staggeredTileBuilder: (_, __) =>
+                        const StaggeredTile.count(1, 1),
+                    selectedItems: state.selectedItems,
+                    onSelectionChange: (_, selected) {
+                      context
+                          .addEvent(_SetSelectedItems(items: selected.cast()));
+                    },
+                    onItemTap: (context, _, item) {
+                      Navigator.of(context).pushNamed(
+                        CollectionBrowser.routeName,
+                        arguments: CollectionBrowserArguments(item.collection),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: SizedBox(
+                  height: AppDimension.of(context).homeBottomAppBarHeight,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: NavigationBarBlurFilter(
+            height: AppDimension.of(context).homeBottomAppBarHeight,
+          ),
+        ),
+      ],
+    );
+  }
 }
 
 typedef _BlocBuilder = BlocBuilder<_Bloc, _State>;
 typedef _BlocListener = BlocListener<_Bloc, _State>;
 // typedef _BlocListenerT<T> = BlocListenerT<_Bloc, _State, T>;
 typedef _BlocSelector<T> = BlocSelector<_Bloc, _State, T>;
+typedef _Emitter = Emitter<_State>;
 
 extension on BuildContext {
   _Bloc get bloc => read<_Bloc>();

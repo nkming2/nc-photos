@@ -67,15 +67,17 @@ class _HorizontalPageViewerState extends State<HorizontalPageViewer> {
   Widget _buildWebContent(BuildContext context) {
     assert(getRawPlatform() == NpPlatform.web);
     // support switching pages with keyboard on web
-    return RawKeyboardListener(
-      onKey: (ev) {
+    return KeyboardListener(
+      onKeyEvent: (ev) {
         if (!widget.canSwitchPage) {
           return;
         }
-        if (ev.isKeyPressed(LogicalKeyboardKey.arrowLeft)) {
-          _switchToLeft();
-        } else if (ev.isKeyPressed(LogicalKeyboardKey.arrowRight)) {
-          _switchToRight();
+        if (ev is KeyUpEvent) {
+          if (ev.logicalKey == LogicalKeyboardKey.arrowLeft) {
+            _switchToLeft();
+          } else if (ev.logicalKey == LogicalKeyboardKey.arrowRight) {
+            _switchToRight();
+          }
         }
       },
       focusNode: _pageFocus,

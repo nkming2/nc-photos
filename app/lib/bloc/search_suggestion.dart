@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_collection/np_collection.dart';
+import 'package:np_log/np_log.dart';
 import 'package:np_string/np_string.dart';
 import 'package:to_string/to_string.dart';
 import 'package:woozy_search/woozy_search.dart';
@@ -81,7 +82,7 @@ class SearchSuggestionBloc<T>
     emit(SearchSuggestionBlocLoading(state.results));
     // doesn't work with upper case
     final results = _search.search(ev.phrase.toCaseInsensitiveString());
-    if (kDebugMode) {
+    if (isDevMode) {
       final str = results.map((e) => "${e.score}: ${e.text}").join("\n");
       _log.info("[_onEventSearch] Search '${ev.phrase}':\n$str");
     }

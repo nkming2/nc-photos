@@ -12,8 +12,11 @@ import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/language_util.dart';
 import 'package:nc_photos/protected_page_handler.dart';
 import 'package:nc_photos/size.dart';
+import 'package:nc_photos/widget/home_collections.dart';
+import 'package:nc_photos/widget/viewer.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/object_util.dart';
+import 'package:np_common/type.dart';
 import 'package:np_gps_map/np_gps_map.dart';
 import 'package:np_string/np_string.dart';
 import 'package:rxdart/rxdart.dart';
@@ -26,10 +29,12 @@ part 'pref_controller/util.dart';
 class PrefController {
   PrefController(this.pref);
 
-  Future<bool> setAccounts(List<Account> value) => _set<List<Account>>(
+  Future<bool> setAccounts(List<Account>? value) => _setOrRemove<List<Account>>(
         controller: _accountsController,
         setter: (pref, value) => pref.setAccounts3(value),
+        remover: (pref) => pref.setAccounts3(null),
         value: value,
+        defaultValue: _accountsDefault,
       );
 
   Future<bool> setCurrentAccountIndex(int? value) => _setOrRemove<int>(
@@ -37,6 +42,7 @@ class PrefController {
         setter: (pref, value) => pref.setCurrentAccountIndex(value),
         remover: (pref) => pref.setCurrentAccountIndex(null),
         value: value,
+        defaultValue: null,
       );
 
   Future<bool> setAppLanguage(AppLanguage value) => _set<AppLanguage>(
@@ -152,6 +158,7 @@ class PrefController {
         setter: (pref, value) => pref.setSeedColor(value.withAlpha(0xFF).value),
         remover: (pref) => pref.setSeedColor(null),
         value: value,
+        defaultValue: null,
       );
 
   Future<bool> setSecondarySeedColor(Color? value) => _setOrRemove<Color>(
@@ -160,6 +167,7 @@ class PrefController {
             pref.setSecondarySeedColor(value.withAlpha(0xFF).value),
         remover: (pref) => pref.setSecondarySeedColor(null),
         value: value,
+        defaultValue: null,
       );
 
   Future<bool> setDontShowVideoPreviewHint(bool value) => _set<bool>(
@@ -175,6 +183,7 @@ class PrefController {
             jsonEncode([value.latitude, value.longitude])),
         remover: (pref) => pref.setMapBrowserPrevPosition(null),
         value: value,
+        defaultValue: null,
       );
 
   Future<bool> setNewHttpEngine(bool value) => _set<bool>(
@@ -189,6 +198,7 @@ class PrefController {
             pref.setFirstRunTime(value.millisecondsSinceEpoch),
         remover: (pref) => pref.setFirstRunTime(null),
         value: value,
+        defaultValue: null,
       );
 
   Future<bool> setLastVersion(int value) => _set<int>(
@@ -210,6 +220,60 @@ class PrefController {
         value: value,
       );
 
+  Future<bool> setSlideshowDuration(Duration value) => _set<Duration>(
+        controller: _slideshowDurationController,
+        setter: (pref, value) => pref.setSlideshowDuration(value),
+        value: value,
+      );
+
+  Future<bool> setSlideshowShuffle(bool value) => _set<bool>(
+        controller: _isSlideshowShuffleController,
+        setter: (pref, value) => pref.setSlideshowShuffle(value),
+        value: value,
+      );
+
+  Future<bool> setSlideshowRepeat(bool value) => _set<bool>(
+        controller: _isSlideshowRepeatController,
+        setter: (pref, value) => pref.setSlideshowRepeat(value),
+        value: value,
+      );
+
+  Future<bool> setSlideshowReverse(bool value) => _set<bool>(
+        controller: _isSlideshowReverseController,
+        setter: (pref, value) => pref.setSlideshowReverse(value),
+        value: value,
+      );
+
+  Future<bool> setViewerAppBarButtons(List<ViewerAppBarButtonType>? value) =>
+      _setOrRemove<List<ViewerAppBarButtonType>>(
+        controller: _viewerAppBarButtonsController,
+        setter: (pref, value) => pref.setViewerAppBarButtons(value),
+        remover: (pref) => pref.setViewerAppBarButtons(null),
+        value: value,
+        defaultValue: _viewerAppBarButtonsDefault,
+      );
+
+  Future<bool> setViewerBottomAppBarButtons(
+          List<ViewerAppBarButtonType>? value) =>
+      _setOrRemove<List<ViewerAppBarButtonType>>(
+        controller: _viewerBottomAppBarButtonsController,
+        setter: (pref, value) => pref.setViewerBottomAppBarButtons(value),
+        remover: (pref) => pref.setViewerBottomAppBarButtons(null),
+        value: value,
+        defaultValue: _viewerBottomAppBarButtonsDefault,
+      );
+
+  Future<bool> setHomeCollectionsNavBarButtons(
+          List<PrefHomeCollectionsNavButton>? value) =>
+      _setOrRemove(
+        controller: _homeCollectionsNavBarButtonsController,
+        setter: (pref, value) => pref.setHomeCollectionsNavBarButtonsJson(
+            jsonEncode(value.map((e) => e.toJson()).toList())),
+        remover: (pref) => pref.setHomeCollectionsNavBarButtonsJson(null),
+        value: value,
+        defaultValue: _homeCollectionsNavBarButtonsDefault,
+      );
+
   Future<bool> _set<T>({
     required BehaviorSubject<T> controller,
     required Future<bool> Function(Pref pref, T value) setter,
@@ -227,7 +291,7 @@ class PrefController {
     required Future<bool> Function(Pref pref, T value) setter,
     required Future<bool> Function(Pref pref) remover,
     required T? value,
-    T? defaultValue,
+    required T? defaultValue,
   }) =>
       _doSetOrRemove(
         pref: pref,
@@ -250,7 +314,7 @@ class PrefController {
 
   @npSubjectAccessor
   late final _accountsController =
-      BehaviorSubject.seeded(pref.getAccounts3() ?? []);
+      BehaviorSubject.seeded(pref.getAccounts3() ?? _accountsDefault);
   @npSubjectAccessor
   late final _currentAccountIndexController =
       BehaviorSubject.seeded(pref.getCurrentAccountIndex());
@@ -337,6 +401,32 @@ class PrefController {
   @npSubjectAccessor
   late final _mapDefaultCustomRangeController = BehaviorSubject.seeded(
       pref.getMapDefaultCustomRange() ?? const Duration(days: 30));
+  @npSubjectAccessor
+  late final _slideshowDurationController = BehaviorSubject.seeded(
+      pref.getSlideshowDuration() ?? const Duration(seconds: 5));
+  @npSubjectAccessor
+  late final _isSlideshowShuffleController =
+      BehaviorSubject.seeded(pref.isSlideshowShuffle() ?? false);
+  @npSubjectAccessor
+  late final _isSlideshowRepeatController =
+      BehaviorSubject.seeded(pref.isSlideshowRepeat() ?? false);
+  @npSubjectAccessor
+  late final _isSlideshowReverseController =
+      BehaviorSubject.seeded(pref.isSlideshowReverse() ?? false);
+  @npSubjectAccessor
+  late final _viewerAppBarButtonsController = BehaviorSubject.seeded(
+      pref.getViewerAppBarButtons() ?? _viewerAppBarButtonsDefault);
+  @npSubjectAccessor
+  late final _viewerBottomAppBarButtonsController = BehaviorSubject.seeded(
+      pref.getViewerBottomAppBarButtons() ?? _viewerBottomAppBarButtonsDefault);
+  @npSubjectAccessor
+  late final _homeCollectionsNavBarButtonsController = BehaviorSubject.seeded(
+      pref.getHomeCollectionsNavBarButtonsJson()?.let((s) =>
+              (jsonDecode(s) as List)
+                  .cast<JsonObj>()
+                  .map(PrefHomeCollectionsNavButton.fromJson)
+                  .toList()) ??
+          _homeCollectionsNavBarButtonsDefault);
 }
 
 extension PrefControllerExtension on PrefController {
@@ -359,6 +449,7 @@ class SecurePrefController {
         setter: (pref, value) => pref.setProtectedPageAuthType(value.index),
         remover: (pref) => pref.setProtectedPageAuthType(null),
         value: value,
+        defaultValue: null,
       );
 
   Future<bool> setProtectedPageAuthPin(CiString? value) =>
@@ -368,6 +459,7 @@ class SecurePrefController {
             pref.setProtectedPageAuthPin(value.toCaseInsensitiveString()),
         remover: (pref) => pref.setProtectedPageAuthPin(null),
         value: value,
+        defaultValue: null,
       );
 
   Future<bool> setProtectedPageAuthPassword(CiString? value) =>
@@ -377,6 +469,7 @@ class SecurePrefController {
             pref.setProtectedPageAuthPassword(value.toCaseInsensitiveString()),
         remover: (pref) => pref.setProtectedPageAuthPassword(null),
         value: value,
+        defaultValue: null,
       );
 
   // ignore: unused_element
@@ -398,7 +491,7 @@ class SecurePrefController {
     required Future<bool> Function(Pref pref, T value) setter,
     required Future<bool> Function(Pref pref) remover,
     required T? value,
-    T? defaultValue,
+    required T? defaultValue,
   }) =>
       _doSetOrRemove(
         pref: securePref,
@@ -452,7 +545,7 @@ Future<bool> _doSetOrRemove<T>({
   required Future<bool> Function(Pref pref, T value) setter,
   required Future<bool> Function(Pref pref) remover,
   required T? value,
-  T? defaultValue,
+  required T? defaultValue,
 }) async {
   final backup = controller.value;
   controller.add(value ?? defaultValue);
@@ -476,6 +569,41 @@ Future<bool> _doSetOrRemove<T>({
     return false;
   }
 }
+
+const _accountsDefault = <Account>[];
+const _viewerAppBarButtonsDefault = [
+  ViewerAppBarButtonType.livePhoto,
+  ViewerAppBarButtonType.favorite,
+];
+const _viewerBottomAppBarButtonsDefault = [
+  ViewerAppBarButtonType.share,
+  ViewerAppBarButtonType.edit,
+  ViewerAppBarButtonType.enhance,
+  ViewerAppBarButtonType.download,
+  ViewerAppBarButtonType.delete,
+];
+const _homeCollectionsNavBarButtonsDefault = [
+  PrefHomeCollectionsNavButton(
+    type: HomeCollectionsNavBarButtonType.map,
+    isMinimized: false,
+  ),
+  PrefHomeCollectionsNavButton(
+    type: HomeCollectionsNavBarButtonType.sharing,
+    isMinimized: false,
+  ),
+  PrefHomeCollectionsNavButton(
+    type: HomeCollectionsNavBarButtonType.edited,
+    isMinimized: false,
+  ),
+  PrefHomeCollectionsNavButton(
+    type: HomeCollectionsNavBarButtonType.archive,
+    isMinimized: false,
+  ),
+  PrefHomeCollectionsNavButton(
+    type: HomeCollectionsNavBarButtonType.trash,
+    isMinimized: false,
+  ),
+];
 
 @npLog
 // ignore: camel_case_types

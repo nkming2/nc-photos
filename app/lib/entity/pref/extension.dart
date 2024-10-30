@@ -19,14 +19,6 @@ extension PrefExtension on Pref {
   }
 
   List<Account> getAccounts3Or(List<Account> def) => getAccounts3() ?? def;
-  Future<bool> setAccounts3(List<Account>? value) {
-    if (value == null) {
-      return _remove(PrefKey.accounts3);
-    } else {
-      final jsons = value.map((e) => jsonEncode(e.toJson())).toList();
-      return provider.setStringList(PrefKey.accounts3, jsons);
-    }
-  }
 
   int? getHomePhotosZoomLevel() => provider.getInt(PrefKey.homePhotosZoomLevel);
   int getHomePhotosZoomLevelOr(int def) => getHomePhotosZoomLevel() ?? def;
@@ -81,27 +73,6 @@ extension PrefExtension on Pref {
   int getLanguageOr(int def) => getLanguage() ?? def;
   Future<bool> setLanguage(int value) => _set<int>(
       PrefKey.language, value, (key, value) => provider.setInt(key, value));
-
-  int? getSlideshowDuration() => provider.getInt(PrefKey.slideshowDuration);
-  int getSlideshowDurationOr(int def) => getSlideshowDuration() ?? def;
-  Future<bool> setSlideshowDuration(int value) => _set<int>(
-      PrefKey.slideshowDuration,
-      value,
-      (key, value) => provider.setInt(key, value));
-
-  bool? isSlideshowShuffle() => provider.getBool(PrefKey.isSlideshowShuffle);
-  bool isSlideshowShuffleOr(bool def) => isSlideshowShuffle() ?? def;
-  Future<bool> setSlideshowShuffle(bool value) => _set<bool>(
-      PrefKey.isSlideshowShuffle,
-      value,
-      (key, value) => provider.setBool(key, value));
-
-  bool? isSlideshowRepeat() => provider.getBool(PrefKey.isSlideshowRepeat);
-  bool isSlideshowRepeatOr(bool def) => isSlideshowRepeat() ?? def;
-  Future<bool> setSlideshowRepeat(bool value) => _set<bool>(
-      PrefKey.isSlideshowRepeat,
-      value,
-      (key, value) => provider.setBool(key, value));
 
   bool? isAlbumBrowserShowDate() =>
       provider.getBool(PrefKey.isAlbumBrowserShowDate);
@@ -179,13 +150,6 @@ extension PrefExtension on Pref {
       value,
       (key, value) => provider.setBool(key, value));
 
-  bool? isSlideshowReverse() => provider.getBool(PrefKey.isSlideshowReverse);
-  bool isSlideshowReverseOr(bool def) => isSlideshowReverse() ?? def;
-  Future<bool> setSlideshowReverse(bool value) => _set<bool>(
-      PrefKey.isSlideshowReverse,
-      value,
-      (key, value) => provider.setBool(key, value));
-
   bool? isVideoPlayerMute() => provider.getBool(PrefKey.isVideoPlayerMute);
   bool isVideoPlayerMuteOr([bool def = false]) => isVideoPlayerMute() ?? def;
   Future<bool> setVideoPlayerMute(bool value) => _set<bool>(
@@ -211,9 +175,6 @@ extension AccountPrefExtension on AccountPref {
       value,
       (key, value) => provider.setString(key, value));
 
-  bool? hasNewSharedAlbum() =>
-      provider.getBool(AccountPrefKey.hasNewSharedAlbum);
-  bool hasNewSharedAlbumOr([bool def = false]) => hasNewSharedAlbum() ?? def;
   Future<bool> setNewSharedAlbum(bool value) => _set<bool>(
       AccountPrefKey.hasNewSharedAlbum,
       value,

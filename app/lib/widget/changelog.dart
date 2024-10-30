@@ -20,6 +20,12 @@ part 'changelog/changelog_662.dart';
 part 'changelog/changelog_663.dart';
 part 'changelog/changelog_670.dart';
 part 'changelog/changelog_680.dart';
+part 'changelog/changelog_690.dart';
+part 'changelog/changelog_700.dart';
+part 'changelog/changelog_710.dart';
+
+// Compatibility with flutter 3.22
+typedef WidgetStateProperty = MaterialStateProperty;
 
 class ChangelogArguments {
   const ChangelogArguments(this.fromVersion);
@@ -31,8 +37,10 @@ class ChangelogArguments {
 class Changelog extends StatelessWidget {
   static const routeName = "/changelog";
 
-  static Route buildRoute(ChangelogArguments args) => MaterialPageRoute(
+  static Route buildRoute(ChangelogArguments args, RouteSettings settings) =>
+      MaterialPageRoute(
         builder: (context) => Changelog.fromArgs(args),
+        settings: settings,
       );
 
   static bool hasContent(int fromVersion) =>
@@ -356,6 +364,9 @@ Widget _subBulletPoint(Widget child) => Row(
     );
 
 final _changelogs = <int, List<Widget> Function(BuildContext)>{
+  710: (_) => const [_Changelog710()],
+  700: (_) => const [_Changelog700()],
+  690: (_) => const [_Changelog690()],
   680: (_) => const [_Changelog680()],
   670: (_) => const [_Changelog670()],
   663: (_) => const [_Changelog663()],

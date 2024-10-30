@@ -9,6 +9,7 @@ class _Bloc extends Bloc<_Event, _State>
     required this.prefController,
   }) : super(_State.init(
           sort: prefController.homeAlbumsSortValue,
+          navBarButtons: prefController.homeCollectionsNavBarButtonsValue,
         )) {
     on<_LoadCollections>(_onLoad);
     on<_ReloadCollections>(_onReload);
@@ -20,6 +21,8 @@ class _Bloc extends Bloc<_Event, _State>
     on<_UpdateCollectionSort>(_onUpdateCollectionSort);
     on<_SetCollectionSort>(_onSetCollectionSort);
     on<_SetItemCount>(_onSetItemCount);
+
+    on<_SetNavBarButtons>(_onSetNavBarButtons);
 
     on<_SetError>(_onSetError);
 
@@ -38,6 +41,10 @@ class _Bloc extends Bloc<_Event, _State>
           }
         }));
       }
+    }));
+    _subscriptions
+        .add(prefController.homeCollectionsNavBarButtonsChange.listen((event) {
+      add(_SetNavBarButtons(event));
     }));
   }
 
@@ -132,6 +139,11 @@ class _Bloc extends Bloc<_Event, _State>
     final next = Map.of(state.itemCounts);
     next[ev.collection.id] = ev.value;
     emit(state.copyWith(itemCounts: next));
+  }
+
+  void _onSetNavBarButtons(_SetNavBarButtons ev, _Emitter emit) {
+    _log.info(ev);
+    emit(state.copyWith(navBarButtons: ev.value));
   }
 
   void _onSetError(_SetError ev, Emitter<_State> emit) {

@@ -1,12 +1,12 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/np_api_util.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_log/np_log.dart';
 import 'package:to_string/to_string.dart';
 
 part 'app_password_exchange_bloc.g.dart';
@@ -40,7 +40,7 @@ class AppPasswordExchangeBlocSuccess extends AppPasswordExchangeBlocState {
   @override
   String toString() => _$toString();
 
-  @Format(r"${kDebugMode ? password : '***'}")
+  @Format(r"${isDevMode ? password : '***'}")
   final String password;
 }
 

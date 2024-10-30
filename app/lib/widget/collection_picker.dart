@@ -38,8 +38,10 @@ typedef _BlocBuilder = BlocBuilder<_Bloc, _State>;
 class CollectionPicker extends StatelessWidget {
   static const routeName = "/collection-picker";
 
-  static Route buildRoute() => MaterialPageRoute<Collection>(
+  static Route buildRoute(RouteSettings settings) =>
+      MaterialPageRoute<Collection>(
         builder: (context) => const CollectionPicker(),
+        settings: settings,
       );
 
   const CollectionPicker({

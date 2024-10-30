@@ -3,14 +3,11 @@ import 'dart:async';
 import 'package:copy_with/copy_with.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc_util.dart';
 import 'package:nc_photos/controller/pref_controller.dart';
 import 'package:nc_photos/db/entity_converter.dart';
-import 'package:nc_photos/di_container.dart';
-import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/widget/trusted_cert_manager.dart';
 import 'package:np_codegen/np_codegen.dart';
@@ -28,7 +25,6 @@ class ExpertSettings extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => _Bloc(
-        KiwiContainer().resolve<DiContainer>(),
         db: context.read(),
         prefController: context.read(),
       )..add(const _Init()),

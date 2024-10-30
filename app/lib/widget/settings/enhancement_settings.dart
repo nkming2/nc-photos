@@ -24,8 +24,9 @@ typedef _BlocSelector<T> = BlocSelector<_Bloc, _State, T>;
 class EnhancementSettings extends StatelessWidget {
   static const routeName = "/settings/enhancement";
 
-  static Route buildRoute() => MaterialPageRoute(
+  static Route buildRoute(RouteSettings settings) => MaterialPageRoute(
         builder: (_) => const EnhancementSettings(),
+        settings: settings,
       );
 
   const EnhancementSettings({super.key});

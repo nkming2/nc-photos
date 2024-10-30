@@ -43,8 +43,9 @@ part 'archive_browser/view.dart';
 class ArchiveBrowser extends StatelessWidget {
   static const routeName = "/archive-browser";
 
-  static Route buildRoute() => MaterialPageRoute(
+  static Route buildRoute(RouteSettings settings) => MaterialPageRoute(
         builder: (_) => const ArchiveBrowser(),
+        settings: settings,
       );
 
   const ArchiveBrowser({super.key});

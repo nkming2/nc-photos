@@ -73,19 +73,12 @@ class _ContentListBody extends StatelessWidget {
           Navigator.of(context).pushNamed(
             Viewer.routeName,
             arguments: ViewerArguments(
-              context.bloc.account,
               state.transformedItems
                   .whereType<_FileItem>()
-                  .map((e) => e.file)
+                  .map((e) => e.file.fdId)
                   .toList(),
               actualIndex,
-              fromCollection: ViewerCollectionData(
-                state.collection,
-                state.transformedItems
-                    .whereType<_ActualItem>()
-                    .map((e) => e.original)
-                    .toList(),
-              ),
+              collectionId: state.collection.id,
             ),
           );
         },
@@ -120,9 +113,13 @@ class _EditContentList extends StatelessWidget {
                     .getThumbSize(zoomLevel.requireData)
                     .toDouble(),
                 items: state.editTransformedItems ?? state.transformedItems,
-                itemBuilder: (context, _, item) => item.buildWidget(context),
+                itemBuilder: (context, _, item) => Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: item.buildWidget(context),
+                ),
                 itemDragFeedbackBuilder: (context, _, item) =>
-                    item.buildDragFeedbackWidget(context),
+                    item.buildDragFeedbackWidget(context) ??
+                    item.buildWidget(context),
                 staggeredTileBuilder: (_, item) => item.staggeredTile,
                 onDragResult: (results) {
                   context.addEvent(_EditManualSort(results));

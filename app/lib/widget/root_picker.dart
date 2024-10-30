@@ -26,9 +26,10 @@ class RootPickerArguments {
 class RootPicker extends StatefulWidget {
   static const routeName = "/root-picker";
 
-  static Route buildRoute(RootPickerArguments args) =>
+  static Route buildRoute(RootPickerArguments args, RouteSettings settings) =>
       MaterialPageRoute<Account>(
         builder: (context) => RootPicker.fromArgs(args),
+        settings: settings,
       );
 
   const RootPicker({

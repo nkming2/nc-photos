@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiwi/kiwi.dart';
@@ -13,10 +12,14 @@ import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_log/np_log.dart';
 import 'package:np_ui/np_ui.dart';
 import 'package:path/path.dart' as path_lib;
 
 part 'dir_picker.g.dart';
+
+// Compatibility with flutter 3.22
+typedef WidgetState = MaterialState;
 
 class DirPicker extends StatefulWidget {
   const DirPicker({
@@ -226,7 +229,7 @@ class DirPickerState extends State<DirPicker> {
     if (state is LsDirBlocSuccess) {
       if (!_fillResult(_root, state)) {
         _log.shout("[_onStateChange] Failed while _fillResult" +
-            (kDebugMode
+            (isDevMode
                 ? ", root:\n${_root.toString(isDeep: true)}\nstate: ${state.root.path}"
                 : ""));
       }

@@ -9,7 +9,7 @@ part of 'type.dart';
 extension _$ResponseToString on Response {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "Response {statusCode: $statusCode, headers: ..., body: ${kDebugMode ? body.toString().replaceAll(RegExp(r'\n\t'), '').slice(0, 200) : '...'}}";
+    return "Response {statusCode: $statusCode, headers: ..., body: ${isDevMode ? body.toString().replaceAll(RegExp(r'\n\t'), '').slice(0, 200) : '...'}}";
   }
 }
 
