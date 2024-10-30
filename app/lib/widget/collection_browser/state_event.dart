@@ -175,6 +175,16 @@ class _AddLabelToCollection implements _Event {
 }
 
 @toString
+class _AddMapToCollection implements _Event {
+  const _AddMapToCollection(this.location);
+
+  @override
+  String toString() => _$toString();
+
+  final CameraPosition location;
+}
+
+@toString
 class _EditSort implements _Event {
   const _EditSort(this.sort);
 

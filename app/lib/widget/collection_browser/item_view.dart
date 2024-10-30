@@ -30,3 +30,58 @@ class _EditLabelView extends StatelessWidget {
   final String text;
   final VoidCallback? onEditPressed;
 }
+
+class _MapView extends StatelessWidget {
+  const _MapView({
+    required this.location,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueStreamBuilderEx<GpsMapProvider>(
+      stream: context.read<PrefController>().gpsMapProvider,
+      builder: StreamWidgetBuilder.value(
+        (context, gpsMapProvider) => StaticMap(
+          key: Key(location.toString()),
+          providerHint: gpsMapProvider,
+          location: location,
+          onTap: onTap,
+        ),
+      ),
+    );
+  }
+
+  final CameraPosition location;
+  final VoidCallback? onTap;
+}
+
+class _EditMapView extends StatelessWidget {
+  const _EditMapView({
+    required this.location,
+    required this.onEditPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        AbsorbPointer(
+          absorbing: true,
+          child: _MapView(location: location),
+        ),
+        Positioned(
+          top: 8,
+          right: 8,
+          child: FloatingActionButton.small(
+            onPressed: onEditPressed,
+            child: const Icon(Icons.edit_outlined),
+          ),
+        ),
+      ],
+    );
+  }
+
+  final CameraPosition location;
+  final VoidCallback? onEditPressed;
+}

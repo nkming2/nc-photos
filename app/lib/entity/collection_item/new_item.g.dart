@@ -19,3 +19,10 @@ extension _$NewCollectionLabelItemToString on NewCollectionLabelItem {
     return "NewCollectionLabelItem {text: $text, createdAt: $createdAt}";
   }
 }
+
+extension _$NewCollectionMapItemToString on NewCollectionMapItem {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "NewCollectionMapItem {location: $location, createdAt: $createdAt}";
+  }
+}

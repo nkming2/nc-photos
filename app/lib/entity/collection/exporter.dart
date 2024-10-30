@@ -59,6 +59,12 @@ class CollectionExporter {
                   addedAt: clock.now().toUtc(),
                   text: e.text,
                 );
+              } else if (e is CollectionMapItem) {
+                return AlbumMapItem(
+                  addedBy: account.userId,
+                  addedAt: clock.now().toUtc(),
+                  location: e.location,
+                );
               } else {
                 return null;
               }

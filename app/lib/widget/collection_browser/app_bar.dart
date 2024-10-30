@@ -364,6 +364,12 @@ class _EditAppBar extends StatelessWidget {
             tooltip: L10n.global().albumAddTextTooltip,
             onPressed: () => _onAddTextPressed(context),
           ),
+        if (capabilitiesAdapter.isPermitted(CollectionCapability.mapItem))
+          IconButton(
+            icon: const Icon(Icons.map_outlined),
+            tooltip: L10n.global().albumAddMapTooltip,
+            onPressed: () => _onAddMapPressed(context),
+          ),
         if (capabilitiesAdapter.isPermitted(CollectionCapability.sort))
           IconButton(
             icon: const Icon(Icons.sort_by_alpha_outlined),
@@ -385,6 +391,15 @@ class _EditAppBar extends StatelessWidget {
       return;
     }
     context.read<_Bloc>().add(_AddLabelToCollection(result));
+  }
+
+  Future<void> _onAddMapPressed(BuildContext context) async {
+    final result = await Navigator.of(context)
+        .pushNamed<CameraPosition>(PlacePicker.routeName);
+    if (result == null) {
+      return;
+    }
+    context.read<_Bloc>().add(_AddMapToCollection(result));
   }
 
   Future<void> _onSortPressed(BuildContext context) async {

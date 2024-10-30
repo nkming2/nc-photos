@@ -8,6 +8,7 @@ abstract class _Item implements SelectableItemMetadata, DraggableItemMetadata {
   Widget buildWidget(BuildContext context);
 
   Widget? buildDragFeedbackWidget(BuildContext context) => null;
+  Size? dragFeedbackWidgetSize() => null;
 }
 
 /// Items backed by an actual [CollectionItem]
@@ -137,6 +138,62 @@ class _LabelItem extends _ActualItem {
 
   final Object id;
   final String text;
+  final VoidCallback? onEditPressed;
+}
+
+class _MapItem extends _ActualItem {
+  const _MapItem({
+    required super.original,
+    required this.id,
+    required this.location,
+    required this.onEditPressed,
+  });
+
+  @override
+  bool get isDraggable => true;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) || (other is _MapItem && id == other.id);
+
+  @override
+  int get hashCode => id.hashCode;
+
+  @override
+  StaggeredTile get staggeredTile => const StaggeredTile.extent(99, 256);
+
+  @override
+  Widget buildWidget(BuildContext context) {
+    return _BlocSelector(
+      selector: (state) => state.isEditMode,
+      builder: (context, isEditMode) => isEditMode
+          ? _EditMapView(
+              location: location,
+              onEditPressed: onEditPressed,
+            )
+          : _MapView(
+              location: location,
+              onTap: () {
+                launchExternalMap(location);
+              },
+            ),
+    );
+  }
+
+  @override
+  Widget? buildDragFeedbackWidget(BuildContext context) {
+    return Icon(
+      Icons.place,
+      color: Theme.of(context).colorScheme.primary,
+      size: 48,
+    );
+  }
+
+  @override
+  Size? dragFeedbackWidgetSize() => const Size.square(48);
+
+  final Object id;
+  final CameraPosition location;
   final VoidCallback? onEditPressed;
 }
 

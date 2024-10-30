@@ -30,6 +30,7 @@ class _Bloc extends Bloc<_Event, _State>
     on<_BeginEdit>(_onBeginEdit);
     on<_EditName>(_onEditName);
     on<_AddLabelToCollection>(_onAddLabelToCollection);
+    on<_AddMapToCollection>(_onAddMapToCollection);
     on<_EditSort>(_onEditSort);
     on<_EditManualSort>(_onEditManualSort);
     on<_TransformEditItems>(_onTransformEditItems);
@@ -205,6 +206,17 @@ class _Bloc extends Bloc<_Event, _State>
     emit(state.copyWith(
       editItems: [
         NewCollectionLabelItem(ev.label, clock.now().toUtc()),
+        ...state.editItems ?? state.items,
+      ],
+    ));
+  }
+
+  void _onAddMapToCollection(_AddMapToCollection ev, Emitter<_State> emit) {
+    _log.info(ev);
+    assert(isCollectionCapabilityPermitted(CollectionCapability.mapItem));
+    emit(state.copyWith(
+      editItems: [
+        NewCollectionMapItem(ev.location, clock.now().toUtc()),
         ...state.editItems ?? state.items,
       ],
     ));
@@ -501,6 +513,15 @@ class _Bloc extends Bloc<_Event, _State>
           original: item,
           id: item.id,
           text: item.text,
+          onEditPressed: () {
+            // TODO
+          },
+        ));
+      } else if (item is CollectionMapItem) {
+        transformed.add(_MapItem(
+          original: item,
+          id: item.id,
+          location: item.location,
           onEditPressed: () {
             // TODO
           },

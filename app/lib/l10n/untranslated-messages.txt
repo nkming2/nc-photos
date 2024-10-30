@@ -269,6 +269,7 @@
     "customizeCollectionsNavBarDescription",
     "customizeButtonsUnsupportedWarning",
     "placePickerTitle",
+    "albumAddMapTooltip",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -288,7 +289,8 @@
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
     "customizeButtonsUnsupportedWarning",
-    "placePickerTitle"
+    "placePickerTitle",
+    "albumAddMapTooltip"
   ],
 
   "de": [
@@ -300,7 +302,8 @@
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
     "customizeButtonsUnsupportedWarning",
-    "placePickerTitle"
+    "placePickerTitle",
+    "albumAddMapTooltip"
   ],
 
   "el": [
@@ -457,7 +460,8 @@
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
     "customizeButtonsUnsupportedWarning",
-    "placePickerTitle"
+    "placePickerTitle",
+    "albumAddMapTooltip"
   ],
 
   "es": [
@@ -469,7 +473,8 @@
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
     "customizeButtonsUnsupportedWarning",
-    "placePickerTitle"
+    "placePickerTitle",
+    "albumAddMapTooltip"
   ],
 
   "fi": [
@@ -517,7 +522,8 @@
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
     "customizeButtonsUnsupportedWarning",
-    "placePickerTitle"
+    "placePickerTitle",
+    "albumAddMapTooltip"
   ],
 
   "fr": [
@@ -565,7 +571,8 @@
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
     "customizeButtonsUnsupportedWarning",
-    "placePickerTitle"
+    "placePickerTitle",
+    "albumAddMapTooltip"
   ],
 
   "it": [
@@ -618,7 +625,8 @@
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
     "customizeButtonsUnsupportedWarning",
-    "placePickerTitle"
+    "placePickerTitle",
+    "albumAddMapTooltip"
   ],
 
   "nl": [
@@ -1008,6 +1016,7 @@
     "customizeCollectionsNavBarDescription",
     "customizeButtonsUnsupportedWarning",
     "placePickerTitle",
+    "albumAddMapTooltip",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -1067,7 +1076,8 @@
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
     "customizeButtonsUnsupportedWarning",
-    "placePickerTitle"
+    "placePickerTitle",
+    "albumAddMapTooltip"
   ],
 
   "pt": [
@@ -1135,7 +1145,8 @@
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
     "customizeButtonsUnsupportedWarning",
-    "placePickerTitle"
+    "placePickerTitle",
+    "albumAddMapTooltip"
   ],
 
   "ru": [
@@ -1183,7 +1194,8 @@
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
     "customizeButtonsUnsupportedWarning",
-    "placePickerTitle"
+    "placePickerTitle",
+    "albumAddMapTooltip"
   ],
 
   "tr": [
@@ -1195,7 +1207,8 @@
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
     "customizeButtonsUnsupportedWarning",
-    "placePickerTitle"
+    "placePickerTitle",
+    "albumAddMapTooltip"
   ],
 
   "zh": [
@@ -1274,7 +1287,8 @@
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
     "customizeButtonsUnsupportedWarning",
-    "placePickerTitle"
+    "placePickerTitle",
+    "albumAddMapTooltip"
   ],
 
   "zh_Hant": [
@@ -1447,6 +1461,7 @@
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
     "customizeButtonsUnsupportedWarning",
-    "placePickerTitle"
+    "placePickerTitle",
+    "albumAddMapTooltip"
   ]
 }

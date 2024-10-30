@@ -21,3 +21,11 @@ extension _$CollectionLabelItemAlbumAdapterToString
     return "CollectionLabelItemAlbumAdapter {item: $item}";
   }
 }
+
+extension _$CollectionMapItemAlbumAdapterToString
+    on CollectionMapItemAlbumAdapter {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "CollectionMapItemAlbumAdapter {item: $item}";
+  }
+}
