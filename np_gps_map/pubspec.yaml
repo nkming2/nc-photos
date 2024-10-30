@@ -26,7 +26,6 @@ dependencies:
   np_platform_util:
     path: ../np_platform_util
   rxdart: ^0.27.7
-  url_launcher: ^6.1.11
 
 dependency_overrides:
   google_maps_flutter_android: 2.7.0

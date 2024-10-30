@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:np_gps_map/src/type.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 class OsmGpsMap extends StatelessWidget {
   const OsmGpsMap({
@@ -17,12 +16,7 @@ class OsmGpsMap extends StatelessWidget {
     const double pinSize = 48;
     final centerLl = LatLng(center.latitude, center.longitude);
     return GestureDetector(
-      onTap: () {
-        launchUrlString(
-          "https://www.openstreetmap.org/?mlat=${center.latitude}&mlon=${center.longitude}#map=${zoom.toInt()}/${center.latitude}/${center.longitude}",
-          mode: LaunchMode.externalApplication,
-        );
-      },
+      onTap: onTap,
       behavior: HitTestBehavior.opaque,
       // IgnorePointer is needed to prevent FlutterMap absorbing all pointer
       // events
