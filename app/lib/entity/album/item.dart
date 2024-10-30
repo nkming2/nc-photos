@@ -5,6 +5,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/type.dart';
+import 'package:np_gps_map/np_gps_map.dart';
 import 'package:np_string/np_string.dart';
 import 'package:to_string/to_string.dart';
 
@@ -30,6 +31,9 @@ abstract class AlbumItem with EquatableMixin {
       case AlbumLabelItem._type:
         return AlbumLabelItem.fromJson(
             content.cast<String, dynamic>(), addedBy, addedAt);
+      case AlbumMapItem._type:
+        return AlbumMapItem.fromJson(
+            content.cast<String, dynamic>(), addedBy, addedAt);
       default:
         _log.shout("[fromJson] Unknown type: $type");
         throw ArgumentError.value(type, "type");
@@ -42,6 +46,8 @@ abstract class AlbumItem with EquatableMixin {
         return AlbumFileItem._type;
       } else if (this is AlbumLabelItem) {
         return AlbumLabelItem._type;
+      } else if (this is AlbumMapItem) {
+        return AlbumMapItem._type;
       } else {
         throw StateError("Unknwon subtype");
       }
@@ -180,4 +186,61 @@ class AlbumLabelItem extends AlbumItem {
   final String text;
 
   static const _type = "label";
+}
+
+@toString
+class AlbumMapItem extends AlbumItem {
+  AlbumMapItem({
+    required super.addedBy,
+    required super.addedAt,
+    required this.location,
+  });
+
+  factory AlbumMapItem.fromJson(
+      JsonObj json, CiString addedBy, DateTime addedAt) {
+    return AlbumMapItem(
+      addedBy: addedBy,
+      addedAt: addedAt,
+      location: CameraPosition.fromJson(json["location"]),
+    );
+  }
+
+  @override
+  String toString() => _$toString();
+
+  @override
+  JsonObj toContentJson() {
+    return {
+      "location": location.toJson(),
+    };
+  }
+
+  @override
+  bool compareServerIdentity(AlbumItem other) =>
+      other is AlbumMapItem &&
+      location == other.location &&
+      addedBy == other.addedBy &&
+      addedAt == other.addedAt;
+
+  AlbumMapItem copyWith({
+    CiString? addedBy,
+    DateTime? addedAt,
+    CameraPosition? location,
+  }) {
+    return AlbumMapItem(
+      addedBy: addedBy ?? this.addedBy,
+      addedAt: addedAt ?? this.addedAt,
+      location: location ?? this.location,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+        ...super.props,
+        location,
+      ];
+
+  final CameraPosition location;
+
+  static const _type = "map";
 }

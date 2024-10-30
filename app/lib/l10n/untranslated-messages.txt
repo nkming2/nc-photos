@@ -268,6 +268,8 @@
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
     "customizeButtonsUnsupportedWarning",
+    "placePickerTitle",
+    "albumAddMapTooltip",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -286,7 +288,9 @@
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
-    "customizeButtonsUnsupportedWarning"
+    "customizeButtonsUnsupportedWarning",
+    "placePickerTitle",
+    "albumAddMapTooltip"
   ],
 
   "de": [
@@ -297,7 +301,9 @@
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
-    "customizeButtonsUnsupportedWarning"
+    "customizeButtonsUnsupportedWarning",
+    "placePickerTitle",
+    "albumAddMapTooltip"
   ],
 
   "el": [
@@ -453,7 +459,9 @@
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
-    "customizeButtonsUnsupportedWarning"
+    "customizeButtonsUnsupportedWarning",
+    "placePickerTitle",
+    "albumAddMapTooltip"
   ],
 
   "es": [
@@ -464,7 +472,9 @@
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
-    "customizeButtonsUnsupportedWarning"
+    "customizeButtonsUnsupportedWarning",
+    "placePickerTitle",
+    "albumAddMapTooltip"
   ],
 
   "fi": [
@@ -511,7 +521,9 @@
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
-    "customizeButtonsUnsupportedWarning"
+    "customizeButtonsUnsupportedWarning",
+    "placePickerTitle",
+    "albumAddMapTooltip"
   ],
 
   "fr": [
@@ -558,7 +570,9 @@
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
-    "customizeButtonsUnsupportedWarning"
+    "customizeButtonsUnsupportedWarning",
+    "placePickerTitle",
+    "albumAddMapTooltip"
   ],
 
   "it": [
@@ -610,7 +624,9 @@
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
-    "customizeButtonsUnsupportedWarning"
+    "customizeButtonsUnsupportedWarning",
+    "placePickerTitle",
+    "albumAddMapTooltip"
   ],
 
   "nl": [
@@ -999,6 +1015,8 @@
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
     "customizeButtonsUnsupportedWarning",
+    "placePickerTitle",
+    "albumAddMapTooltip",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -1057,7 +1075,9 @@
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
-    "customizeButtonsUnsupportedWarning"
+    "customizeButtonsUnsupportedWarning",
+    "placePickerTitle",
+    "albumAddMapTooltip"
   ],
 
   "pt": [
@@ -1124,7 +1144,9 @@
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
-    "customizeButtonsUnsupportedWarning"
+    "customizeButtonsUnsupportedWarning",
+    "placePickerTitle",
+    "albumAddMapTooltip"
   ],
 
   "ru": [
@@ -1171,7 +1193,9 @@
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
-    "customizeButtonsUnsupportedWarning"
+    "customizeButtonsUnsupportedWarning",
+    "placePickerTitle",
+    "albumAddMapTooltip"
   ],
 
   "tr": [
@@ -1182,7 +1206,9 @@
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
-    "customizeButtonsUnsupportedWarning"
+    "customizeButtonsUnsupportedWarning",
+    "placePickerTitle",
+    "albumAddMapTooltip"
   ],
 
   "zh": [
@@ -1260,7 +1286,9 @@
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
-    "customizeButtonsUnsupportedWarning"
+    "customizeButtonsUnsupportedWarning",
+    "placePickerTitle",
+    "albumAddMapTooltip"
   ],
 
   "zh_Hant": [
@@ -1432,6 +1460,8 @@
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
-    "customizeButtonsUnsupportedWarning"
+    "customizeButtonsUnsupportedWarning",
+    "placePickerTitle",
+    "albumAddMapTooltip"
   ]
 }

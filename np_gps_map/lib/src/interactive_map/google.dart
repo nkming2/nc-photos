@@ -5,7 +5,7 @@ import 'package:google_maps_cluster_manager/google_maps_cluster_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:np_common/object_util.dart';
 import 'package:np_gps_map/src/interactive_map.dart';
-import 'package:np_gps_map/src/map_coord.dart';
+import 'package:np_gps_map/src/type.dart' as type;
 
 typedef GoogleClusterBuilder = FutureOr<BitmapDescriptor> Function(
     BuildContext context, List<DataPoint> dataPoints);
@@ -20,18 +20,20 @@ class GoogleInteractiveMap extends StatefulWidget {
     this.onClusterTap,
     this.contentPadding,
     this.onMapCreated,
+    this.onCameraMove,
   });
 
   @override
   State<StatefulWidget> createState() => _GoogleInteractiveMapState();
 
-  final MapCoord? initialPosition;
+  final type.MapCoord? initialPosition;
   final double? initialZoom;
   final List<DataPoint>? dataPoints;
   final GoogleClusterBuilder? clusterBuilder;
   final void Function(List<DataPoint> dataPoints)? onClusterTap;
   final EdgeInsets? contentPadding;
   final void Function(InteractiveMapController controller)? onMapCreated;
+  final void Function(type.CameraPosition position)? onCameraMove;
 }
 
 class _GoogleInteractiveMapState extends State<GoogleInteractiveMap> {
@@ -57,7 +59,14 @@ class _GoogleInteractiveMapState extends State<GoogleInteractiveMap> {
           const CameraPosition(target: LatLng(0, 0)),
       markers: _markers,
       onMapCreated: _onMapCreated,
-      onCameraMove: _clusterManager.onCameraMove,
+      onCameraMove: (position) {
+        _clusterManager.onCameraMove(position);
+        widget.onCameraMove?.call(type.CameraPosition(
+          center: position.target.toMapCoord(),
+          zoom: position.zoom,
+          rotation: position.bearing,
+        ));
+      },
       onCameraIdle: _clusterManager.updateMap,
       padding: widget.contentPadding ?? EdgeInsets.zero,
     );
@@ -120,7 +129,7 @@ class _ParentController implements InteractiveMapController {
   const _ParentController(this.controller);
 
   @override
-  void setPosition(MapCoord position) {
+  void setPosition(type.MapCoord position) {
     controller
         .animateCamera(CameraUpdate.newLatLngZoom(position.toLatLng(), 10));
   }
@@ -128,7 +137,7 @@ class _ParentController implements InteractiveMapController {
   final GoogleMapController controller;
 }
 
-extension on MapCoord {
+extension on type.MapCoord {
   LatLng toLatLng() => LatLng(latitude, longitude);
 }
 

@@ -56,6 +56,7 @@ class CollectionAlbumProvider
           CollectionCapability.manualItem,
           CollectionCapability.manualSort,
           CollectionCapability.labelItem,
+          CollectionCapability.mapItem,
           CollectionCapability.share,
         ],
       ];
@@ -66,6 +67,7 @@ class CollectionAlbumProvider
         if (album.provider is AlbumStaticProvider) ...[
           CollectionCapability.manualItem,
           CollectionCapability.labelItem,
+          CollectionCapability.mapItem,
         ],
       ];
 

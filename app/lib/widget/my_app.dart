@@ -38,6 +38,7 @@ import 'package:nc_photos/widget/image_enhancer.dart';
 import 'package:nc_photos/widget/local_file_viewer.dart';
 import 'package:nc_photos/widget/map_browser.dart';
 import 'package:nc_photos/widget/people_browser.dart';
+import 'package:nc_photos/widget/place_picker/place_picker.dart';
 import 'package:nc_photos/widget/places_browser.dart';
 import 'package:nc_photos/widget/result_viewer.dart';
 import 'package:nc_photos/widget/root_picker.dart';
@@ -213,6 +214,7 @@ class _WrappedAppState extends State<_WrappedApp>
         ArchiveBrowser.routeName: ArchiveBrowser.buildRoute,
         TrustedCertManager.routeName: TrustedCertManager.buildRoute,
         MapBrowser.routeName: MapBrowser.buildRoute,
+        PlacePicker.routeName: PlacePicker.buildRoute,
       };
 
   Route<dynamic>? _onGenerateRoute(RouteSettings settings) {

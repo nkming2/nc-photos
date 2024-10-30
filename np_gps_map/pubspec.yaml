@@ -9,6 +9,7 @@ environment:
   flutter: ">=3.19.0"
 
 dependencies:
+  equatable: ^2.0.5
   flutter:
     sdk: flutter
   flutter_map: ^6.1.0
@@ -25,7 +26,6 @@ dependencies:
   np_platform_util:
     path: ../np_platform_util
   rxdart: ^0.27.7
-  url_launcher: ^6.1.11
 
 dependency_overrides:
   google_maps_flutter_android: 2.7.0

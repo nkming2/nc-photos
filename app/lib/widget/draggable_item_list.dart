@@ -24,6 +24,7 @@ class DraggableItemList<T extends DraggableItemMetadata>
     required this.maxCrossAxisExtent,
     required this.itemBuilder,
     required this.itemDragFeedbackBuilder,
+    this.itemDragFeedbackSize,
     required this.staggeredTileBuilder,
     this.onDragResult,
     this.onDraggingChanged,
@@ -38,6 +39,7 @@ class DraggableItemList<T extends DraggableItemMetadata>
       itemBuilder;
   final Widget? Function(BuildContext context, int index, T metadata)?
       itemDragFeedbackBuilder;
+  final Size? Function(int index, T metadata)? itemDragFeedbackSize;
   final StaggeredTile? Function(int index, T metadata) staggeredTileBuilder;
 
   /// Called when an item is dropped to a new place
@@ -63,9 +65,9 @@ class _DraggableItemListState<T extends DraggableItemMetadata>
         if (meta.isDraggable) {
           return my.Draggable<_DraggableData>(
             data: _DraggableData(i, meta),
-            feedback: SizedBox(
-              width: widget.maxCrossAxisExtent * .65,
-              height: widget.maxCrossAxisExtent * .65,
+            feedback: SizedBox.fromSize(
+              size: widget.itemDragFeedbackSize?.call(i, meta) ??
+                  Size.square(widget.maxCrossAxisExtent * .65),
               child: widget.itemDragFeedbackBuilder?.call(context, i, meta),
             ),
             onDropBefore: (data) => _onMoved(data.index, i, true),

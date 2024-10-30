@@ -219,6 +219,13 @@ extension _$_AddLabelToCollectionToString on _AddLabelToCollection {
   }
 }
 
+extension _$_AddMapToCollectionToString on _AddMapToCollection {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_AddMapToCollection {location: $location}";
+  }
+}
+
 extension _$_EditSortToString on _EditSort {
   String _$toString() {
     // ignore: unnecessary_string_interpolations

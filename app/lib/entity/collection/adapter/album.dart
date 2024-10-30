@@ -54,6 +54,8 @@ class CollectionAlbumAdapter implements CollectionAdapter {
         return CollectionFileItemAlbumAdapter(i);
       } else if (i is AlbumLabelItem) {
         return CollectionLabelItemAlbumAdapter(i);
+      } else if (i is AlbumMapItem) {
+        return CollectionMapItemAlbumAdapter(i);
       } else {
         _log.shout("[listItem] Unknown item type: ${i.runtimeType}");
         throw UnimplementedError("Unknown item type: ${i.runtimeType}");
@@ -99,6 +101,12 @@ class CollectionAlbumAdapter implements CollectionAdapter {
               addedBy: account.userId,
               addedAt: e.createdAt,
               text: e.text,
+            );
+          } else if (e is NewCollectionMapItem) {
+            return AlbumMapItem(
+              addedBy: account.userId,
+              addedAt: e.createdAt,
+              location: e.location,
             );
           } else {
             _log.severe("[edit] Unsupported type: ${e.runtimeType}");
@@ -248,6 +256,16 @@ class CollectionAlbumAdapter implements CollectionAdapter {
           .reversed
           .firstWhere((e) => e.text == original.text);
       return CollectionLabelItemAlbumAdapter(item);
+    } else if (original is NewCollectionMapItem) {
+      final item = AlbumStaticProvider.of(_provider.album)
+          .items
+          .whereType<AlbumMapItem>()
+          .sorted((a, b) => a.addedAt.compareTo(b.addedAt))
+          .reversed
+          .firstWhere((e) =>
+              e.location == original.location &&
+              e.addedAt == original.createdAt);
+      return CollectionMapItemAlbumAdapter(item);
     } else {
       throw UnsupportedError("Unsupported type: ${original.runtimeType}");
     }

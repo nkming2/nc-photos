@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:np_gps_map/src/map_coord.dart';
+import 'package:np_gps_map/src/type.dart' as type;
 
 class GoogleGpsMap extends StatelessWidget {
   const GoogleGpsMap({
     super.key,
-    required this.center,
-    required this.zoom,
+    required this.location,
     this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    final centerLl = LatLng(center.latitude, center.longitude);
+    final center = LatLng(location.center.latitude, location.center.longitude);
     return GoogleMap(
       compassEnabled: false,
       mapToolbarEnabled: false,
@@ -25,13 +24,14 @@ class GoogleGpsMap extends StatelessWidget {
       buildingsEnabled: false,
       // liteModeEnabled: true,
       initialCameraPosition: CameraPosition(
-        target: centerLl,
-        zoom: zoom,
+        target: center,
+        zoom: location.zoom,
+        bearing: location.rotation,
       ),
       markers: {
         Marker(
           markerId: const MarkerId("at"),
-          position: centerLl,
+          position: center,
           // for some reason, GoogleMap's onTap is not triggered if
           // tapped on top of the marker
           onTap: onTap,
@@ -46,8 +46,7 @@ class GoogleGpsMap extends StatelessWidget {
     );
   }
 
-  final MapCoord center;
-  final double zoom;
+  final type.CameraPosition location;
   final VoidCallback? onTap;
 }
 

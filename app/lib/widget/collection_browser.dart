@@ -36,11 +36,13 @@ import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/flutter_util.dart' as flutter_util;
+import 'package:nc_photos/gps_map_util.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/np_api_util.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
+import 'package:nc_photos/stream_util.dart';
 import 'package:nc_photos/widget/album_share_outlier_browser.dart';
 import 'package:nc_photos/widget/app_intermediate_circular_progress_indicator.dart';
 import 'package:nc_photos/widget/collection_picker.dart';
@@ -52,6 +54,7 @@ import 'package:nc_photos/widget/network_thumbnail.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
 import 'package:nc_photos/widget/photo_list_item.dart';
 import 'package:nc_photos/widget/photo_list_util.dart' as photo_list_util;
+import 'package:nc_photos/widget/place_picker/place_picker.dart';
 import 'package:nc_photos/widget/selectable_item_list.dart';
 import 'package:nc_photos/widget/selection_app_bar.dart';
 import 'package:nc_photos/widget/share_collection_dialog.dart';
@@ -62,12 +65,14 @@ import 'package:nc_photos/widget/viewer.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/or_null.dart';
 import 'package:np_datetime/np_datetime.dart';
+import 'package:np_gps_map/np_gps_map.dart';
 import 'package:np_ui/np_ui.dart';
 import 'package:to_string/to_string.dart';
 
 part 'collection_browser.g.dart';
 part 'collection_browser/app_bar.dart';
 part 'collection_browser/bloc.dart';
+part 'collection_browser/item_view.dart';
 part 'collection_browser/state_event.dart';
 part 'collection_browser/type.dart';
 part 'collection_browser/view.dart';
@@ -412,7 +417,7 @@ class _WrappedCollectionBrowserState extends State<_WrappedCollectionBrowser>
 typedef _BlocBuilder = BlocBuilder<_Bloc, _State>;
 typedef _BlocListener = BlocListener<_Bloc, _State>;
 typedef _BlocListenerT<T> = BlocListenerT<_Bloc, _State, T>;
-// typedef _BlocSelector<T> = BlocSelector<_Bloc, _State, T>;
+typedef _BlocSelector<T> = BlocSelector<_Bloc, _State, T>;
 
 extension on BuildContext {
   _Bloc get bloc => read<_Bloc>();
