@@ -16,8 +16,7 @@ class GpsMap extends StatelessWidget {
   const GpsMap({
     super.key,
     required this.providerHint,
-    required this.center,
-    required this.zoom,
+    required this.location,
     this.onTap,
   });
 
@@ -26,14 +25,12 @@ class GpsMap extends StatelessWidget {
     if (providerHint == GpsMapProvider.osm ||
         (getRawPlatform() == NpPlatform.android && !isNewGMapsRenderer())) {
       return OsmGpsMap(
-        center: center,
-        zoom: zoom,
+        location: location,
         onTap: onTap,
       );
     } else {
       return GoogleGpsMap(
-        center: center,
-        zoom: zoom,
+        location: location,
         onTap: onTap,
       );
     }
@@ -43,8 +40,6 @@ class GpsMap extends StatelessWidget {
   /// actual choice may be different depending on the runtime environment
   final GpsMapProvider providerHint;
 
-  /// A pair of latitude and longitude coordinates, stored as degrees
-  final MapCoord center;
-  final double zoom;
+  final CameraPosition location;
   final void Function()? onTap;
 }

@@ -357,8 +357,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
                     stream: context.read<PrefController>().gpsMapProvider,
                     builder: (context, gpsMapProvider) => GpsMap(
                       providerHint: gpsMapProvider.requireData,
-                      center: _gps!,
-                      zoom: 16,
+                      location: CameraPosition(center: _gps!, zoom: 16),
                       onTap: _onMapTap,
                     ),
                   ),
