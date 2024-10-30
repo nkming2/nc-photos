@@ -348,8 +348,11 @@
 	"settingsForceRotationTitle": "Döndürme kilidini yoksay",
 	"settingsForceRotationDescription": "Bu ayar Otomatik Döndürme ayarı devre dışı olsa dahi ekranı döndürmenizi sağlar",
 	"settingsMapProviderTitle": "Harita Sağlayıcısı",
+	"settingsViewerCustomizeAppBarTitle": "Altbarı Özelleştir",
+	"settingsViewerCustomizeBottomAppBarTitle": "Altbarı Özelleştir",
 	"settingsShowDateInAlbumTitle": "Fotoğrafları tarihe göre gruplara ayır",
 	"settingsShowDateInAlbumDescription": "Yalnızca albüm zamana göre sıralandığında uygula",
+	"settingsCollectionsCustomizeNavigationBarTitle": "Gezinme çubuğunu özelleştir",
 	"settingsImageEditTitle": "Editör",
 	"@settingsImageEditTitle": {
 		"description": "Include settings for image enhancements and the image editor"
@@ -1532,5 +1535,22 @@
 	"homeTabMapBrowser": "Harita",
 	"mapBrowserSetDefaultDateRangeButton": "Varsayılan olarak ayarla",
 	"todayText": "Bugün",
+	"alternativeSignIn": "Kullanıcı adı ve şifreyle oturum açın",
+	"@alternativeSignIn": {
+		"description": "Sign in using username and password instead of the recommended Nextcloud login flow"
+	},
+	"livePhotoTooltip": "Canlı fotoğraf",
+	"dragAndDropRearrangeButtons": "Düğmeleri yeniden sıralamak için sürükleyin",
+	"@dragAndDropRearrangeButtons": {
+		"description": "Instruction to customize buttons layout"
+	},
+	"customizeCollectionsNavBarDescription": "Düğmeleri yeniden sıralamak için sürükleyin, yazıyı gizlemek için düğmelere dokunabilirsiniz",
+	"@customizeCollectionsNavBarDescription": {
+		"description": "Instruction to customize navigation bar buttons in the Collections page"
+	},
+	"customizeButtonsUnsupportedWarning": "Bu buton özelleştirilemez",
+	"@customizeButtonsUnsupportedWarning": {
+		"description": "Some button can't be removed. This message will be shown instead when user try to do so"
+	},
 	"dontShowAgain": "Tekrar gösterme"
 }
