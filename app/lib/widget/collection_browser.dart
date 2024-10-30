@@ -68,6 +68,7 @@ import 'package:to_string/to_string.dart';
 part 'collection_browser.g.dart';
 part 'collection_browser/app_bar.dart';
 part 'collection_browser/bloc.dart';
+part 'collection_browser/item_view.dart';
 part 'collection_browser/state_event.dart';
 part 'collection_browser/type.dart';
 part 'collection_browser/view.dart';

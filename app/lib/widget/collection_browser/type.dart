@@ -101,7 +101,11 @@ class _LabelItem extends _ActualItem {
     required super.original,
     required this.id,
     required this.text,
+    required this.onEditPressed,
   });
+
+  @override
+  bool get isDraggable => true;
 
   @override
   bool operator ==(Object other) =>
@@ -115,39 +119,24 @@ class _LabelItem extends _ActualItem {
 
   @override
   Widget buildWidget(BuildContext context) {
-    return PhotoListLabel(
-      text: text,
-    );
-  }
-
-  final Object id;
-  final String text;
-}
-
-class _EditLabelListItem extends _LabelItem {
-  const _EditLabelListItem({
-    required super.original,
-    required super.id,
-    required super.text,
-    required this.onEditPressed,
-  });
-
-  @override
-  bool get isDraggable => true;
-
-  @override
-  Widget buildWidget(BuildContext context) {
-    return PhotoListLabelEdit(
-      text: text,
-      onEditPressed: onEditPressed,
+    return _BlocSelector(
+      selector: (state) => state.isEditMode,
+      builder: (context, isEditMode) => isEditMode
+          ? _EditLabelView(
+              text: text,
+              onEditPressed: onEditPressed,
+            )
+          : _LabelView(text: text),
     );
   }
 
   @override
   Widget? buildDragFeedbackWidget(BuildContext context) {
-    return super.buildWidget(context);
+    return _LabelView(text: text);
   }
 
+  final Object id;
+  final String text;
   final VoidCallback? onEditPressed;
 }
 

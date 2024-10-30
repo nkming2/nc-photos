@@ -497,22 +497,14 @@ class _Bloc extends Bloc<_Event, _State>
               "[_transformItems] Unsupported file format: ${item.file.fdMime}");
         }
       } else if (item is CollectionLabelItem) {
-        if (state.isEditMode) {
-          transformed.add(_EditLabelListItem(
-            original: item,
-            id: item.id,
-            text: item.text,
-            onEditPressed: () {
-              // TODO
-            },
-          ));
-        } else {
-          transformed.add(_LabelItem(
-            original: item,
-            id: item.id,
-            text: item.text,
-          ));
-        }
+        transformed.add(_LabelItem(
+          original: item,
+          id: item.id,
+          text: item.text,
+          onEditPressed: () {
+            // TODO
+          },
+        ));
       }
     }
     return _TransformResult(
