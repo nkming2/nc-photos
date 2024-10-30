@@ -1521,6 +1521,7 @@
 	"@customizeButtonsUnsupportedWarning": {
 		"description": "Some button can't be removed. This message will be shown instead when user try to do so"
 	},
+	"placePickerTitle": "Pick a place",
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {

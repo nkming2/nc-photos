@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_cluster_manager/google_maps_cluster_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:latlong2/latlong.dart' as type;
 import 'package:np_common/object_util.dart';
 import 'package:np_gps_map/src/interactive_map.dart';
 import 'package:np_gps_map/src/map_coord.dart';
+import 'package:np_gps_map/src/type.dart' as type;
 
 typedef GoogleClusterBuilder = FutureOr<BitmapDescriptor> Function(
     BuildContext context, List<DataPoint> dataPoints);
@@ -20,6 +22,7 @@ class GoogleInteractiveMap extends StatefulWidget {
     this.onClusterTap,
     this.contentPadding,
     this.onMapCreated,
+    this.onCameraMove,
   });
 
   @override
@@ -32,6 +35,7 @@ class GoogleInteractiveMap extends StatefulWidget {
   final void Function(List<DataPoint> dataPoints)? onClusterTap;
   final EdgeInsets? contentPadding;
   final void Function(InteractiveMapController controller)? onMapCreated;
+  final void Function(type.CameraPosition position)? onCameraMove;
 }
 
 class _GoogleInteractiveMapState extends State<GoogleInteractiveMap> {
@@ -57,7 +61,17 @@ class _GoogleInteractiveMapState extends State<GoogleInteractiveMap> {
           const CameraPosition(target: LatLng(0, 0)),
       markers: _markers,
       onMapCreated: _onMapCreated,
-      onCameraMove: _clusterManager.onCameraMove,
+      onCameraMove: (position) {
+        _clusterManager.onCameraMove(position);
+        widget.onCameraMove?.call(type.CameraPosition(
+          center: type.LatLng(
+            position.target.latitude,
+            position.target.longitude,
+          ),
+          zoom: position.zoom,
+          rotation: position.bearing,
+        ));
+      },
       onCameraIdle: _clusterManager.updateMap,
       padding: widget.contentPadding ?? EdgeInsets.zero,
     );

@@ -268,6 +268,7 @@
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
     "customizeButtonsUnsupportedWarning",
+    "placePickerTitle",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -286,7 +287,8 @@
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
-    "customizeButtonsUnsupportedWarning"
+    "customizeButtonsUnsupportedWarning",
+    "placePickerTitle"
   ],
 
   "de": [
@@ -297,7 +299,8 @@
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
-    "customizeButtonsUnsupportedWarning"
+    "customizeButtonsUnsupportedWarning",
+    "placePickerTitle"
   ],
 
   "el": [
@@ -453,7 +456,8 @@
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
-    "customizeButtonsUnsupportedWarning"
+    "customizeButtonsUnsupportedWarning",
+    "placePickerTitle"
   ],
 
   "es": [
@@ -464,7 +468,8 @@
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
-    "customizeButtonsUnsupportedWarning"
+    "customizeButtonsUnsupportedWarning",
+    "placePickerTitle"
   ],
 
   "fi": [
@@ -511,7 +516,8 @@
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
-    "customizeButtonsUnsupportedWarning"
+    "customizeButtonsUnsupportedWarning",
+    "placePickerTitle"
   ],
 
   "fr": [
@@ -558,7 +564,8 @@
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
-    "customizeButtonsUnsupportedWarning"
+    "customizeButtonsUnsupportedWarning",
+    "placePickerTitle"
   ],
 
   "it": [
@@ -610,7 +617,8 @@
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
-    "customizeButtonsUnsupportedWarning"
+    "customizeButtonsUnsupportedWarning",
+    "placePickerTitle"
   ],
 
   "nl": [
@@ -999,6 +1007,7 @@
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
     "customizeButtonsUnsupportedWarning",
+    "placePickerTitle",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -1057,7 +1066,8 @@
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
-    "customizeButtonsUnsupportedWarning"
+    "customizeButtonsUnsupportedWarning",
+    "placePickerTitle"
   ],
 
   "pt": [
@@ -1124,7 +1134,8 @@
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
-    "customizeButtonsUnsupportedWarning"
+    "customizeButtonsUnsupportedWarning",
+    "placePickerTitle"
   ],
 
   "ru": [
@@ -1171,7 +1182,8 @@
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
-    "customizeButtonsUnsupportedWarning"
+    "customizeButtonsUnsupportedWarning",
+    "placePickerTitle"
   ],
 
   "tr": [
@@ -1182,7 +1194,8 @@
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
-    "customizeButtonsUnsupportedWarning"
+    "customizeButtonsUnsupportedWarning",
+    "placePickerTitle"
   ],
 
   "zh": [
@@ -1260,7 +1273,8 @@
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
-    "customizeButtonsUnsupportedWarning"
+    "customizeButtonsUnsupportedWarning",
+    "placePickerTitle"
   ],
 
   "zh_Hant": [
@@ -1432,6 +1446,7 @@
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
     "customizeCollectionsNavBarDescription",
-    "customizeButtonsUnsupportedWarning"
+    "customizeButtonsUnsupportedWarning",
+    "placePickerTitle"
   ]
 }

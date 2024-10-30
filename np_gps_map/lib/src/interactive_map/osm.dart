@@ -8,6 +8,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:np_common/object_util.dart';
 import 'package:np_gps_map/src/interactive_map.dart';
 import 'package:np_gps_map/src/map_coord.dart';
+import 'package:np_gps_map/src/type.dart';
 import 'package:rxdart/rxdart.dart';
 
 typedef OsmClusterBuilder = Widget Function(
@@ -23,6 +24,7 @@ class OsmInteractiveMap extends StatefulWidget {
     this.onClusterTap,
     this.contentPadding,
     this.onMapCreated,
+    this.onCameraMove,
   });
 
   @override
@@ -35,6 +37,7 @@ class OsmInteractiveMap extends StatefulWidget {
   final void Function(List<DataPoint> dataPoints)? onClusterTap;
   final EdgeInsets? contentPadding;
   final void Function(InteractiveMapController controller)? onMapCreated;
+  final void Function(CameraPosition position)? onCameraMove;
 }
 
 class _OsmInteractiveMapState extends State<OsmInteractiveMap> {
@@ -47,6 +50,11 @@ class _OsmInteractiveMapState extends State<OsmInteractiveMap> {
         widget.onMapCreated?.call(_parentController!);
         _subscriptions.add(_controller.mapEventStream.listen((ev) {
           _mapRotationRadSubject.add(ev.camera.rotationRad);
+          widget.onCameraMove?.call(CameraPosition(
+            center: ev.camera.center,
+            zoom: ev.camera.zoom,
+            rotation: (360 - ev.camera.rotation) % 360,
+          ));
         }));
       }
     });
