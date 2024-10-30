@@ -355,7 +355,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
                   height: 256,
                   child: ValueStreamBuilder<GpsMapProvider>(
                     stream: context.read<PrefController>().gpsMapProvider,
-                    builder: (context, gpsMapProvider) => GpsMap(
+                    builder: (context, gpsMapProvider) => StaticMap(
                       providerHint: gpsMapProvider.requireData,
                       location: CameraPosition(center: _gps!, zoom: 16),
                       onTap: _onMapTap,

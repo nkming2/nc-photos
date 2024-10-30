@@ -3,6 +3,12 @@ import 'package:google_maps_flutter/google_maps_flutter.dart' as gmap;
 import 'package:latlong2/latlong.dart';
 import 'package:np_common/type.dart';
 
+enum GpsMapProvider {
+  google,
+  osm,
+  ;
+}
+
 /// A pair of latitude and longitude coordinates, stored as degrees
 class MapCoord {
   const MapCoord(this.latitude, this.longitude);

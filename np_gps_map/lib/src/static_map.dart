@@ -6,14 +6,8 @@ import 'package:np_gps_map/src/type.dart';
 import 'package:np_gps_map/src/util.dart';
 import 'package:np_platform_util/np_platform_util.dart';
 
-enum GpsMapProvider {
-  google,
-  osm,
-  ;
-}
-
-class GpsMap extends StatelessWidget {
-  const GpsMap({
+class StaticMap extends StatelessWidget {
+  const StaticMap({
     super.key,
     required this.providerHint,
     required this.location,

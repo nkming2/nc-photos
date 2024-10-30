@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:np_gps_map/src/gps_map.dart';
 import 'package:np_gps_map/src/interactive_map/google.dart';
 import 'package:np_gps_map/src/interactive_map/osm.dart';
 import 'package:np_gps_map/src/type.dart';
