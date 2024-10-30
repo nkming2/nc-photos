@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:np_gps_map/src/map_coord.dart';
+import 'package:np_gps_map/src/type.dart' as type;
 
 class GoogleGpsMap extends StatelessWidget {
   const GoogleGpsMap({
@@ -46,7 +46,7 @@ class GoogleGpsMap extends StatelessWidget {
     );
   }
 
-  final MapCoord center;
+  final type.MapCoord center;
   final double zoom;
   final VoidCallback? onTap;
 }

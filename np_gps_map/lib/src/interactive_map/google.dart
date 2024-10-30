@@ -3,10 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_cluster_manager/google_maps_cluster_manager.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:latlong2/latlong.dart' as type;
 import 'package:np_common/object_util.dart';
 import 'package:np_gps_map/src/interactive_map.dart';
-import 'package:np_gps_map/src/map_coord.dart';
 import 'package:np_gps_map/src/type.dart' as type;
 
 typedef GoogleClusterBuilder = FutureOr<BitmapDescriptor> Function(
@@ -28,7 +26,7 @@ class GoogleInteractiveMap extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _GoogleInteractiveMapState();
 
-  final MapCoord? initialPosition;
+  final type.MapCoord? initialPosition;
   final double? initialZoom;
   final List<DataPoint>? dataPoints;
   final GoogleClusterBuilder? clusterBuilder;
@@ -64,10 +62,7 @@ class _GoogleInteractiveMapState extends State<GoogleInteractiveMap> {
       onCameraMove: (position) {
         _clusterManager.onCameraMove(position);
         widget.onCameraMove?.call(type.CameraPosition(
-          center: type.LatLng(
-            position.target.latitude,
-            position.target.longitude,
-          ),
+          center: position.target.toMapCoord(),
           zoom: position.zoom,
           rotation: position.bearing,
         ));
@@ -134,7 +129,7 @@ class _ParentController implements InteractiveMapController {
   const _ParentController(this.controller);
 
   @override
-  void setPosition(MapCoord position) {
+  void setPosition(type.MapCoord position) {
     controller
         .animateCamera(CameraUpdate.newLatLngZoom(position.toLatLng(), 10));
   }
@@ -142,7 +137,7 @@ class _ParentController implements InteractiveMapController {
   final GoogleMapController controller;
 }
 
-extension on MapCoord {
+extension on type.MapCoord {
   LatLng toLatLng() => LatLng(latitude, longitude);
 }
 

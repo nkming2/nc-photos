@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:np_gps_map/src/map_coord.dart';
 import 'package:np_gps_map/src/native/google_gps_map.dart'
     if (dart.library.html) 'package:np_gps_map/src/web/google_gps_map.dart';
 import 'package:np_gps_map/src/osm_gps_map.dart';
+import 'package:np_gps_map/src/type.dart';
 import 'package:np_gps_map/src/util.dart';
 import 'package:np_platform_util/np_platform_util.dart';
 

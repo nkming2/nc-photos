@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:np_gps_map/src/gps_map.dart';
 import 'package:np_gps_map/src/interactive_map.dart';
-import 'package:np_gps_map/src/map_coord.dart';
 import 'package:np_gps_map/src/type.dart';
 
 class PlacePickerView extends StatelessWidget {

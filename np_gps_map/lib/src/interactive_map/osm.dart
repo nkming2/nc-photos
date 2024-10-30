@@ -7,7 +7,6 @@ import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:np_common/object_util.dart';
 import 'package:np_gps_map/src/interactive_map.dart';
-import 'package:np_gps_map/src/map_coord.dart';
 import 'package:np_gps_map/src/type.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -51,7 +50,7 @@ class _OsmInteractiveMapState extends State<OsmInteractiveMap> {
         _subscriptions.add(_controller.mapEventStream.listen((ev) {
           _mapRotationRadSubject.add(ev.camera.rotationRad);
           widget.onCameraMove?.call(CameraPosition(
-            center: ev.camera.center,
+            center: ev.camera.center.toMapCoord(),
             zoom: ev.camera.zoom,
             rotation: (360 - ev.camera.rotation) % 360,
           ));
