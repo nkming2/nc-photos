@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:android_intent_plus/android_intent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -19,6 +18,7 @@ import 'package:nc_photos/entity/exif_extension.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
+import 'package:nc_photos/gps_map_util.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/platform/features.dart' as features;
@@ -358,7 +358,10 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
                     builder: (context, gpsMapProvider) => StaticMap(
                       providerHint: gpsMapProvider.requireData,
                       location: CameraPosition(center: _gps!, zoom: 16),
-                      onTap: _onMapTap,
+                      onTap: () => launchExternalMap(CameraPosition(
+                        center: _gps!,
+                        zoom: 16,
+                      )),
                     ),
                   ),
                 ),
@@ -490,16 +493,6 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     assert(_file != null);
     final c = KiwiContainer().resolve<DiContainer>();
     SetAsHandler(c, context: context).setAsFile(widget.account, _file!);
-  }
-
-  void _onMapTap() {
-    if (getRawPlatform() == NpPlatform.android) {
-      final intent = AndroidIntent(
-        action: "action_view",
-        data: Uri.encodeFull("geo:${_gps!.latitude},${_gps!.longitude}?z=16"),
-      );
-      intent.launch();
-    }
   }
 
   void _onDateTimeTap(BuildContext context) {
