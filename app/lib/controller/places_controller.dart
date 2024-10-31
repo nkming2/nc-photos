@@ -4,6 +4,7 @@ import 'package:copy_with/copy_with.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/di_container.dart';
+import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/use_case/list_location_group.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:rxdart/rxdart.dart';
@@ -47,6 +48,8 @@ class PlacesController {
     return _placeStreamContorller.stream;
   }
 
+  Stream<ExceptionEvent> get errorStream => _placeErrorStreamController.stream;
+
   Future<void> reload() async {
     if (_isPlaceStreamInited) {
       return _load();
@@ -67,7 +70,7 @@ class PlacesController {
         );
         _placeStreamContorller.add(lastData);
       },
-      onError: _placeStreamContorller.addError,
+      onError: _placeErrorStreamController.add,
       onDone: () => completer.complete(),
     );
     await completer.future;
@@ -84,4 +87,6 @@ class PlacesController {
       hasNext: true,
     ),
   );
+  final _placeErrorStreamController =
+      StreamController<ExceptionEvent>.broadcast();
 }

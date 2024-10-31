@@ -131,13 +131,14 @@ class _Bloc extends Bloc<_Event, _State>
           rawItems: data.items,
           isLoading: data.hasNext,
         ),
-        onError: (e, stackTrace) {
-          _log.severe("[_onLoad] Uncaught exception", e, stackTrace);
-          return state.copyWith(
-            isLoading: false,
-            error: ExceptionEvent(e, stackTrace),
-          );
-        },
+      ),
+      forEach(
+        emit,
+        itemsController.errorStream,
+        onData: (data) => state.copyWith(
+          isLoading: false,
+          error: data,
+        ),
       ),
       // do we need this as we already filter files in filesController?
       forEach(

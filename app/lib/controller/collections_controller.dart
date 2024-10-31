@@ -18,6 +18,7 @@ import 'package:nc_photos/entity/collection_item/util.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/sharee.dart';
 import 'package:nc_photos/exception.dart';
+import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/rx_extension.dart';
 import 'package:nc_photos/use_case/collection/create_collection.dart';
 import 'package:nc_photos/use_case/collection/edit_collection.dart';
@@ -98,6 +99,8 @@ class CollectionsController {
   /// Peek the stream and return the current value
   CollectionStreamEvent peekStream() => _dataStreamController.stream.value;
 
+  Stream<ExceptionEvent> get errorStream => _dataErrorStreamController.stream;
+
   /// Reload the data
   ///
   /// The data will be loaded automatically when the stream is first listened so
@@ -109,7 +112,7 @@ class CollectionsController {
       (c) {
         results = c;
       },
-      onError: _dataStreamController.addError,
+      onError: _dataErrorStreamController.add,
       onDone: () => completer.complete(),
     );
     await completer.future;
@@ -225,7 +228,7 @@ class CollectionsController {
       });
       _updateCollection(c, newItems?.whereNotNull().toList());
     } catch (e, stackTrace) {
-      _dataStreamController.addError(e, stackTrace);
+      _dataErrorStreamController.add(ExceptionEvent(e, stackTrace));
     }
   }
 
@@ -246,11 +249,11 @@ class CollectionsController {
         _updateCollection(newCollection!);
       }
       if (result == CollectionShareResult.partial) {
-        _dataStreamController
-            .addError(CollectionPartialShareException(sharee.shareWith.raw));
+        _dataErrorStreamController.add(ExceptionEvent(
+            CollectionPartialShareException(sharee.shareWith.raw)));
       }
     } catch (e, stackTrace) {
-      _dataStreamController.addError(e, stackTrace);
+      _dataErrorStreamController.add(ExceptionEvent(e, stackTrace));
     }
   }
 
@@ -271,11 +274,11 @@ class CollectionsController {
         _updateCollection(newCollection!);
       }
       if (result == CollectionShareResult.partial) {
-        _dataStreamController
-            .addError(CollectionPartialUnshareException(share.username));
+        _dataErrorStreamController.add(
+            ExceptionEvent(CollectionPartialUnshareException(share.username)));
       }
     } catch (e, stackTrace) {
-      _dataStreamController.addError(e, stackTrace);
+      _dataErrorStreamController.add(ExceptionEvent(e, stackTrace));
     }
   }
 
@@ -293,7 +296,7 @@ class CollectionsController {
           ));
       return newCollection;
     } catch (e, stackTrace) {
-      _dataStreamController.addError(e, stackTrace);
+      _dataErrorStreamController.add(ExceptionEvent(e, stackTrace));
       return null;
     }
   }
@@ -312,7 +315,7 @@ class CollectionsController {
         );
         _dataStreamController.add(lastData);
       },
-      onError: _dataStreamController.addError,
+      onError: _dataErrorStreamController.add,
       onDone: () => completer.complete(),
     );
     await completer.future;
@@ -376,6 +379,8 @@ class CollectionsController {
       hasNext: true,
     ),
   );
+  final _dataErrorStreamController =
+      StreamController<ExceptionEvent>.broadcast();
 
   final _itemControllers = <_CollectionKey, CollectionItemsController>{};
 

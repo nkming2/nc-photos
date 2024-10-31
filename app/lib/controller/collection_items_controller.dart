@@ -16,7 +16,6 @@ import 'package:nc_photos/entity/collection_item/new_item.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/exception_event.dart';
-import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/rx_extension.dart';
 import 'package:nc_photos/use_case/collection/add_file_to_collection.dart';
 import 'package:nc_photos/use_case/collection/list_collection_item.dart';
@@ -25,6 +24,7 @@ import 'package:nc_photos/use_case/collection/update_collection_post_load.dart';
 import 'package:nc_photos/use_case/remove.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_collection/np_collection.dart';
+import 'package:np_common/object_util.dart';
 import 'package:rxdart/rxdart.dart';
 
 part 'collection_items_controller.g.dart';
@@ -87,6 +87,8 @@ class CollectionItemsController {
     return _dataStreamController.stream;
   }
 
+  Stream<ExceptionEvent> get errorStream => _dataErrorStreamController.stream;
+
   /// Peek the stream and return the current value
   CollectionItemStreamData peekStream() => _dataStreamController.stream.value;
 
@@ -142,8 +144,7 @@ class CollectionItemsController {
       );
 
       if (isInited) {
-        error
-            ?.run((e) => _dataStreamController.addError(e.error, e.stackTrace));
+        error?.also(_dataErrorStreamController.add);
         var finalize = _dataStreamController.value.items.toList();
         if (failed.isNotEmpty) {
           // remove failed items
@@ -216,8 +217,7 @@ class CollectionItemsController {
       );
 
       if (isInited) {
-        error
-            ?.run((e) => _dataStreamController.addError(e.error, e.stackTrace));
+        error?.also(_dataErrorStreamController.add);
         if (failed.isNotEmpty) {
           _dataStreamController.addWithValue((value) => value.copyWith(
                 items: [...value.items, ...failed],
@@ -276,8 +276,7 @@ class CollectionItemsController {
       );
 
       if (isInited) {
-        error
-            ?.run((e) => _dataStreamController.addError(e.error, e.stackTrace));
+        error?.also(_dataErrorStreamController.add);
         if (failed.isNotEmpty) {
           _dataStreamController.addWithValue((value) => value.copyWith(
                 items: [...value.items, ...failed],
@@ -347,9 +346,8 @@ class CollectionItemsController {
         }
       }
     } catch (e, stackTrace) {
-      _dataStreamController
-        ..addError(e, stackTrace)
-        ..addWithValue((v) => v.copyWith(hasNext: false));
+      _dataErrorStreamController.add(ExceptionEvent(e, stackTrace));
+      _dataStreamController.addWithValue((v) => v.copyWith(hasNext: false));
     }
   }
 
@@ -401,6 +399,8 @@ class CollectionItemsController {
       hasNext: true,
     ),
   );
+  final _dataErrorStreamController =
+      StreamController<ExceptionEvent>.broadcast();
   late final BehaviorSubject<int?> _countStreamController;
 
   final _mutex = Mutex();

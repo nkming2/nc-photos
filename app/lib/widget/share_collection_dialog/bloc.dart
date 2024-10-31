@@ -27,7 +27,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
 
     on<_SetError>(_onSetError);
 
-    _collectionControllerSubscription = collectionsController.stream.listen(
+    _subscriptions.add(collectionsController.stream.listen(
       (event) {
         final c = event.data
             .firstWhere((d) => state.collection.compareIdentity(d.collection));
@@ -35,10 +35,10 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
           add(_UpdateCollection(c.collection));
         }
       },
-      onError: (e, stackTrace) {
-        add(_SetError(e, stackTrace));
-      },
-    );
+    ));
+    _subscriptions.add(collectionsController.errorStream.listen((ev) {
+      add(_SetError(ev.error, ev.stackTrace));
+    }));
   }
 
   @override
@@ -46,7 +46,9 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
 
   @override
   Future<void> close() {
-    _collectionControllerSubscription?.cancel();
+    for (final s in _subscriptions) {
+      s.cancel();
+    }
     return super.close();
   }
 
@@ -159,6 +161,6 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   final Account account;
   final CollectionsController collectionsController;
 
-  StreamSubscription? _collectionControllerSubscription;
+  final _subscriptions = <StreamSubscription>[];
   var _isHandlingError = false;
 }

@@ -10,6 +10,7 @@ import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/share.dart';
 import 'package:nc_photos/event/event.dart';
+import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/rx_extension.dart';
 import 'package:nc_photos/use_case/list_share_with_me.dart';
@@ -90,6 +91,9 @@ class SharingsController {
     return _sharingStreamContorller.stream;
   }
 
+  Stream<ExceptionEvent> get errorStream =>
+      _sharingErrorStreamController.stream;
+
   /// In the future we need to get rid of the listeners and this reload function
   /// and move all manipulations to this controller
   Future<void> reload() async {
@@ -114,7 +118,7 @@ class SharingsController {
           _sharingStreamContorller.add(lastData);
         }
       },
-      onError: _sharingStreamContorller.addError,
+      onError: _sharingErrorStreamController.add,
       onDone: () => completer.complete(),
     );
     await completer.future;
@@ -187,6 +191,8 @@ class SharingsController {
   final _sharingStreamContorller = BehaviorSubject.seeded(
     const SharingStreamEvent(data: [], hasNext: true),
   );
+  final _sharingErrorStreamController =
+      StreamController<ExceptionEvent>.broadcast();
 
   AppEventListener<ShareRemovedEvent>? _shareRemovedListener;
   AppEventListener<FileMovedEvent>? _fileMovedEventListener;

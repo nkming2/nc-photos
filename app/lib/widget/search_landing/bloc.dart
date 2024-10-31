@@ -19,21 +19,24 @@ class _Bloc extends Bloc<_Event, _State>
 
   Future<void> _onLoadPersons(_LoadPersons ev, Emitter<_State> emit) {
     _log.info(ev);
-    return forEach(
-      emit,
-      personsController.stream,
-      onData: (data) => state.copyWith(
-        persons: data.data,
-        isPersonsLoading: data.hasNext,
+    return Future.wait([
+      forEach(
+        emit,
+        personsController.stream,
+        onData: (data) => state.copyWith(
+          persons: data.data,
+          isPersonsLoading: data.hasNext,
+        ),
       ),
-      onError: (e, stackTrace) {
-        _log.severe("[_onLoadPersons] Uncaught exception", e, stackTrace);
-        return state.copyWith(
+      forEach(
+        emit,
+        personsController.errorStream,
+        onData: (data) => state.copyWith(
           isPersonsLoading: false,
-          error: ExceptionEvent(e, stackTrace),
-        );
-      },
-    );
+          error: data,
+        ),
+      ),
+    ]);
   }
 
   Future<void> _onTransformPersonItems(
@@ -56,21 +59,24 @@ class _Bloc extends Bloc<_Event, _State>
 
   Future<void> _onLoadPlaces(_LoadPlaces ev, Emitter<_State> emit) {
     _log.info(ev);
-    return forEach(
-      emit,
-      placesController.stream,
-      onData: (data) => state.copyWith(
-        places: data.data,
-        isPlacesLoading: data.hasNext,
+    return Future.wait([
+      forEach(
+        emit,
+        placesController.stream,
+        onData: (data) => state.copyWith(
+          places: data.data,
+          isPlacesLoading: data.hasNext,
+        ),
       ),
-      onError: (e, stackTrace) {
-        _log.severe("[_onLoadPlaces] Uncaught exception", e, stackTrace);
-        return state.copyWith(
+      forEach(
+        emit,
+        placesController.errorStream,
+        onData: (data) => state.copyWith(
           isPlacesLoading: false,
-          error: ExceptionEvent(e, stackTrace),
-        );
-      },
-    );
+          error: data,
+        ),
+      ),
+    ]);
   }
 
   Future<void> _onTransformPlaceItems(

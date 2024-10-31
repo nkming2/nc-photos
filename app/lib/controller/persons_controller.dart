@@ -6,6 +6,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/controller/account_pref_controller.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/person.dart';
+import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/use_case/person/list_person.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:rxdart/rxdart.dart';
@@ -58,6 +59,8 @@ class PersonsController {
     return _personStreamContorller.stream;
   }
 
+  Stream<ExceptionEvent> get errorStream => _personErrorStreamController.stream;
+
   Future<void> reload() async {
     if (_isPersonStreamInited) {
       return _load();
@@ -80,7 +83,7 @@ class PersonsController {
         );
         _personStreamContorller.add(lastData);
       },
-      onError: _personStreamContorller.addError,
+      onError: _personErrorStreamController.add,
       onDone: () => completer.complete(),
     );
     await completer.future;
@@ -97,4 +100,6 @@ class PersonsController {
   final _personStreamContorller = BehaviorSubject.seeded(
     const PersonStreamEvent(data: [], hasNext: true),
   );
+  final _personErrorStreamController =
+      StreamController<ExceptionEvent>.broadcast();
 }
