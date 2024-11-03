@@ -16,6 +16,7 @@ void main() {
       test("file w/ metadata-photos-ifd0", _filesNc28MetadataIfd0);
       test("file w/ metadata-photos-exif", _filesNc28MetadataExif);
       test("file w/ metadata-photos-gps", _filesNc28MetadataGps);
+      test("file w/ metadata-photos-size", _filesNc28MetadataSize);
     });
   });
 }
@@ -584,6 +585,53 @@ Future<void> _filesNc28MetadataGps() async {
         "latitude": "1.23456",
         "longitude": "2.34567",
         "altitude": "3.45678",
+      },
+    ),
+  ]);
+}
+
+Future<void> _filesNc28MetadataSize() async {
+  const xml = """
+<?xml version="1.0"?>
+<d:multistatus xmlns:d="DAV:"
+	xmlns:s="http://sabredav.org/ns"
+	xmlns:oc="http://owncloud.org/ns"
+	xmlns:nc="http://nextcloud.org/ns">
+	<d:response>
+		<d:href>/nextcloud/remote.php/dav/files/admin/1.jpg</d:href>
+		<d:propstat>
+			<d:prop>
+				<d:getlastmodified>Fri, 01 Jan 2021 02:03:04 GMT</d:getlastmodified>
+				<d:getetag>&quot;1324f58d4d5c8d81bed6e4ed9d5ea862&quot;</d:getetag>
+				<d:getcontenttype>image/jpeg</d:getcontenttype>
+				<d:resourcetype/>
+        <oc:fileid>123</oc:fileid>
+				<d:getcontentlength>3963036</d:getcontentlength>
+				<nc:has-preview>false</nc:has-preview>
+        <nc:metadata-photos-size>
+          <width>4032</width>
+          <height>3024</height>
+        </nc:metadata-photos-size>
+			</d:prop>
+			<d:status>HTTP/1.1 200 OK</d:status>
+		</d:propstat>
+	</d:response>
+</d:multistatus>
+""";
+  final results = await FileParser().parse(xml);
+  expect(results, [
+    File(
+      href: "/nextcloud/remote.php/dav/files/admin/1.jpg",
+      contentLength: 3963036,
+      contentType: "image/jpeg",
+      etag: "1324f58d4d5c8d81bed6e4ed9d5ea862",
+      lastModified: DateTime.utc(2021, 1, 1, 2, 3, 4),
+      hasPreview: false,
+      fileId: 123,
+      isCollection: false,
+      metadataPhotosSize: {
+        "width": "4032",
+        "height": "3024",
       },
     ),
   ]);
