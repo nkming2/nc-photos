@@ -50,7 +50,7 @@ class ApiFavoriteConverter {
 
 class ApiFileConverter {
   static File fromApi(api.File file) {
-    final metadata = file.customProperties?["com.nkming.nc_photos:metadata"]
+    var metadata = file.customProperties?["com.nkming.nc_photos:metadata"]
         ?.run((obj) => Metadata.fromJson(
               jsonDecode(obj),
               upgraderV1: MetadataUpgraderV1(
@@ -66,6 +66,15 @@ class ApiFileConverter {
                 logFilePath: file.href,
               ),
             ));
+    if (file.metadataPhotosIfd0 != null) {
+      final ifd0_metadata = Metadata.fromPhotosIfd0(file.metadataPhotosIfd0!);
+      if (metadata == null) {
+        metadata = ifd0_metadata;
+      } else {
+        metadata = metadata.copyWith(exif: ifd0_metadata.exif);
+      }
+    }
+
     return File(
       path: _hrefToPath(file.href),
       contentLength: file.contentLength,
