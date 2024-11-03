@@ -87,6 +87,7 @@ class File with EquatableMixin {
     this.metadataPhotosIfd0,
     this.metadataPhotosExif,
     this.metadataPhotosGps,
+    this.metadataPhotosSize,
     this.customProperties,
   });
 
@@ -112,6 +113,7 @@ class File with EquatableMixin {
         metadataPhotosIfd0,
         metadataPhotosExif,
         metadataPhotosGps,
+        metadataPhotosSize,
         customProperties,
       ];
 
@@ -132,6 +134,7 @@ class File with EquatableMixin {
   final Map<String, String>? metadataPhotosIfd0;
   final Map<String, String>? metadataPhotosExif;
   final Map<String, String>? metadataPhotosGps;
+  final Map<String, String>? metadataPhotosSize;
   final Map<String, String>? customProperties;
 }
 

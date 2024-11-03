@@ -36,6 +36,7 @@ class FileParser extends XmlResponseParser {
     Map<String, String>? metadataPhotosIfd0;
     Map<String, String>? metadataPhotosExif;
     Map<String, String>? metadataPhotosGps;
+    Map<String, String>? metadataPhotosSize;
     Map<String, String>? customProperties;
 
     for (final child in element.children.whereType<XmlElement>()) {
@@ -72,6 +73,7 @@ class FileParser extends XmlResponseParser {
         metadataPhotosIfd0 = propParser.metadataPhotosIfd0;
         metadataPhotosExif = propParser.metadataPhotosExif;
         metadataPhotosGps = propParser.metadataPhotosGps;
+        metadataPhotosSize = propParser.metadataPhotosSize;
         customProperties = propParser.customProperties;
       }
     }
@@ -94,6 +96,7 @@ class FileParser extends XmlResponseParser {
       metadataPhotosIfd0: metadataPhotosIfd0,
       metadataPhotosExif: metadataPhotosExif,
       metadataPhotosGps: metadataPhotosGps,
+      metadataPhotosSize: metadataPhotosSize,
       customProperties: customProperties,
     );
   }
@@ -165,6 +168,11 @@ class _PropParser {
         for (final c in child.children.whereType<XmlElement>()) {
           (_metadataPhotosGps ??= {})[c.localName] = c.innerText;
         }
+      } else if (child.matchQualifiedName("metadata-photos-size",
+          prefix: "http://nextcloud.org/ns", namespaces: namespaces)) {
+        for (final c in child.children.whereType<XmlElement>()) {
+          (_metadataPhotosSize ??= {})[c.localName] = c.innerText;
+        }
       } else {
         final key = child.name.prefix == null
             ? child.localName
@@ -190,6 +198,7 @@ class _PropParser {
   Map<String, String>? get metadataPhotosIfd0 => _metadataPhotosIfd0;
   Map<String, String>? get metadataPhotosExif => _metadataPhotosExif;
   Map<String, String>? get metadataPhotosGps => _metadataPhotosGps;
+  Map<String, String>? get metadataPhotosSize => _metadataPhotosSize;
   Map<String, String>? get customProperties => _customProperties;
 
   final Map<String, String> namespaces;
@@ -210,6 +219,7 @@ class _PropParser {
   Map<String, String>? _metadataPhotosIfd0;
   Map<String, String>? _metadataPhotosExif;
   Map<String, String>? _metadataPhotosGps;
+  Map<String, String>? _metadataPhotosSize;
   Map<String, String>? _customProperties;
 }
 
