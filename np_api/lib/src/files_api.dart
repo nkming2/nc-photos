@@ -73,6 +73,8 @@ class ApiFiles {
     trashbinOriginalLocation,
     trashbinDeletionTime,
     metadataPhotosIfd0,
+    metadataPhotosExif,
+    metadataPhotosGps,
     Map<String, String>? customNamespaces,
     List<String>? customProperties,
   }) async {
@@ -98,7 +100,9 @@ class ApiFiles {
           trashbinFilename != null ||
           trashbinOriginalLocation != null ||
           trashbinDeletionTime != null ||
-          metadataPhotosIfd0 != null);
+          metadataPhotosIfd0 != null ||
+          metadataPhotosExif != null ||
+          metadataPhotosGps != null);
       if (!hasDavNs && !hasOcNs && !hasNcNs) {
         // no body
         return await _api.request("PROPFIND", path);
@@ -179,6 +183,12 @@ class ApiFiles {
             }
             if (metadataPhotosIfd0 != null) {
               builder.element("nc:metadata-photos-ifd0");
+            }
+            if (metadataPhotosExif != null) {
+              builder.element("nc:metadata-photos-exif");
+            }
+            if (metadataPhotosGps != null) {
+              builder.element("nc:metadata-photos-gps");
             }
             for (final p in customProperties ?? []) {
               builder.element(p);
