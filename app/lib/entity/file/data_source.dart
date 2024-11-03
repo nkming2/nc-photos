@@ -55,6 +55,7 @@ class FileWebdavDataSource implements FileDataSource {
       trashbinFilename: 1,
       trashbinOriginalLocation: 1,
       trashbinDeletionTime: 1,
+      metadataPhotosIfd0: 1,
       customNamespaces: {
         "com.nkming.nc_photos": "app",
       },
@@ -275,6 +276,7 @@ class FileWebdavDataSource implements FileDataSource {
     trashbinFilename,
     trashbinOriginalLocation,
     trashbinDeletionTime,
+    metadataPhotosIfd0,
     Map<String, String>? customNamespaces,
     List<String>? customProperties,
   }) async {
@@ -302,6 +304,7 @@ class FileWebdavDataSource implements FileDataSource {
           trashbinFilename: trashbinFilename,
           trashbinOriginalLocation: trashbinOriginalLocation,
           trashbinDeletionTime: trashbinDeletionTime,
+          metadataPhotosIfd0: metadataPhotosIfd0,
           customNamespaces: customNamespaces,
           customProperties: customProperties,
         );

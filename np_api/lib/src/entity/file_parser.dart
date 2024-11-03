@@ -33,6 +33,7 @@ class FileParser extends XmlResponseParser {
     String? trashbinFilename;
     String? trashbinOriginalLocation;
     DateTime? trashbinDeletionTime;
+    Map<String, String>? metadataPhotosIfd0;
     Map<String, String>? customProperties;
 
     for (final child in element.children.whereType<XmlElement>()) {
@@ -66,6 +67,7 @@ class FileParser extends XmlResponseParser {
         trashbinFilename = propParser.trashbinFilename;
         trashbinOriginalLocation = propParser.trashbinOriginalLocation;
         trashbinDeletionTime = propParser.trashbinDeletionTime;
+        metadataPhotosIfd0 = propParser.metadataPhotosIfd0;
         customProperties = propParser.customProperties;
       }
     }
@@ -85,6 +87,7 @@ class FileParser extends XmlResponseParser {
       trashbinFilename: trashbinFilename,
       trashbinOriginalLocation: trashbinOriginalLocation,
       trashbinDeletionTime: trashbinDeletionTime,
+      metadataPhotosIfd0: metadataPhotosIfd0,
       customProperties: customProperties,
     );
   }
@@ -140,6 +143,11 @@ class _PropParser {
           prefix: "http://nextcloud.org/ns", namespaces: namespaces)) {
         _trashbinDeletionTime = DateTime.fromMillisecondsSinceEpoch(
             int.parse(child.innerText) * 1000);
+      } else if (child.matchQualifiedName("metadata-photos-ifd0",
+          prefix: "http://nextcloud.org/ns", namespaces: namespaces)) {
+        for (final ifd0_child in child.children.whereType<XmlElement>()) {
+          (_metadataPhotosIfd0 ??= {})[ifd0_child.name.toString()] = ifd0_child.innerText;
+        }
       } else {
         final key = child.name.prefix == null
             ? child.localName
@@ -162,6 +170,7 @@ class _PropParser {
   String? get trashbinFilename => _trashbinFilename;
   String? get trashbinOriginalLocation => _trashbinOriginalLocation;
   DateTime? get trashbinDeletionTime => _trashbinDeletionTime;
+  Map<String, String>? get metadataPhotosIfd0 => _metadataPhotosIfd0;
   Map<String, String>? get customProperties => _customProperties;
 
   final Map<String, String> namespaces;
@@ -179,6 +188,7 @@ class _PropParser {
   String? _trashbinFilename;
   String? _trashbinOriginalLocation;
   DateTime? _trashbinDeletionTime;
+  Map<String, String>? _metadataPhotosIfd0;
   Map<String, String>? _customProperties;
 }
 

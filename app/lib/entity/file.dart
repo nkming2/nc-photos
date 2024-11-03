@@ -185,6 +185,16 @@ class Metadata with EquatableMixin {
     );
   }
 
+  static Metadata fromPhotosIfd0(Map<String, String> metadataPhotosIfd0) {
+    return Metadata(
+      lastUpdated: null,
+      fileEtag: null,
+      imageWidth: null,
+      imageHeight: null,
+      exif: new Exif(metadataPhotosIfd0),
+    );
+  }
+
   @override
   String toString() => _$toString();
 
