@@ -43,7 +43,6 @@ class _SetupState extends State<Setup> {
   Widget _buildContent(BuildContext context) {
     final page = _pageController.hasClients ? _pageController.page!.round() : 0;
     final pages = <Widget>[
-      if (_initialProgress & _PageId.exif == 0) _Exif(),
       if (_initialProgress & _PageId.hiddenPrefDirNotice == 0)
         _HiddenPrefDirNotice(),
     ];
@@ -125,71 +124,12 @@ class _SetupState extends State<Setup> {
 }
 
 class _PageId {
-  static const exif = 0x01;
   static const hiddenPrefDirNotice = 0x02;
-  static const all = exif | hiddenPrefDirNotice;
+  static const all = hiddenPrefDirNotice;
 }
 
 abstract class _Page {
   int getPageId();
-}
-
-class _Exif extends StatefulWidget implements _Page {
-  @override
-  createState() => _ExifState();
-
-  @override
-  getPageId() => _PageId.exif;
-}
-
-class _ExifState extends State<_Exif> {
-  @override
-  build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SwitchListTile(
-            title: Text(L10n.global().settingsExifSupportTitle),
-            value: _isEnableExif,
-            onChanged: _onValueChanged,
-          ),
-          const SizedBox(height: 8),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text(L10n.global().exifSupportDetails),
-          ),
-          const SizedBox(height: 16),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              L10n.global().setupSettingsModifyLaterHint,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium
-                  ?.copyWith(fontStyle: FontStyle.italic),
-            ),
-          ),
-          const SizedBox(height: 8),
-        ],
-      ),
-    );
-  }
-
-  @override
-  dispose() {
-    super.dispose();
-    // persist user's choice
-    Pref().setEnableExif(_isEnableExif);
-  }
-
-  void _onValueChanged(bool value) {
-    setState(() {
-      _isEnableExif = value;
-    });
-  }
-
-  bool _isEnableExif = Pref().isEnableExifOr();
 }
 
 class _HiddenPrefDirNotice extends StatefulWidget implements _Page {
