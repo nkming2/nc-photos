@@ -13,6 +13,7 @@ class _Bloc extends Bloc<_Event, _State>
     required this.syncController,
     required this.personsController,
     required this.metadataController,
+    required this.serverController,
   }) : super(_State.init(
           zoom: prefController.homePhotosZoomLevelValue,
           isEnableMemoryCollection:
@@ -535,7 +536,11 @@ class _Bloc extends Bloc<_Event, _State>
         personsController: personsController,
         personProvider: accountPrefController.personProviderValue,
       );
-      metadataController.kickstart();
+      if (!serverController.isSupported(ServerFeature.ncMetadata)) {
+        metadataController.kickstart();
+      } else {
+        _log.info("[_syncRemote] Skipping metadata service");
+      }
       _log.info(
           "[_syncRemote] Elapsed time: ${stopwatch.elapsedMilliseconds}ms");
     });
@@ -711,6 +716,7 @@ class _Bloc extends Bloc<_Event, _State>
   final SyncController syncController;
   final PersonsController personsController;
   final MetadataController metadataController;
+  final ServerController serverController;
 
   final _itemTransformerQueue =
       ComputeQueue<_ItemTransformerArgument, _ItemTransformerResult>();

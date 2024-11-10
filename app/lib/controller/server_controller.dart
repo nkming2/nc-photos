@@ -13,6 +13,7 @@ part 'server_controller.g.dart';
 
 enum ServerFeature {
   ncAlbum,
+  ncMetadata,
 }
 
 @npLog
@@ -37,6 +38,9 @@ class ServerController {
       case ServerFeature.ncAlbum:
         return !_statusStreamContorller.hasValue ||
             _statusStreamContorller.value.majorVersion >= 25;
+      case ServerFeature.ncMetadata:
+        return !_statusStreamContorller.hasValue ||
+            _statusStreamContorller.value.majorVersion >= 28;
     }
   }
 
