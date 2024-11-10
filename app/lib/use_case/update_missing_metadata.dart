@@ -5,7 +5,7 @@ import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/connectivity_util.dart' as connectivity_util;
 import 'package:nc_photos/di_container.dart';
-import 'package:nc_photos/entity/exif_extension.dart';
+import 'package:nc_photos/entity/exif_util.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/event/event.dart';
 import 'package:nc_photos/exception.dart';

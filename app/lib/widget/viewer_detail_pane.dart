@@ -14,7 +14,7 @@ import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/collection.dart';
 import 'package:nc_photos/entity/collection/adapter.dart';
 import 'package:nc_photos/entity/collection_item.dart';
-import 'package:nc_photos/entity/exif_extension.dart';
+import 'package:nc_photos/entity/exif_util.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
