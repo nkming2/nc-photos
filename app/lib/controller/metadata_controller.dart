@@ -68,6 +68,7 @@ class MetadataController {
       final missingCount = await _c.npDb.countFilesByMissingMetadata(
         account: account.toDb(),
         mimes: file_util.supportedImageFormatMimes,
+        ownerId: account.userId.toCaseInsensitiveString(),
       );
       _log.info("[_startMetadataTask] Missing count: $missingCount");
       if (missingCount > 0) {

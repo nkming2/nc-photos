@@ -351,6 +351,7 @@ abstract class NpDb {
   Future<int> countFilesByMissingMetadata({
     required DbAccount account,
     required List<String> mimes,
+    required String ownerId,
   });
 
   /// Delete a file or dir from db

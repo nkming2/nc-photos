@@ -340,6 +340,7 @@ extension SqliteDbFileExtension on SqliteDb {
     required ByAccount account,
     bool? isMissingMetadata,
     List<String>? mimes,
+    String? ownerId,
   }) async {
     _log.info(
         "[countFiles] isMissingMetadata: $isMissingMetadata, mimes: $mimes");
@@ -379,6 +380,9 @@ extension SqliteDbFileExtension on SqliteDb {
     }
     if (mimes != null) {
       query.where(files.contentType.isIn(mimes));
+    }
+    if (ownerId != null) {
+      query.where(files.ownerId.equals(ownerId));
     }
     return await query.map((r) => r.read(count)!).getSingle();
   }

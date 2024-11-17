@@ -383,12 +383,14 @@ class NpDbSqlite implements NpDb {
   Future<int> countFilesByMissingMetadata({
     required DbAccount account,
     required List<String> mimes,
+    required String ownerId,
   }) async {
     return _db.use((db) async {
       return await db.countFiles(
         account: ByAccount.db(account),
         isMissingMetadata: true,
         mimes: mimes,
+        ownerId: ownerId,
       );
     });
   }
