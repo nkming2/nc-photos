@@ -27,7 +27,7 @@ bool isSupportedVideoFormat(FileDescriptor file) =>
     isSupportedVideoMime(file.fdMime ?? "");
 
 bool isMetadataSupportedMime(String mime) =>
-    _metadataSupportedFormatMimes.contains(mime);
+    metadataSupportedFormatMimes.contains(mime);
 
 bool isMetadataSupportedFormat(FileDescriptor file) =>
     isMetadataSupportedMime(file.fdMime ?? "");
@@ -138,7 +138,7 @@ final supportedImageFormatMimes =
 final supportedVideoFormatMimes =
     supportedFormatMimes.where((f) => f.startsWith("video/")).toList();
 
-const _metadataSupportedFormatMimes = [
+const metadataSupportedFormatMimes = [
   "image/jpeg",
   "image/heic",
 ];
