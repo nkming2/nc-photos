@@ -160,7 +160,7 @@ class Exif with EquatableMixin {
         int.parse(str.substring(pos + 1)),
       );
     } catch (e, stackTrace) {
-      log.shout(
+      _$ExifNpLog.log.shout(
           "[_tryParseRationalString] Failed to parse rational string: $str",
           e,
           stackTrace);
@@ -175,7 +175,9 @@ class Exif with EquatableMixin {
     try {
       return int.parse(str);
     } catch (e, stackTrace) {
-      log.shout("[_tryParseIntString] Failed to parse int string: $str", e,
+      _$ExifNpLog.log.shout(
+          "[_tryParseIntString] Failed to parse int string: $str",
+          e,
           stackTrace);
       return null;
     }
