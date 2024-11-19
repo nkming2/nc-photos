@@ -412,6 +412,7 @@ abstract class NpDb {
   Future<DbFilesSummary> getFilesSummary({
     required DbAccount account,
     List<String>? includeRelativeRoots,
+    List<String>? includeRelativeDirs,
     List<String>? excludeRelativeRoots,
     List<String>? mimes,
   });

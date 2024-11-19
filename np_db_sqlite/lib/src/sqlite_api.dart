@@ -474,6 +474,7 @@ class NpDbSqlite implements NpDb {
   Future<DbFilesSummary> getFilesSummary({
     required DbAccount account,
     List<String>? includeRelativeRoots,
+    List<String>? includeRelativeDirs,
     List<String>? excludeRelativeRoots,
     List<String>? mimes,
   }) async {
@@ -481,6 +482,7 @@ class NpDbSqlite implements NpDb {
       return await db.countFileGroupsByDate(
         account: ByAccount.db(account),
         includeRelativeRoots: includeRelativeRoots,
+        includeRelativeDirs: includeRelativeDirs,
         excludeRelativeRoots: excludeRelativeRoots,
         mimes: mimes,
         isArchived: false,

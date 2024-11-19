@@ -574,6 +574,7 @@ class FilesController {
           .map((e) => File(path: file_util.unstripPath(account, e))
               .strippedPathWithEmpty)
           .toList(),
+      includeRelativeDirs: [accountPrefController.shareFolderValue],
       excludeRelativeRoots: [remote_storage_util.remoteStorageDirRelativePath],
       mimes: file_util.supportedFormatMimes,
     );

@@ -620,6 +620,7 @@ extension SqliteDbFileExtension on SqliteDb {
   Future<CountFileGroupsByDateResult> countFileGroupsByDate({
     required ByAccount account,
     List<String>? includeRelativeRoots,
+    List<String>? includeRelativeDirs,
     List<String>? excludeRelativeRoots,
     List<String>? mimes,
     bool? isArchived,
@@ -627,9 +628,22 @@ extension SqliteDbFileExtension on SqliteDb {
     _log.info(
       "[countFileGroupsByDate] "
       "includeRelativeRoots: $includeRelativeRoots, "
+      "includeRelativeDirs: $includeRelativeDirs, "
       "excludeRelativeRoots: $excludeRelativeRoots, "
       "mimes: $mimes",
     );
+
+    List<int>? dirIds;
+    if (includeRelativeDirs?.isNotEmpty == true) {
+      final sqlAccount = await accountOf(account);
+      final result = await _accountFileRowIdsOf(ByAccount.sql(sqlAccount),
+              includeRelativeDirs!.map((e) => DbFileKey.byPath(e)).toList())
+          .notNull();
+      dirIds = result.values.map((e) => e.fileRowId).toList();
+      if (dirIds.length != includeRelativeDirs.length) {
+        _log.warning("Some dirs not found: $includeRelativeDirs");
+      }
+    }
 
     final count = countAll();
     final localDate = accountFiles.bestDateTime
@@ -646,6 +660,17 @@ extension SqliteDbFileExtension on SqliteDb {
         if (includeRelativeRoots.none((p) => p.isEmpty)) {
           for (final r in includeRelativeRoots) {
             q.byOrRelativePathPattern("$r/%");
+          }
+          if (dirIds != null) {
+            for (final i in dirIds) {
+              q.byOrDirRowId(i);
+            }
+          }
+        }
+      } else {
+        if (dirIds != null) {
+          for (final i in dirIds) {
+            q.byOrDirRowId(i);
           }
         }
       }
