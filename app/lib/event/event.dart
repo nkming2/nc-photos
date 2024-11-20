@@ -46,6 +46,7 @@ class AccountPrefUpdatedEvent {
   final dynamic value;
 }
 
+@Deprecated("not fired anymore, to be removed")
 class FilePropertyUpdatedEvent {
   FilePropertyUpdatedEvent(this.account, this.file, this.properties);
 
@@ -95,26 +96,6 @@ class FavoriteResyncedEvent {
   const FavoriteResyncedEvent(this.account);
 
   final Account account;
-}
-
-enum MetadataTaskState {
-  /// No work is being done
-  idle,
-
-  /// Processing images
-  prcoessing,
-
-  /// Paused on data network
-  waitingForWifi,
-
-  /// Paused on low battery
-  lowBattery,
-}
-
-class MetadataTaskStateChangedEvent {
-  const MetadataTaskStateChangedEvent(this.state);
-
-  final MetadataTaskState state;
 }
 
 @Deprecated("not fired anymore, to be removed")

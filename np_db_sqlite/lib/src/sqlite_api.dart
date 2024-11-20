@@ -396,6 +396,34 @@ class NpDbSqlite implements NpDb {
   }
 
   @override
+  Future<DbFileMissingMetadataResult> getFilesByMissingMetadata({
+    required DbAccount account,
+    required List<String> mimes,
+    required String ownerId,
+  }) async {
+    return _db.use((db) async {
+      final results = <({int fileId, String relativePath})>[];
+      var i = 0;
+      while (true) {
+        final sqlObjs = await db.queryFileIdPathsByMissingMetadata(
+          account: ByAccount.db(account),
+          isMissingMetadata: true,
+          mimes: mimes,
+          ownerId: ownerId,
+          limit: 10000,
+          offset: i,
+        );
+        if (sqlObjs.isEmpty) {
+          break;
+        }
+        results.addAll(sqlObjs);
+        i += 10000;
+      }
+      return DbFileMissingMetadataResult(items: results);
+    });
+  }
+
+  @override
   Future<void> deleteFile({
     required DbAccount account,
     required DbFileKey file,

@@ -81,6 +81,31 @@ extension $DbFilesMemoryCopyWith on DbFilesMemory {
       _$DbFilesMemoryCopyWithWorkerImpl(this);
 }
 
+abstract class $DbFileMissingMetadataResultCopyWithWorker {
+  DbFileMissingMetadataResult call(
+      {List<({int fileId, String relativePath})>? items});
+}
+
+class _$DbFileMissingMetadataResultCopyWithWorkerImpl
+    implements $DbFileMissingMetadataResultCopyWithWorker {
+  _$DbFileMissingMetadataResultCopyWithWorkerImpl(this.that);
+
+  @override
+  DbFileMissingMetadataResult call({dynamic items}) {
+    return DbFileMissingMetadataResult(
+        items:
+            items as List<({int fileId, String relativePath})>? ?? that.items);
+  }
+
+  final DbFileMissingMetadataResult that;
+}
+
+extension $DbFileMissingMetadataResultCopyWith on DbFileMissingMetadataResult {
+  $DbFileMissingMetadataResultCopyWithWorker get copyWith => _$copyWith;
+  $DbFileMissingMetadataResultCopyWithWorker get _$copyWith =>
+      _$DbFileMissingMetadataResultCopyWithWorkerImpl(this);
+}
+
 // **************************************************************************
 // NpLogGenerator
 // **************************************************************************
@@ -149,5 +174,12 @@ extension _$DbFilesMemoryToString on DbFilesMemory {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
     return "DbFilesMemory {memories: $memories}";
+  }
+}
+
+extension _$DbFileMissingMetadataResultToString on DbFileMissingMetadataResult {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "DbFileMissingMetadataResult {items: [length: ${items.length}]}";
   }
 }

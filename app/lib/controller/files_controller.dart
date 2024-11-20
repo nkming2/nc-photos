@@ -253,7 +253,7 @@ class FilesController {
     final failures = <FileDescriptor>[];
     for (final f in files) {
       try {
-        await UpdateProperty(_c)(
+        await UpdateProperty(fileRepo: _c.fileRepo2)(
           account,
           f,
           metadata: metadata,

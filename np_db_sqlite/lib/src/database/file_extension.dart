@@ -343,7 +343,7 @@ extension SqliteDbFileExtension on SqliteDb {
     String? ownerId,
   }) async {
     _log.info(
-        "[countFiles] isMissingMetadata: $isMissingMetadata, mimes: $mimes");
+        "[countFiles] isMissingMetadata: $isMissingMetadata, mimes: $mimes, ownerId: $ownerId");
     Expression<bool>? filter;
     if (isMissingMetadata != null) {
       if (isMissingMetadata) {
@@ -385,6 +385,69 @@ extension SqliteDbFileExtension on SqliteDb {
       query.where(files.ownerId.equals(ownerId));
     }
     return await query.map((r) => r.read(count)!).getSingle();
+  }
+
+  Future<List<({int fileId, String relativePath})>>
+      queryFileIdPathsByMissingMetadata({
+    required ByAccount account,
+    bool? isMissingMetadata,
+    List<String>? mimes,
+    String? ownerId,
+    int? offset,
+    int? limit,
+  }) async {
+    _log.info(
+        "[queryFileIdPathsByMissingMetadata] isMissingMetadata: $isMissingMetadata, mimes: $mimes, ownerId: $ownerId");
+    final query = selectOnly(files).join([
+      innerJoin(accountFiles, accountFiles.file.equalsExp(files.rowId),
+          useColumns: false),
+      if (account.dbAccount != null) ...[
+        innerJoin(accounts, accounts.rowId.equalsExp(accountFiles.account),
+            useColumns: false),
+        innerJoin(servers, servers.rowId.equalsExp(accounts.server),
+            useColumns: false),
+      ],
+      leftOuterJoin(images, images.accountFile.equalsExp(accountFiles.rowId),
+          useColumns: false),
+      leftOuterJoin(imageLocations,
+          imageLocations.accountFile.equalsExp(accountFiles.rowId),
+          useColumns: false),
+    ]);
+    query.addColumns([files.fileId, accountFiles.relativePath]);
+    if (account.sqlAccount != null) {
+      query.where(accountFiles.account.equals(account.sqlAccount!.rowId));
+    } else if (account.dbAccount != null) {
+      query
+        ..where(servers.address.equals(account.dbAccount!.serverAddress))
+        ..where(accounts.userId
+            .equals(account.dbAccount!.userId.toCaseInsensitiveString()));
+    }
+    if (mimes != null) {
+      query.where(files.contentType.isIn(mimes));
+    }
+    if (ownerId != null) {
+      query.where(files.ownerId.equals(ownerId));
+    }
+    if (isMissingMetadata != null) {
+      if (isMissingMetadata) {
+        query.where(
+            images.lastUpdated.isNull() | imageLocations.version.isNull());
+      } else {
+        query.where(images.lastUpdated.isNotNull() &
+            imageLocations.version.isNotNull());
+      }
+    }
+
+    query.orderBy([OrderingTerm.desc(files.fileId)]);
+    if (limit != null) {
+      query.limit(limit, offset: offset);
+    }
+    return await query
+        .map((r) => (
+              fileId: r.read(files.fileId)!,
+              relativePath: r.read(accountFiles.relativePath)!,
+            ))
+        .get();
   }
 
   Future<List<FileDescriptor>> queryFileDescriptors({

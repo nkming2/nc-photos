@@ -201,6 +201,19 @@ class DbFilesMemory {
   final Map<int, List<DbFileDescriptor>> memories;
 }
 
+@genCopyWith
+@toString
+class DbFileMissingMetadataResult {
+  const DbFileMissingMetadataResult({
+    required this.items,
+  });
+
+  @override
+  String toString() => _$toString();
+
+  final List<({int fileId, String relativePath})> items;
+}
+
 @npLog
 abstract class NpDb {
   factory NpDb() => NpDbSqlite();
@@ -349,6 +362,13 @@ abstract class NpDb {
 
   /// Return number of files without metadata
   Future<int> countFilesByMissingMetadata({
+    required DbAccount account,
+    required List<String> mimes,
+    required String ownerId,
+  });
+
+  /// Return files without metadata
+  Future<DbFileMissingMetadataResult> getFilesByMissingMetadata({
     required DbAccount account,
     required List<String> mimes,
     required String ownerId,

@@ -536,11 +536,7 @@ class _Bloc extends Bloc<_Event, _State>
         personsController: personsController,
         personProvider: accountPrefController.personProviderValue,
       );
-      if (!serverController.isSupported(ServerFeature.ncMetadata)) {
-        metadataController.kickstart();
-      } else {
-        _log.info("[_syncRemote] Skipping metadata service");
-      }
+      metadataController.kickstart();
       _log.info(
           "[_syncRemote] Elapsed time: ${stopwatch.elapsedMilliseconds}ms");
     });
