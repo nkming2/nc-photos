@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/app_localizations.dart';
-import 'package:nc_photos/controller/account_controller.dart';
 import 'package:nc_photos/controller/pref_controller.dart';
-import 'package:nc_photos/controller/server_controller.dart';
 import 'package:nc_photos/debug_util.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/language_util.dart' as language_util;
@@ -81,15 +79,11 @@ class _SettingsState extends State<Settings> {
                   description: L10n.global().settingsThemeDescription,
                   pageBuilder: () => const ThemeSettings(),
                 ),
-                if (!context
-                    .read<AccountController>()
-                    .serverController
-                    .isSupported(ServerFeature.ncMetadata))
-                  _SubPageItem(
-                    leading: const Icon(Icons.local_offer_outlined),
-                    label: L10n.global().settingsMetadataTitle,
-                    pageBuilder: () => const MetadataSettings(),
-                  ),
+                _SubPageItem(
+                  leading: const Icon(Icons.local_offer_outlined),
+                  label: L10n.global().settingsMetadataTitle,
+                  pageBuilder: () => const MetadataSettings(),
+                ),
                 _SubPageItem(
                   leading: const Icon(Icons.image_outlined),
                   label: L10n.global().photosTabLabel,
