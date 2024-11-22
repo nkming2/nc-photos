@@ -41,7 +41,7 @@ class _SyncByServer {
       _log.fine("[_syncDir] Syncing dir $dir");
       final files = await fileRepoRemote.list(account, dir);
       await FileSqliteCacheUpdater(db)(account, dir, remote: files);
-      for (final f in files) {
+      for (final f in files.where((e) => fileIds.contains(e.fdId))) {
         File? result;
         if (!_supportedMimes.contains(f.fdMime)) {
           _log.info(

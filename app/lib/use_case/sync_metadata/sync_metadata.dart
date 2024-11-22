@@ -98,8 +98,15 @@ class SyncMetadata {
       fallback: fallback,
     );
     await op.init();
+    final fileIds = <int>[];
+    final relativePaths = <String>[];
+    for (final f in files.items) {
+      fileIds.add(f.fileId);
+      relativePaths.add(f.relativePath);
+    }
     final stream = op.syncFiles(
-      relativePaths: files.items.map((e) => e.relativePath).toList(),
+      fileIds: fileIds,
+      relativePaths: relativePaths,
     );
     yield* stream;
   }
