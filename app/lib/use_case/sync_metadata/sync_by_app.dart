@@ -34,8 +34,12 @@ class _SyncByApp {
       account: account.toDb(),
       fileIds: fileIds,
     );
-    for (final f in files) {
-      final result = await _syncOne(f);
+    for (final dbF in files) {
+      final f = DbFileConverter.fromDb(
+        account.userId.toCaseInsensitiveString(),
+        dbF,
+      );
+      final result = await syncOne(f);
       if (result != null) {
         yield result;
       }
@@ -45,16 +49,12 @@ class _SyncByApp {
     }
   }
 
-  Future<File?> _syncOne(DbFile file) async {
-    final f = DbFileConverter.fromDb(
-      account.userId.toCaseInsensitiveString(),
-      file,
-    );
-    _log.fine("[_syncOne] Syncing ${file.relativePath}");
+  Future<File?> syncOne(File file) async {
+    _log.fine("[syncOne] Syncing ${file.path}");
     try {
       OrNull<Metadata>? metadataUpdate;
       OrNull<ImageLocation>? locationUpdate;
-      if (f.metadata == null) {
+      if (file.metadata == null) {
         // since we need to download multiple images in their original size,
         // we only do it with WiFi
         await wifiEnsurer();
@@ -62,21 +62,21 @@ class _SyncByApp {
         if (!_shouldRun) {
           return null;
         }
-        _log.fine("[_syncOne] Updating metadata for ${f.path}");
-        final binary = await GetFileBinary(fileRepo)(account, f);
+        _log.fine("[syncOne] Updating metadata for ${file.path}");
+        final binary = await GetFileBinary(fileRepo)(account, file);
         final metadata =
-            (await LoadMetadata().loadRemote(account, f, binary)).copyWith(
-          fileEtag: f.etag,
+            (await LoadMetadata().loadRemote(account, file, binary)).copyWith(
+          fileEtag: file.etag,
         );
         metadataUpdate = OrNull(metadata);
       }
 
-      final lat = (metadataUpdate?.obj ?? f.metadata)?.exif?.gpsLatitudeDeg;
-      final lng = (metadataUpdate?.obj ?? f.metadata)?.exif?.gpsLongitudeDeg;
+      final lat = (metadataUpdate?.obj ?? file.metadata)?.exif?.gpsLatitudeDeg;
+      final lng = (metadataUpdate?.obj ?? file.metadata)?.exif?.gpsLongitudeDeg;
       try {
         ImageLocation? location;
         if (lat != null && lng != null) {
-          _log.fine("[_syncOne] Reverse geocoding for ${f.path}");
+          _log.fine("[syncOne] Reverse geocoding for ${file.path}");
           final l = await _geocoder(lat, lng);
           if (l != null) {
             location = l.toImageLocation();
@@ -84,7 +84,7 @@ class _SyncByApp {
         }
         locationUpdate = OrNull(location ?? ImageLocation.empty());
       } catch (e, stackTrace) {
-        _log.severe("[_syncOne] Failed while reverse geocoding: ${f.path}", e,
+        _log.severe("[syncOne] Failed while reverse geocoding: ${file.path}", e,
             stackTrace);
         // if failed, we skip updating the location
       }
@@ -92,16 +92,16 @@ class _SyncByApp {
       if (metadataUpdate != null || locationUpdate != null) {
         await UpdateProperty(fileRepo: fileRepo2)(
           account,
-          f,
+          file,
           metadata: metadataUpdate,
           location: locationUpdate,
         );
-        return f;
+        return file;
       } else {
         return null;
       }
     } catch (e, stackTrace) {
-      _log.severe("[_syncOne] Failed while updating metadata: ${f.path}", e,
+      _log.severe("[syncOne] Failed while updating metadata: ${file.path}", e,
           stackTrace);
       return null;
     }

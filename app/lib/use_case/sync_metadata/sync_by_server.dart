@@ -9,6 +9,7 @@ class _SyncByServer {
     required this.fileRepo2,
     required this.db,
     this.interrupter,
+    required this.fallback,
   }) {
     interrupter?.listen((event) {
       _shouldRun = false;
@@ -20,17 +21,20 @@ class _SyncByServer {
   }
 
   Stream<File> syncFiles({
+    required List<int> fileIds,
     required List<String> relativePaths,
   }) async* {
     final dirs = relativePaths.map(dirname).toSet();
     for (final dir in dirs) {
       yield* _syncDir(
+        fileIds: fileIds,
         dir: File(path: file_util.unstripPath(account, dir)),
       );
     }
   }
 
   Stream<File> _syncDir({
+    required List<int> fileIds,
     required File dir,
   }) async* {
     try {
@@ -38,14 +42,21 @@ class _SyncByServer {
       final files = await fileRepoRemote.list(account, dir);
       await FileSqliteCacheUpdater(db)(account, dir, remote: files);
       for (final f in files) {
-        if (f.metadata != null && f.location == null) {
-          final result = await _syncOne(f);
-          if (result != null) {
-            yield result;
+        File? result;
+        if (!_supportedMimes.contains(f.fdMime)) {
+          _log.info(
+              "[_syncDir] File ${f.path} (mime: ${f.fdMime}) not supported by server, fallback to client");
+          result = await fallback.syncOne(f);
+        } else {
+          if (f.metadata != null && f.location == null) {
+            result = await _syncOne(f);
           }
-          if (!_shouldRun) {
-            return;
-          }
+        }
+        if (result != null) {
+          yield result;
+        }
+        if (!_shouldRun) {
+          return;
         }
       }
     } catch (e, stackTrace) {
@@ -54,6 +65,7 @@ class _SyncByServer {
   }
 
   Future<File?> _syncOne(File file) async {
+    _log.fine("[_syncOne] Syncing ${file.path}");
     try {
       final lat = file.metadata!.exif?.gpsLatitudeDeg;
       final lng = file.metadata!.exif?.gpsLongitudeDeg;
@@ -85,7 +97,13 @@ class _SyncByServer {
   final FileRepo2 fileRepo2;
   final NpDb db;
   final Stream<void>? interrupter;
+  final _SyncByApp fallback;
 
   final _geocoder = ReverseGeocoder();
   var _shouldRun = true;
+
+  static const _supportedMimes = [
+    "image/jpeg",
+    "image/webp",
+  ];
 }

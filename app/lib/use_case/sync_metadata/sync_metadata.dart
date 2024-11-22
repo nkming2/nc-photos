@@ -48,7 +48,7 @@ class SyncMetadata {
     }
     final files = await db.getFilesByMissingMetadata(
       account: account.toDb(),
-      mimes: file_util.metadataSupportedFormatMimes,
+      mimes: file_util.supportedImageFormatMimes,
       ownerId: account.userId.toCaseInsensitiveString(),
     );
     _log.info("[syncAccount] Missing count: ${files.items.length}");
@@ -79,12 +79,23 @@ class SyncMetadata {
 
   Stream<File> _doWithServer(
       Account account, DbFileMissingMetadataResult files) async* {
+    final fallback = _SyncByApp(
+      account: account,
+      fileRepo: fileRepo,
+      fileRepo2: fileRepo2,
+      db: db,
+      interrupter: interrupter,
+      wifiEnsurer: wifiEnsurer,
+      batteryEnsurer: batteryEnsurer,
+    );
+    await fallback.init();
     final op = _SyncByServer(
       account: account,
       fileRepoRemote: fileRepoRemote,
       fileRepo2: fileRepo2,
       db: db,
       interrupter: interrupter,
+      fallback: fallback,
     );
     await op.init();
     final stream = op.syncFiles(
