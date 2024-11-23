@@ -150,7 +150,7 @@ class _ExifState extends State<_Exif> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SwitchListTile(
-            title: Text(L10n.global().settingsExifSupportTitle),
+            title: Text(L10n.global().settingsExifSupportTitle2),
             value: _isEnableExif,
             onChanged: _onValueChanged,
           ),
@@ -158,6 +158,11 @@ class _ExifState extends State<_Exif> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(L10n.global().exifSupportDetails),
+          ),
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Text(L10n.global().exifSupportNextcloud28Notes),
           ),
           const SizedBox(height: 16),
           Padding(

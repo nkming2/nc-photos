@@ -77,7 +77,7 @@ class _WrappedMetadataSettingsState extends State<_WrappedMetadataSettings>
                     selector: (state) => state.isEnable,
                     builder: (context, state) {
                       return SwitchListTile(
-                        title: Text(L10n.global().settingsExifSupportTitle),
+                        title: Text(L10n.global().settingsExifSupportTitle2),
                         subtitle: state
                             ? Text(
                                 L10n.global().settingsExifSupportTrueSubtitle)
@@ -122,8 +122,15 @@ class _WrappedMetadataSettingsState extends State<_WrappedMetadataSettings>
       final result = await showDialog<bool>(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text(L10n.global().exifSupportConfirmationDialogTitle),
-          content: Text(L10n.global().exifSupportDetails),
+          title: Text(L10n.global().exifSupportConfirmationDialogTitle2),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(L10n.global().exifSupportDetails),
+              const SizedBox(height: 16),
+              Text(L10n.global().exifSupportNextcloud28Notes),
+            ],
+          ),
           actions: [
             TextButton(
               onPressed: () {
