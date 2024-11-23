@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/controller/account_pref_controller.dart';
 import 'package:nc_photos/controller/server_controller.dart';
 import 'package:nc_photos/db/entity_converter.dart';
 import 'package:nc_photos/entity/exif_util.dart';
@@ -10,6 +11,7 @@ import 'package:nc_photos/entity/file/file_cache_manager.dart';
 import 'package:nc_photos/entity/file/repo.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/geocoder_util.dart';
+import 'package:nc_photos/service/service.dart';
 import 'package:nc_photos/use_case/battery_ensurer.dart';
 import 'package:nc_photos/use_case/get_file_binary.dart';
 import 'package:nc_photos/use_case/load_metadata.dart';
@@ -38,10 +40,14 @@ class SyncMetadata {
     required this.batteryEnsurer,
   });
 
-  Stream<File> syncAccount(Account account) async* {
+  Stream<File> syncAccount(
+    Account account,
+    AccountPrefController accountPrefController,
+  ) async* {
     final bool isNcMetadataSupported;
     try {
-      isNcMetadataSupported = await _isNcMetadataSupported(account);
+      isNcMetadataSupported =
+          (await _isNcMetadataSupported(account, accountPrefController))!;
     } catch (e) {
       _log.severe("[syncAccount] Failed to get server version", e);
       return;
@@ -111,8 +117,14 @@ class SyncMetadata {
     yield* stream;
   }
 
-  Future<bool> _isNcMetadataSupported(Account account) async {
-    final serverController = ServerController(account: account);
+  Future<bool?> _isNcMetadataSupported(
+    Account account,
+    AccountPrefController accountPrefController,
+  ) async {
+    final serverController = ServerController(
+      account: account,
+      accountPrefController: accountPrefController,
+    );
     await serverController.status.first.timeout(const Duration(seconds: 15));
     return serverController.isSupported(ServerFeature.ncMetadata);
   }

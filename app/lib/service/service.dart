@@ -9,10 +9,10 @@ import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/app_init.dart' as app_init;
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/controller/account_pref_controller.dart';
 import 'package:nc_photos/controller/pref_controller.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
-import 'package:nc_photos/entity/pref.dart';
 import 'package:nc_photos/event/native_event.dart';
 import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/use_case/battery_ensurer.dart';
@@ -95,13 +95,14 @@ class _Service {
   }
 
   Future<void> _doWork() async {
-    final prefController = PrefController(Pref());
+    final c = KiwiContainer().resolve<DiContainer>();
+    final prefController = PrefController(c.pref);
     final account = prefController.currentAccountValue;
     if (account == null) {
       _log.shout("[_doWork] account == null");
       return;
     }
-    final c = KiwiContainer().resolve<DiContainer>();
+    final accountPrefController = AccountPrefController(account: account);
 
     final wifiEnsurer = WifiEnsurer(
       interrupter: _shouldRun.stream,
@@ -143,7 +144,7 @@ class _Service {
       batteryEnsurer: batteryEnsurer,
     );
     final processedIds = <int>[];
-    await for (final f in syncOp.syncAccount(account)) {
+    await for (final f in syncOp.syncAccount(account, accountPrefController)) {
       processedIds.add(f.fdId);
       service.setNotificationInfo(
         title: _L10n.global().metadataTaskProcessingNotification,

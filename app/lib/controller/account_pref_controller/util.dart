@@ -5,4 +5,13 @@ extension on AccountPref {
       provider.getBool(AccountPrefKey.hasNewSharedAlbum);
   // Future<bool> setNewSharedAlbum(bool value) =>
   //     provider.setBool(AccountPrefKey.hasNewSharedAlbum, value);
+
+  String? getServerStatus() => provider.getString(AccountPrefKey.serverStatus);
+  Future<bool> setServerStatus(String? value) {
+    if (value == null) {
+      return provider.remove(AccountPrefKey.serverStatus);
+    } else {
+      return provider.setString(AccountPrefKey.serverStatus, value);
+    }
+  }
 }

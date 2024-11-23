@@ -63,6 +63,7 @@ class AccountController {
   ServerController get serverController =>
       _serverController ??= ServerController(
         account: _account!,
+        accountPrefController: accountPrefController,
       );
 
   AccountPrefController get accountPrefController =>
