@@ -230,6 +230,7 @@ enum AccountPrefKey implements PrefKeyInterface {
   accountLabel,
   lastNewCollectionType,
   personProvider,
+  serverStatus,
   ;
 
   @override
@@ -249,6 +250,8 @@ enum AccountPrefKey implements PrefKeyInterface {
         return "lastNewCollectionType";
       case AccountPrefKey.personProvider:
         return "personProvider";
+      case AccountPrefKey.serverStatus:
+        return "serverStatus";
     }
   }
 }

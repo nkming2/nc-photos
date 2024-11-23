@@ -1,6 +1,7 @@
 {
   "ca": [
     "settingsMetadataTitle",
+    "settingsExifSupportTitle2",
     "settingsShareFolderPickerDescription",
     "settingsPersonProviderTitle",
     "settingsServerAppSectionTitle",
@@ -55,7 +56,8 @@
     "writePreferenceFailureNotification",
     "enableButtonLabel",
     "exifSupportDetails",
-    "exifSupportConfirmationDialogTitle",
+    "exifSupportNextcloud28Notes",
+    "exifSupportConfirmationDialogTitle2",
     "captureLogDetails",
     "captureLogSuccessNotification",
     "doneButtonLabel",
@@ -281,9 +283,12 @@
   ],
 
   "cs": [
+    "settingsExifSupportTitle2",
     "settingsViewerCustomizeAppBarTitle",
     "settingsViewerCustomizeBottomAppBarTitle",
     "settingsCollectionsCustomizeNavigationBarTitle",
+    "exifSupportNextcloud28Notes",
+    "exifSupportConfirmationDialogTitle2",
     "alternativeSignIn",
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
@@ -294,9 +299,12 @@
   ],
 
   "de": [
+    "settingsExifSupportTitle2",
     "settingsViewerCustomizeAppBarTitle",
     "settingsViewerCustomizeBottomAppBarTitle",
     "settingsCollectionsCustomizeNavigationBarTitle",
+    "exifSupportNextcloud28Notes",
+    "exifSupportConfirmationDialogTitle2",
     "alternativeSignIn",
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
@@ -313,6 +321,7 @@
     "signInHeaderText2",
     "settingsLanguageOptionSystemDefaultLabel",
     "settingsMetadataTitle",
+    "settingsExifSupportTitle2",
     "settingsExifWifiOnlyTitle",
     "settingsExifWifiOnlyFalseSubtitle",
     "settingsAccountLabelTitle",
@@ -359,6 +368,8 @@
     "settingsUseNewHttpEngineDescription",
     "settingsServerVersionTitle",
     "settingsRestartNeededDialog",
+    "exifSupportNextcloud28Notes",
+    "exifSupportConfirmationDialogTitle2",
     "slideshowSetupDialogReverseTitle",
     "shareMethodPreviewTitle",
     "shareMethodPreviewDescription",
@@ -465,9 +476,12 @@
   ],
 
   "es": [
+    "settingsExifSupportTitle2",
     "settingsViewerCustomizeAppBarTitle",
     "settingsViewerCustomizeBottomAppBarTitle",
     "settingsCollectionsCustomizeNavigationBarTitle",
+    "exifSupportNextcloud28Notes",
+    "exifSupportConfirmationDialogTitle2",
     "alternativeSignIn",
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
@@ -478,6 +492,7 @@
   ],
 
   "fi": [
+    "settingsExifSupportTitle2",
     "settingsViewerCustomizeAppBarTitle",
     "settingsViewerCustomizeBottomAppBarTitle",
     "settingsCollectionsCustomizeNavigationBarTitle",
@@ -498,6 +513,8 @@
     "settingsUseNewHttpEngine",
     "settingsUseNewHttpEngineDescription",
     "settingsRestartNeededDialog",
+    "exifSupportNextcloud28Notes",
+    "exifSupportConfirmationDialogTitle2",
     "appLockUnlockHint",
     "appLockUnlockWrongPassword",
     "enabledText",
@@ -527,6 +544,7 @@
   ],
 
   "fr": [
+    "settingsExifSupportTitle2",
     "settingsViewerCustomizeAppBarTitle",
     "settingsViewerCustomizeBottomAppBarTitle",
     "settingsCollectionsCustomizeNavigationBarTitle",
@@ -547,6 +565,8 @@
     "settingsUseNewHttpEngine",
     "settingsUseNewHttpEngineDescription",
     "settingsRestartNeededDialog",
+    "exifSupportNextcloud28Notes",
+    "exifSupportConfirmationDialogTitle2",
     "appLockUnlockHint",
     "appLockUnlockWrongPassword",
     "enabledText",
@@ -576,6 +596,7 @@
   ],
 
   "it": [
+    "settingsExifSupportTitle2",
     "settingsPersonProviderTitle",
     "settingsViewerCustomizeAppBarTitle",
     "settingsViewerCustomizeBottomAppBarTitle",
@@ -598,6 +619,8 @@
     "settingsUseNewHttpEngine",
     "settingsUseNewHttpEngineDescription",
     "settingsRestartNeededDialog",
+    "exifSupportNextcloud28Notes",
+    "exifSupportConfirmationDialogTitle2",
     "unmuteTooltip",
     "slideshowTooltip",
     "enhanceColorPopTitle",
@@ -657,7 +680,7 @@
     "settingsLanguageTitle",
     "settingsLanguageOptionSystemDefaultLabel",
     "settingsMetadataTitle",
-    "settingsExifSupportTitle",
+    "settingsExifSupportTitle2",
     "settingsExifSupportTrueSubtitle",
     "settingsExifWifiOnlyTitle",
     "settingsExifWifiOnlyFalseSubtitle",
@@ -744,7 +767,8 @@
     "writePreferenceFailureNotification",
     "enableButtonLabel",
     "exifSupportDetails",
-    "exifSupportConfirmationDialogTitle",
+    "exifSupportNextcloud28Notes",
+    "exifSupportConfirmationDialogTitle2",
     "captureLogDetails",
     "captureLogSuccessNotification",
     "doneButtonLabel",
@@ -1028,6 +1052,7 @@
   ],
 
   "pl": [
+    "settingsExifSupportTitle2",
     "settingsMemoriesRangeValueText",
     "settingsViewerCustomizeAppBarTitle",
     "settingsViewerCustomizeBottomAppBarTitle",
@@ -1049,6 +1074,8 @@
     "settingsUseNewHttpEngine",
     "settingsUseNewHttpEngineDescription",
     "settingsRestartNeededDialog",
+    "exifSupportNextcloud28Notes",
+    "exifSupportConfirmationDialogTitle2",
     "enhanceColorPopTitle",
     "imageEditTransformOrientationClockwise",
     "imageEditTransformOrientationCounterclockwise",
@@ -1083,6 +1110,7 @@
   "pt": [
     "nameInputInvalidEmpty",
     "settingsMetadataTitle",
+    "settingsExifSupportTitle2",
     "settingsPersonProviderTitle",
     "settingsViewerCustomizeAppBarTitle",
     "settingsViewerCustomizeBottomAppBarTitle",
@@ -1107,6 +1135,8 @@
     "settingsUseNewHttpEngineDescription",
     "settingsServerVersionTitle",
     "settingsRestartNeededDialog",
+    "exifSupportNextcloud28Notes",
+    "exifSupportConfirmationDialogTitle2",
     "searchLandingPeopleListEmptyText2",
     "createCollectionFailureNotification",
     "addItemToCollectionTooltip",
@@ -1150,6 +1180,7 @@
   ],
 
   "ru": [
+    "settingsExifSupportTitle2",
     "settingsViewerCustomizeAppBarTitle",
     "settingsViewerCustomizeBottomAppBarTitle",
     "settingsCollectionsCustomizeNavigationBarTitle",
@@ -1170,6 +1201,8 @@
     "settingsUseNewHttpEngine",
     "settingsUseNewHttpEngineDescription",
     "settingsRestartNeededDialog",
+    "exifSupportNextcloud28Notes",
+    "exifSupportConfirmationDialogTitle2",
     "appLockUnlockHint",
     "appLockUnlockWrongPassword",
     "enabledText",
@@ -1199,9 +1232,12 @@
   ],
 
   "tr": [
+    "settingsExifSupportTitle2",
     "settingsViewerCustomizeAppBarTitle",
     "settingsViewerCustomizeBottomAppBarTitle",
     "settingsCollectionsCustomizeNavigationBarTitle",
+    "exifSupportNextcloud28Notes",
+    "exifSupportConfirmationDialogTitle2",
     "alternativeSignIn",
     "livePhotoTooltip",
     "dragAndDropRearrangeButtons",
@@ -1213,6 +1249,7 @@
 
   "zh": [
     "settingsMetadataTitle",
+    "settingsExifSupportTitle2",
     "settingsPersonProviderTitle",
     "settingsMemoriesRangeValueText",
     "settingsViewerCustomizeAppBarTitle",
@@ -1239,6 +1276,8 @@
     "settingsUseNewHttpEngine",
     "settingsUseNewHttpEngineDescription",
     "settingsRestartNeededDialog",
+    "exifSupportNextcloud28Notes",
+    "exifSupportConfirmationDialogTitle2",
     "slideshowSetupDialogReverseTitle",
     "enhanceColorPopTitle",
     "enhanceRetouchTitle",
@@ -1298,6 +1337,7 @@
     "signInHeaderText2",
     "settingsLanguageOptionSystemDefaultLabel",
     "settingsMetadataTitle",
+    "settingsExifSupportTitle2",
     "settingsExifWifiOnlyTitle",
     "settingsExifWifiOnlyFalseSubtitle",
     "settingsAccountLabelTitle",
@@ -1347,6 +1387,8 @@
     "settingsUseNewHttpEngineDescription",
     "settingsServerVersionTitle",
     "settingsRestartNeededDialog",
+    "exifSupportNextcloud28Notes",
+    "exifSupportConfirmationDialogTitle2",
     "sortOptionFilenameAscendingLabel",
     "sortOptionFilenameDescendingLabel",
     "slideshowSetupDialogReverseTitle",

@@ -8,6 +8,7 @@ import 'package:nc_photos/entity/file/data_source.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_db/np_db.dart';
 
 part 'file_cache_manager.g.dart';
 
@@ -81,7 +82,7 @@ class FileCacheLoader {
 
 @npLog
 class FileSqliteCacheUpdater {
-  const FileSqliteCacheUpdater(this._c);
+  const FileSqliteCacheUpdater(this.db);
 
   Future<void> call(
     Account account,
@@ -90,7 +91,7 @@ class FileSqliteCacheUpdater {
   }) async {
     final s = Stopwatch()..start();
     try {
-      await _c.npDb.syncDirFiles(
+      await db.syncDirFiles(
         account: account.toDb(),
         dirFile: dir.toDbKey(),
         files: remote.map((e) => e.toDb()).toList(),
@@ -101,13 +102,13 @@ class FileSqliteCacheUpdater {
   }
 
   Future<void> updateSingle(Account account, File remoteFile) async {
-    await _c.npDb.syncFile(
+    await db.syncFile(
       account: account.toDb(),
       file: remoteFile.toDb(),
     );
   }
 
-  final DiContainer _c;
+  final NpDb db;
 }
 
 class FileSqliteCacheEmptier {

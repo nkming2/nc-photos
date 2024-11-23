@@ -55,6 +55,10 @@ class FileWebdavDataSource implements FileDataSource {
       trashbinFilename: 1,
       trashbinOriginalLocation: 1,
       trashbinDeletionTime: 1,
+      metadataPhotosIfd0: 1,
+      metadataPhotosExif: 1,
+      metadataPhotosGps: 1,
+      metadataPhotosSize: 1,
       customNamespaces: {
         "com.nkming.nc_photos": "app",
       },
@@ -275,6 +279,10 @@ class FileWebdavDataSource implements FileDataSource {
     trashbinFilename,
     trashbinOriginalLocation,
     trashbinDeletionTime,
+    metadataPhotosIfd0,
+    metadataPhotosExif,
+    metadataPhotosGps,
+    metadataPhotosSize,
     Map<String, String>? customNamespaces,
     List<String>? customProperties,
   }) async {
@@ -302,6 +310,10 @@ class FileWebdavDataSource implements FileDataSource {
           trashbinFilename: trashbinFilename,
           trashbinOriginalLocation: trashbinOriginalLocation,
           trashbinDeletionTime: trashbinDeletionTime,
+          metadataPhotosIfd0: metadataPhotosIfd0,
+          metadataPhotosExif: metadataPhotosExif,
+          metadataPhotosGps: metadataPhotosGps,
+          metadataPhotosSize: metadataPhotosSize,
           customNamespaces: customNamespaces,
           customProperties: customProperties,
         );
@@ -623,7 +635,7 @@ class FileCachedDataSource implements FileDataSource {
       return state.files;
     }
 
-    await FileSqliteCacheUpdater(_c)(state.account, state.dir,
+    await FileSqliteCacheUpdater(_c.npDb)(state.account, state.dir,
         remote: state.files);
     if (shouldCheckCache) {
       // update our local touch token to match the remote one
@@ -645,7 +657,7 @@ class FileCachedDataSource implements FileDataSource {
     if (remote.isCollection != true) {
       // only update regular files
       _log.info("[listSingle] Cache single file: ${logFilename(f.path)}");
-      await FileSqliteCacheUpdater(_c).updateSingle(account, remote);
+      await FileSqliteCacheUpdater(_c.npDb).updateSingle(account, remote);
     }
     return remote;
   }

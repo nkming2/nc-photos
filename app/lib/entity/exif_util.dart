@@ -1,4 +1,5 @@
 import 'package:exifdart/exifdart.dart';
+import 'package:flutter/foundation.dart';
 import 'package:nc_photos/entity/exif.dart';
 
 extension ExifExtension on Exif {
@@ -12,7 +13,7 @@ extension ExifExtension on Exif {
       // invalid value
       return null;
     } else {
-      return _gpsDmsToDouble(gpsLatitude!) * (gpsLatitudeRef == "S" ? -1 : 1);
+      return gpsDmsToDouble(gpsLatitude!) * (gpsLatitudeRef == "S" ? -1 : 1);
     }
   }
 
@@ -26,12 +27,23 @@ extension ExifExtension on Exif {
       // invalid value
       return null;
     } else {
-      return _gpsDmsToDouble(gpsLongitude!) * (gpsLongitudeRef == "W" ? -1 : 1);
+      return gpsDmsToDouble(gpsLongitude!) * (gpsLongitudeRef == "W" ? -1 : 1);
     }
   }
 }
 
-double _gpsDmsToDouble(List<Rational> dms) {
+List<Rational> gpsDoubleToDms(double src) {
+  var tmp = src.abs();
+  final d = tmp.floor();
+  tmp -= d;
+  final ss = (tmp * 3600 * 100).floor();
+  final s = ss % (60 * 100);
+  final m = (ss / (60 * 100)).floor();
+  return [Rational(d, 1), Rational(m, 1), Rational(s, 100)];
+}
+
+@visibleForTesting
+double gpsDmsToDouble(List<Rational> dms) {
   double product = dms[0].toDouble();
   if (dms.length > 1) {
     product += dms[1].toDouble() / 60;
@@ -40,4 +52,15 @@ double _gpsDmsToDouble(List<Rational> dms) {
     product += dms[2].toDouble() / 3600;
   }
   return product;
+}
+
+Rational doubleToRational(double src) {
+  final s = src.abs();
+  if (s < 1000) {
+    return Rational((s * 100000).truncate(), 100000);
+  } else if (s < 100000) {
+    return Rational((s * 1000).truncate(), 1000);
+  } else {
+    return Rational(s.truncate(), 1);
+  }
 }

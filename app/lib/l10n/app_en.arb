@@ -274,8 +274,8 @@
 	"@settingsMetadataTitle": {
 		"description": "Metadata (e.g., date, resolution, GPS, etc)"
 	},
-	"settingsExifSupportTitle": "EXIF support",
-	"@settingsExifSupportTitle": {
+	"settingsExifSupportTitle2": "Client side EXIF support",
+	"@settingsExifSupportTitle2": {
 		"description": "Title of the EXIF support setting"
 	},
 	"settingsExifSupportTrueSubtitle": "Require extra network usage",
@@ -501,8 +501,12 @@
 	"@exifSupportDetails": {
 		"description": "Detailed description of the exif support feature"
 	},
-	"exifSupportConfirmationDialogTitle": "Enable EXIF support?",
-	"@exifSupportConfirmationDialogTitle": {
+	"exifSupportNextcloud28Notes": "Client side support complements your server. The app will process files and attributes not supported by Nextcloud",
+	"@exifSupportNextcloud28Notes": {
+		"description": "Extra notes for Nextcloud 28+"
+	},
+	"exifSupportConfirmationDialogTitle2": "Enable client side EXIF support?",
+	"@exifSupportConfirmationDialogTitle2": {
 		"description": "Title of the dialog to confirm enabling exif support"
 	},
 	"captureLogDetails": "To take logs for a bug report:\n\n1. Enable this setting\n2. Reproduce the issue\n3. Disable this setting\n4. Look for nc-photos.log in the download folder\n\n*If the issue causes the app to crash, no logs could be captured. In such case, please contact the developer for further instructions",

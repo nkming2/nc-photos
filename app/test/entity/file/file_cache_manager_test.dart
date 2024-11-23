@@ -205,7 +205,7 @@ Future<void> _updaterIdentical() async {
     await util.insertDirRelation(c.sqliteDb, account, files[2], [files[3]]);
   });
 
-  final updater = FileSqliteCacheUpdater(c);
+  final updater = FileSqliteCacheUpdater(c.npDb);
   await updater(account, files[0], remote: files.slice(0, 3));
   expect(
     await util.listSqliteDbFiles(c.sqliteDb),
@@ -240,7 +240,7 @@ Future<void> _updaterNewFile() async {
     await util.insertDirRelation(c.sqliteDb, account, files[2], [files[3]]);
   });
 
-  final updater = FileSqliteCacheUpdater(c);
+  final updater = FileSqliteCacheUpdater(c.npDb);
   await updater(account, files[0], remote: [...files.slice(0, 3), newFile]);
   expect(
     await util.listSqliteDbFiles(c.sqliteDb),
@@ -271,7 +271,7 @@ Future<void> _updaterDeleteFile() async {
     await util.insertDirRelation(c.sqliteDb, account, files[2], [files[3]]);
   });
 
-  final updater = FileSqliteCacheUpdater(c);
+  final updater = FileSqliteCacheUpdater(c.npDb);
   await updater(account, files[0], remote: [files[0], files[2]]);
   expect(
     await util.listSqliteDbFiles(c.sqliteDb),
@@ -305,7 +305,7 @@ Future<void> _updaterDeleteDir() async {
     await util.insertDirRelation(c.sqliteDb, account, files[2], [files[3]]);
   });
 
-  final updater = FileSqliteCacheUpdater(c);
+  final updater = FileSqliteCacheUpdater(c.npDb);
   await updater(account, files[0], remote: files.slice(0, 2));
   expect(
     await util.listSqliteDbFiles(c.sqliteDb),
@@ -343,7 +343,7 @@ Future<void> _updaterUpdateFile() async {
     await util.insertDirRelation(c.sqliteDb, account, files[2], [files[3]]);
   });
 
-  final updater = FileSqliteCacheUpdater(c);
+  final updater = FileSqliteCacheUpdater(c.npDb);
   await updater(account, files[0],
       remote: [files[0], newFile, ...files.slice(2)]);
   expect(
@@ -382,7 +382,7 @@ Future<void> _updaterNewSharedFile() async {
     await util.insertDirRelation(c.sqliteDb, account, files[2], [files[3]]);
   });
 
-  final updater = FileSqliteCacheUpdater(c);
+  final updater = FileSqliteCacheUpdater(c.npDb);
   await updater(user1Account, user1Files[0], remote: user1Files);
   expect(
     await util.listSqliteDbFiles(c.sqliteDb),
@@ -419,7 +419,7 @@ Future<void> _updaterNewSharedDir() async {
     await util.insertDirRelation(c.sqliteDb, account, files[2], [files[3]]);
   });
 
-  final updater = FileSqliteCacheUpdater(c);
+  final updater = FileSqliteCacheUpdater(c.npDb);
   await updater(user1Account, user1Files[0], remote: user1Files);
   expect(
     await util.listSqliteDbFiles(c.sqliteDb),
@@ -461,7 +461,7 @@ Future<void> _updaterDeleteSharedFile() async {
         c.sqliteDb, user1Account, user1Files[0], [user1Files[1]]);
   });
 
-  final updater = FileSqliteCacheUpdater(c);
+  final updater = FileSqliteCacheUpdater(c.npDb);
   await updater(user1Account, user1Files[0], remote: [user1Files[0]]);
   expect(
     await util.listSqliteDbFiles(c.sqliteDb),
@@ -504,7 +504,7 @@ Future<void> _updaterDeleteSharedDir() async {
         c.sqliteDb, user1Account, user1Files[0], [user1Files[1]]);
   });
 
-  final updater = FileSqliteCacheUpdater(c);
+  final updater = FileSqliteCacheUpdater(c.npDb);
   await updater(user1Account, user1Files[0], remote: [user1Files[0]]);
   expect(
     await util.listSqliteDbFiles(c.sqliteDb),
@@ -541,7 +541,7 @@ Future<void> _updaterTooManyFiles() async {
     await util.insertDirRelation(c.sqliteDb, account, files[2], files.slice(3));
   });
 
-  final updater = FileSqliteCacheUpdater(c);
+  final updater = FileSqliteCacheUpdater(c.npDb);
   await updater(account, files[2], remote: [...files.slice(2), ...newFiles]);
   // we are testing to make sure the above function won't throw, so nothing to
   // expect here
@@ -574,12 +574,12 @@ Future<void> _updaterMovedFileToFront() async {
   final movedFile = files[3].copyWith(
     path: "remote.php/dav/files/admin/test1/test1.jpg",
   );
-  await FileSqliteCacheUpdater(c)(
+  await FileSqliteCacheUpdater(c.npDb)(
     account,
     files[1],
     remote: [files[1], movedFile],
   );
-  await FileSqliteCacheUpdater(c)(
+  await FileSqliteCacheUpdater(c.npDb)(
     account,
     files[2],
     remote: [files[2]],
@@ -621,12 +621,12 @@ Future<void> _updaterMovedFileToBehind() async {
   final movedFile = files[3].copyWith(
     path: "remote.php/dav/files/admin/test2/test1.jpg",
   );
-  await FileSqliteCacheUpdater(c)(
+  await FileSqliteCacheUpdater(c.npDb)(
     account,
     files[1],
     remote: [files[1]],
   );
-  await FileSqliteCacheUpdater(c)(
+  await FileSqliteCacheUpdater(c.npDb)(
     account,
     files[2],
     remote: [files[2], movedFile],

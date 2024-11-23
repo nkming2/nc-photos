@@ -72,6 +72,10 @@ class ApiFiles {
     trashbinFilename,
     trashbinOriginalLocation,
     trashbinDeletionTime,
+    metadataPhotosIfd0,
+    metadataPhotosExif,
+    metadataPhotosGps,
+    metadataPhotosSize,
     Map<String, String>? customNamespaces,
     List<String>? customProperties,
   }) async {
@@ -96,7 +100,11 @@ class ApiFiles {
           richWorkspace != null ||
           trashbinFilename != null ||
           trashbinOriginalLocation != null ||
-          trashbinDeletionTime != null);
+          trashbinDeletionTime != null ||
+          metadataPhotosIfd0 != null ||
+          metadataPhotosExif != null ||
+          metadataPhotosGps != null ||
+          metadataPhotosSize != null);
       if (!hasDavNs && !hasOcNs && !hasNcNs) {
         // no body
         return await _api.request("PROPFIND", path);
@@ -174,6 +182,18 @@ class ApiFiles {
             }
             if (trashbinDeletionTime != null) {
               builder.element("nc:trashbin-deletion-time");
+            }
+            if (metadataPhotosIfd0 != null) {
+              builder.element("nc:metadata-photos-ifd0");
+            }
+            if (metadataPhotosExif != null) {
+              builder.element("nc:metadata-photos-exif");
+            }
+            if (metadataPhotosGps != null) {
+              builder.element("nc:metadata-photos-gps");
+            }
+            if (metadataPhotosSize != null) {
+              builder.element("nc:metadata-photos-size");
             }
             for (final p in customProperties ?? []) {
               builder.element(p);

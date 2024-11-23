@@ -17,6 +17,7 @@ import 'package:nc_photos/entity/tagged_file.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:np_api/np_api.dart' as api;
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_common/object_util.dart';
 import 'package:np_string/np_string.dart';
 
 part 'entity_converter.g.dart';
@@ -49,23 +50,36 @@ class ApiFavoriteConverter {
 }
 
 class ApiFileConverter {
+  static Metadata? _metadataFromApi(api.File file) {
+    if (file.metadataPhotosSize != null) {
+      return Metadata.fromApi(
+        etag: file.etag,
+        ifd0: file.metadataPhotosIfd0,
+        exif: file.metadataPhotosExif,
+        gps: file.metadataPhotosGps,
+        size: file.metadataPhotosSize!,
+      );
+    } else {
+      return file.customProperties?["com.nkming.nc_photos:metadata"]
+          ?.let((obj) => Metadata.fromJson(
+                jsonDecode(obj),
+                upgraderV1: MetadataUpgraderV1(
+                  fileContentType: file.contentType,
+                  logFilePath: file.href,
+                ),
+                upgraderV2: MetadataUpgraderV2(
+                  fileContentType: file.contentType,
+                  logFilePath: file.href,
+                ),
+                upgraderV3: MetadataUpgraderV3(
+                  fileContentType: file.contentType,
+                  logFilePath: file.href,
+                ),
+              ));
+    }
+  }
+
   static File fromApi(api.File file) {
-    final metadata = file.customProperties?["com.nkming.nc_photos:metadata"]
-        ?.run((obj) => Metadata.fromJson(
-              jsonDecode(obj),
-              upgraderV1: MetadataUpgraderV1(
-                fileContentType: file.contentType,
-                logFilePath: file.href,
-              ),
-              upgraderV2: MetadataUpgraderV2(
-                fileContentType: file.contentType,
-                logFilePath: file.href,
-              ),
-              upgraderV3: MetadataUpgraderV3(
-                fileContentType: file.contentType,
-                logFilePath: file.href,
-              ),
-            ));
     return File(
       path: _hrefToPath(file.href),
       contentLength: file.contentLength,
@@ -81,7 +95,7 @@ class ApiFileConverter {
       trashbinFilename: file.trashbinFilename,
       trashbinOriginalLocation: file.trashbinOriginalLocation,
       trashbinDeletionTime: file.trashbinDeletionTime,
-      metadata: metadata,
+      metadata: _metadataFromApi(file),
       isArchived: file.customProperties?["com.nkming.nc_photos:is-archived"]
           ?.run((obj) => obj == "true"),
       overrideDateTime: file

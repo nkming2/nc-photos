@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/person.dart';
 import 'package:nc_photos/entity/pref.dart';
+import 'package:nc_photos/entity/server_status.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_common/object_util.dart';
 import 'package:rxdart/rxdart.dart';
 
 part 'account_pref_controller.g.dart';
@@ -52,6 +56,13 @@ class AccountPrefController {
         value: value,
       );
 
+  Future<void> setServerStatus(ServerStatus value) => _set(
+        controller: _serverStatusController,
+        setter: (pref, value) =>
+            pref.setServerStatus(jsonEncode(value!.toJson())),
+        value: value,
+      );
+
   Future<void> _set<T>({
     required BehaviorSubject<T> controller,
     required Future<bool> Function(AccountPref pref, T value) setter,
@@ -89,4 +100,8 @@ class AccountPrefController {
   @npSubjectAccessor
   late final _hasNewSharedAlbumController =
       BehaviorSubject.seeded(_accountPref.hasNewSharedAlbum() ?? false);
+  @npSubjectAccessor
+  late final _serverStatusController = BehaviorSubject.seeded(_accountPref
+      .getServerStatus()
+      ?.let((e) => ServerStatus.fromJson(jsonDecode(e))));
 }

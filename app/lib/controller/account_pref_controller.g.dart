@@ -50,4 +50,10 @@ extension $AccountPrefControllerNpSubjectAccessor on AccountPrefController {
   Stream<bool> get hasNewSharedAlbumChange =>
       hasNewSharedAlbum.distinct().skip(1);
   bool get hasNewSharedAlbumValue => _hasNewSharedAlbumController.value;
+// _serverStatusController
+  ValueStream<ServerStatus?> get serverStatus => _serverStatusController.stream;
+  Stream<ServerStatus?> get serverStatusNew => serverStatus.skip(1);
+  Stream<ServerStatus?> get serverStatusChange =>
+      serverStatus.distinct().skip(1);
+  ServerStatus? get serverStatusValue => _serverStatusController.value;
 }

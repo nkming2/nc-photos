@@ -84,6 +84,10 @@ class File with EquatableMixin {
     this.trashbinFilename,
     this.trashbinOriginalLocation,
     this.trashbinDeletionTime,
+    this.metadataPhotosIfd0,
+    this.metadataPhotosExif,
+    this.metadataPhotosGps,
+    this.metadataPhotosSize,
     this.customProperties,
   });
 
@@ -106,6 +110,10 @@ class File with EquatableMixin {
         trashbinFilename,
         trashbinOriginalLocation,
         trashbinDeletionTime,
+        metadataPhotosIfd0,
+        metadataPhotosExif,
+        metadataPhotosGps,
+        metadataPhotosSize,
         customProperties,
       ];
 
@@ -123,6 +131,10 @@ class File with EquatableMixin {
   final String? trashbinFilename;
   final String? trashbinOriginalLocation;
   final DateTime? trashbinDeletionTime;
+  final Map<String, String>? metadataPhotosIfd0;
+  final Map<String, String>? metadataPhotosExif;
+  final Map<String, String>? metadataPhotosGps;
+  final Map<String, String>? metadataPhotosSize;
   final Map<String, String>? customProperties;
 }
 

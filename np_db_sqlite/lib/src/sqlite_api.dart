@@ -383,13 +383,43 @@ class NpDbSqlite implements NpDb {
   Future<int> countFilesByMissingMetadata({
     required DbAccount account,
     required List<String> mimes,
+    required String ownerId,
   }) async {
     return _db.use((db) async {
       return await db.countFiles(
         account: ByAccount.db(account),
         isMissingMetadata: true,
         mimes: mimes,
+        ownerId: ownerId,
       );
+    });
+  }
+
+  @override
+  Future<DbFileMissingMetadataResult> getFilesByMissingMetadata({
+    required DbAccount account,
+    required List<String> mimes,
+    required String ownerId,
+  }) async {
+    return _db.use((db) async {
+      final results = <({int fileId, String relativePath})>[];
+      var i = 0;
+      while (true) {
+        final sqlObjs = await db.queryFileIdPathsByMissingMetadata(
+          account: ByAccount.db(account),
+          isMissingMetadata: true,
+          mimes: mimes,
+          ownerId: ownerId,
+          limit: 10000,
+          offset: i,
+        );
+        if (sqlObjs.isEmpty) {
+          break;
+        }
+        results.addAll(sqlObjs);
+        i += 10000;
+      }
+      return DbFileMissingMetadataResult(items: results);
     });
   }
 
@@ -472,6 +502,7 @@ class NpDbSqlite implements NpDb {
   Future<DbFilesSummary> getFilesSummary({
     required DbAccount account,
     List<String>? includeRelativeRoots,
+    List<String>? includeRelativeDirs,
     List<String>? excludeRelativeRoots,
     List<String>? mimes,
   }) async {
@@ -479,6 +510,7 @@ class NpDbSqlite implements NpDb {
       return await db.countFileGroupsByDate(
         account: ByAccount.db(account),
         includeRelativeRoots: includeRelativeRoots,
+        includeRelativeDirs: includeRelativeDirs,
         excludeRelativeRoots: excludeRelativeRoots,
         mimes: mimes,
         isArchived: false,

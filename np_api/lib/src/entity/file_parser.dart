@@ -33,6 +33,10 @@ class FileParser extends XmlResponseParser {
     String? trashbinFilename;
     String? trashbinOriginalLocation;
     DateTime? trashbinDeletionTime;
+    Map<String, String>? metadataPhotosIfd0;
+    Map<String, String>? metadataPhotosExif;
+    Map<String, String>? metadataPhotosGps;
+    Map<String, String>? metadataPhotosSize;
     Map<String, String>? customProperties;
 
     for (final child in element.children.whereType<XmlElement>()) {
@@ -66,6 +70,10 @@ class FileParser extends XmlResponseParser {
         trashbinFilename = propParser.trashbinFilename;
         trashbinOriginalLocation = propParser.trashbinOriginalLocation;
         trashbinDeletionTime = propParser.trashbinDeletionTime;
+        metadataPhotosIfd0 = propParser.metadataPhotosIfd0;
+        metadataPhotosExif = propParser.metadataPhotosExif;
+        metadataPhotosGps = propParser.metadataPhotosGps;
+        metadataPhotosSize = propParser.metadataPhotosSize;
         customProperties = propParser.customProperties;
       }
     }
@@ -85,6 +93,10 @@ class FileParser extends XmlResponseParser {
       trashbinFilename: trashbinFilename,
       trashbinOriginalLocation: trashbinOriginalLocation,
       trashbinDeletionTime: trashbinDeletionTime,
+      metadataPhotosIfd0: metadataPhotosIfd0,
+      metadataPhotosExif: metadataPhotosExif,
+      metadataPhotosGps: metadataPhotosGps,
+      metadataPhotosSize: metadataPhotosSize,
       customProperties: customProperties,
     );
   }
@@ -140,6 +152,27 @@ class _PropParser {
           prefix: "http://nextcloud.org/ns", namespaces: namespaces)) {
         _trashbinDeletionTime = DateTime.fromMillisecondsSinceEpoch(
             int.parse(child.innerText) * 1000);
+      } else if (child.matchQualifiedName("metadata-photos-ifd0",
+          prefix: "http://nextcloud.org/ns", namespaces: namespaces)) {
+        for (final ifd0Child in child.children.whereType<XmlElement>()) {
+          (_metadataPhotosIfd0 ??= {})[ifd0Child.localName] =
+              ifd0Child.innerText;
+        }
+      } else if (child.matchQualifiedName("metadata-photos-exif",
+          prefix: "http://nextcloud.org/ns", namespaces: namespaces)) {
+        for (final c in child.children.whereType<XmlElement>()) {
+          (_metadataPhotosExif ??= {})[c.localName] = c.innerText;
+        }
+      } else if (child.matchQualifiedName("metadata-photos-gps",
+          prefix: "http://nextcloud.org/ns", namespaces: namespaces)) {
+        for (final c in child.children.whereType<XmlElement>()) {
+          (_metadataPhotosGps ??= {})[c.localName] = c.innerText;
+        }
+      } else if (child.matchQualifiedName("metadata-photos-size",
+          prefix: "http://nextcloud.org/ns", namespaces: namespaces)) {
+        for (final c in child.children.whereType<XmlElement>()) {
+          (_metadataPhotosSize ??= {})[c.localName] = c.innerText;
+        }
       } else {
         final key = child.name.prefix == null
             ? child.localName
@@ -162,6 +195,10 @@ class _PropParser {
   String? get trashbinFilename => _trashbinFilename;
   String? get trashbinOriginalLocation => _trashbinOriginalLocation;
   DateTime? get trashbinDeletionTime => _trashbinDeletionTime;
+  Map<String, String>? get metadataPhotosIfd0 => _metadataPhotosIfd0;
+  Map<String, String>? get metadataPhotosExif => _metadataPhotosExif;
+  Map<String, String>? get metadataPhotosGps => _metadataPhotosGps;
+  Map<String, String>? get metadataPhotosSize => _metadataPhotosSize;
   Map<String, String>? get customProperties => _customProperties;
 
   final Map<String, String> namespaces;
@@ -179,6 +216,10 @@ class _PropParser {
   String? _trashbinFilename;
   String? _trashbinOriginalLocation;
   DateTime? _trashbinDeletionTime;
+  Map<String, String>? _metadataPhotosIfd0;
+  Map<String, String>? _metadataPhotosExif;
+  Map<String, String>? _metadataPhotosGps;
+  Map<String, String>? _metadataPhotosSize;
   Map<String, String>? _customProperties;
 }
 

@@ -21,6 +21,7 @@ import 'package:nc_photos/controller/files_controller.dart';
 import 'package:nc_photos/controller/metadata_controller.dart';
 import 'package:nc_photos/controller/persons_controller.dart';
 import 'package:nc_photos/controller/pref_controller.dart';
+import 'package:nc_photos/controller/server_controller.dart';
 import 'package:nc_photos/controller/sync_controller.dart';
 import 'package:nc_photos/db/entity_converter.dart';
 import 'package:nc_photos/di_container.dart';
@@ -97,6 +98,7 @@ class HomePhotos2 extends StatelessWidget {
         syncController: accountController.syncController,
         personsController: accountController.personsController,
         metadataController: accountController.metadataController,
+        serverController: accountController.serverController,
       ),
       child: const _WrappedHomePhotos(),
     );
