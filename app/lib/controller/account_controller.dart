@@ -108,6 +108,7 @@ class AccountController {
         KiwiContainer().resolve(),
         account: account,
         prefController: prefController,
+        serverController: serverController,
       );
 
   PrefController prefController;

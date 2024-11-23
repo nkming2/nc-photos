@@ -41,12 +41,18 @@ class _SyncByServer {
       _log.fine("[_syncDir] Syncing dir $dir");
       final files = await fileRepoRemote.list(account, dir);
       await FileSqliteCacheUpdater(db)(account, dir, remote: files);
+      final isEnableClientExif = await ServiceConfig.isEnableClientExif();
       for (final f in files.where((e) => fileIds.contains(e.fdId))) {
         File? result;
         if (!_supportedMimes.contains(f.fdMime)) {
-          _log.info(
-              "[_syncDir] File ${f.path} (mime: ${f.fdMime}) not supported by server, fallback to client");
-          result = await fallback.syncOne(f);
+          if (isEnableClientExif) {
+            _log.info(
+                "[_syncDir] File ${f.path} (mime: ${f.fdMime}) not supported by server, fallback to client");
+            result = await fallback.syncOne(f);
+          } else {
+            _log.info(
+                "[_syncDir] File ${f.path} (mime: ${f.fdMime}) not supported by server");
+          }
         } else {
           if (f.metadata != null && f.location == null) {
             result = await _syncOne(f);

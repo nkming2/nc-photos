@@ -28,7 +28,9 @@ part 'l10n.dart';
 part 'service.g.dart';
 
 /// Start the background service
-Future<void> startService() async {
+Future<void> startService({
+  required PrefController prefController,
+}) async {
   _$__NpLog.log.info("[startService] Starting service");
   final service = FlutterBackgroundService();
   await service.configure(
@@ -46,7 +48,9 @@ Future<void> startService() async {
   );
   // sync settings
   await ServiceConfig.setProcessExifWifiOnly(
-      Pref().shouldProcessExifWifiOnlyOr());
+      prefController.shouldProcessExifWifiOnlyValue);
+  await ServiceConfig.setEnableClientExif(
+      prefController.isEnableClientExifValue);
   await service.start();
 }
 

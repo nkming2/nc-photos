@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/controller/pref_controller.dart';
+import 'package:nc_photos/controller/server_controller.dart';
 import 'package:nc_photos/db/entity_converter.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
@@ -17,6 +18,7 @@ class MetadataController {
     this._c, {
     required this.account,
     required this.prefController,
+    required this.serverController,
   }) {
     _subscriptions.add(
         prefController.isEnableClientExifChange.listen(_onSetEnableClientExif));
@@ -44,7 +46,12 @@ class MetadataController {
   void kickstart() {
     _log.info("[kickstart] Metadata controller enabled");
     _isEnable = true;
-    if (prefController.isEnableClientExifValue && !_hasStarted) {
+    // on NC28+, the service is needed to get metadata for files that are not
+    // yet available the moment we queried them, and files not supported by the
+    // server (if client side exif enabled).
+    if ((serverController.isSupported(ServerFeature.ncMetadata) ||
+            prefController.isEnableClientExifValue) &&
+        !_hasStarted) {
       _startMetadataTask();
     }
   }
@@ -72,7 +79,7 @@ class MetadataController {
       );
       _log.info("[_startMetadataTask] Missing count: $missingCount");
       if (missingCount > 0) {
-        unawaited(service.startService());
+        unawaited(service.startService(prefController: prefController));
       }
     } catch (e, stackTrace) {
       _log.shout(
@@ -87,6 +94,7 @@ class MetadataController {
   final DiContainer _c;
   final Account account;
   final PrefController prefController;
+  final ServerController serverController;
 
   final _subscriptions = <StreamSubscription>[];
   var _isEnable = false;
