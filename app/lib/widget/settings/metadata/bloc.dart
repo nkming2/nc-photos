@@ -6,7 +6,7 @@ class _Bloc extends Bloc<_Event, _State>
   _Bloc({
     required this.prefController,
   }) : super(_State(
-          isEnable: prefController.isEnableExifValue,
+          isEnable: prefController.isEnableClientExifValue,
           isWifiOnly: prefController.shouldProcessExifWifiOnlyValue,
         )) {
     on<_Init>(_onInit);
@@ -22,7 +22,7 @@ class _Bloc extends Bloc<_Event, _State>
     await Future.wait([
       forEach(
         emit,
-        prefController.isEnableExifChange,
+        prefController.isEnableClientExifChange,
         onData: (data) => state.copyWith(isEnable: data),
         onError: (e, stackTrace) {
           _log.severe("[_onInit] Uncaught exception", e, stackTrace);
@@ -43,7 +43,7 @@ class _Bloc extends Bloc<_Event, _State>
 
   void _onSetEnable(_SetEnable ev, Emitter<_State> emit) {
     _log.info(ev);
-    prefController.setEnableExif(ev.value);
+    prefController.setEnableClientExif(ev.value);
   }
 
   Future<void> _onSetWifiOnly(_SetWifiOnly ev, Emitter<_State> emit) async {

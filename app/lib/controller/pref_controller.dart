@@ -69,9 +69,9 @@ class PrefController {
         value: value,
       );
 
-  Future<bool> setEnableExif(bool value) => _set<bool>(
-        controller: _isEnableExifController,
-        setter: (pref, value) => pref.setEnableExif(value),
+  Future<bool> setEnableClientExif(bool value) => _set<bool>(
+        controller: _isEnableClientExifController,
+        setter: (pref, value) => pref.setEnableClientExif(value),
         value: value,
       );
 
@@ -331,8 +331,8 @@ class PrefController {
   late final _homeAlbumsSortController = BehaviorSubject.seeded(
       CollectionSort.values[pref.getHomeAlbumsSortOr(0)]);
   @npSubjectAccessor
-  late final _isEnableExifController =
-      BehaviorSubject.seeded(pref.isEnableExifOr(true));
+  late final _isEnableClientExifController =
+      BehaviorSubject.seeded(pref.isEnableClientExif() ?? true);
   @npSubjectAccessor
   late final _shouldProcessExifWifiOnlyController =
       BehaviorSubject.seeded(pref.shouldProcessExifWifiOnlyOr(true));

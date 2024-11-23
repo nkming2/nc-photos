@@ -18,8 +18,8 @@ class MetadataController {
     required this.account,
     required this.prefController,
   }) {
-    _subscriptions
-        .add(prefController.isEnableExifChange.listen(_onSetEnableExif));
+    _subscriptions.add(
+        prefController.isEnableClientExifChange.listen(_onSetEnableClientExif));
   }
 
   void dispose() {
@@ -44,16 +44,16 @@ class MetadataController {
   void kickstart() {
     _log.info("[kickstart] Metadata controller enabled");
     _isEnable = true;
-    if (prefController.isEnableExifValue && !_hasStarted) {
+    if (prefController.isEnableClientExifValue && !_hasStarted) {
       _startMetadataTask();
     }
   }
 
-  void _onSetEnableExif(bool value) {
-    _log.info("[_onSetEnableExif]");
+  void _onSetEnableClientExif(bool value) {
+    _log.info("[_onSetEnableClientExif]");
     if (value) {
       if (!_isEnable) {
-        _log.info("[_onSetEnableExif] Ignored as not enabled");
+        _log.info("[_onSetEnableClientExif] Ignored as not enabled");
         return;
       }
       _startMetadataTask();
