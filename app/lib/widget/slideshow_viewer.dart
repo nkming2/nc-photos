@@ -7,8 +7,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
+import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc_util.dart';
 import 'package:nc_photos/controller/account_controller.dart';
+import 'package:nc_photos/controller/files_controller.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/k.dart' as k;
@@ -23,6 +25,7 @@ import 'package:nc_photos/widget/video_viewer.dart';
 import 'package:nc_photos/widget/viewer_mixin.dart';
 import 'package:nc_photos/widget/wakelock_util.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_common/object_util.dart';
 import 'package:np_ui/np_ui.dart';
 import 'package:to_string/to_string.dart';
 
@@ -35,13 +38,13 @@ part 'slideshow_viewer/view.dart';
 class SlideshowViewerArguments {
   const SlideshowViewerArguments(
     this.account,
-    this.files,
+    this.fileIds,
     this.startIndex,
     this.config,
   );
 
   final Account account;
-  final List<FileDescriptor> files;
+  final List<int> fileIds;
   final int startIndex;
   final SlideshowConfig config;
 }
@@ -59,7 +62,7 @@ class SlideshowViewer extends StatelessWidget {
   const SlideshowViewer({
     super.key,
     required this.account,
-    required this.files,
+    required this.fileIds,
     required this.startIndex,
     required this.config,
   });
@@ -68,7 +71,7 @@ class SlideshowViewer extends StatelessWidget {
       : this(
           key: key,
           account: args.account,
-          files: args.files,
+          fileIds: args.fileIds,
           startIndex: args.startIndex,
           config: args.config,
         );
@@ -77,8 +80,9 @@ class SlideshowViewer extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => _Bloc(
+        filesController: context.read<AccountController>().filesController,
         account: context.read<AccountController>().account,
-        files: files,
+        fileIds: fileIds,
         startIndex: startIndex,
         config: config,
       )..add(const _Init()),
@@ -87,7 +91,7 @@ class SlideshowViewer extends StatelessWidget {
   }
 
   final Account account;
-  final List<FileDescriptor> files;
+  final List<int> fileIds;
   final int startIndex;
   final SlideshowConfig config;
 }
@@ -145,7 +149,11 @@ class _WrappedSlideshowViewerState extends State<_WrappedSlideshowViewer>
               onPopInvoked: (_) {
                 context.addEvent(const _RequestExit());
               },
-              child: const _Body(),
+              child: _BlocSelector<bool>(
+                selector: (state) => state.hasInit,
+                builder: (context, hasInit) =>
+                    hasInit ? const _Body() : const _InitBody(),
+              ),
             ),
           ),
         ),

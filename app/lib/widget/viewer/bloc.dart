@@ -343,14 +343,11 @@ class _Bloc extends Bloc<_Event, _State>
 
   void _onStartSlideshow(_StartSlideshow ev, _Emitter emit) {
     _log.info(ev);
-    final files =
-        state.fileIdOrders.map((id) => state.files[id]).nonNulls.toList();
     final req = _SlideshowRequest(
       account: account,
-      files: files,
-      startIndex: files
-          .indexWhere((e) => e.fdId == ev.fileId)
-          .let((i) => i == -1 ? 0 : i),
+      fileIds: state.fileIdOrders,
+      startIndex:
+          state.fileIdOrders.indexOf(ev.fileId).let((i) => i == -1 ? 0 : i),
     );
     emit(state.copyWith(slideshowRequest: Unique(req)));
   }

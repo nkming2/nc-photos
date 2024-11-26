@@ -87,13 +87,26 @@ class _TimelineItem extends StatelessWidget {
           color: isSelected
               ? Theme.of(context).colorScheme.secondaryContainer
               : Colors.transparent,
-          child: PhotoListImage(
-            account: context.bloc.account,
-            previewUrl: NetworkRectThumbnail.imageUrlForFile(
-              context.bloc.account,
-              file,
-            ),
-          ),
+          child: file != null
+              ? PhotoListImage(
+                  account: context.bloc.account,
+                  previewUrl: NetworkRectThumbnail.imageUrlForFile(
+                    context.bloc.account,
+                    file!,
+                  ),
+                )
+              : AspectRatio(
+                  aspectRatio: 1,
+                  child: Container(
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.all(4),
+                    child: Text(
+                      L10n.global().fileNotFound,
+                      style: Theme.of(context).textTheme.bodySmall,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
         ),
         if (!isSelected)
           Positioned.fill(
@@ -111,6 +124,6 @@ class _TimelineItem extends StatelessWidget {
   }
 
   final int index;
-  final FileDescriptor file;
+  final FileDescriptor? file;
   final bool isSelected;
 }

@@ -1530,6 +1530,7 @@
 	"@albumAddMapTooltip": {
 		"description": "Add a map that display between photos to an album"
 	},
+	"fileNotFound": "File not found",
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {

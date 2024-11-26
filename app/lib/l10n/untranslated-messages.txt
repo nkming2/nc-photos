@@ -272,6 +272,7 @@
     "customizeButtonsUnsupportedWarning",
     "placePickerTitle",
     "albumAddMapTooltip",
+    "fileNotFound",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -295,7 +296,8 @@
     "customizeCollectionsNavBarDescription",
     "customizeButtonsUnsupportedWarning",
     "placePickerTitle",
-    "albumAddMapTooltip"
+    "albumAddMapTooltip",
+    "fileNotFound"
   ],
 
   "de": [
@@ -311,7 +313,8 @@
     "customizeCollectionsNavBarDescription",
     "customizeButtonsUnsupportedWarning",
     "placePickerTitle",
-    "albumAddMapTooltip"
+    "albumAddMapTooltip",
+    "fileNotFound"
   ],
 
   "el": [
@@ -472,7 +475,8 @@
     "customizeCollectionsNavBarDescription",
     "customizeButtonsUnsupportedWarning",
     "placePickerTitle",
-    "albumAddMapTooltip"
+    "albumAddMapTooltip",
+    "fileNotFound"
   ],
 
   "es": [
@@ -488,7 +492,8 @@
     "customizeCollectionsNavBarDescription",
     "customizeButtonsUnsupportedWarning",
     "placePickerTitle",
-    "albumAddMapTooltip"
+    "albumAddMapTooltip",
+    "fileNotFound"
   ],
 
   "fi": [
@@ -540,7 +545,8 @@
     "customizeCollectionsNavBarDescription",
     "customizeButtonsUnsupportedWarning",
     "placePickerTitle",
-    "albumAddMapTooltip"
+    "albumAddMapTooltip",
+    "fileNotFound"
   ],
 
   "fr": [
@@ -592,7 +598,8 @@
     "customizeCollectionsNavBarDescription",
     "customizeButtonsUnsupportedWarning",
     "placePickerTitle",
-    "albumAddMapTooltip"
+    "albumAddMapTooltip",
+    "fileNotFound"
   ],
 
   "it": [
@@ -649,7 +656,8 @@
     "customizeCollectionsNavBarDescription",
     "customizeButtonsUnsupportedWarning",
     "placePickerTitle",
-    "albumAddMapTooltip"
+    "albumAddMapTooltip",
+    "fileNotFound"
   ],
 
   "nl": [
@@ -1041,6 +1049,7 @@
     "customizeButtonsUnsupportedWarning",
     "placePickerTitle",
     "albumAddMapTooltip",
+    "fileNotFound",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -1104,7 +1113,8 @@
     "customizeCollectionsNavBarDescription",
     "customizeButtonsUnsupportedWarning",
     "placePickerTitle",
-    "albumAddMapTooltip"
+    "albumAddMapTooltip",
+    "fileNotFound"
   ],
 
   "pt": [
@@ -1176,7 +1186,8 @@
     "customizeCollectionsNavBarDescription",
     "customizeButtonsUnsupportedWarning",
     "placePickerTitle",
-    "albumAddMapTooltip"
+    "albumAddMapTooltip",
+    "fileNotFound"
   ],
 
   "ru": [
@@ -1228,7 +1239,8 @@
     "customizeCollectionsNavBarDescription",
     "customizeButtonsUnsupportedWarning",
     "placePickerTitle",
-    "albumAddMapTooltip"
+    "albumAddMapTooltip",
+    "fileNotFound"
   ],
 
   "tr": [
@@ -1244,7 +1256,8 @@
     "customizeCollectionsNavBarDescription",
     "customizeButtonsUnsupportedWarning",
     "placePickerTitle",
-    "albumAddMapTooltip"
+    "albumAddMapTooltip",
+    "fileNotFound"
   ],
 
   "zh": [
@@ -1327,7 +1340,8 @@
     "customizeCollectionsNavBarDescription",
     "customizeButtonsUnsupportedWarning",
     "placePickerTitle",
-    "albumAddMapTooltip"
+    "albumAddMapTooltip",
+    "fileNotFound"
   ],
 
   "zh_Hant": [
@@ -1504,6 +1518,7 @@
     "customizeCollectionsNavBarDescription",
     "customizeButtonsUnsupportedWarning",
     "placePickerTitle",
-    "albumAddMapTooltip"
+    "albumAddMapTooltip",
+    "fileNotFound"
   ]
 }

@@ -254,7 +254,7 @@ class _WrappedViewerState extends State<_WrappedViewer>
       SlideshowViewer.routeName,
       arguments: SlideshowViewerArguments(
         slideshowRequest.value!.account,
-        slideshowRequest.value!.files,
+        slideshowRequest.value!.fileIds,
         slideshowRequest.value!.startIndex,
         result,
       ),

@@ -3,14 +3,14 @@ part of '../slideshow_viewer.dart';
 @npLog
 class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   _Bloc({
+    required this.filesController,
     required this.account,
-    required this.files,
+    required this.fileIds,
     required this.startIndex,
     required this.config,
-  }) : super(_State.init(
-          initialFile: files[startIndex],
-        )) {
+  }) : super(_State.init()) {
     on<_Init>(_onInit);
+    on<_SetFiles>(_onSetFiles);
     on<_ToggleShowUi>(_onToggleShowUi);
     on<_PreloadSidePages>(_onPreloadSidePages);
     on<_VideoCompleted>(_onVideoCompleted);
@@ -23,6 +23,10 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     on<_ToggleTimeline>(_onToggleTimeline);
     on<_RequestPage>(_onRequestPage);
     on<_RequestExit>(_onRequestExit);
+
+    _subscriptions.add(filesController.stream.listen((event) {
+      add(_SetFiles(event.dataMap));
+    }));
   }
 
   @override
@@ -40,24 +44,27 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   /// Convert the page index to the corresponding item index
   int convertPageToFileIndex(int pageIndex) {
     if (config.isShuffle) {
-      final i = pageIndex ~/ files.length;
+      final i = pageIndex ~/ fileIds.length;
       if (!_shuffledIndex.containsKey(i)) {
-        final index = [for (var i = 0; i < files.length; ++i) i];
+        final index = [for (var i = 0; i < fileIds.length; ++i) i];
         _shuffledIndex[i] = index..shuffle();
       }
-      return _shuffledIndex[i]![pageIndex % files.length];
+      return _shuffledIndex[i]![pageIndex % fileIds.length];
     } else {
-      return _shuffledIndex[0]![pageIndex % files.length];
+      return _shuffledIndex[0]![pageIndex % fileIds.length];
     }
   }
 
-  FileDescriptor getFileByPageIndex(int pageIndex) =>
-      files[convertPageToFileIndex(pageIndex)];
+  FileDescriptor? getFileByPageIndex(int pageIndex) =>
+      state.files[convertPageToFileIndex(pageIndex)];
 
-  void _onInit(_Init ev, Emitter<_State> emit) {
+  Future<void> _onInit(_Init ev, Emitter<_State> emit) async {
     _log.info(ev);
+    // needed for now because some pages (e.g., search) haven't yet migrated
+    await filesController.queryByFileId(fileIds);
+
     final parsedConfig = _parseConfig(
-      files: files,
+      fileIds: fileIds,
       startIndex: startIndex,
       config: config,
     );
@@ -71,7 +78,16 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
       hasPrev: initialPage > 0,
       hasNext: pageCount == null || initialPage < (pageCount! - 1),
     ));
-    _prepareNextPage();
+    unawaited(_prepareNextPage());
+  }
+
+  void _onSetFiles(_SetFiles ev, Emitter<_State> emit) {
+    _log.info(ev);
+    final files = fileIds.map((e) => ev.dataMap[e]).toList();
+    emit(state.copyWith(
+      files: files,
+      currentFile: files[convertPageToFileIndex(state.page)],
+    ));
   }
 
   void _onToggleShowUi(_ToggleShowUi ev, Emitter<_State> emit) {
@@ -96,16 +112,14 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     }
     _log.info("[_onPreloadSidePages] Pre-loading nearby images");
     if (ev.center > 0) {
-      final fileIndex = convertPageToFileIndex(ev.center - 1);
-      final prevFile = files[fileIndex];
-      if (file_util.isSupportedImageFormat(prevFile)) {
+      final prevFile = getFileByPageIndex(ev.center - 1);
+      if (prevFile != null && file_util.isSupportedImageFormat(prevFile)) {
         RemoteImageViewer.preloadImage(account, prevFile);
       }
     }
     if (pageCount == null || ev.center + 1 < pageCount!) {
-      final fileIndex = convertPageToFileIndex(ev.center + 1);
-      final nextFile = files[fileIndex];
-      if (file_util.isSupportedImageFormat(nextFile)) {
+      final nextFile = getFileByPageIndex(ev.center + 1);
+      if (nextFile != null && file_util.isSupportedImageFormat(nextFile)) {
         RemoteImageViewer.preloadImage(account, nextFile);
       }
     }
@@ -128,7 +142,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
 
   void _onSetPlay(_SetPlay ev, Emitter<_State> emit) {
     _log.info(ev);
-    if (file_util.isSupportedVideoFormat(state.currentFile)) {
+    if (state.currentFile?.let(file_util.isSupportedVideoFormat) == true) {
       // only start the countdown if the video completed
       if (state.isVideoCompleted) {
         _pageChangeTimer?.cancel();
@@ -196,12 +210,12 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   }
 
   static ({List<int> shuffled, int initial, int? count}) _parseConfig({
-    required List<FileDescriptor> files,
+    required List<int> fileIds,
     required int startIndex,
     required SlideshowConfig config,
   }) {
-    final index = [for (var i = 0; i < files.length; ++i) i];
-    final count = config.isRepeat ? null : files.length;
+    final index = [for (var i = 0; i < fileIds.length; ++i) i];
+    final count = config.isRepeat ? null : fileIds.length;
     if (config.isShuffle) {
       return (
         shuffled: index..shuffle(),
@@ -211,7 +225,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     } else if (config.isReverse) {
       return (
         shuffled: index.reversed.toList(),
-        initial: files.length - 1 - startIndex,
+        initial: fileIds.length - 1 - startIndex,
         count: count,
       );
     } else {
@@ -224,8 +238,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   }
 
   Future<void> _prepareNextPage() async {
-    final file = state.currentFile;
-    if (file_util.isSupportedVideoFormat(file)) {
+    if (state.currentFile?.let(file_util.isSupportedVideoFormat) == true) {
       // for videos, we need to wait until it's ended
       return;
     }
@@ -264,8 +277,9 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     add(_NextPage(nextPage));
   }
 
+  final FilesController filesController;
   final Account account;
-  final List<FileDescriptor> files;
+  final List<int> fileIds;
   final int startIndex;
   final SlideshowConfig config;
 
