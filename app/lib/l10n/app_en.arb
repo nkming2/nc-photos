@@ -1108,12 +1108,12 @@
 	"@createCollectionTooltip": {
 		"description": "Create a new collection. A collection can be an album, a folder, or something else in the future"
 	},
-	"createCollectionDialogAlbumLabel": "Album",
-	"@createCollectionDialogAlbumLabel": {
+	"createCollectionDialogAlbumLabel2": "Client side album",
+	"@createCollectionDialogAlbumLabel2": {
 		"description": "Create an album as collection"
 	},
-	"createCollectionDialogAlbumDescription": "Show photos added by you from anywhere on the server",
-	"@createCollectionDialogAlbumDescription": {
+	"createCollectionDialogAlbumDescription2": "Album with extra features, accessible only with this app",
+	"@createCollectionDialogAlbumDescription2": {
 		"description": "Describe how an album collection works"
 	},
 	"createCollectionDialogFolderLabel": "Folder",
@@ -1447,11 +1447,11 @@
 		"description": "Export an arbitrary Collection (typical one with generated contents) as a new static Collection"
 	},
 	"exportCollectionDialogTitle": "Export collection",
-	"createCollectionDialogNextcloudAlbumLabel": "Nextcloud album",
-	"@createCollectionDialogNextcloudAlbumLabel": {
+	"createCollectionDialogNextcloudAlbumLabel2": "Server side album",
+	"@createCollectionDialogNextcloudAlbumLabel2": {
 		"description": "Server-side albums that are available in Nextcloud 25+"
 	},
-	"createCollectionDialogNextcloudAlbumDescription": "Server-side album, require Nextcloud 25 or above",
+	"createCollectionDialogNextcloudAlbumDescription2": "Create an album on your server, accessible with any app",
 	"removeCollectionsFailedNotification": "Failed to remove some collections",
 	"accountSettingsTooltip": "Account settings",
 	"contributorsTooltip": "Contributors",

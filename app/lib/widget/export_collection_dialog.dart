@@ -221,18 +221,18 @@ enum _ProviderOption {
   String toValueString(BuildContext context) {
     switch (this) {
       case appAlbum:
-        return L10n.global().createCollectionDialogAlbumLabel;
+        return L10n.global().createCollectionDialogAlbumLabel2;
       case ncAlbum:
-        return L10n.global().createCollectionDialogNextcloudAlbumLabel;
+        return L10n.global().createCollectionDialogNextcloudAlbumLabel2;
     }
   }
 
   String toDescription(BuildContext context) {
     switch (this) {
       case appAlbum:
-        return L10n.global().createCollectionDialogAlbumDescription;
+        return L10n.global().createCollectionDialogAlbumDescription2;
       case ncAlbum:
-        return L10n.global().createCollectionDialogNextcloudAlbumDescription;
+        return L10n.global().createCollectionDialogNextcloudAlbumDescription2;
     }
   }
 }
