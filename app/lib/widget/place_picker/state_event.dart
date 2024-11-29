@@ -5,14 +5,18 @@ part of 'place_picker.dart';
 class _State {
   const _State({
     this.position,
+    required this.isDone,
   });
 
-  factory _State.init() => const _State();
+  factory _State.init() => const _State(
+    isDone: false,
+  );
 
   @override
   String toString() => _$toString();
 
   final CameraPosition? position;
+  final bool isDone;
 }
 
 abstract class _Event {}
@@ -25,4 +29,12 @@ class _SetPosition implements _Event {
   String toString() => _$toString();
 
   final CameraPosition value;
+}
+
+@toString
+class _Done implements _Event {
+  const _Done();
+
+  @override
+  String toString() => _$toString();
 }

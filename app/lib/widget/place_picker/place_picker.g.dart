@@ -13,18 +13,19 @@ part of 'place_picker.dart';
 // **************************************************************************
 
 abstract class $_StateCopyWithWorker {
-  _State call({CameraPosition? position});
+  _State call({CameraPosition? position, bool? isDone});
 }
 
 class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
   _$_StateCopyWithWorkerImpl(this.that);
 
   @override
-  _State call({dynamic position = copyWithNull}) {
+  _State call({dynamic position = copyWithNull, dynamic isDone}) {
     return _State(
         position: position == copyWithNull
             ? that.position
-            : position as CameraPosition?);
+            : position as CameraPosition?,
+        isDone: isDone as bool? ?? that.isDone);
   }
 
   final _State that;
@@ -61,7 +62,7 @@ extension _$_BlocNpLog on _Bloc {
 extension _$_StateToString on _State {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_State {position: $position}";
+    return "_State {position: $position, isDone: $isDone}";
   }
 }
 
@@ -69,5 +70,12 @@ extension _$_SetPositionToString on _SetPosition {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
     return "_SetPosition {value: $value}";
+  }
+}
+
+extension _$_DoneToString on _Done {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_Done {}";
   }
 }

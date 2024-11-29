@@ -365,10 +365,20 @@ class _EditAppBar extends StatelessWidget {
             onPressed: () => _onAddTextPressed(context),
           ),
         if (capabilitiesAdapter.isPermitted(CollectionCapability.mapItem))
-          IconButton(
-            icon: const Icon(Icons.map_outlined),
-            tooltip: L10n.global().albumAddMapTooltip,
-            onPressed: () => _onAddMapPressed(context),
+          _BlocSelector(
+            selector: (state) => state.isAddMapBusy,
+            builder: (context, isAddMapBusy) => isAddMapBusy
+                ? const IconButton(
+                    icon: AppBarProgressIndicator(),
+                    onPressed: null,
+                  )
+                : IconButton(
+                    icon: const Icon(Icons.map_outlined),
+                    tooltip: L10n.global().albumAddMapTooltip,
+                    onPressed: () {
+                      context.addEvent(const _RequestAddMap());
+                    },
+                  ),
           ),
         if (capabilitiesAdapter.isPermitted(CollectionCapability.sort))
           IconButton(
@@ -391,15 +401,6 @@ class _EditAppBar extends StatelessWidget {
       return;
     }
     context.read<_Bloc>().add(_AddLabelToCollection(result));
-  }
-
-  Future<void> _onAddMapPressed(BuildContext context) async {
-    final result = await Navigator.of(context)
-        .pushNamed<CameraPosition>(PlacePicker.routeName);
-    if (result == null) {
-      return;
-    }
-    context.read<_Bloc>().add(_AddMapToCollection(result));
   }
 
   Future<void> _onSortPressed(BuildContext context) async {

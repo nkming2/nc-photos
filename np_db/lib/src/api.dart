@@ -454,6 +454,13 @@ abstract class NpDb {
     List<String>? excludeRelativeRoots,
   });
 
+  /// Return the location data of the first file (sorted by date time in
+  /// descending order) in a group of files
+  Future<DbLocation?> getFirstLocationOfFileIds({
+    required DbAccount account,
+    required List<int> fileIds,
+  });
+
   /// Return the latitude, longitude and the file id of all files
   Future<List<DbImageLatLng>> getImageLatLngWithFileIds({
     required DbAccount account,

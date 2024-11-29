@@ -200,6 +200,64 @@ extension SqliteDbImageLocationExtension on SqliteDb {
     }).get();
   }
 
+  Future<ImageLocation?> queryFirstImageLocationByFileIds({
+    required ByAccount account,
+    required List<int> fileIds,
+  }) async {
+    final candidates = await fileIds.withPartition((sublist) async {
+      final query = selectOnly(files).join([
+        innerJoin(accountFiles, accountFiles.file.equalsExp(files.rowId),
+            useColumns: false),
+        if (account.dbAccount != null) ...[
+          innerJoin(accounts, accounts.rowId.equalsExp(accountFiles.account),
+              useColumns: false),
+          innerJoin(servers, servers.rowId.equalsExp(accounts.server),
+              useColumns: false),
+        ],
+        innerJoin(imageLocations,
+            imageLocations.accountFile.equalsExp(accountFiles.rowId),
+            useColumns: false),
+      ]);
+      query.addColumns([
+        accountFiles.rowId,
+        accountFiles.bestDateTime,
+      ]);
+
+      if (account.sqlAccount != null) {
+        query.where(accountFiles.account.equals(account.sqlAccount!.rowId));
+      } else if (account.dbAccount != null) {
+        query
+          ..where(servers.address.equals(account.dbAccount!.serverAddress))
+          ..where(accounts.userId
+              .equals(account.dbAccount!.userId.toCaseInsensitiveString()));
+      }
+
+      query
+        ..where(files.fileId.isIn(sublist))
+        ..where(imageLocations.latitude.isNotNull() &
+            imageLocations.longitude.isNotNull())
+        ..orderBy([OrderingTerm.desc(accountFiles.bestDateTime)])
+        ..limit(1);
+      return [
+        await query
+            .map((r) => (
+                  rowId: r.read(accountFiles.rowId)!,
+                  dateTime: r.read(accountFiles.bestDateTime)!,
+                ))
+            .getSingleOrNull()
+      ];
+    }, _maxByFileIdsSize);
+    final winner =
+        candidates.nonNulls.sortedBy((e) => e.dateTime).reversed.firstOrNull;
+    if (winner == null) {
+      return null;
+    }
+
+    final reusltQuery = select(imageLocations)
+      ..where((t) => t.accountFile.equals(winner.rowId));
+    return reusltQuery.getSingleOrNull();
+  }
+
   Future<List<ImageLocationGroup>> _groupImageLocationsBy({
     required ByAccount account,
     required GeneratedColumn<String> by,

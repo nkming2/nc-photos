@@ -608,6 +608,20 @@ class NpDbSqlite implements NpDb {
   }
 
   @override
+  Future<DbLocation?> getFirstLocationOfFileIds({
+    required DbAccount account,
+    required List<int> fileIds,
+  }) async {
+    final sqlObj = await _db.use((db) async {
+      return await db.queryFirstImageLocationByFileIds(
+        account: ByAccount.db(account),
+        fileIds: fileIds,
+      );
+    });
+    return sqlObj?.let(ImageLocationConverter.fromSql);
+  }
+
+  @override
   Future<List<DbImageLatLng>> getImageLatLngWithFileIds({
     required DbAccount account,
     TimeRange? timeRange,

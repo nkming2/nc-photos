@@ -2,8 +2,13 @@ part of 'place_picker.dart';
 
 @npLog
 class _Bloc extends Bloc<_Event, _State> with BlocLogger {
-  _Bloc() : super(_State.init()) {
+  _Bloc({
+    required this.prefController,
+    required this.initialPosition,
+    required this.initialZoom,
+  }) : super(_State.init()) {
     on<_SetPosition>(_onSetPosition);
+    on<_Done>(_onDone);
   }
 
   @override
@@ -18,4 +23,17 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     // _log.info(ev);
     emit(state.copyWith(position: ev.value));
   }
+
+  void _onDone(_Done ev, _Emitter emit) {
+    _log.info(ev);
+    if (prefController.mapBrowserPrevPositionValue == null &&
+        state.position != null) {
+      prefController.setMapBrowserPrevPosition(state.position!.center);
+    }
+    emit(state.copyWith(isDone: true));
+  }
+
+  final PrefController prefController;
+  final MapCoord? initialPosition;
+  final double? initialZoom;
 }

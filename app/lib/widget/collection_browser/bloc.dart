@@ -9,6 +9,7 @@ class _Bloc extends Bloc<_Event, _State>
     required this.prefController,
     required this.collectionsController,
     required this.filesController,
+    required this.db,
     required Collection collection,
   })  : _c = container,
         _isAdHocCollection = !collectionsController.stream.value.data
@@ -30,6 +31,7 @@ class _Bloc extends Bloc<_Event, _State>
     on<_BeginEdit>(_onBeginEdit);
     on<_EditName>(_onEditName);
     on<_AddLabelToCollection>(_onAddLabelToCollection);
+    on<_RequestAddMap>(_onRequestAddMap);
     on<_AddMapToCollection>(_onAddMapToCollection);
     on<_EditSort>(_onEditSort);
     on<_EditManualSort>(_onEditManualSort);
@@ -210,6 +212,34 @@ class _Bloc extends Bloc<_Event, _State>
         ...state.editItems ?? state.items,
       ],
     ));
+  }
+
+  Future<void> _onRequestAddMap(_RequestAddMap ev, _Emitter emit) async {
+    _log.info(ev);
+    emit(state.copyWith(isAddMapBusy: true));
+    try {
+      final location = await db.getFirstLocationOfFileIds(
+        account: account.toDb(),
+        fileIds: state.transformedItems
+            .whereType<_FileItem>()
+            .map((e) => e.file.fdId)
+            .toList(),
+      );
+      final mapCoord =
+          location?.let((e) => MapCoord(e.latitude!, e.longitude!));
+      emit(state.copyWith(
+        placePickerRequest:
+            Unique(_PlacePickerRequest(initialPosition: mapCoord)),
+      ));
+    } catch (e, stackTrace) {
+      _log.severe("[_onRequestAddMap] Failed while getFirstLocationOfFileIds",
+          e, stackTrace);
+      emit(state.copyWith(
+        placePickerRequest: Unique(const _PlacePickerRequest()),
+      ));
+    } finally {
+      emit(state.copyWith(isAddMapBusy: false));
+    }
   }
 
   void _onAddMapToCollection(_AddMapToCollection ev, Emitter<_State> emit) {
@@ -597,6 +627,7 @@ class _Bloc extends Bloc<_Event, _State>
   final PrefController prefController;
   final CollectionsController collectionsController;
   final FilesController filesController;
+  final NpDb db;
   late final CollectionItemsController itemsController;
 
   /// Specify if the supplied [collection] is an "inline" one, which means it's

@@ -221,6 +221,14 @@ class _DateItem extends _Item {
   final Date date;
 }
 
+class _PlacePickerRequest {
+  const _PlacePickerRequest({
+    this.initialPosition,
+  });
+
+  final MapCoord? initialPosition;
+}
+
 @toString
 class _ArchiveFailedError implements Exception {
   const _ArchiveFailedError(this.count);

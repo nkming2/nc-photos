@@ -214,7 +214,6 @@ class _WrappedAppState extends State<_WrappedApp>
         ArchiveBrowser.routeName: ArchiveBrowser.buildRoute,
         TrustedCertManager.routeName: TrustedCertManager.buildRoute,
         MapBrowser.routeName: MapBrowser.buildRoute,
-        PlacePicker.routeName: PlacePicker.buildRoute,
       };
 
   Route<dynamic>? _onGenerateRoute(RouteSettings settings) {
@@ -242,6 +241,7 @@ class _WrappedAppState extends State<_WrappedApp>
     route ??= _handleImageEnhancerRoute(settings);
     route ??= _handleCollectionBrowserRoute(settings);
     route ??= _handleAccountSettingsRoute(settings);
+    route ??= _handlePlacePickerRoute(settings);
     return route;
   }
 
@@ -547,6 +547,18 @@ class _WrappedAppState extends State<_WrappedApp>
     } catch (e) {
       _log.severe(
           "[_handleAccountSettingsRoute] Failed while handling route", e);
+    }
+    return null;
+  }
+
+  Route<dynamic>? _handlePlacePickerRoute(RouteSettings settings) {
+    try {
+      if (settings.name == PlacePicker.routeName) {
+        final args = settings.arguments as PlacePickerArguments?;
+        return PlacePicker.buildRoute(args, settings);
+      }
+    } catch (e) {
+      _log.severe("[_handlePlacePickerRoute] Failed while handling route", e);
     }
     return null;
   }

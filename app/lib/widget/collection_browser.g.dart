@@ -31,6 +31,8 @@ abstract class $_StateCopyWithWorker {
       List<CollectionItem>? editItems,
       List<_Item>? editTransformedItems,
       CollectionItemSort? editSort,
+      bool? isAddMapBusy,
+      Unique<_PlacePickerRequest?>? placePickerRequest,
       bool? isDragging,
       int? zoom,
       double? scale,
@@ -61,6 +63,8 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
       dynamic editItems = copyWithNull,
       dynamic editTransformedItems = copyWithNull,
       dynamic editSort = copyWithNull,
+      dynamic isAddMapBusy,
+      dynamic placePickerRequest,
       dynamic isDragging,
       dynamic zoom,
       dynamic scale = copyWithNull,
@@ -99,6 +103,10 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
         editSort: editSort == copyWithNull
             ? that.editSort
             : editSort as CollectionItemSort?,
+        isAddMapBusy: isAddMapBusy as bool? ?? that.isAddMapBusy,
+        placePickerRequest:
+            placePickerRequest as Unique<_PlacePickerRequest?>? ??
+                that.placePickerRequest,
         isDragging: isDragging as bool? ?? that.isDragging,
         zoom: zoom as int? ?? that.zoom,
         scale: scale == copyWithNull ? that.scale : scale as double?,
@@ -151,7 +159,7 @@ extension _$_BlocNpLog on _Bloc {
 extension _$_StateToString on _State {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_State {collection: $collection, coverUrl: $coverUrl, items: [length: ${items.length}], rawItems: [length: ${rawItems.length}], itemsWhitelist: ${itemsWhitelist == null ? null : "{length: ${itemsWhitelist!.length}}"}, isLoading: $isLoading, transformedItems: [length: ${transformedItems.length}], selectedItems: {length: ${selectedItems.length}}, isSelectionRemovable: $isSelectionRemovable, isSelectionManageableFile: $isSelectionManageableFile, isSelectionDeletable: $isSelectionDeletable, isEditMode: $isEditMode, isEditBusy: $isEditBusy, editName: $editName, editItems: ${editItems == null ? null : "[length: ${editItems!.length}]"}, editTransformedItems: ${editTransformedItems == null ? null : "[length: ${editTransformedItems!.length}]"}, editSort: ${editSort == null ? null : "${editSort!.name}"}, isDragging: $isDragging, zoom: $zoom, scale: ${scale == null ? null : "${scale!.toStringAsFixed(3)}"}, importResult: $importResult, error: $error, message: $message}";
+    return "_State {collection: $collection, coverUrl: $coverUrl, items: [length: ${items.length}], rawItems: [length: ${rawItems.length}], itemsWhitelist: ${itemsWhitelist == null ? null : "{length: ${itemsWhitelist!.length}}"}, isLoading: $isLoading, transformedItems: [length: ${transformedItems.length}], selectedItems: {length: ${selectedItems.length}}, isSelectionRemovable: $isSelectionRemovable, isSelectionManageableFile: $isSelectionManageableFile, isSelectionDeletable: $isSelectionDeletable, isEditMode: $isEditMode, isEditBusy: $isEditBusy, editName: $editName, editItems: ${editItems == null ? null : "[length: ${editItems!.length}]"}, editTransformedItems: ${editTransformedItems == null ? null : "[length: ${editTransformedItems!.length}]"}, editSort: ${editSort == null ? null : "${editSort!.name}"}, isAddMapBusy: $isAddMapBusy, placePickerRequest: $placePickerRequest, isDragging: $isDragging, zoom: $zoom, scale: ${scale == null ? null : "${scale!.toStringAsFixed(3)}"}, importResult: $importResult, error: $error, message: $message}";
   }
 }
 
@@ -216,6 +224,13 @@ extension _$_AddLabelToCollectionToString on _AddLabelToCollection {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
     return "_AddLabelToCollection {label: $label}";
+  }
+}
+
+extension _$_RequestAddMapToString on _RequestAddMap {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_RequestAddMap {}";
   }
 }
 
