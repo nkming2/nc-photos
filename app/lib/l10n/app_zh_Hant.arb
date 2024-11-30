@@ -250,10 +250,6 @@
 	"@settingsLanguageTitle": {
 		"description": "Set display language"
 	},
-	"settingsExifSupportTitle": "EXIF 支援",
-	"@settingsExifSupportTitle": {
-		"description": "Title of the EXIF support setting"
-	},
 	"settingsExifSupportTrueSubtitle": "需要額外的網絡用量",
 	"@settingsExifSupportTrueSubtitle": {
 		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
@@ -356,10 +352,6 @@
 	"exifSupportDetails": "啟用 EXIF 支援功能將使 App 可以讀取相片中的中繼資料 (metadata)，例如拍照日期、相機型號等等，而為了讀取這些資料，App 需要額外的網絡用量從伺服器下載完整的檔案。App 只會在裝置連接 WiFi 網絡的時候才會下載。",
 	"@exifSupportDetails": {
 		"description": "Detailed description of the exif support feature"
-	},
-	"exifSupportConfirmationDialogTitle": "啟用 EXIF 支援?",
-	"@exifSupportConfirmationDialogTitle": {
-		"description": "Title of the dialog to confirm enabling exif support"
 	},
 	"captureLogDetails": "如需記錄事件日誌以匯報問題:\n\n1. 啟用本設定\n2. 重現一次你遇到的問題\n3. 禁用本設定\n4. 在裝置的下載資料夾尋找 nc-photos.log 檔案\n\n*此功能不支援使 App 強制關閉的問題，如遇此種情況，請直接聯絡開發者",
 	"@captureLogDetails": {
@@ -937,14 +929,6 @@
 	"createCollectionTooltip": "新增相片集",
 	"@createCollectionTooltip": {
 		"description": "Create a new collection. A collection can be an album, a folder, or something else in the future"
-	},
-	"createCollectionDialogAlbumLabel": "相簿",
-	"@createCollectionDialogAlbumLabel": {
-		"description": "Create an album as collection"
-	},
-	"createCollectionDialogAlbumDescription": "顯示你任意加入的相片",
-	"@createCollectionDialogAlbumDescription": {
-		"description": "Describe how an album collection works"
 	},
 	"createCollectionDialogFolderLabel": "資料夾",
 	"@createCollectionDialogFolderLabel": {

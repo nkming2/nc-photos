@@ -270,10 +270,6 @@
 	"@settingsLanguageOptionSystemDefaultLabel": {
 		"description": "Follow the Android system language"
 	},
-	"settingsExifSupportTitle": "Suport EXIF",
-	"@settingsExifSupportTitle": {
-		"description": "Title of the EXIF support setting"
-	},
 	"settingsExifSupportTrueSubtitle": "Requereix un ús extra de la xarxa",
 	"@settingsExifSupportTrueSubtitle": {
 		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"

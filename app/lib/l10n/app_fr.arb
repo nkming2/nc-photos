@@ -1,6 +1,6 @@
 {
 	"appTitle": "Photos",
-	"translator": "mgreil\nFymyte",
+	"translator": "mgreil\nFymyte\nChoukajohn",
 	"@translator": {
 		"description": "Name of the translator(s) for this language"
 	},
@@ -270,10 +270,6 @@
 	"@settingsLanguageOptionSystemDefaultLabel": {
 		"description": "Follow the Android system language"
 	},
-	"settingsExifSupportTitle": "Prise en charge EXIF",
-	"@settingsExifSupportTitle": {
-		"description": "Title of the EXIF support setting"
-	},
 	"settingsExifSupportTrueSubtitle": "Demande une utilisation plus intense du réseau",
 	"@settingsExifSupportTrueSubtitle": {
 		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
@@ -452,10 +448,6 @@
 	"exifSupportDetails": "L'activation de la prise en charge EXIF ​​rendra diverses métadonnées disponibles, telles que la date de prise de vue, le modèle de l'appareil photo, etc. Afin de lire ces métadonnées, une utilisation supplémentaire du réseau est requise pour télécharger l'image originale en taille réelle. L'application ne commencera à télécharger qu'une fois connectée à un réseau Wi-Fi",
 	"@exifSupportDetails": {
 		"description": "Detailed description of the exif support feature"
-	},
-	"exifSupportConfirmationDialogTitle": "Activer la prise en charge EXIF ?",
-	"@exifSupportConfirmationDialogTitle": {
-		"description": "Title of the dialog to confirm enabling exif support"
 	},
 	"captureLogDetails": "Pour prendre des logs pour un rapport de bug :\n\n1. Activez ce paramètre\n2. Reproduisez le problème\n3. Désactivez ce paramètre\n4. Recherchez nc-photos.log dans le dossier de téléchargement\n\n*Si le problème provoque le blocage de l'application, aucun log ne peut être capturé. Dans ce cas, veuillez contacter le développeur pour plus d'instructions",
 	"@captureLogDetails": {
@@ -1056,14 +1048,6 @@
 	"@createCollectionTooltip": {
 		"description": "Create a new collection. A collection can be an album, a folder, or something else in the future"
 	},
-	"createCollectionDialogAlbumLabel": "Album",
-	"@createCollectionDialogAlbumLabel": {
-		"description": "Create an album as collection"
-	},
-	"createCollectionDialogAlbumDescription": "Afficher les photos que vous avez ajoutées de n'importe où sur le serveur",
-	"@createCollectionDialogAlbumDescription": {
-		"description": "Describe how an album collection works"
-	},
 	"createCollectionDialogFolderLabel": "Dossier",
 	"@createCollectionDialogFolderLabel": {
 		"description": "Create a folder as collection"
@@ -1391,11 +1375,6 @@
 		"description": "Export an arbitrary Collection (typical one with generated contents) as a new static Collection"
 	},
 	"exportCollectionDialogTitle": "Exporter la collection",
-	"createCollectionDialogNextcloudAlbumLabel": "Albums Nextcloud",
-	"@createCollectionDialogNextcloudAlbumLabel": {
-		"description": "Server-side albums that are available in Nextcloud 25+"
-	},
-	"createCollectionDialogNextcloudAlbumDescription": "Albums sur le serveur, requiert Nextcloud 25 ou plus récent",
 	"removeCollectionsFailedNotification": "La suppression des collections a échouée",
 	"errorUnauthenticated": "Accès non authentifié. Veuillez vous reconnecter si le problème persiste",
 	"@errorUnauthenticated": {
@@ -1463,5 +1442,74 @@
 				"example": "http://www.example.com"
 			}
 		}
-	}
+	},
+	"settingsThemePrimaryColor": "Primaire",
+	"settingsThemeSecondaryColor": "Secondaire",
+	"settingsThemePresets": "Préréglages",
+	"settingsAppLock": "Verrouillage de l'application",
+	"@settingsAppLock": {
+		"description": "If enabled, users need to authenticate themselves when opening the app"
+	},
+	"settingsAppLockTypeBiometric": "Biométrique",
+	"@settingsAppLockTypeBiometric": {
+		"description": "Unlock app with fingerprint, face, etc"
+	},
+	"settingsAppLockTypePin": "PIN",
+	"@settingsAppLockTypePin": {
+		"description": "Unlock app with 4 to 6 digits PIN"
+	},
+	"settingsAppLockTypePassword": "Mot de passe",
+	"@settingsAppLockTypePassword": {
+		"description": "Unlock app with password"
+	},
+	"settingsAppLockDescription": "Si cette option est activée, il vous sera demandé de vous authentifier à l'ouverture de l'application. Cette fonctionnalité ne vous protège PAS contre les attaques réelles.",
+	"settingsAppLockSetupBiometricFallbackDialogTitle": "Choisissez une solution de secours lorsque la biométrie n'est pas disponible",
+	"settingsAppLockSetupPinDialogTitle": "Définir le code PIN pour déverrouiller l'application",
+	"settingsAppLockConfirmPinDialogTitle": "Saisissez à nouveau le même code PIN",
+	"settingsAppLockSetupPasswordDialogTitle": "Définir le mot de passe pour déverrouiller l'application",
+	"settingsAppLockConfirmPasswordDialogTitle": "Saisissez à nouveau le même mot de passe",
+	"appLockUnlockHint": "Déverrouiller l'application",
+	"@appLockUnlockHint": {
+		"description": "Unlock app via selected means (e.g., password) in case app lock is enabled by user"
+	},
+	"appLockUnlockWrongPassword": "Mot de passe incorrect",
+	"@appLockUnlockWrongPassword": {
+		"description": "Unlock app via selected means (e.g., password) in case app lock is enabled by user"
+	},
+	"enabledText": "Activé",
+	"disabledText": "Désactivé",
+	"settingsManageTrustedCertificateTitle": "Gérer les certificats de confiance",
+	"trustedCertManagerPageTitle": "Certificats de confiance",
+	"@trustedCertManagerPageTitle": {
+		"description": "A page to manage trusted certificates"
+	},
+	"trustedCertManagerAlreadyTrustedError": "Déjà approuvé",
+	"@trustedCertManagerAlreadyTrustedError": {
+		"description": "The selected cert has been trusted already"
+	},
+	"trustedCertManagerSelectServer": "Sélectionnez le serveur HTTPS",
+	"@trustedCertManagerSelectServer": {
+		"description": "Select a server from the account list"
+	},
+	"trustedCertManagerNoHttpsServerError": "Aucun serveur disponible",
+	"@trustedCertManagerNoHttpsServerError": {
+		"description": "There's no HTTPS server in the account list"
+	},
+	"trustedCertManagerFailedToRemoveCertError": "Impossible de supprimer le certificat",
+	"missingVideoThumbnailHelpDialogTitle": "Vous rencontrez des problèmes avec les miniatures des vidéos ?",
+	"dontShowAgain": "Ne plus afficher",
+	"settingsUseNewHttpEngine": "Utiliser le nouveau moteur HTTP",
+	"settingsUseNewHttpEngineDescription": "Nouveau moteur HTTP basé sur Chromium, prenant en charge de nouvelles normes telles que HTTP/2* et HTTP/3 QUIC*.\n\nLimitations :\nNous ne pouvons plus gérer les certificats auto-signés. Vous devez importer vos certificats CA dans le magasin de confiance du système pour qu'ils fonctionnent.\n\n* HTTPS est requis pour HTTP/2 et HTTP/3",
+	"settingsRestartNeededDialog": "Veuillez redémarrer l'application pour appliquer les modifications",
+	"mapBrowserDateRangeLabel": "Plage de dates",
+	"@mapBrowserDateRangeLabel": {
+		"description": "Filter photos by date range"
+	},
+	"mapBrowserDateRangeThisMonth": "Ce mois-ci",
+	"mapBrowserDateRangePrevMonth": "Mois précédent",
+	"mapBrowserDateRangeThisYear": "Cette année",
+	"mapBrowserDateRangeCustom": "Personnalisée",
+	"homeTabMapBrowser": "Carte",
+	"mapBrowserSetDefaultDateRangeButton": "Définir par défaut",
+	"todayText": "Aujourd'hui"
 }
