@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/app_localizations.dart';
+import 'package:nc_photos/help_utils.dart' as help_util;
+import 'package:nc_photos/url_launcher_util.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_ui/np_ui.dart';
 
@@ -23,6 +25,7 @@ part 'changelog/changelog_680.dart';
 part 'changelog/changelog_690.dart';
 part 'changelog/changelog_700.dart';
 part 'changelog/changelog_710.dart';
+part 'changelog/changelog_720.dart';
 
 // Compatibility with flutter 3.22
 typedef WidgetStateProperty = MaterialStateProperty;
@@ -364,6 +367,7 @@ Widget _subBulletPoint(Widget child) => Row(
     );
 
 final _changelogs = <int, List<Widget> Function(BuildContext)>{
+  720: (_) => const [_Changelog720()],
   710: (_) => const [_Changelog710()],
   700: (_) => const [_Changelog700()],
   690: (_) => const [_Changelog690()],
