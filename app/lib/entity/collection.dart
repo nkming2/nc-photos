@@ -88,6 +88,8 @@ enum CollectionCapability {
   rename,
   // text labels
   labelItem,
+  // maps
+  mapItem,
   // set the cover image
   manualCover,
   // share the collection with other user on the same server

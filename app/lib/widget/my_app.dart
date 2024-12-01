@@ -38,6 +38,7 @@ import 'package:nc_photos/widget/image_enhancer.dart';
 import 'package:nc_photos/widget/local_file_viewer.dart';
 import 'package:nc_photos/widget/map_browser.dart';
 import 'package:nc_photos/widget/people_browser.dart';
+import 'package:nc_photos/widget/place_picker/place_picker.dart';
 import 'package:nc_photos/widget/places_browser.dart';
 import 'package:nc_photos/widget/result_viewer.dart';
 import 'package:nc_photos/widget/root_picker.dart';
@@ -240,6 +241,7 @@ class _WrappedAppState extends State<_WrappedApp>
     route ??= _handleImageEnhancerRoute(settings);
     route ??= _handleCollectionBrowserRoute(settings);
     route ??= _handleAccountSettingsRoute(settings);
+    route ??= _handlePlacePickerRoute(settings);
     return route;
   }
 
@@ -545,6 +547,18 @@ class _WrappedAppState extends State<_WrappedApp>
     } catch (e) {
       _log.severe(
           "[_handleAccountSettingsRoute] Failed while handling route", e);
+    }
+    return null;
+  }
+
+  Route<dynamic>? _handlePlacePickerRoute(RouteSettings settings) {
+    try {
+      if (settings.name == PlacePicker.routeName) {
+        final args = settings.arguments as PlacePickerArguments?;
+        return PlacePicker.buildRoute(args, settings);
+      }
+    } catch (e) {
+      _log.severe("[_handlePlacePickerRoute] Failed while handling route", e);
     }
     return null;
   }

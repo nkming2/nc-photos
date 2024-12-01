@@ -274,8 +274,8 @@
 	"@settingsMetadataTitle": {
 		"description": "Metadata (e.g., date, resolution, GPS, etc)"
 	},
-	"settingsExifSupportTitle": "EXIF support",
-	"@settingsExifSupportTitle": {
+	"settingsExifSupportTitle2": "Client side EXIF support",
+	"@settingsExifSupportTitle2": {
 		"description": "Title of the EXIF support setting"
 	},
 	"settingsExifSupportTrueSubtitle": "Require extra network usage",
@@ -501,8 +501,12 @@
 	"@exifSupportDetails": {
 		"description": "Detailed description of the exif support feature"
 	},
-	"exifSupportConfirmationDialogTitle": "Enable EXIF support?",
-	"@exifSupportConfirmationDialogTitle": {
+	"exifSupportNextcloud28Notes": "Client side support complements your server. The app will process files and attributes not supported by Nextcloud",
+	"@exifSupportNextcloud28Notes": {
+		"description": "Extra notes for Nextcloud 28+"
+	},
+	"exifSupportConfirmationDialogTitle2": "Enable client side EXIF support?",
+	"@exifSupportConfirmationDialogTitle2": {
 		"description": "Title of the dialog to confirm enabling exif support"
 	},
 	"captureLogDetails": "To take logs for a bug report:\n\n1. Enable this setting\n2. Reproduce the issue\n3. Disable this setting\n4. Look for nc-photos.log in the download folder\n\n*If the issue causes the app to crash, no logs could be captured. In such case, please contact the developer for further instructions",
@@ -1104,12 +1108,12 @@
 	"@createCollectionTooltip": {
 		"description": "Create a new collection. A collection can be an album, a folder, or something else in the future"
 	},
-	"createCollectionDialogAlbumLabel": "Album",
-	"@createCollectionDialogAlbumLabel": {
+	"createCollectionDialogAlbumLabel2": "Client side album",
+	"@createCollectionDialogAlbumLabel2": {
 		"description": "Create an album as collection"
 	},
-	"createCollectionDialogAlbumDescription": "Show photos added by you from anywhere on the server",
-	"@createCollectionDialogAlbumDescription": {
+	"createCollectionDialogAlbumDescription2": "Album with extra features, accessible only with this app",
+	"@createCollectionDialogAlbumDescription2": {
 		"description": "Describe how an album collection works"
 	},
 	"createCollectionDialogFolderLabel": "Folder",
@@ -1443,11 +1447,11 @@
 		"description": "Export an arbitrary Collection (typical one with generated contents) as a new static Collection"
 	},
 	"exportCollectionDialogTitle": "Export collection",
-	"createCollectionDialogNextcloudAlbumLabel": "Nextcloud album",
-	"@createCollectionDialogNextcloudAlbumLabel": {
+	"createCollectionDialogNextcloudAlbumLabel2": "Server side album",
+	"@createCollectionDialogNextcloudAlbumLabel2": {
 		"description": "Server-side albums that are available in Nextcloud 25+"
 	},
-	"createCollectionDialogNextcloudAlbumDescription": "Server-side album, require Nextcloud 25 or above",
+	"createCollectionDialogNextcloudAlbumDescription2": "Create an album on your server, accessible with any app",
 	"removeCollectionsFailedNotification": "Failed to remove some collections",
 	"accountSettingsTooltip": "Account settings",
 	"contributorsTooltip": "Contributors",
@@ -1521,6 +1525,12 @@
 	"@customizeButtonsUnsupportedWarning": {
 		"description": "Some button can't be removed. This message will be shown instead when user try to do so"
 	},
+	"placePickerTitle": "Pick a place",
+	"albumAddMapTooltip": "Add map",
+	"@albumAddMapTooltip": {
+		"description": "Add a map that display between photos to an album"
+	},
+	"fileNotFound": "File not found",
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {

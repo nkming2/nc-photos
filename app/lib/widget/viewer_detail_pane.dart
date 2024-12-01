@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:android_intent_plus/android_intent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -15,10 +14,11 @@ import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/collection.dart';
 import 'package:nc_photos/entity/collection/adapter.dart';
 import 'package:nc_photos/entity/collection_item.dart';
-import 'package:nc_photos/entity/exif_extension.dart';
+import 'package:nc_photos/entity/exif_util.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
+import 'package:nc_photos/gps_map_util.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/platform/features.dart' as features;
@@ -355,11 +355,13 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
                   height: 256,
                   child: ValueStreamBuilder<GpsMapProvider>(
                     stream: context.read<PrefController>().gpsMapProvider,
-                    builder: (context, gpsMapProvider) => GpsMap(
+                    builder: (context, gpsMapProvider) => StaticMap(
                       providerHint: gpsMapProvider.requireData,
-                      center: _gps!,
-                      zoom: 16,
-                      onTap: _onMapTap,
+                      location: CameraPosition(center: _gps!, zoom: 16),
+                      onTap: () => launchExternalMap(CameraPosition(
+                        center: _gps!,
+                        zoom: 16,
+                      )),
                     ),
                   ),
                 ),
@@ -493,16 +495,6 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
     SetAsHandler(c, context: context).setAsFile(widget.account, _file!);
   }
 
-  void _onMapTap() {
-    if (getRawPlatform() == NpPlatform.android) {
-      final intent = AndroidIntent(
-        action: "action_view",
-        data: Uri.encodeFull("geo:${_gps!.latitude},${_gps!.longitude}?z=16"),
-      );
-      intent.launch();
-    }
-  }
-
   void _onDateTimeTap(BuildContext context) {
     assert(_file != null);
     showDialog(
@@ -513,7 +505,7 @@ class _ViewerDetailPaneState extends State<ViewerDetailPane> {
         return;
       }
       try {
-        await UpdateProperty(_c)
+        await UpdateProperty(fileRepo: _c.fileRepo2)
             .updateOverrideDateTime(widget.account, _file!, value);
         if (mounted) {
           setState(() {

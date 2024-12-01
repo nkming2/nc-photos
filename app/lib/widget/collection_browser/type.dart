@@ -8,6 +8,7 @@ abstract class _Item implements SelectableItemMetadata, DraggableItemMetadata {
   Widget buildWidget(BuildContext context);
 
   Widget? buildDragFeedbackWidget(BuildContext context) => null;
+  Size? dragFeedbackWidgetSize() => null;
 }
 
 /// Items backed by an actual [CollectionItem]
@@ -101,7 +102,11 @@ class _LabelItem extends _ActualItem {
     required super.original,
     required this.id,
     required this.text,
+    required this.onEditPressed,
   });
+
+  @override
+  bool get isDraggable => true;
 
   @override
   bool operator ==(Object other) =>
@@ -115,20 +120,32 @@ class _LabelItem extends _ActualItem {
 
   @override
   Widget buildWidget(BuildContext context) {
-    return PhotoListLabel(
-      text: text,
+    return _BlocSelector(
+      selector: (state) => state.isEditMode,
+      builder: (context, isEditMode) => isEditMode
+          ? _EditLabelView(
+              text: text,
+              onEditPressed: onEditPressed,
+            )
+          : _LabelView(text: text),
     );
+  }
+
+  @override
+  Widget? buildDragFeedbackWidget(BuildContext context) {
+    return _LabelView(text: text);
   }
 
   final Object id;
   final String text;
+  final VoidCallback? onEditPressed;
 }
 
-class _EditLabelListItem extends _LabelItem {
-  const _EditLabelListItem({
+class _MapItem extends _ActualItem {
+  const _MapItem({
     required super.original,
-    required super.id,
-    required super.text,
+    required this.id,
+    required this.location,
     required this.onEditPressed,
   });
 
@@ -136,18 +153,47 @@ class _EditLabelListItem extends _LabelItem {
   bool get isDraggable => true;
 
   @override
+  bool operator ==(Object other) =>
+      identical(this, other) || (other is _MapItem && id == other.id);
+
+  @override
+  int get hashCode => id.hashCode;
+
+  @override
+  StaggeredTile get staggeredTile => const StaggeredTile.extent(99, 256);
+
+  @override
   Widget buildWidget(BuildContext context) {
-    return PhotoListLabelEdit(
-      text: text,
-      onEditPressed: onEditPressed,
+    return _BlocSelector(
+      selector: (state) => state.isEditMode,
+      builder: (context, isEditMode) => isEditMode
+          ? _EditMapView(
+              location: location,
+              onEditPressed: onEditPressed,
+            )
+          : _MapView(
+              location: location,
+              onTap: () {
+                launchExternalMap(location);
+              },
+            ),
     );
   }
 
   @override
   Widget? buildDragFeedbackWidget(BuildContext context) {
-    return super.buildWidget(context);
+    return Icon(
+      Icons.place,
+      color: Theme.of(context).colorScheme.primary,
+      size: 48,
+    );
   }
 
+  @override
+  Size? dragFeedbackWidgetSize() => const Size.square(48);
+
+  final Object id;
+  final CameraPosition location;
   final VoidCallback? onEditPressed;
 }
 
@@ -173,6 +219,14 @@ class _DateItem extends _Item {
   }
 
   final Date date;
+}
+
+class _PlacePickerRequest {
+  const _PlacePickerRequest({
+    this.initialPosition,
+  });
+
+  final MapCoord? initialPosition;
 }
 
 @toString

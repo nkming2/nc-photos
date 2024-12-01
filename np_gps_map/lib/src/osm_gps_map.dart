@@ -1,36 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:np_gps_map/src/map_coord.dart';
-import 'package:url_launcher/url_launcher_string.dart';
+import 'package:np_gps_map/src/type.dart';
 
 class OsmGpsMap extends StatelessWidget {
   const OsmGpsMap({
     super.key,
-    required this.center,
-    required this.zoom,
+    required this.location,
     this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     const double pinSize = 48;
-    final centerLl = LatLng(center.latitude, center.longitude);
+    final center = LatLng(location.center.latitude, location.center.longitude);
     return GestureDetector(
-      onTap: () {
-        launchUrlString(
-          "https://www.openstreetmap.org/?mlat=${center.latitude}&mlon=${center.longitude}#map=${zoom.toInt()}/${center.latitude}/${center.longitude}",
-          mode: LaunchMode.externalApplication,
-        );
-      },
+      onTap: onTap,
       behavior: HitTestBehavior.opaque,
       // IgnorePointer is needed to prevent FlutterMap absorbing all pointer
       // events
       child: IgnorePointer(
         child: FlutterMap(
           options: MapOptions(
-            initialCenter: centerLl,
-            initialZoom: zoom,
+            initialCenter: center,
+            initialZoom: location.zoom,
+            initialRotation: (360 - location.rotation) % 360,
             interactionOptions: const InteractionOptions(
               flags: InteractiveFlag.none,
             ),
@@ -40,11 +34,12 @@ class OsmGpsMap extends StatelessWidget {
               urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
             ),
             MarkerLayer(
+              rotate: true,
               markers: [
                 Marker(
                   width: pinSize,
                   height: pinSize,
-                  point: centerLl,
+                  point: center,
                   alignment: Alignment.topCenter,
                   child: const Image(
                     image: AssetImage(
@@ -62,7 +57,6 @@ class OsmGpsMap extends StatelessWidget {
     );
   }
 
-  final MapCoord center;
-  final double zoom;
+  final CameraPosition location;
   final void Function()? onTap;
 }

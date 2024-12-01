@@ -250,10 +250,6 @@
 	"@settingsLanguageTitle": {
 		"description": "Set display language"
 	},
-	"settingsExifSupportTitle": "Υποστήριξη EXIF",
-	"@settingsExifSupportTitle": {
-		"description": "Title of the EXIF support setting"
-	},
 	"settingsExifSupportTrueSubtitle": "Απαιτείται επιπλέον χρήση δικτύου",
 	"@settingsExifSupportTrueSubtitle": {
 		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
@@ -362,10 +358,6 @@
 	"exifSupportDetails": "Ενεργοποιώντας την υποστήριξη EXIF διάφορα μεταδεδομένα όπως ημερομηνία λήψης, μοντέλο κάμερας θα γίνουν διαθέσιμα. Για την ανάγνωση αυτών των μεταδεδομένων, απαιτείται επιπλέον χρήση δικτύου για τη λήψη της αρχικής εικόνας πλήρους μεγέθους. Η εφαρμογή θα ξεκινήσει τη λήψη μόνο όταν είναι συνδεδεμένη σε δίκτυο Wi-Fi",
 	"@exifSupportDetails": {
 		"description": "Detailed description of the exif support feature"
-	},
-	"exifSupportConfirmationDialogTitle": "Ενεργοποίηση υποστήριξης EXIF;",
-	"@exifSupportConfirmationDialogTitle": {
-		"description": "Title of the dialog to confirm enabling exif support"
 	},
 	"captureLogDetails": "Για τη λήψη αρχείων καταγραφής για μια αναφορά σφαλμάτων:\n\n1. Ενεργοποιήστε αυτήν τη ρύθμιση\n2. Αναπαράγετε το πρόβλημα\n3. Απενεργοποιήστε αυτήν τη ρύθμιση\n4. Αναζητήστε το nc-photos.log στο φάκελο λήψης\n\n*Εάν το πρόβλημα προκαλεί τη διακοπή λειτουργίας της εφαρμογής, δεν είναι δυνατή η λήψη αρχείων καταγραφής. Σε αυτήν την περίπτωση, επικοινωνήστε με τον προγραμματιστή για περαιτέρω οδηγίες",
 	"@captureLogDetails": {
@@ -951,14 +943,6 @@
 	"createCollectionTooltip": "Νέα συλλογή",
 	"@createCollectionTooltip": {
 		"description": "Create a new collection. A collection can be an album, a folder, or something else in the future"
-	},
-	"createCollectionDialogAlbumLabel": "Άλμπουμ",
-	"@createCollectionDialogAlbumLabel": {
-		"description": "Create an album as collection"
-	},
-	"createCollectionDialogAlbumDescription": "Εμφάνιση φωτογραφιών από όλους τους τους φακέλους του διακομιστή",
-	"@createCollectionDialogAlbumDescription": {
-		"description": "Describe how an album collection works"
 	},
 	"createCollectionDialogFolderLabel": "Φάκελος",
 	"@createCollectionDialogFolderLabel": {

@@ -129,6 +129,31 @@ class _ControlBar extends StatelessWidget {
   }
 }
 
+class _InitBody extends StatelessWidget {
+  const _InitBody();
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        const Center(child: CircularProgressIndicator()),
+        Positioned.directional(
+          textDirection: Directionality.of(context),
+          top: 0,
+          start: 0,
+          child: IconButton(
+            icon: const Icon(Icons.close),
+            tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 @npLog
 class _Body extends StatelessWidget {
   const _Body();
@@ -259,25 +284,37 @@ class _PageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final file = context.bloc.files[itemIndex];
-    if (file_util.isSupportedImageFormat(file)) {
-      return _ImagePageView(
-        file: file,
-        onLoaded: () {
-          context.addEvent(_PreloadSidePages(page));
-        },
-      );
-    } else if (file_util.isSupportedVideoFormat(file)) {
-      return _VideoPageView(
-        file: file,
-        onCompleted: () {
-          context.addEvent(const _VideoCompleted());
-        },
-      );
-    } else {
-      _log.shout("[build] Unknown file format: ${file.fdMime}");
-      return const SizedBox.shrink();
-    }
+    return _BlocSelector<FileDescriptor?>(
+      selector: (state) => state.files[itemIndex],
+      builder: (context, file) {
+        if (file == null) {
+          return Center(
+            child: Text(
+              L10n.global().fileNotFound,
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+          );
+        }
+        if (file_util.isSupportedImageFormat(file)) {
+          return _ImagePageView(
+            file: file,
+            onLoaded: () {
+              context.addEvent(_PreloadSidePages(page));
+            },
+          );
+        } else if (file_util.isSupportedVideoFormat(file)) {
+          return _VideoPageView(
+            file: file,
+            onCompleted: () {
+              context.addEvent(const _VideoCompleted());
+            },
+          );
+        } else {
+          _log.shout("[build] Unknown file format: ${file.fdMime}");
+          return const SizedBox.shrink();
+        }
+      },
+    );
   }
 
   final int page;

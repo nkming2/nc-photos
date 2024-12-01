@@ -270,10 +270,6 @@
 	"@settingsLanguageOptionSystemDefaultLabel": {
 		"description": "Follow the Android system language"
 	},
-	"settingsExifSupportTitle": "Supporto EXIF",
-	"@settingsExifSupportTitle": {
-		"description": "Title of the EXIF support setting"
-	},
 	"settingsExifSupportTrueSubtitle": "Richiede un uso extra di dati",
 	"@settingsExifSupportTrueSubtitle": {
 		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
@@ -448,10 +444,6 @@
 	"exifSupportDetails": "Abilitare il supporto EXIF renderà disponibili vari metadati come la data dello scatto, il modello della macchinetta fotografica, ecc... Per leggere questi metadati verranno utilizzato maggiori dati per scaricare la foto a piena scala. L'app comincerà a scaricare solo quando connessa a una rete Wi-Fi",
 	"@exifSupportDetails": {
 		"description": "Detailed description of the exif support feature"
-	},
-	"exifSupportConfirmationDialogTitle": "Abilitare supporto EXIF?",
-	"@exifSupportConfirmationDialogTitle": {
-		"description": "Title of the dialog to confirm enabling exif support"
 	},
 	"captureLogDetails": "Per registrare un log per riportare un bug:\n\n1. Abilita questa opzione\n2. Riproduci il problema\n3. Disabilita questa opzione\n4. Cerca il file nc-photos.log nella cartella Download\n\n* Non sarà generaro alcun log se il problema causa il crash dell'app. In questo caso contatta gli sviluppatori per avere ulteriori istruzioni",
 	"@captureLogDetails": {
@@ -1044,14 +1036,6 @@
 	"@createCollectionTooltip": {
 		"description": "Create a new collection. A collection can be an album, a folder, or something else in the future"
 	},
-	"createCollectionDialogAlbumLabel": "Album",
-	"@createCollectionDialogAlbumLabel": {
-		"description": "Create an album as collection"
-	},
-	"createCollectionDialogAlbumDescription": "Mostra le foto aggiunte da te nel server",
-	"@createCollectionDialogAlbumDescription": {
-		"description": "Describe how an album collection works"
-	},
 	"createCollectionDialogFolderLabel": "Cartella",
 	"@createCollectionDialogFolderLabel": {
 		"description": "Create a folder as collection"
@@ -1375,11 +1359,6 @@
 		"description": "Export an arbitrary Collection (typical one with generated contents) as a new static Collection"
 	},
 	"exportCollectionDialogTitle": "Esporta collezione",
-	"createCollectionDialogNextcloudAlbumLabel": "Album Nextcloud",
-	"@createCollectionDialogNextcloudAlbumLabel": {
-		"description": "Server-side albums that are available in Nextcloud 25+"
-	},
-	"createCollectionDialogNextcloudAlbumDescription": "Gli album su server richiedono Nextcloud 25 o superiore",
 	"removeCollectionsFailedNotification": "Qualche collezione non è stata rimossa per un problema",
 	"errorUnauthenticated": "Accesso non autenticato. Accedi nuovamente se il problema persiste",
 	"@errorUnauthenticated": {

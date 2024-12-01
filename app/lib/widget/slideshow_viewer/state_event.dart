@@ -8,7 +8,8 @@ class _State {
     required this.page,
     required this.nextPage,
     required this.shouldAnimateNextPage,
-    required this.currentFile,
+    required this.files,
+    this.currentFile,
     required this.isShowUi,
     required this.isPlay,
     required this.isVideoCompleted,
@@ -19,15 +20,12 @@ class _State {
     required this.hasRequestExit,
   });
 
-  factory _State.init({
-    required FileDescriptor initialFile,
-  }) =>
-      _State(
+  factory _State.init() => const _State(
         hasInit: false,
         page: 0,
         nextPage: 0,
         shouldAnimateNextPage: true,
-        currentFile: initialFile,
+        files: [],
         isShowUi: false,
         isPlay: true,
         isVideoCompleted: false,
@@ -45,7 +43,8 @@ class _State {
   final int page;
   final int nextPage;
   final bool shouldAnimateNextPage;
-  final FileDescriptor currentFile;
+  final List<FileDescriptor?> files;
+  final FileDescriptor? currentFile;
   final bool isShowUi;
   final bool isPlay;
   final bool isVideoCompleted;
@@ -64,6 +63,16 @@ class _Init implements _Event {
 
   @override
   String toString() => _$toString();
+}
+
+@toString
+class _SetFiles implements _Event {
+  const _SetFiles(this.dataMap);
+
+  @override
+  String toString() => _$toString();
+
+  final Map<int, FileDescriptor> dataMap;
 }
 
 @toString

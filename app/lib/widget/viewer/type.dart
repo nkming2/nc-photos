@@ -15,12 +15,12 @@ class _ShareRequest {
 class _SlideshowRequest {
   const _SlideshowRequest({
     required this.account,
-    required this.files,
+    required this.fileIds,
     required this.startIndex,
   });
 
   final Account account;
-  final List<FileDescriptor> files;
+  final List<int> fileIds;
   final int startIndex;
 }
 

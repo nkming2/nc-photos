@@ -14,7 +14,6 @@ import 'package:nc_photos/entity/collection_item/new_item.dart';
 import 'package:nc_photos/entity/collection_item/util.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/nc_album.dart';
-import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/use_case/find_file_descriptor.dart';
 import 'package:nc_photos/use_case/nc_album/add_file_to_nc_album.dart';
 import 'package:nc_photos/use_case/nc_album/edit_nc_album.dart';
@@ -98,16 +97,16 @@ class CollectionNcAlbumAdapter
       _log.warning(
           "[edit] Nextcloud album does not support editing item or sort");
     }
-    final newItems = items?.run((items) => items
-        .map((e) => e is CollectionFileItem ? e.file : null)
-        .whereNotNull()
-        .toList());
+    // final newItems = items?.run((items) => items
+    //     .map((e) => e is CollectionFileItem ? e.file : null)
+    //     .whereNotNull()
+    //     .toList());
     final newAlbum = await EditNcAlbum(_c)(
       account,
       _provider.album,
       name: name,
-      items: newItems,
-      itemSort: itemSort,
+      // items: newItems,
+      // itemSort: itemSort,
     );
     return collection.copyWith(
       name: name,

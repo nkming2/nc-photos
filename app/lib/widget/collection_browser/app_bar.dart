@@ -364,6 +364,22 @@ class _EditAppBar extends StatelessWidget {
             tooltip: L10n.global().albumAddTextTooltip,
             onPressed: () => _onAddTextPressed(context),
           ),
+        if (capabilitiesAdapter.isPermitted(CollectionCapability.mapItem))
+          _BlocSelector(
+            selector: (state) => state.isAddMapBusy,
+            builder: (context, isAddMapBusy) => isAddMapBusy
+                ? const IconButton(
+                    icon: AppBarProgressIndicator(),
+                    onPressed: null,
+                  )
+                : IconButton(
+                    icon: const Icon(Icons.map_outlined),
+                    tooltip: L10n.global().albumAddMapTooltip,
+                    onPressed: () {
+                      context.addEvent(const _RequestAddMap());
+                    },
+                  ),
+          ),
         if (capabilitiesAdapter.isPermitted(CollectionCapability.sort))
           IconButton(
             icon: const Icon(Icons.sort_by_alpha_outlined),

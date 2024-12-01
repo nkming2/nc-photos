@@ -253,7 +253,7 @@ class FilesController {
     final failures = <FileDescriptor>[];
     for (final f in files) {
       try {
-        await UpdateProperty(_c)(
+        await UpdateProperty(fileRepo: _c.fileRepo2)(
           account,
           f,
           metadata: metadata,
@@ -574,6 +574,7 @@ class FilesController {
           .map((e) => File(path: file_util.unstripPath(account, e))
               .strippedPathWithEmpty)
           .toList(),
+      includeRelativeDirs: [accountPrefController.shareFolderValue],
       excludeRelativeRoots: [remote_storage_util.remoteStorageDirRelativePath],
       mimes: file_util.supportedFormatMimes,
     );

@@ -5,10 +5,12 @@ import 'package:equatable/equatable.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/exif.dart';
+import 'package:nc_photos/entity/exif_util.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/json_util.dart' as json_util;
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_common/object_util.dart';
 import 'package:np_common/or_null.dart';
 import 'package:np_common/type.dart';
 import 'package:np_string/np_string.dart';
@@ -182,6 +184,43 @@ class Metadata with EquatableMixin {
       imageWidth: imageWidth ?? this.imageWidth,
       imageHeight: imageHeight ?? this.imageHeight,
       exif: exif ?? this.exif,
+    );
+  }
+
+  static Metadata? fromApi({
+    required String? etag,
+    Map<String, String>? ifd0,
+    Map<String, String>? exif,
+    Map<String, String>? gps,
+    required Map<String, String> size,
+  }) {
+    final lat = gps?["latitude"]?.let(double.tryParse);
+    final lng = gps?["longitude"]?.let(double.tryParse);
+    final alt = gps?["altitude"]?.let(double.tryParse);
+    return Metadata(
+      lastUpdated: clock.now().toUtc(),
+      fileEtag: etag,
+      imageWidth: int.parse(size["width"]!),
+      imageHeight: int.parse(size["height"]!),
+      exif: ifd0 != null || exif != null || gps != null
+          ? Exif({
+              if (ifd0 != null) ...ifd0,
+              if (exif != null) ...exif,
+              if (lat != null && lng != null) ...{
+                "GPSLatitude": gpsDoubleToDms(lat),
+                "GPSLatitudeRef": lat.isNegative ? "S" : "N",
+                "GPSLongitude": gpsDoubleToDms(lng),
+                "GPSLongitudeRef": lng.isNegative ? "W" : "E",
+                if (alt != null) ...{
+                  "GPSAltitude": doubleToRational(alt),
+                  "GPSAltitudeRef": alt.isNegative ? 1 : 0,
+                }
+              }
+            }..removeWhere((key, value) =>
+              key == "MakerNote" ||
+              key == "UserComment" ||
+              key == "ImageDescription"))
+          : null,
     );
   }
 

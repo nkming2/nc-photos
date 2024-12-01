@@ -6,7 +6,7 @@ import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc_util.dart';
 import 'package:nc_photos/controller/pref_controller.dart';
 import 'package:nc_photos/exception_event.dart';
-import 'package:nc_photos/service.dart';
+import 'package:nc_photos/service/service.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
 import 'package:np_codegen/np_codegen.dart';
@@ -77,7 +77,7 @@ class _WrappedMetadataSettingsState extends State<_WrappedMetadataSettings>
                     selector: (state) => state.isEnable,
                     builder: (context, state) {
                       return SwitchListTile(
-                        title: Text(L10n.global().settingsExifSupportTitle),
+                        title: Text(L10n.global().settingsExifSupportTitle2),
                         subtitle: state
                             ? Text(
                                 L10n.global().settingsExifSupportTrueSubtitle)
@@ -122,8 +122,15 @@ class _WrappedMetadataSettingsState extends State<_WrappedMetadataSettings>
       final result = await showDialog<bool>(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text(L10n.global().exifSupportConfirmationDialogTitle),
-          content: Text(L10n.global().exifSupportDetails),
+          title: Text(L10n.global().exifSupportConfirmationDialogTitle2),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(L10n.global().exifSupportDetails),
+              const SizedBox(height: 16),
+              Text(L10n.global().exifSupportNextcloud28Notes),
+            ],
+          ),
           actions: [
             TextButton(
               onPressed: () {

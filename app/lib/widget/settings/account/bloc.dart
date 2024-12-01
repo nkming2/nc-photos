@@ -6,6 +6,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     required Account account,
     required this.prefController,
     required this.accountPrefController,
+    required this.npDb,
     this.highlight,
   }) : super(_State.init(
           account: account,
@@ -88,11 +89,11 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
 
   Future<void> _onSetAccount(_SetAccount ev, Emitter<_State> emit) async {
     _log.info(ev);
+    final revert = state.account;
     emit(state.copyWith(
       account: ev.account,
       shouldReload: true,
     ));
-    final revert = state.account;
     try {
       final accounts = prefController.accountsValue;
       if (accounts.contains(ev.account)) {
@@ -111,6 +112,20 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
       if (!await prefController.setAccounts(accounts)) {
         _log.severe("[_onSetAccount] Failed while setAccounts3: ${ev.account}");
         throw const _WritePrefError();
+      }
+      // clear files in db
+      for (final r in {
+        ...revert.roots,
+        accountPrefController.shareFolderValue,
+      }) {
+        _log.info("[_onSetAccount] Delete dir: $r");
+        try {
+          final f = File(path: file_util.unstripPath(revert, r));
+          await npDb.truncateDir(account: revert.toDb(), dir: f.toDbKey());
+          await npDb.deleteFile(account: revert.toDb(), file: f.toDbKey());
+        } catch (e, stackTrace) {
+          _log.severe("[_onSetAccount] Failed deleting dir: $r", e, stackTrace);
+        }
       }
     } catch (_) {
       emit(state.copyWith(account: revert));
@@ -155,6 +170,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
   final PrefController prefController;
   final AccountPrefController accountPrefController;
   final AccountSettingsOption? highlight;
+  final NpDb npDb;
 
   final _subscriptions = <StreamSubscription>[];
   var _isHandlingError = false;

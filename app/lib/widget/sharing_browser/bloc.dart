@@ -21,21 +21,24 @@ class _Bloc extends Bloc<_Event, _State> with BlocForEachMixin<_Event, _State> {
           "[_onInit] Failed while _importPotentialSharedAlbum", e, stackTrace);
     }
     unawaited(sharingsController.reload());
-    return forEach(
-      emit,
-      sharingsController.stream,
-      onData: (data) => state.copyWith(
-        items: data.data,
-        isLoading: data.hasNext,
+    await Future.wait([
+      forEach(
+        emit,
+        sharingsController.stream,
+        onData: (data) => state.copyWith(
+          items: data.data,
+          isLoading: data.hasNext,
+        ),
       ),
-      onError: (e, stackTrace) {
-        _log.severe("[_onInit] Uncaught exception", e, stackTrace);
-        return state.copyWith(
+      forEach(
+        emit,
+        sharingsController.errorStream,
+        onData: (data) => state.copyWith(
           isLoading: false,
-          error: ExceptionEvent(e, stackTrace),
-        );
-      },
-    );
+          error: data,
+        ),
+      ),
+    ]);
   }
 
   Future<void> _onTransformItems(

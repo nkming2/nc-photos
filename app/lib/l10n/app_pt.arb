@@ -266,10 +266,6 @@
 	"@settingsLanguageOptionSystemDefaultLabel": {
 		"description": "Follow the Android system language"
 	},
-	"settingsExifSupportTitle": "Suporte a EXIF",
-	"@settingsExifSupportTitle": {
-		"description": "Title of the EXIF support setting"
-	},
 	"settingsExifSupportTrueSubtitle": "Requer consumo de dados elevado",
 	"@settingsExifSupportTrueSubtitle": {
 		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
@@ -444,10 +440,6 @@
 	"exifSupportDetails": "Ativar o suporte ao EXIF vai disponibilizar vários metadados como data de captura, modelo da câmera etc. Para ler estes metadados, um consumo de dados de internet extra é necessário para acessar a imagem em tamanho original. O aplicativo só baixa quando conectado ao Wi-Fi.",
 	"@exifSupportDetails": {
 		"description": "Detailed description of the exif support feature"
-	},
-	"exifSupportConfirmationDialogTitle": "Ativar o suporte ao EXIF?",
-	"@exifSupportConfirmationDialogTitle": {
-		"description": "Title of the dialog to confirm enabling exif support"
 	},
 	"captureLogDetails": "Para reportar bugs:\n\n1. Ative essa configuração\n2. Reproduza o problema\n3. Desative essa configuração\n4. Procure por nc-photos.log na pasta de download\n\n*Se o bug fizer que o app trave, nenhum log será gravado. Nesse caso, por gentileza contacte o desenvolvedor do app para instruções adicionais",
 	"@captureLogDetails": {
@@ -1047,14 +1039,6 @@
 	"createCollectionTooltip": "Nova coleção",
 	"@createCollectionTooltip": {
 		"description": "Create a new collection. A collection can be an album, a folder, or something else in the future"
-	},
-	"createCollectionDialogAlbumLabel": "Álbum",
-	"@createCollectionDialogAlbumLabel": {
-		"description": "Create an album as collection"
-	},
-	"createCollectionDialogAlbumDescription": "Mostra fotos adicionadas por você ou por outrem quando compartilhado",
-	"@createCollectionDialogAlbumDescription": {
-		"description": "Describe how an album collection works"
 	},
 	"createCollectionDialogFolderLabel": "Pasta",
 	"@createCollectionDialogFolderLabel": {

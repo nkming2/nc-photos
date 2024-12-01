@@ -270,10 +270,6 @@
 	"@settingsLanguageOptionSystemDefaultLabel": {
 		"description": "Follow the Android system language"
 	},
-	"settingsExifSupportTitle": "EXIF-tuki",
-	"@settingsExifSupportTitle": {
-		"description": "Title of the EXIF support setting"
-	},
 	"settingsExifSupportTrueSubtitle": "Vaatii ylimääräistä verkon käyttöä",
 	"@settingsExifSupportTrueSubtitle": {
 		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
@@ -452,10 +448,6 @@
 	"exifSupportDetails": "EXIF-tuen käyttöönotto tuo metadatasta lisätietoa kuten, kuvauspäivämäärä, kameramalli jne. Jotta sovellus voi lukea metadataa, käyttää se enemmän verkkoa täysikokoisten kuvien lataamista varten. Sovellus lataa ainoastaan Wi-Fi verkossa.",
 	"@exifSupportDetails": {
 		"description": "Detailed description of the exif support feature"
-	},
-	"exifSupportConfirmationDialogTitle": "Ota EXIF-tuki käyttöön",
-	"@exifSupportConfirmationDialogTitle": {
-		"description": "Title of the dialog to confirm enabling exif support"
 	},
 	"captureLogDetails": "Lokitietojen tallenusta varten:\n\n1. Ota tämä asetus käyttöön\n2. Toista ongelma\n3. Poista tämä asetus käytöstä\n4. Etsi nc-photos.log -tiedosto latauskansiosta\n\n*Mikäli ongelma kaataa sovelluksen, lokitiedostoja ei pystytä tallentamaan. Tässä tapauksessa ota yhteyttä kehittäjään lisätietoja varten.",
 	"@captureLogDetails": {
@@ -1056,14 +1048,6 @@
 	"@createCollectionTooltip": {
 		"description": "Create a new collection. A collection can be an album, a folder, or something else in the future"
 	},
-	"createCollectionDialogAlbumLabel": "Albumi",
-	"@createCollectionDialogAlbumLabel": {
-		"description": "Create an album as collection"
-	},
-	"createCollectionDialogAlbumDescription": "Näytä kaikki palvelimelle lisäämäsi kuvat",
-	"@createCollectionDialogAlbumDescription": {
-		"description": "Describe how an album collection works"
-	},
 	"createCollectionDialogFolderLabel": "Kansio",
 	"@createCollectionDialogFolderLabel": {
 		"description": "Create a folder as collection"
@@ -1391,11 +1375,6 @@
 		"description": "Export an arbitrary Collection (typical one with generated contents) as a new static Collection"
 	},
 	"exportCollectionDialogTitle": "Vie kokoelma",
-	"createCollectionDialogNextcloudAlbumLabel": "Nextcloud albumi",
-	"@createCollectionDialogNextcloudAlbumLabel": {
-		"description": "Server-side albums that are available in Nextcloud 25+"
-	},
-	"createCollectionDialogNextcloudAlbumDescription": "Palvelimella sijoitettavat albumit vaativat vähintään Nextcloud-version 25",
 	"removeCollectionsFailedNotification": "Joidenkin kokoelmien poisto epäonnistui",
 	"errorUnauthenticated": "Ei sallittu pääsyä. Kirjaudu sovellukseen uudelleen mikäli virhe toistuu",
 	"@errorUnauthenticated": {

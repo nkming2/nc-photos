@@ -270,10 +270,6 @@
 	"@settingsLanguageOptionSystemDefaultLabel": {
 		"description": "Follow the Android system language"
 	},
-	"settingsExifSupportTitle": "Поддержка EXIF",
-	"@settingsExifSupportTitle": {
-		"description": "Title of the EXIF support setting"
-	},
 	"settingsExifSupportTrueSubtitle": "Повышенный расход трафика",
 	"@settingsExifSupportTrueSubtitle": {
 		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
@@ -452,10 +448,6 @@
 	"exifSupportDetails": "Включение поддержки EXIF даёт возможность видеть дополнительные метаданные, такие как дата снимка, модель камеры и т.д. В свою очередь, для получения этих метаданных необходимо получить оригинальное, несжатое изображение, что влечёт расход большого объёма трафика. Приложение начинает скачивание только при подключении к сети Wi-Fi",
 	"@exifSupportDetails": {
 		"description": "Detailed description of the exif support feature"
-	},
-	"exifSupportConfirmationDialogTitle": "Включить поддержку EXIF?",
-	"@exifSupportConfirmationDialogTitle": {
-		"description": "Title of the dialog to confirm enabling exif support"
 	},
 	"captureLogDetails": "Чтобы собрать логи для отправки отчета об ошибке:\n\n1. Включите эту настройку\n2. Воспроизведите проблему\n3. Отключите эту настройку\n4. Найдите файл nc-photos.log в папке загрузки\n\n*Если проблема привела к аварийному завершению работы приложения, логи собрать не удастся. В этом случае, пожалуйста, свяжитесь с разработчиком для получения дальнейших инструкций.",
 	"@captureLogDetails": {
@@ -1056,14 +1048,6 @@
 	"@createCollectionTooltip": {
 		"description": "Create a new collection. A collection can be an album, a folder, or something else in the future"
 	},
-	"createCollectionDialogAlbumLabel": "Альбом",
-	"@createCollectionDialogAlbumLabel": {
-		"description": "Create an album as collection"
-	},
-	"createCollectionDialogAlbumDescription": "Показывать фото, добавленные из любого места на сервере",
-	"@createCollectionDialogAlbumDescription": {
-		"description": "Describe how an album collection works"
-	},
 	"createCollectionDialogFolderLabel": "Папка",
 	"@createCollectionDialogFolderLabel": {
 		"description": "Create a folder as collection"
@@ -1391,11 +1375,6 @@
 		"description": "Export an arbitrary Collection (typical one with generated contents) as a new static Collection"
 	},
 	"exportCollectionDialogTitle": "Экспорт альбома",
-	"createCollectionDialogNextcloudAlbumLabel": "Альбом Nextcloud",
-	"@createCollectionDialogNextcloudAlbumLabel": {
-		"description": "Server-side albums that are available in Nextcloud 25+"
-	},
-	"createCollectionDialogNextcloudAlbumDescription": "Альбом на сервере, требуется Nextcloud 25 и выше",
 	"removeCollectionsFailedNotification": "Не удалось удалить некоторые альбомы",
 	"errorUnauthenticated": "Неавторизованный доступ. Если ошибка возникает снова, попробуйте перелогиниться",
 	"@errorUnauthenticated": {

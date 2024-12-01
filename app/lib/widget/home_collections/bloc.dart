@@ -75,23 +75,26 @@ class _Bloc extends Bloc<_Event, _State>
     super.onError(error, stackTrace);
   }
 
-  Future<void> _onLoad(_LoadCollections ev, Emitter<_State> emit) async {
+  Future<void> _onLoad(_LoadCollections ev, Emitter<_State> emit) {
     _log.info(ev);
-    return forEach(
-      emit,
-      controller.stream,
-      onData: (data) => state.copyWith(
-        collections: data.data.map((d) => d.collection).toList(),
-        isLoading: data.hasNext,
+    return Future.wait([
+      forEach(
+        emit,
+        controller.stream,
+        onData: (data) => state.copyWith(
+          collections: data.data.map((d) => d.collection).toList(),
+          isLoading: data.hasNext,
+        ),
       ),
-      onError: (e, stackTrace) {
-        _log.severe("[_onLoad] Uncaught exception", e, stackTrace);
-        return state.copyWith(
+      forEach(
+        emit,
+        controller.errorStream,
+        onData: (data) => state.copyWith(
           isLoading: false,
-          error: ExceptionEvent(e, stackTrace),
-        );
-      },
-    );
+          error: data,
+        ),
+      ),
+    ]);
   }
 
   void _onReload(_ReloadCollections ev, Emitter<_State> emit) {

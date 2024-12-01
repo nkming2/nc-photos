@@ -1,9 +1,11 @@
+import 'package:equatable/equatable.dart';
+import 'package:np_common/type.dart';
 import 'package:to_string/to_string.dart';
 
 part 'server_status.g.dart';
 
 @toString
-class ServerStatus {
+class ServerStatus with EquatableMixin {
   const ServerStatus({
     required this.versionRaw,
     required this.versionName,
@@ -12,6 +14,25 @@ class ServerStatus {
 
   @override
   String toString() => _$toString();
+
+  factory ServerStatus.fromJson(JsonObj json) {
+    return ServerStatus(
+      versionRaw: json["versionRaw"],
+      versionName: json["versionName"],
+      productName: json["productName"],
+    );
+  }
+
+  JsonObj toJson() {
+    return {
+      "versionRaw": versionRaw,
+      "versionName": versionName,
+      "productName": productName,
+    };
+  }
+
+  @override
+  List<Object?> get props => [versionRaw, versionName, productName];
 
   final String versionRaw;
   final String versionName;

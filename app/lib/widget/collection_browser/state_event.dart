@@ -21,6 +21,8 @@ class _State {
     this.editItems,
     this.editTransformedItems,
     this.editSort,
+    required this.isAddMapBusy,
+    required this.placePickerRequest,
     required this.isDragging,
     required this.zoom,
     this.scale,
@@ -47,6 +49,8 @@ class _State {
       isSelectionDeletable: true,
       isEditMode: false,
       isEditBusy: false,
+      isAddMapBusy: false,
+      placePickerRequest: Unique(null),
       isDragging: false,
       zoom: zoom,
     );
@@ -76,6 +80,8 @@ class _State {
   final List<CollectionItem>? editItems;
   final List<_Item>? editTransformedItems;
   final CollectionItemSort? editSort;
+  final bool isAddMapBusy;
+  final Unique<_PlacePickerRequest?> placePickerRequest;
 
   final bool isDragging;
 
@@ -172,6 +178,24 @@ class _AddLabelToCollection implements _Event {
   String toString() => _$toString();
 
   final String label;
+}
+
+@toString
+class _RequestAddMap implements _Event {
+  const _RequestAddMap();
+
+  @override
+  String toString() => _$toString();
+}
+
+@toString
+class _AddMapToCollection implements _Event {
+  const _AddMapToCollection(this.location);
+
+  @override
+  String toString() => _$toString();
+
+  final CameraPosition location;
 }
 
 @toString

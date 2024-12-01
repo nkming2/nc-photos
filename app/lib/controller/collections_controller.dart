@@ -10,12 +10,15 @@ import 'package:nc_photos/controller/files_controller.dart';
 import 'package:nc_photos/controller/server_controller.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/collection.dart';
+import 'package:nc_photos/entity/collection/adapter.dart';
 import 'package:nc_photos/entity/collection/util.dart';
 import 'package:nc_photos/entity/collection_item.dart';
+import 'package:nc_photos/entity/collection_item/new_item.dart';
 import 'package:nc_photos/entity/collection_item/util.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/entity/sharee.dart';
 import 'package:nc_photos/exception.dart';
+import 'package:nc_photos/exception_event.dart';
 import 'package:nc_photos/rx_extension.dart';
 import 'package:nc_photos/use_case/collection/create_collection.dart';
 import 'package:nc_photos/use_case/collection/edit_collection.dart';
@@ -25,6 +28,7 @@ import 'package:nc_photos/use_case/collection/remove_collections.dart';
 import 'package:nc_photos/use_case/collection/share_collection.dart';
 import 'package:nc_photos/use_case/collection/unshare_collection.dart';
 import 'package:np_codegen/np_codegen.dart';
+import 'package:np_collection/np_collection.dart';
 import 'package:np_common/or_null.dart';
 import 'package:np_common/type.dart';
 import 'package:rxdart/rxdart.dart';
@@ -95,6 +99,8 @@ class CollectionsController {
   /// Peek the stream and return the current value
   CollectionStreamEvent peekStream() => _dataStreamController.stream.value;
 
+  Stream<ExceptionEvent> get errorStream => _dataErrorStreamController.stream;
+
   /// Reload the data
   ///
   /// The data will be loaded automatically when the stream is first listened so
@@ -106,7 +112,7 @@ class CollectionsController {
       (c) {
         results = c;
       },
-      onError: _dataStreamController.addError,
+      onError: _dataErrorStreamController.add,
       onDone: () => completer.complete(),
     );
     await completer.future;
@@ -208,9 +214,21 @@ class CollectionsController {
           knownItems: (item?.items.isEmpty ?? true) ? null : item!.items,
         );
       });
-      _updateCollection(c, items);
+      final newItems = await items?.asyncMap((e) {
+        if (e is NewCollectionItem) {
+          try {
+            return CollectionAdapter.of(_c, account, c).adaptToNewItem(e);
+          } catch (e, stackTrace) {
+            _log.severe("[edit] Failed to adapt new item: $e", e, stackTrace);
+            return Future.value(null);
+          }
+        } else {
+          return Future.value(e);
+        }
+      });
+      _updateCollection(c, newItems?.whereNotNull().toList());
     } catch (e, stackTrace) {
-      _dataStreamController.addError(e, stackTrace);
+      _dataErrorStreamController.add(ExceptionEvent(e, stackTrace));
     }
   }
 
@@ -231,11 +249,11 @@ class CollectionsController {
         _updateCollection(newCollection!);
       }
       if (result == CollectionShareResult.partial) {
-        _dataStreamController
-            .addError(CollectionPartialShareException(sharee.shareWith.raw));
+        _dataErrorStreamController.add(ExceptionEvent(
+            CollectionPartialShareException(sharee.shareWith.raw)));
       }
     } catch (e, stackTrace) {
-      _dataStreamController.addError(e, stackTrace);
+      _dataErrorStreamController.add(ExceptionEvent(e, stackTrace));
     }
   }
 
@@ -256,11 +274,11 @@ class CollectionsController {
         _updateCollection(newCollection!);
       }
       if (result == CollectionShareResult.partial) {
-        _dataStreamController
-            .addError(CollectionPartialUnshareException(share.username));
+        _dataErrorStreamController.add(
+            ExceptionEvent(CollectionPartialUnshareException(share.username)));
       }
     } catch (e, stackTrace) {
-      _dataStreamController.addError(e, stackTrace);
+      _dataErrorStreamController.add(ExceptionEvent(e, stackTrace));
     }
   }
 
@@ -278,7 +296,7 @@ class CollectionsController {
           ));
       return newCollection;
     } catch (e, stackTrace) {
-      _dataStreamController.addError(e, stackTrace);
+      _dataErrorStreamController.add(ExceptionEvent(e, stackTrace));
       return null;
     }
   }
@@ -297,7 +315,7 @@ class CollectionsController {
         );
         _dataStreamController.add(lastData);
       },
-      onError: _dataStreamController.addError,
+      onError: _dataErrorStreamController.add,
       onDone: () => completer.complete(),
     );
     await completer.future;
@@ -361,6 +379,8 @@ class CollectionsController {
       hasNext: true,
     ),
   );
+  final _dataErrorStreamController =
+      StreamController<ExceptionEvent>.broadcast();
 
   final _itemControllers = <_CollectionKey, CollectionItemsController>{};
 

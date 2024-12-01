@@ -1,4 +1,6 @@
 import 'package:clock/clock.dart';
+import 'package:exifdart/exifdart.dart' hide Metadata;
+import 'package:flutter/foundation.dart';
 import 'package:nc_photos/entity/exif.dart';
 import 'package:nc_photos/entity/file.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
@@ -243,6 +245,14 @@ void main() {
             "Make": "dummy",
           },
         });
+      });
+    });
+
+    group("fromApi", () {
+      test("size", _fromApiSize);
+      group("gps", () {
+        test("place1", _fromApiGpsPlace1);
+        test("place2", _fromApiGpsPlace2);
       });
     });
   });
@@ -1216,4 +1226,117 @@ void main() {
       });
     });
   });
+}
+
+void _fromApiSize() {
+  withClock(
+    Clock(() => DateTime(2020, 1, 2, 3, 4, 5)),
+    () {
+      final actual = Metadata.fromApi(
+        etag: null,
+        size: {
+          "width": "1234",
+          "height": "5678",
+        },
+      );
+      expect(
+        actual,
+        Metadata(
+          imageWidth: 1234,
+          imageHeight: 5678,
+        ),
+      );
+    },
+  );
+}
+
+void _fromApiGpsPlace1() {
+  final actual = Metadata.fromApi(
+    etag: null,
+    size: {
+      "width": "1234",
+      "height": "5678",
+    },
+    gps: {
+      "latitude": "40.749444",
+      "longitude": "-73.968056",
+      "altitude": "12.345678",
+    },
+  );
+  expect(
+    actual?.exif,
+    _MetadataGpsMatcher(Exif({
+      "GPSLatitude": [Rational(40, 1), Rational(44, 1), Rational(5799, 100)],
+      "GPSLatitudeRef": "N",
+      "GPSLongitude": [Rational(73, 1), Rational(58, 1), Rational(500, 100)],
+      "GPSLongitudeRef": "W",
+      "GPSAltitude": Rational(1234567, 100000),
+      "GPSAltitudeRef": 0,
+    })),
+  );
+}
+
+void _fromApiGpsPlace2() {
+  final actual = Metadata.fromApi(
+    etag: null,
+    size: {
+      "width": "1234",
+      "height": "5678",
+    },
+    gps: {
+      "latitude": "-37.688944",
+      "longitude": "178.5481396",
+      "altitude": "-12.345678",
+    },
+  );
+  expect(
+    actual?.exif,
+    _MetadataGpsMatcher(Exif({
+      "GPSLatitude": [Rational(37, 1), Rational(41, 1), Rational(2019, 100)],
+      "GPSLatitudeRef": "S",
+      "GPSLongitude": [Rational(178, 1), Rational(32, 1), Rational(5330, 100)],
+      "GPSLongitudeRef": "E",
+      "GPSAltitude": Rational(1234567, 100000),
+      "GPSAltitudeRef": 1,
+    })),
+  );
+}
+
+class _MetadataGpsMatcher extends Matcher {
+  const _MetadataGpsMatcher(this.expected);
+
+  @override
+  bool matches(Object? item, Map matchState) {
+    final actual = item as Exif;
+    final gpsLatitude = listEquals(
+      actual["GPSLatitude"]?.map((e) => e.toString()).toList(),
+      expected["GPSLatitude"]?.map((e) => e.toString()).toList(),
+    );
+    final gpsLatitudeRef =
+        actual["GPSLatitudeRef"] == expected["GPSLatitudeRef"];
+    final gpsLongitude = listEquals(
+      actual["GPSLongitude"]?.map((e) => e.toString()).toList(),
+      expected["GPSLongitude"]?.map((e) => e.toString()).toList(),
+    );
+    final gpsLongitudeRef =
+        actual["GPSLongitudeRef"] == expected["GPSLongitudeRef"];
+    final gpsAltitude = actual["GPSAltitude"]?.toString() ==
+        expected["GPSAltitude"]?.toString();
+    final gpsAltitudeRef =
+        actual["GPSAltitudeRef"] == expected["GPSAltitudeRef"];
+
+    return gpsLatitude &&
+        gpsLatitudeRef &&
+        gpsLongitude &&
+        gpsLongitudeRef &&
+        gpsAltitude &&
+        gpsAltitudeRef;
+  }
+
+  @override
+  Description describe(Description description) {
+    return description.add(expected.toString());
+  }
+
+  final Exif expected;
 }

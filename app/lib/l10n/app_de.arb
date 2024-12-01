@@ -270,10 +270,6 @@
 	"@settingsLanguageOptionSystemDefaultLabel": {
 		"description": "Follow the Android system language"
 	},
-	"settingsExifSupportTitle": "EXIF-Unterstützung",
-	"@settingsExifSupportTitle": {
-		"description": "Title of the EXIF support setting"
-	},
 	"settingsExifSupportTrueSubtitle": "Erfordert zusätzliche Netzwerknutzung",
 	"@settingsExifSupportTrueSubtitle": {
 		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
@@ -452,10 +448,6 @@
 	"exifSupportDetails": "Durch Aktivieren der EXIF-Unterstützung werden verschiedene Metadaten wie Aufnahmedatum, Kameramodell usw. verfügbar gemacht. Um diese Metadaten zu lesen, ist eine zusätzliche Netzwerknutzung erforderlich, um das Originalbild in voller Größe herunterzuladen. Die App wird nur herunterladen, wenn sie mit einem Wi-Fi-Netzwerk verbunden ist",
 	"@exifSupportDetails": {
 		"description": "Detailed description of the exif support feature"
-	},
-	"exifSupportConfirmationDialogTitle": "EXIF-Unterstützung aktivieren?",
-	"@exifSupportConfirmationDialogTitle": {
-		"description": "Title of the dialog to confirm enabling exif support"
 	},
 	"captureLogDetails": "So erstellen Sie Protokolle für einen Fehlerbericht:\n\n1. Aktivieren Sie diese Einstellung\n2. Reproduzieren Sie das Problem\n3. Deaktivieren Sie diese Einstellung\n4. Suchen Sie im Download-Ordner nach nc-photos.log\n\n*Wenn das Problem zum Absturz der App führt, konnten keine Protokolle erfasst werden. In diesem Fall wenden Sie sich bitte an den Entwickler, um weitere Anweisungen zu erhalten",
 	"@captureLogDetails": {
@@ -1056,14 +1048,6 @@
 	"@createCollectionTooltip": {
 		"description": "Create a new collection. A collection can be an album, a folder, or something else in the future"
 	},
-	"createCollectionDialogAlbumLabel": "Album",
-	"@createCollectionDialogAlbumLabel": {
-		"description": "Create an album as collection"
-	},
-	"createCollectionDialogAlbumDescription": "Fotos anzeigen, die von Ihnen von überall auf dem Server hinzugefügt wurden",
-	"@createCollectionDialogAlbumDescription": {
-		"description": "Describe how an album collection works"
-	},
 	"createCollectionDialogFolderLabel": "Ordner",
 	"@createCollectionDialogFolderLabel": {
 		"description": "Create a folder as collection"
@@ -1391,11 +1375,6 @@
 		"description": "Export an arbitrary Collection (typical one with generated contents) as a new static Collection"
 	},
 	"exportCollectionDialogTitle": "Album exportieren",
-	"createCollectionDialogNextcloudAlbumLabel": "Nextcloud Album",
-	"@createCollectionDialogNextcloudAlbumLabel": {
-		"description": "Server-side albums that are available in Nextcloud 25+"
-	},
-	"createCollectionDialogNextcloudAlbumDescription": "Serverbasiertes Album, Nextcloud 25 oder höher erforderlich",
 	"removeCollectionsFailedNotification": "Entfernen einiger Alben fehlgeschlagen",
 	"errorUnauthenticated": "Nicht authentifizierter Zugriff. Bitte melden Sie sich erneut an, wenn das Problem weiterhin besteht",
 	"@errorUnauthenticated": {

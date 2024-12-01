@@ -17,21 +17,24 @@ class _Bloc extends Bloc<_Event, _State>
 
   Future<void> _onLoad(_LoadPersons ev, Emitter<_State> emit) {
     _log.info(ev);
-    return forEach(
-      emit,
-      personsController.stream,
-      onData: (data) => state.copyWith(
-        persons: data.data,
-        isLoading: data.hasNext,
+    return Future.wait([
+      forEach(
+        emit,
+        personsController.stream,
+        onData: (data) => state.copyWith(
+          persons: data.data,
+          isLoading: data.hasNext,
+        ),
       ),
-      onError: (e, stackTrace) {
-        _log.severe("[_onLoad] Uncaught exception", e, stackTrace);
-        return state.copyWith(
+      forEach(
+        emit,
+        personsController.errorStream,
+        onData: (data) => state.copyWith(
           isLoading: false,
-          error: ExceptionEvent(e, stackTrace),
-        );
-      },
-    );
+          error: data,
+        ),
+      ),
+    ]);
   }
 
   void _onReload(_Reload ev, Emitter<_State> emit) {

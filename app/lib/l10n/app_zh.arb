@@ -270,10 +270,6 @@
 	"@settingsLanguageOptionSystemDefaultLabel": {
 		"description": "Follow the Android system language"
 	},
-	"settingsExifSupportTitle": "EXIF 支持",
-	"@settingsExifSupportTitle": {
-		"description": "Title of the EXIF support setting"
-	},
 	"settingsExifSupportTrueSubtitle": "需要额外的网络流量",
 	"@settingsExifSupportTrueSubtitle": {
 		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
@@ -438,10 +434,6 @@
 	"exifSupportDetails": "启用 EXIF 支持功能将使 App 可以读取照片中的中继数据 (metadata)，例如拍照日期、相机型号等等，而为了读取这些资料，App 需要额外的网络流量从服务器下载完整的档案。App 只会在装置连接 WiFi 网络的时候才会下载。",
 	"@exifSupportDetails": {
 		"description": "Detailed description of the exif support feature"
-	},
-	"exifSupportConfirmationDialogTitle": "启用 EXIF 支持?",
-	"@exifSupportConfirmationDialogTitle": {
-		"description": "Title of the dialog to confirm enabling exif support"
 	},
 	"captureLogDetails": "如需记录事件日志以反馈问题:\n\n1. 启用本设置\n2. 重现一次你遇到的问题\n3. 禁用本设置\n4. 在装置的下载文件夹寻找 nc-photos.log 文件\n\n*此功能不支持使 App 强制关闭的问题，如遇此种情况，请直接联络开发者",
 	"@captureLogDetails": {
@@ -1038,14 +1030,6 @@
 	"@createCollectionTooltip": {
 		"description": "Create a new collection. A collection can be an album, a folder, or something else in the future"
 	},
-	"createCollectionDialogAlbumLabel": "相册",
-	"@createCollectionDialogAlbumLabel": {
-		"description": "Create an album as collection"
-	},
-	"createCollectionDialogAlbumDescription": "显示你任意添加的照片",
-	"@createCollectionDialogAlbumDescription": {
-		"description": "Describe how an album collection works"
-	},
 	"createCollectionDialogFolderLabel": "文件夹",
 	"@createCollectionDialogFolderLabel": {
 		"description": "Create a folder as collection"
@@ -1290,11 +1274,6 @@
 		"description": "Export an arbitrary Collection (typical one with generated contents) as a new static Collection"
 	},
 	"exportCollectionDialogTitle": "导出影集",
-	"createCollectionDialogNextcloudAlbumLabel": "Nextcloud影集",
-	"@createCollectionDialogNextcloudAlbumLabel": {
-		"description": "Server-side albums that are available in Nextcloud 25+"
-	},
-	"createCollectionDialogNextcloudAlbumDescription": "服务器侧影集，需要Nextcloud 25+",
 	"removeCollectionsFailedNotification": "删除影集失败",
 	"errorUnauthenticated": "未授权的存取，若问题持续请重新登录",
 	"@errorUnauthenticated": {

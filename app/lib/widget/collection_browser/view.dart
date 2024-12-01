@@ -120,6 +120,8 @@ class _EditContentList extends StatelessWidget {
                 itemDragFeedbackBuilder: (context, _, item) =>
                     item.buildDragFeedbackWidget(context) ??
                     item.buildWidget(context),
+                itemDragFeedbackSize: (_, item) =>
+                    item.dragFeedbackWidgetSize(),
                 staggeredTileBuilder: (_, item) => item.staggeredTile,
                 onDragResult: (results) {
                   context.addEvent(_EditManualSort(results));

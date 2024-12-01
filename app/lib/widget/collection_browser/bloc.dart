@@ -9,6 +9,7 @@ class _Bloc extends Bloc<_Event, _State>
     required this.prefController,
     required this.collectionsController,
     required this.filesController,
+    required this.db,
     required Collection collection,
   })  : _c = container,
         _isAdHocCollection = !collectionsController.stream.value.data
@@ -30,6 +31,8 @@ class _Bloc extends Bloc<_Event, _State>
     on<_BeginEdit>(_onBeginEdit);
     on<_EditName>(_onEditName);
     on<_AddLabelToCollection>(_onAddLabelToCollection);
+    on<_RequestAddMap>(_onRequestAddMap);
+    on<_AddMapToCollection>(_onAddMapToCollection);
     on<_EditSort>(_onEditSort);
     on<_EditManualSort>(_onEditManualSort);
     on<_TransformEditItems>(_onTransformEditItems);
@@ -130,13 +133,14 @@ class _Bloc extends Bloc<_Event, _State>
           rawItems: data.items,
           isLoading: data.hasNext,
         ),
-        onError: (e, stackTrace) {
-          _log.severe("[_onLoad] Uncaught exception", e, stackTrace);
-          return state.copyWith(
-            isLoading: false,
-            error: ExceptionEvent(e, stackTrace),
-          );
-        },
+      ),
+      forEach(
+        emit,
+        itemsController.errorStream,
+        onData: (data) => state.copyWith(
+          isLoading: false,
+          error: data,
+        ),
       ),
       // do we need this as we already filter files in filesController?
       forEach(
@@ -205,6 +209,45 @@ class _Bloc extends Bloc<_Event, _State>
     emit(state.copyWith(
       editItems: [
         NewCollectionLabelItem(ev.label, clock.now().toUtc()),
+        ...state.editItems ?? state.items,
+      ],
+    ));
+  }
+
+  Future<void> _onRequestAddMap(_RequestAddMap ev, _Emitter emit) async {
+    _log.info(ev);
+    emit(state.copyWith(isAddMapBusy: true));
+    try {
+      final location = await db.getFirstLocationOfFileIds(
+        account: account.toDb(),
+        fileIds: state.transformedItems
+            .whereType<_FileItem>()
+            .map((e) => e.file.fdId)
+            .toList(),
+      );
+      final mapCoord =
+          location?.let((e) => MapCoord(e.latitude!, e.longitude!));
+      emit(state.copyWith(
+        placePickerRequest:
+            Unique(_PlacePickerRequest(initialPosition: mapCoord)),
+      ));
+    } catch (e, stackTrace) {
+      _log.severe("[_onRequestAddMap] Failed while getFirstLocationOfFileIds",
+          e, stackTrace);
+      emit(state.copyWith(
+        placePickerRequest: Unique(const _PlacePickerRequest()),
+      ));
+    } finally {
+      emit(state.copyWith(isAddMapBusy: false));
+    }
+  }
+
+  void _onAddMapToCollection(_AddMapToCollection ev, Emitter<_State> emit) {
+    _log.info(ev);
+    assert(isCollectionCapabilityPermitted(CollectionCapability.mapItem));
+    emit(state.copyWith(
+      editItems: [
+        NewCollectionMapItem(ev.location, clock.now().toUtc()),
         ...state.editItems ?? state.items,
       ],
     ));
@@ -497,22 +540,23 @@ class _Bloc extends Bloc<_Event, _State>
               "[_transformItems] Unsupported file format: ${item.file.fdMime}");
         }
       } else if (item is CollectionLabelItem) {
-        if (state.isEditMode) {
-          transformed.add(_EditLabelListItem(
-            original: item,
-            id: item.id,
-            text: item.text,
-            onEditPressed: () {
-              // TODO
-            },
-          ));
-        } else {
-          transformed.add(_LabelItem(
-            original: item,
-            id: item.id,
-            text: item.text,
-          ));
-        }
+        transformed.add(_LabelItem(
+          original: item,
+          id: item.id,
+          text: item.text,
+          onEditPressed: () {
+            // TODO
+          },
+        ));
+      } else if (item is CollectionMapItem) {
+        transformed.add(_MapItem(
+          original: item,
+          id: item.id,
+          location: item.location,
+          onEditPressed: () {
+            // TODO
+          },
+        ));
       }
     }
     return _TransformResult(
@@ -583,6 +627,7 @@ class _Bloc extends Bloc<_Event, _State>
   final PrefController prefController;
   final CollectionsController collectionsController;
   final FilesController filesController;
+  final NpDb db;
   late final CollectionItemsController itemsController;
 
   /// Specify if the supplied [collection] is an "inline" one, which means it's

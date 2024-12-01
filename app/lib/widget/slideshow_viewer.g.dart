@@ -18,6 +18,7 @@ abstract class $_StateCopyWithWorker {
       int? page,
       int? nextPage,
       bool? shouldAnimateNextPage,
+      List<FileDescriptor?>? files,
       FileDescriptor? currentFile,
       bool? isShowUi,
       bool? isPlay,
@@ -38,7 +39,8 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
       dynamic page,
       dynamic nextPage,
       dynamic shouldAnimateNextPage,
-      dynamic currentFile,
+      dynamic files,
+      dynamic currentFile = copyWithNull,
       dynamic isShowUi,
       dynamic isPlay,
       dynamic isVideoCompleted,
@@ -53,7 +55,10 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
         nextPage: nextPage as int? ?? that.nextPage,
         shouldAnimateNextPage:
             shouldAnimateNextPage as bool? ?? that.shouldAnimateNextPage,
-        currentFile: currentFile as FileDescriptor? ?? that.currentFile,
+        files: files as List<FileDescriptor?>? ?? that.files,
+        currentFile: currentFile == copyWithNull
+            ? that.currentFile
+            : currentFile as FileDescriptor?,
         isShowUi: isShowUi as bool? ?? that.isShowUi,
         isPlay: isPlay as bool? ?? that.isPlay,
         isVideoCompleted: isVideoCompleted as bool? ?? that.isVideoCompleted,
@@ -104,7 +109,7 @@ extension _$_PageViewNpLog on _PageView {
 extension _$_StateToString on _State {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_State {hasInit: $hasInit, page: $page, nextPage: $nextPage, shouldAnimateNextPage: $shouldAnimateNextPage, currentFile: ${currentFile.fdPath}, isShowUi: $isShowUi, isPlay: $isPlay, isVideoCompleted: $isVideoCompleted, hasPrev: $hasPrev, hasNext: $hasNext, isShowTimeline: $isShowTimeline, hasShownTimeline: $hasShownTimeline, hasRequestExit: $hasRequestExit}";
+    return "_State {hasInit: $hasInit, page: $page, nextPage: $nextPage, shouldAnimateNextPage: $shouldAnimateNextPage, files: [length: ${files.length}], currentFile: ${currentFile == null ? null : "${currentFile!.fdPath}"}, isShowUi: $isShowUi, isPlay: $isPlay, isVideoCompleted: $isVideoCompleted, hasPrev: $hasPrev, hasNext: $hasNext, isShowTimeline: $isShowTimeline, hasShownTimeline: $hasShownTimeline, hasRequestExit: $hasRequestExit}";
   }
 }
 
@@ -112,6 +117,13 @@ extension _$_InitToString on _Init {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
     return "_Init {}";
+  }
+}
+
+extension _$_SetFilesToString on _SetFiles {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_SetFiles {dataMap: {length: ${dataMap.length}}}";
   }
 }
 

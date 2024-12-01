@@ -63,6 +63,7 @@ class AccountController {
   ServerController get serverController =>
       _serverController ??= ServerController(
         account: _account!,
+        accountPrefController: accountPrefController,
       );
 
   AccountPrefController get accountPrefController =>
@@ -107,6 +108,7 @@ class AccountController {
         KiwiContainer().resolve(),
         account: account,
         prefController: prefController,
+        serverController: serverController,
       );
 
   PrefController prefController;

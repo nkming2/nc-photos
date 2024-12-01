@@ -73,7 +73,7 @@ class _Bloc extends Bloc<_Event, _State>
         filesController.errorStream,
         onData: (data) => state.copyWith(
           isLoading: _itemTransformerQueue.isProcessing,
-          error: ExceptionEvent(data.error, data.stackTrace),
+          error: data,
         ),
       ),
     ]);

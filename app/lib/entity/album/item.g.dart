@@ -78,3 +78,10 @@ extension _$AlbumLabelItemToString on AlbumLabelItem {
     return "AlbumLabelItem {addedBy: $addedBy, addedAt: $addedAt, text: $text}";
   }
 }
+
+extension _$AlbumMapItemToString on AlbumMapItem {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "AlbumMapItem {addedBy: $addedBy, addedAt: $addedAt, location: $location}";
+  }
+}

@@ -56,11 +56,13 @@ extension $PrefControllerNpSubjectAccessor on PrefController {
   Stream<CollectionSort> get homeAlbumsSortChange =>
       homeAlbumsSort.distinct().skip(1);
   CollectionSort get homeAlbumsSortValue => _homeAlbumsSortController.value;
-// _isEnableExifController
-  ValueStream<bool> get isEnableExif => _isEnableExifController.stream;
-  Stream<bool> get isEnableExifNew => isEnableExif.skip(1);
-  Stream<bool> get isEnableExifChange => isEnableExif.distinct().skip(1);
-  bool get isEnableExifValue => _isEnableExifController.value;
+// _isEnableClientExifController
+  ValueStream<bool> get isEnableClientExif =>
+      _isEnableClientExifController.stream;
+  Stream<bool> get isEnableClientExifNew => isEnableClientExif.skip(1);
+  Stream<bool> get isEnableClientExifChange =>
+      isEnableClientExif.distinct().skip(1);
+  bool get isEnableClientExifValue => _isEnableClientExifController.value;
 // _shouldProcessExifWifiOnlyController
   ValueStream<bool> get shouldProcessExifWifiOnly =>
       _shouldProcessExifWifiOnlyController.stream;

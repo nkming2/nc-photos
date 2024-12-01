@@ -87,7 +87,7 @@ class Exif with EquatableMixin {
   }
 
   @override
-  toString() {
+  String toString() {
     final dataStr = data.entries.map((e) {
       return "${e.key}: '${e.value}'";
     }).join(", ");
@@ -117,16 +117,16 @@ class Exif with EquatableMixin {
   }
 
   /// 0x829a ExposureTime
-  Rational? get exposureTime => data["ExposureTime"];
+  Rational? get exposureTime => _readRationalValue("ExposureTime");
 
   /// 0x829d FNumber
-  Rational? get fNumber => data["FNumber"];
+  Rational? get fNumber => _readRationalValue("FNumber");
 
   /// 0x8827 ISO/ISOSpeedRatings/PhotographicSensitivity
-  int? get isoSpeedRatings => data["ISOSpeedRatings"];
+  int? get isoSpeedRatings => _readIntValue("ISOSpeedRatings");
 
   /// 0x920a FocalLength
-  Rational? get focalLength => data["FocalLength"];
+  Rational? get focalLength => _readRationalValue("FocalLength");
 
   /// 0x8825 GPS tags
   String? get gpsLatitudeRef => data["GPSLatitudeRef"];
@@ -135,9 +135,53 @@ class Exif with EquatableMixin {
   List<Rational>? get gpsLongitude => data["GPSLongitude"]?.cast<Rational>();
 
   @override
-  get props => [
+  List<Object?> get props => [
         data,
       ];
+
+  Rational? _readRationalValue(String key) {
+    // values may be saved as typed (extracted by app) or untyped string
+    // (extracted by server)
+    return data[key] is String ? _tryParseRationalString(data[key]) : data[key];
+  }
+
+  int? _readIntValue(String key) {
+    return data[key] is String ? _tryParseIntString(data[key]) : data[key];
+  }
+
+  static Rational? _tryParseRationalString(String str) {
+    if (str.isEmpty) {
+      return null;
+    }
+    try {
+      final pos = str.indexOf("/");
+      return Rational(
+        int.parse(str.substring(0, pos)),
+        int.parse(str.substring(pos + 1)),
+      );
+    } catch (e, stackTrace) {
+      _$ExifNpLog.log.shout(
+          "[_tryParseRationalString] Failed to parse rational string: $str",
+          e,
+          stackTrace);
+      return null;
+    }
+  }
+
+  static int? _tryParseIntString(String str) {
+    if (str.isEmpty) {
+      return null;
+    }
+    try {
+      return int.parse(str);
+    } catch (e, stackTrace) {
+      _$ExifNpLog.log.shout(
+          "[_tryParseIntString] Failed to parse int string: $str",
+          e,
+          stackTrace);
+      return null;
+    }
+  }
 
   final Map<String, dynamic> data;
 

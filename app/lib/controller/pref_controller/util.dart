@@ -15,6 +15,9 @@ extension on Pref {
   Future<bool> setHomeAlbumsSort(int value) =>
       provider.setInt(PrefKey.homeAlbumsSort, value);
 
+  bool? isEnableClientExif() => isEnableExif();
+  Future<bool> setEnableClientExif(bool value) => setEnableExif(value);
+
   bool? isDarkTheme() => provider.getBool(PrefKey.darkTheme);
   bool isDarkThemeOr(bool def) => isDarkTheme() ?? def;
   Future<bool> setDarkTheme(bool value) =>
