@@ -74,20 +74,26 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     emit(state.copyWith(
       hasInit: true,
       page: initialPage,
-      currentFile: getFileByPageIndex(initialPage),
       hasPrev: initialPage > 0,
       hasNext: pageCount == null || initialPage < (pageCount! - 1),
     ));
+    if (state.files.isNotEmpty) {
+      emit(state.copyWith(
+        currentFile: getFileByPageIndex(initialPage),
+      ));
+    }
     unawaited(_prepareNextPage());
   }
 
   void _onSetFiles(_SetFiles ev, Emitter<_State> emit) {
     _log.info(ev);
     final files = fileIds.map((e) => ev.dataMap[e]).toList();
-    emit(state.copyWith(
-      files: files,
-      currentFile: files[convertPageToFileIndex(state.page)],
-    ));
+    emit(state.copyWith(files: files));
+    if (state.hasInit) {
+      emit(state.copyWith(
+        currentFile: files[convertPageToFileIndex(state.page)],
+      ));
+    }
   }
 
   void _onToggleShowUi(_ToggleShowUi ev, Emitter<_State> emit) {
