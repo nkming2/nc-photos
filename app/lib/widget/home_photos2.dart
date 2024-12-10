@@ -181,15 +181,17 @@ class _WrappedHomePhotosState extends State<_WrappedHomePhotos> {
         child: _BlocSelector(
           selector: (state) => state.selectedItems.isEmpty,
           builder: (context, isSelectedEmpty) => isSelectedEmpty
-              ? const DoubleTapExitContainer(
-                  child: _BodyView(),
+              ? DoubleTapExitContainer(
+                  child: _BodyView(
+                    key: _bodyKey,
+                  ),
                 )
               : PopScope(
                   canPop: false,
                   onPopInvoked: (_) {
                     context.addEvent(const _SetSelectedItems(items: {}));
                   },
-                  child: const _BodyView(),
+                  child: _BodyView(key: _bodyKey),
                 ),
         ),
       ),
@@ -197,11 +199,12 @@ class _WrappedHomePhotosState extends State<_WrappedHomePhotos> {
   }
 
   final _key = GlobalKey();
+  final _bodyKey = GlobalKey();
   bool? _isVisible;
 }
 
 class _BodyView extends StatelessWidget {
-  const _BodyView();
+  const _BodyView({super.key});
 
   @override
   Widget build(BuildContext context) {
