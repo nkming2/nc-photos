@@ -371,10 +371,10 @@ class _Bloc extends Bloc<_Event, _State>
   void _onStartSlideshow(_StartSlideshow ev, _Emitter emit) {
     _log.info(ev);
     final req = _SlideshowRequest(
-      account: account,
       fileIds: state.fileIdOrders,
       startIndex:
           state.fileIdOrders.indexOf(ev.fileId).let((i) => i == -1 ? 0 : i),
+      collectionId: collectionId,
     );
     emit(state.copyWith(slideshowRequest: Unique(req)));
   }
