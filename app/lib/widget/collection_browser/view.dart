@@ -78,7 +78,9 @@ class _ContentListBody extends StatelessWidget {
                   .map((e) => e.file.fdId)
                   .toList(),
               actualIndex,
-              collectionId: state.collection.id,
+              collectionId: state.collection.isDynamicCollection
+                  ? null
+                  : state.collection.id,
             ),
           );
         },
