@@ -1,3 +1,4 @@
 library;
 
-export 'src/np_ffi_torch.dart';
+export 'src/method.dart';
+export 'src/super_resolution.dart';

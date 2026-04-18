@@ -26,7 +26,12 @@ add_subdirectory(${EXECUTORCH_HOME_DIR} "${CMAKE_CURRENT_SOURCE_DIR}/../third_pa
 set(CMAKE_BUILD_TYPE "${_saved_build_type}")
 
 add_library(np_ffi_torch SHARED
+  "real_esrgan/real_esrgan.cpp"
+  "memory_context.cpp"
+  "model_loader.cpp"
   "np_ffi_torch.cpp"
+  "stopwatch.cpp"
+  "util.cpp"
 )
 
 add_compile_options(
@@ -49,6 +54,7 @@ target_link_libraries(
   # executorch::kernels
   quantized_ops_lib
   optimized_native_cpu_ops_lib
+  -fopenmp -static-openmp
 )
 target_compile_definitions(np_ffi_torch PUBLIC DART_SHARED_LIB)
 

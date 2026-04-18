@@ -26,11 +26,48 @@ class NpFfiTorchBindings {
     ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName) lookup,
   ) : _lookup = lookup;
 
-  int getCoresCount() {
-    return _getCoresCount();
+  void torchRgb8ImageFree(ffi.Pointer<TorchRgb8Image> that) {
+    return _torchRgb8ImageFree(that);
   }
 
-  late final _getCoresCountPtr =
-      _lookup<ffi.NativeFunction<ffi.Uint32 Function()>>('getCoresCount');
-  late final _getCoresCount = _getCoresCountPtr.asFunction<int Function()>();
+  late final _torchRgb8ImageFreePtr =
+      _lookup<
+        ffi.NativeFunction<ffi.Void Function(ffi.Pointer<TorchRgb8Image>)>
+      >('torchRgb8ImageFree');
+  late final _torchRgb8ImageFree = _torchRgb8ImageFreePtr
+      .asFunction<void Function(ffi.Pointer<TorchRgb8Image>)>();
+
+  ffi.Pointer<TorchRgb8Image> inferRealEsrgan(
+    ffi.Pointer<TorchRgb8Image> input,
+    ffi.Pointer<ffi.Char> modelPath,
+  ) {
+    return _inferRealEsrgan(input, modelPath);
+  }
+
+  late final _inferRealEsrganPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Pointer<TorchRgb8Image> Function(
+            ffi.Pointer<TorchRgb8Image>,
+            ffi.Pointer<ffi.Char>,
+          )
+        >
+      >('inferRealEsrgan');
+  late final _inferRealEsrgan = _inferRealEsrganPtr
+      .asFunction<
+        ffi.Pointer<TorchRgb8Image> Function(
+          ffi.Pointer<TorchRgb8Image>,
+          ffi.Pointer<ffi.Char>,
+        )
+      >();
+}
+
+final class TorchRgb8Image extends ffi.Struct {
+  external ffi.Pointer<ffi.Uint8> pixel;
+
+  @ffi.UnsignedInt()
+  external int width;
+
+  @ffi.UnsignedInt()
+  external int height;
 }

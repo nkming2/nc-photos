@@ -1,5 +1,8 @@
 #include "np_ffi_torch.h"
-#include <cpuinfo.h>
-#include <cstdint>
+#include <cstdlib>
 
-uint32_t getCoresCount() { return cpuinfo_get_cores_count(); }
+void torchRgb8ImageFree(TorchRgb8Image *that) {
+  if (that) {
+    free(that->pixel);
+  }
+}
