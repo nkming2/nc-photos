@@ -126,6 +126,8 @@ dependencies:
     path: ../np_exiv2
   np_ffi_image_editor:
     path: ../np_ffi_image_editor
+  np_ffi_torch:
+    path: ../np_ffi_torch
   np_geocoder:
     path: ../np_geocoder
   np_gps_map:

@@ -1,0 +1,28 @@
+name: np_ffi_torch
+description: "A new Flutter FFI plugin project."
+version: 0.0.1
+homepage:
+publish_to: none
+
+environment:
+  sdk: ">=3.10.0"
+  flutter: ">=3.38.0"
+
+dependencies:
+  ffi: ^2.1.4
+  flutter:
+    sdk: flutter
+  logging: ^1.2.0
+  plugin_platform_interface: ^2.0.2
+
+dev_dependencies:
+  dart_style: 3.1.2
+  ffigen: ^19.0.0
+  np_lints:
+    path: ../np_lints
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        ffiPlugin: true

@@ -1198,6 +1198,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  np_ffi_torch:
+    dependency: "direct main"
+    description:
+      path: "../np_ffi_torch"
+      relative: true
+    source: path
+    version: "0.0.1"
   np_geocoder:
     dependency: "direct main"
     description:

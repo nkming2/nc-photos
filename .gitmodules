@@ -1,0 +1,3 @@
+[submodule "np_ffi_torch/third_party/executorch"]
+	path = np_ffi_torch/third_party/executorch
+	url = https://github.com/pytorch/executorch.git
