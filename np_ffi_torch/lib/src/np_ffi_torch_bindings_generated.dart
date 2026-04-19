@@ -60,6 +60,30 @@ class NpFfiTorchBindings {
           ffi.Pointer<ffi.Char>,
         )
       >();
+
+  ffi.Pointer<TorchRgb8Image> inferNafnet(
+    ffi.Pointer<TorchRgb8Image> input,
+    ffi.Pointer<ffi.Char> modelPath,
+  ) {
+    return _inferNafnet(input, modelPath);
+  }
+
+  late final _inferNafnetPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Pointer<TorchRgb8Image> Function(
+            ffi.Pointer<TorchRgb8Image>,
+            ffi.Pointer<ffi.Char>,
+          )
+        >
+      >('inferNafnet');
+  late final _inferNafnet = _inferNafnetPtr
+      .asFunction<
+        ffi.Pointer<TorchRgb8Image> Function(
+          ffi.Pointer<TorchRgb8Image>,
+          ffi.Pointer<ffi.Char>,
+        )
+      >();
 }
 
 final class TorchRgb8Image extends ffi.Struct {
