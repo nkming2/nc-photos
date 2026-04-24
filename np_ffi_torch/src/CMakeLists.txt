@@ -26,11 +26,13 @@ add_subdirectory(${EXECUTORCH_HOME_DIR} "${CMAKE_CURRENT_SOURCE_DIR}/../third_pa
 set(CMAKE_BUILD_TYPE "${_saved_build_type}")
 
 add_library(np_ffi_torch SHARED
+  "efficient_derain/efficient_derain.cpp"
   "nafnet/nafnet.cpp"
   "real_esrgan/real_esrgan.cpp"
   "memory_context.cpp"
   "model_loader.cpp"
   "np_ffi_torch.cpp"
+  "pad_image.cpp"
   "stopwatch.cpp"
   "util.cpp"
 )

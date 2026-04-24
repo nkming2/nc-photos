@@ -26,6 +26,9 @@ FFI_PLUGIN_EXPORT TorchRgb8Image *inferRealEsrgan(const TorchRgb8Image *input,
 FFI_PLUGIN_EXPORT TorchRgb8Image *inferNafnet(const TorchRgb8Image *input,
                                               const char *modelPath);
 
+FFI_PLUGIN_EXPORT TorchRgb8Image *
+inferEfficientDerain(const TorchRgb8Image *input, const char *modelPath);
+
 #ifdef __cplusplus
 }
 #endif

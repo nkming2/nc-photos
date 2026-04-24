@@ -84,6 +84,30 @@ class NpFfiTorchBindings {
           ffi.Pointer<ffi.Char>,
         )
       >();
+
+  ffi.Pointer<TorchRgb8Image> inferEfficientDerain(
+    ffi.Pointer<TorchRgb8Image> input,
+    ffi.Pointer<ffi.Char> modelPath,
+  ) {
+    return _inferEfficientDerain(input, modelPath);
+  }
+
+  late final _inferEfficientDerainPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Pointer<TorchRgb8Image> Function(
+            ffi.Pointer<TorchRgb8Image>,
+            ffi.Pointer<ffi.Char>,
+          )
+        >
+      >('inferEfficientDerain');
+  late final _inferEfficientDerain = _inferEfficientDerainPtr
+      .asFunction<
+        ffi.Pointer<TorchRgb8Image> Function(
+          ffi.Pointer<TorchRgb8Image>,
+          ffi.Pointer<ffi.Char>,
+        )
+      >();
 }
 
 final class TorchRgb8Image extends ffi.Struct {
