@@ -14,6 +14,8 @@ dependencies:
     sdk: flutter
   http: ^1.1.2
   logging: ^1.2.0
+  np_common:
+    path: ../np_common
   np_platform_raw_image:
     path: ../np_platform_raw_image
   path_provider: ^2.1.3

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:isolate';
 
+import 'package:np_common/size.dart';
 import 'package:np_ffi_torch/src/method.dart';
 import 'package:np_ffi_torch/src/model_downloader.dart';
 import 'package:np_ffi_torch/src/np_ffi_torch.dart';
@@ -26,6 +27,9 @@ class Derain implements Method {
   Future<bool> isResourceReady() {
     return _modelDownloader.isDownloaded(ModelType.efficientDerain);
   }
+
+  @override
+  SizeInt getMaxSrcSize() => const SizeInt(1536, 1536);
 
   @override
   Future<Rgb8Image?> apply(Rgb8Image src) async {
