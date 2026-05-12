@@ -20,7 +20,8 @@ class JobCanceledException implements Exception {
 enum ModelType {
   realEsrganX4Vk,
   nafnetGopro,
-  efficientDerain;
+  efficientDerain,
+  retouch;
 
   Uri toRemoteUri() {
     return switch (this) {
@@ -36,6 +37,7 @@ enum ModelType {
         "nc-photos.web.app",
         "/link/torch/efficient-derain-spa",
       ),
+      retouch => Uri.https("nc-photos.web.app", "/link/torch/neurop-ppr-a"),
     };
   }
 
@@ -44,6 +46,7 @@ enum ModelType {
       realEsrganX4Vk => File("${root.path}/real-esrgan-x4-vk-1.pte"),
       nafnetGopro => File("${root.path}/nafnet-gopro-32.pte"),
       efficientDerain => File("${root.path}/efficient-derain-spa.pte"),
+      retouch => File("${root.path}/neurop-ppr-a.pte"),
     };
   }
 }

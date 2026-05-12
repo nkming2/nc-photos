@@ -73,6 +73,26 @@ Future<Rgb8Image?> inferEfficientDerain(
   }
 }
 
+Future<Rgb8Image?> inferNeurop(Rgb8Image input, {required String modelPath}) {
+  final cModelPath = modelPath.toNativeUtf8();
+  try {
+    return input.useNative((cInput) {
+      var result = Pointer<ffi.TorchRgb8Image>.fromAddress(0);
+      try {
+        result = _bindings.inferNeurop(cInput, cModelPath.cast());
+        if (result.address == 0) {
+          return null;
+        }
+        return result.ref.toDart();
+      } finally {
+        _bindings.torchRgb8ImageFree(result);
+      }
+    });
+  } finally {
+    malloc.free(cModelPath);
+  }
+}
+
 const String _libName = 'np_ffi_torch';
 
 /// The dynamic library in which the symbols for [NpFfiTorchBindings] can be found.

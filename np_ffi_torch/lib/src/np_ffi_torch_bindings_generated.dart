@@ -108,6 +108,30 @@ class NpFfiTorchBindings {
           ffi.Pointer<ffi.Char>,
         )
       >();
+
+  ffi.Pointer<TorchRgb8Image> inferNeurop(
+    ffi.Pointer<TorchRgb8Image> input,
+    ffi.Pointer<ffi.Char> modelPath,
+  ) {
+    return _inferNeurop(input, modelPath);
+  }
+
+  late final _inferNeuropPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Pointer<TorchRgb8Image> Function(
+            ffi.Pointer<TorchRgb8Image>,
+            ffi.Pointer<ffi.Char>,
+          )
+        >
+      >('inferNeurop');
+  late final _inferNeurop = _inferNeuropPtr
+      .asFunction<
+        ffi.Pointer<TorchRgb8Image> Function(
+          ffi.Pointer<TorchRgb8Image>,
+          ffi.Pointer<ffi.Char>,
+        )
+      >();
 }
 
 final class TorchRgb8Image extends ffi.Struct {

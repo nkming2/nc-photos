@@ -28,6 +28,7 @@ set(CMAKE_BUILD_TYPE "${_saved_build_type}")
 add_library(np_ffi_torch SHARED
   "efficient_derain/efficient_derain.cpp"
   "nafnet/nafnet.cpp"
+  "neurop/neurop.cpp"
   "real_esrgan/real_esrgan.cpp"
   "memory_context.cpp"
   "model_loader.cpp"
