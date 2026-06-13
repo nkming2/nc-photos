@@ -479,15 +479,7 @@ class _Bloc extends Bloc<_Event, _State>
       return;
     }
     emit(
-      state.copyWith(
-        imageEnhancerRequest: Unique(
-          ImageEnhancerArguments(
-            account,
-            f,
-            prefController.isSaveEditResultToServerValue,
-          ),
-        ),
-      ),
+      state.copyWith(imageEnhancerRequest: Unique(ImageEnhancerArguments(f))),
     );
   }
 

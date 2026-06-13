@@ -39,7 +39,7 @@ import 'package:nc_photos/widget/convert_settings/convert_settings.dart';
 import 'package:nc_photos/widget/enhanced_photo_browser.dart';
 import 'package:nc_photos/widget/home/home.dart';
 import 'package:nc_photos/widget/image_editor/image_editor.dart';
-import 'package:nc_photos/widget/image_enhancer.dart';
+import 'package:nc_photos/widget/image_enhancer/image_enhancer.dart';
 import 'package:nc_photos/widget/local_file_viewer.dart';
 import 'package:nc_photos/widget/local_result_viewer/local_result_viewer.dart';
 import 'package:nc_photos/widget/map_browser/map_browser.dart';
