@@ -86,7 +86,7 @@ class _ContentBodyState extends State<_ContentBody> {
           listener: (context, state) {
             if (state.backwardBound != null &&
                 state.forwardBound != null &&
-                state.backwardBound! >= state.forwardBound!) {
+                state.backwardBound! > state.forwardBound!) {
               // no more file
               Navigator.of(context).pop();
             } else if (state.backwardBound != null &&
