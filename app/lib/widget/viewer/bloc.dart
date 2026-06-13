@@ -779,4 +779,5 @@ class _Bloc extends Bloc<_Event, _State>
   final _subscriptions = <StreamSubscription>[];
   StreamSubscription? _collectionItemsSubscription;
   var _isHandlingError = false;
+  var _isPopped = false;
 }
