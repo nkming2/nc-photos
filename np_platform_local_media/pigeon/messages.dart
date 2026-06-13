@@ -36,6 +36,7 @@ abstract class MyHostApi {
   @async
   List<QueryResult> queryFiles({
     List<String>? fileIds,
+    List<String>? platformIdentifiers,
     int? timeRangeBeg,
     bool? isTimeRangeBegInclusive,
     int? timeRangeEnd,

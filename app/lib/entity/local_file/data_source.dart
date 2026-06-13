@@ -29,6 +29,7 @@ class LocalFileMediaStoreDataSource implements LocalFileDataSource {
   @override
   Future<List<LocalFile>> getFiles({
     List<String>? fileIds,
+    List<String>? platformIdentifiers,
     TimeRange? timeRange,
     List<String>? dirWhitelist,
     bool? isAscending,
@@ -38,6 +39,7 @@ class LocalFileMediaStoreDataSource implements LocalFileDataSource {
     _log.info(
       "[getFiles] "
       "fileIds: ${fileIds?.toReadableString(truncate: 10)}, "
+      "platformIdentifiers: ${platformIdentifiers?.toReadableString(truncate: 10)}, "
       "timeRange: $timeRange, "
       "dirWhitelist: $dirWhitelist, "
       "isAscending: $isAscending, "
@@ -48,6 +50,7 @@ class LocalFileMediaStoreDataSource implements LocalFileDataSource {
     Future<List<LocalFile>> queryFiles(Iterable<String>? ids) async {
       final results = await LocalMedia.queryFiles(
         fileIds: ids?.toList(),
+        platformIdentifiers: platformIdentifiers?.toList(),
         timeRange: timeRange,
         dirWhitelist: dirWhitelist,
         isAscending: isAscending,
@@ -58,6 +61,7 @@ class LocalFileMediaStoreDataSource implements LocalFileDataSource {
     }
 
     if (fileIds != null) {
+      // TODO need to include support for platformIdentifiers
       return fileIds.withPartition(queryFiles, 30000);
     } else {
       return queryFiles(fileIds);

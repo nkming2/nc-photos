@@ -20,6 +20,7 @@ class LocalFileRepo {
   /// See [LocalFileDataSource.getFiles]
   Future<List<LocalFile>> getFiles({
     List<String>? fileIds,
+    List<String>? platformIdentifiers,
     TimeRange? timeRange,
     List<String>? dirWhitelist,
     bool? isAscending,
@@ -27,6 +28,7 @@ class LocalFileRepo {
     int? limit,
   }) => dataSrc.getFiles(
     fileIds: fileIds,
+    platformIdentifiers: platformIdentifiers,
     timeRange: timeRange,
     dirWhitelist: dirWhitelist,
     isAscending: isAscending,
@@ -77,6 +79,7 @@ abstract class LocalFileDataSource {
   /// Returned files are sorted by time in descending order
   Future<List<LocalFile>> getFiles({
     List<String>? fileIds,
+    List<String>? platformIdentifiers,
     TimeRange? timeRange,
     List<String>? dirWhitelist,
     bool? isAscending,

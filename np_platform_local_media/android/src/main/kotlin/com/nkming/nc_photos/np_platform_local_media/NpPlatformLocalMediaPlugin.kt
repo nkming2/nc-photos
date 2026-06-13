@@ -195,6 +195,7 @@ private class PigeonApiImpl : MyHostApi, ActivityAware, PluginRegistry.ActivityR
 
     override fun queryFiles(
         fileIds: List<String>?,
+        platformIdentifiers: List<String>?,
         timeRangeBeg: Long?,
         isTimeRangeBegInclusive: Boolean?,
         timeRangeEnd: Long?,
@@ -223,6 +224,12 @@ private class PigeonApiImpl : MyHostApi, ActivityAware, PluginRegistry.ActivityR
             )
             return
         }
+        var fileIdsSet = fileIds?.toMutableSet()
+        if (platformIdentifiers != null) {
+            fileIdsSet = fileIdsSet ?: mutableSetOf()
+            fileIdsSet.addAll(
+                platformIdentifiers.map { ContentUris.parseId(it.toUri()).toString() })
+        }
         launch(Dispatchers.IO) {
             try {
                 val wheres = mutableListOf<String>()
@@ -230,8 +237,8 @@ private class PigeonApiImpl : MyHostApi, ActivityAware, PluginRegistry.ActivityR
                 wheres.add(
                     "(${MediaStore.Files.FileColumns.MEDIA_TYPE}=${MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE} OR ${MediaStore.Files.FileColumns.MEDIA_TYPE}=${MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO})"
                 )
-                if (fileIds != null) {
-                    val args = fileIds.joinToString(",", transform = { it.toString() })
+                if (fileIdsSet != null) {
+                    val args = fileIdsSet.joinToString(",", transform = { it.toString() })
                     wheres.add("${MediaStore.MediaColumns._ID} IN (${args})")
                 }
                 if (timeRangeBeg != null) {
