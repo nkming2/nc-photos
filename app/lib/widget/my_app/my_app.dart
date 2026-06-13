@@ -28,6 +28,7 @@ import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/album_dir_picker.dart';
 import 'package:nc_photos/widget/album_importer.dart';
 import 'package:nc_photos/widget/album_share_outlier_browser.dart';
+import 'package:nc_photos/widget/anyfile_list_viewer/anyfile_list_viewer.dart';
 import 'package:nc_photos/widget/archive_browser/archive_browser.dart';
 import 'package:nc_photos/widget/changelog/changelog.dart';
 import 'package:nc_photos/widget/collection_browser/collection_browser.dart';
@@ -266,6 +267,7 @@ class _WrappedAppState extends State<_WrappedApp>
     route ??= _handleCollectionViewerRoute(settings);
     route ??= _handleUploadFolderPickerRoute(settings);
     route ??= _handleLocalResultViewerRoute(settings);
+    route ??= _handleAnyFileListViewerRoute(settings);
     return route;
   }
 
@@ -646,6 +648,22 @@ class _WrappedAppState extends State<_WrappedApp>
     } catch (e) {
       _log.severe(
         "[_handleLocalResultViewerRoute] Failed while handling route",
+        e,
+      );
+    }
+    return null;
+  }
+
+  Route<dynamic>? _handleAnyFileListViewerRoute(RouteSettings settings) {
+    try {
+      if (settings.name == AnyFileListViewer.routeName &&
+          settings.arguments != null) {
+        final args = settings.arguments as AnyFileListViewerArguments;
+        return AnyFileListViewer.buildRoute(args, settings);
+      }
+    } catch (e) {
+      _log.severe(
+        "[_handleAnyFileListViewerRoute] Failed while handling route",
         e,
       );
     }
