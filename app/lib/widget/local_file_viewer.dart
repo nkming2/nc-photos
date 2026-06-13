@@ -15,6 +15,7 @@ import 'package:np_log/np_log.dart';
 
 part 'local_file_viewer.g.dart';
 
+@Deprecated("For legacy photo enhancer only")
 class LocalFileViewerArguments {
   LocalFileViewerArguments(this.streamFiles, this.startIndex);
 
@@ -22,6 +23,7 @@ class LocalFileViewerArguments {
   final int startIndex;
 }
 
+@Deprecated("For legacy photo enhancer only")
 class LocalFileViewer extends StatefulWidget {
   static const routeName = "/local-file-viewer";
 
