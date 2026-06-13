@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:circular_reveal_animation/circular_reveal_animation.dart';
 import 'package:copy_with/copy_with.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -33,6 +34,7 @@ import 'package:workmanager/workmanager.dart';
 part 'bloc.dart';
 part 'dialog.dart';
 part 'image_enhancer.g.dart';
+part 'showcase.dart';
 part 'state_event.dart';
 part 'type.dart';
 
@@ -210,30 +212,6 @@ class _Body extends StatelessWidget {
       ],
     );
   }
-}
-
-class _MethodShowcase extends StatefulWidget {
-  const _MethodShowcase();
-
-  @override
-  State<StatefulWidget> createState() => _MethodShowcaseState();
-}
-
-class _MethodShowcaseState extends State<_MethodShowcase> {
-  @override
-  Widget build(BuildContext context) {
-    return PageView.builder(
-      controller: _pageController,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: _Method.values.length,
-      itemBuilder: (context, i) {
-        final m = _Method.values[i];
-        return Padding(padding: const EdgeInsets.all(48), child: Text(m.name));
-      },
-    );
-  }
-
-  late final _pageController = PageController(keepPage: false);
 }
 
 class _MethodSelector extends StatelessWidget {
