@@ -74,7 +74,7 @@ class AnyFileNextcloudLocalFileUriGetter implements AnyFileLocalFileUriGetter {
   }) : _provider = file.provider as AnyFileNextcloudProvider;
 
   @override
-  Future<Uri> get() async {
+  Future<Uri> get({void Function(double progress)? onProgress}) async {
     if (isPublic) {
       await const PermissionHandler().ensureStorageWritePermission();
     }
@@ -84,6 +84,7 @@ class AnyFileNextcloudLocalFileUriGetter implements AnyFileLocalFileUriGetter {
         _provider.file,
         isPublic: isPublic,
         shouldNotify: false,
+        onProgress: onProgress,
       ),
     );
   }
