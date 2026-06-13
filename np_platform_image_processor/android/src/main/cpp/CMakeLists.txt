@@ -37,10 +37,8 @@ add_library( # Sets the name of the library.
              core/filter/saturation.cpp
              arbitrary_style_transfer.cpp
              deep_lap_3.cpp
-             esrgan.cpp
              exception.cpp
              image_splitter.cpp
-             neur_op.cpp
              stopwatch.cpp
              tflite_wrapper.cpp
              util.cpp

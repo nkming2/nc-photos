@@ -48,22 +48,6 @@ class ImageProcessor {
     "isSaveToServer": isSaveToServer,
   });
 
-  static Future<void> esrgan(
-    Uri fileUri,
-    String filename,
-    int maxWidth,
-    int maxHeight, {
-    Map<String, String>? headers,
-    required bool isSaveToServer,
-  }) => _methodChannel.invokeMethod("esrgan", <String, dynamic>{
-    "fileUri": fileUri.toString(),
-    "headers": headers,
-    "filename": filename,
-    "maxWidth": maxWidth,
-    "maxHeight": maxHeight,
-    "isSaveToServer": isSaveToServer,
-  });
-
   static Future<void> arbitraryStyleTransfer(
     Uri fileUri,
     String filename,
@@ -99,22 +83,6 @@ class ImageProcessor {
     "maxWidth": maxWidth,
     "maxHeight": maxHeight,
     "weight": weight,
-    "isSaveToServer": isSaveToServer,
-  });
-
-  static Future<void> neurOp(
-    Uri fileUri,
-    String filename,
-    int maxWidth,
-    int maxHeight, {
-    Map<String, String>? headers,
-    required bool isSaveToServer,
-  }) => _methodChannel.invokeMethod("neurOp", <String, dynamic>{
-    "fileUri": fileUri.toString(),
-    "headers": headers,
-    "filename": filename,
-    "maxWidth": maxWidth,
-    "maxHeight": maxHeight,
     "isSaveToServer": isSaveToServer,
   });
 

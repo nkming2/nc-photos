@@ -227,21 +227,6 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
         );
         break;
 
-      case _Algorithm.esrgan:
-        await ImageProcessor.esrgan(
-          await uriGetter.get(),
-          widget.file.name,
-          _c.pref.getEnhanceMaxWidthOr(),
-          _c.pref.getEnhanceMaxHeightOr(),
-          headers: {
-            "Authorization": AuthUtil.fromAccount(
-              widget.account,
-            ).toHeaderValue(),
-          },
-          isSaveToServer: widget.isSaveToServer,
-        );
-        break;
-
       case _Algorithm.arbitraryStyleTransfer:
         await ImageProcessor.arbitraryStyleTransfer(
           await uriGetter.get(),
@@ -272,21 +257,6 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
           _c.pref.getEnhanceMaxWidthOr(),
           _c.pref.getEnhanceMaxHeightOr(),
           args["weight"],
-          headers: {
-            "Authorization": AuthUtil.fromAccount(
-              widget.account,
-            ).toHeaderValue(),
-          },
-          isSaveToServer: widget.isSaveToServer,
-        );
-        break;
-
-      case _Algorithm.neurOp:
-        await ImageProcessor.neurOp(
-          await uriGetter.get(),
-          widget.file.name,
-          _c.pref.getEnhanceMaxWidthOr(),
-          _c.pref.getEnhanceMaxHeightOr(),
           headers: {
             "Authorization": AuthUtil.fromAccount(
               widget.account,
@@ -377,17 +347,11 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
       case _Algorithm.deepLab3Portrait:
         return _getDeepLab3PortraitArgs(context);
 
-      case _Algorithm.esrgan:
-        return {};
-
       case _Algorithm.arbitraryStyleTransfer:
         return _getArbitraryStyleTransferArgs(context);
 
       case _Algorithm.deepLab3ColorPop:
         return _getDeepLab3ColorPopArgs(context);
-
-      case _Algorithm.neurOp:
-        return {};
     }
   }
 
@@ -550,13 +514,6 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
   late final _options = [
     if (getRawPlatform() == NpPlatform.android) ...[
       _Option(
-        title: L10n.global().enhanceRetouchTitle,
-        description: L10n.global().enhanceRetouchDescription,
-        link: enhanceRetouchUrl,
-        showcaseBuilder: (_) => const _RetouchShowcase(),
-        algorithm: _Algorithm.neurOp,
-      ),
-      _Option(
         title: L10n.global().enhanceColorPopTitle,
         description: L10n.global().enhanceColorPopDescription,
         link: enhanceDeepLabColorPopUrl,
@@ -577,13 +534,6 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
         showcaseBuilder: (_) => const _PortraitBlurShowcase(),
         algorithm: _Algorithm.deepLab3Portrait,
       ),
-      _Option(
-        title: L10n.global().enhanceSuperResolution4xTitle,
-        description: L10n.global().enhanceSuperResolution4xDescription,
-        link: enhanceEsrganUrl,
-        showcaseBuilder: (_) => const _SuperResolutionShowcase(),
-        algorithm: _Algorithm.esrgan,
-      ),
       if (_isAtLeast4GbRam())
         _Option(
           title: L10n.global().enhanceStyleTransferTitle,
@@ -603,10 +553,8 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
 enum _Algorithm {
   zeroDce,
   deepLab3Portrait,
-  esrgan,
   arbitraryStyleTransfer,
   deepLab3ColorPop,
-  neurOp,
 }
 
 class _Option {
@@ -690,37 +638,6 @@ mixin _ShowcaseStateMixin<T extends StatefulWidget>
   late final Animation<double> anim = CurvedAnimation(
     parent: animController,
     curve: Curves.easeIn,
-  );
-}
-
-class _RetouchShowcase extends StatefulWidget {
-  const _RetouchShowcase();
-
-  @override
-  createState() => _RetouchShowcaseState();
-}
-
-class _RetouchShowcaseState extends State<_RetouchShowcase>
-    with TickerProviderStateMixin, _ShowcaseStateMixin {
-  @override
-  build(BuildContext context) => Stack(
-    fit: StackFit.expand,
-    children: [
-      Image.asset(
-        "assets/retouch0.jpg",
-        fit: BoxFit.contain,
-        gaplessPlayback: true,
-      ),
-      CircularRevealAnimation(
-        animation: anim,
-        centerAlignment: Alignment.bottomCenter,
-        child: Image.asset(
-          "assets/retouch1.jpg",
-          fit: BoxFit.contain,
-          gaplessPlayback: true,
-        ),
-      ),
-    ],
   );
 }
 
@@ -809,37 +726,6 @@ class _PortraitBlurShowcaseState extends State<_PortraitBlurShowcase>
         centerAlignment: Alignment.bottomCenter,
         child: Image.asset(
           "assets/portrait-blur1.jpg",
-          fit: BoxFit.contain,
-          gaplessPlayback: true,
-        ),
-      ),
-    ],
-  );
-}
-
-class _SuperResolutionShowcase extends StatefulWidget {
-  const _SuperResolutionShowcase();
-
-  @override
-  createState() => _SuperResolutionShowcaseState();
-}
-
-class _SuperResolutionShowcaseState extends State<_SuperResolutionShowcase>
-    with TickerProviderStateMixin, _ShowcaseStateMixin {
-  @override
-  build(BuildContext context) => Stack(
-    fit: StackFit.expand,
-    children: [
-      Image.asset(
-        "assets/super-resolution0.jpg",
-        fit: BoxFit.contain,
-        gaplessPlayback: true,
-      ),
-      CircularRevealAnimation(
-        animation: anim,
-        centerAlignment: Alignment.bottomCenter,
-        child: Image.asset(
-          "assets/super-resolution1.jpg",
           fit: BoxFit.contain,
           gaplessPlayback: true,
         ),

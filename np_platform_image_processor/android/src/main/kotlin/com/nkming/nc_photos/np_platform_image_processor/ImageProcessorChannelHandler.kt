@@ -65,21 +65,6 @@ internal class ImageProcessorChannelHandler(context: Context) :
 				}
 			}
 
-			"esrgan" -> {
-				try {
-					esrgan(
-						call.argument("fileUri")!!, call.argument("headers"),
-						call.argument("filename")!!,
-						call.argument("maxWidth")!!,
-						call.argument("maxHeight")!!,
-						call.argument<Boolean>("isSaveToServer")!!, result
-					)
-				} catch (e: Throwable) {
-					logE(TAG, "Uncaught exception", e)
-					result.error("systemException", e.toString(), null)
-				}
-			}
-
 			"arbitraryStyleTransfer" -> {
 				try {
 					arbitraryStyleTransfer(
@@ -106,21 +91,6 @@ internal class ImageProcessorChannelHandler(context: Context) :
 						call.argument("maxHeight")!!,
 						call.argument<Boolean>("isSaveToServer")!!,
 						call.argument("weight")!!, result
-					)
-				} catch (e: Throwable) {
-					logE(TAG, "Uncaught exception", e)
-					result.error("systemException", e.toString(), null)
-				}
-			}
-
-			"neurOp" -> {
-				try {
-					neurOp(
-						call.argument("fileUri")!!, call.argument("headers"),
-						call.argument("filename")!!,
-						call.argument("maxWidth")!!,
-						call.argument("maxHeight")!!,
-						call.argument<Boolean>("isSaveToServer")!!, result
 					)
 				} catch (e: Throwable) {
 					logE(TAG, "Uncaught exception", e)
@@ -162,15 +132,6 @@ internal class ImageProcessorChannelHandler(context: Context) :
 			it.putExtra(ImageProcessorService.EXTRA_RADIUS, radius)
 		})
 
-	private fun esrgan(
-		fileUri: String, headers: Map<String, String>?, filename: String,
-		maxWidth: Int, maxHeight: Int, isSaveToServer: Boolean,
-		result: MethodChannel.Result
-	) = method(
-		fileUri, headers, filename, maxWidth, maxHeight, isSaveToServer,
-		ImageProcessorService.METHOD_ESRGAN, result
-	)
-
 	private fun arbitraryStyleTransfer(
 		fileUri: String, headers: Map<String, String>?, filename: String,
 		maxWidth: Int, maxHeight: Int, isSaveToServer: Boolean,
@@ -192,15 +153,6 @@ internal class ImageProcessorChannelHandler(context: Context) :
 		ImageProcessorService.METHOD_DEEP_LAP_COLOR_POP, result, onIntent = {
 			it.putExtra(ImageProcessorService.EXTRA_WEIGHT, weight)
 		})
-
-	private fun neurOp(
-		fileUri: String, headers: Map<String, String>?, filename: String,
-		maxWidth: Int, maxHeight: Int, isSaveToServer: Boolean,
-		result: MethodChannel.Result
-	) = method(
-		fileUri, headers, filename, maxWidth, maxHeight, isSaveToServer,
-		ImageProcessorService.METHOD_NEUR_OP, result
-	)
 
 	private fun method(
 		fileUri: String, headers: Map<String, String>?, filename: String,

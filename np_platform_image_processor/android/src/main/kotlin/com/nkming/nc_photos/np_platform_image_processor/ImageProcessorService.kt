@@ -36,10 +36,8 @@ internal class ImageProcessorService : Service() {
 		const val EXTRA_METHOD = "method"
 		const val METHOD_ZERO_DCE = "zero-dce"
 		const val METHOD_DEEP_LAP_PORTRAIT = "DeepLab3Portrait"
-		const val METHOD_ESRGAN = "Esrgan"
 		const val METHOD_ARBITRARY_STYLE_TRANSFER = "ArbitraryStyleTransfer"
 		const val METHOD_DEEP_LAP_COLOR_POP = "DeepLab3ColorPop"
-		const val METHOD_NEUR_OP = "NeurOp"
 		const val EXTRA_FILE_URI = "fileUri"
 		const val EXTRA_HEADERS = "headers"
 		const val EXTRA_FILENAME = "filename"
@@ -126,7 +124,6 @@ internal class ImageProcessorService : Service() {
 				startId, intent.extras!!
 			)
 
-			METHOD_ESRGAN -> onEsrgan(startId, intent.extras!!)
 			METHOD_ARBITRARY_STYLE_TRANSFER -> onArbitraryStyleTransfer(
 				startId, intent.extras!!
 			)
@@ -135,7 +132,6 @@ internal class ImageProcessorService : Service() {
 				startId, intent.extras!!
 			)
 
-			METHOD_NEUR_OP -> onNeurOp(startId, intent.extras!!)
 			else -> {
 				logE(TAG, "Unknown method: $method")
 				// we can't call stopSelf here as it'll stop the service even if
@@ -167,11 +163,6 @@ internal class ImageProcessorService : Service() {
 		})
 	}
 
-	private fun onEsrgan(startId: Int, extras: Bundle) {
-		return onMethod(
-			startId, extras, { params -> ImageProcessorEsrganCommand(params) })
-	}
-
 	private fun onArbitraryStyleTransfer(startId: Int, extras: Bundle) {
 		return onMethod(startId, extras, { params ->
 			ImageProcessorArbitraryStyleTransferCommand(
@@ -189,12 +180,6 @@ internal class ImageProcessorService : Service() {
 					params, extras.getFloat(EXTRA_WEIGHT)
 				)
 			},
-		)
-	}
-
-	private fun onNeurOp(startId: Int, extras: Bundle) {
-		return onMethod(
-			startId, extras, { params -> ImageProcessorNeurOpCommand(params) },
 		)
 	}
 

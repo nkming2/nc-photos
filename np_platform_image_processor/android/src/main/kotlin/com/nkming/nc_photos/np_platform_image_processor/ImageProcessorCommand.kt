@@ -6,8 +6,6 @@ import android.net.Uri
 import com.nkming.nc_photos.np_platform_image_processor.processor.ArbitraryStyleTransfer
 import com.nkming.nc_photos.np_platform_image_processor.processor.DeepLab3ColorPop
 import com.nkming.nc_photos.np_platform_image_processor.processor.DeepLab3Portrait
-import com.nkming.nc_photos.np_platform_image_processor.processor.Esrgan
-import com.nkming.nc_photos.np_platform_image_processor.processor.NeurOp
 import com.nkming.nc_photos.np_platform_image_processor.processor.ZeroDce
 
 interface ImageProcessorCommand
@@ -80,16 +78,6 @@ class ImageProcessorDeepLapPortraitCommand(
 	override fun isEnhanceCommand() = true
 }
 
-class ImageProcessorEsrganCommand(
-	params: Params,
-) : ImageProcessorImageCommand(params) {
-	override fun apply(context: Context, fileUri: Uri): Bitmap {
-		return Esrgan(context, maxWidth, maxHeight).infer(fileUri)
-	}
-
-	override fun isEnhanceCommand() = true
-}
-
 class ImageProcessorArbitraryStyleTransferCommand(
 	params: Params,
 	val styleUri: Uri,
@@ -112,16 +100,6 @@ class ImageProcessorDeepLapColorPopCommand(
 		return DeepLab3ColorPop(
 			context, maxWidth, maxHeight, weight
 		).infer(fileUri)
-	}
-
-	override fun isEnhanceCommand() = true
-}
-
-class ImageProcessorNeurOpCommand(
-	params: Params,
-) : ImageProcessorImageCommand(params) {
-	override fun apply(context: Context, fileUri: Uri): Bitmap {
-		return NeurOp(context, maxWidth, maxHeight).infer(fileUri)
 	}
 
 	override fun isEnhanceCommand() = true
