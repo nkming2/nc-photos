@@ -19,6 +19,7 @@ import 'package:nc_photos/l10n/app_localizations.dart';
 import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/mobile/self_signed_cert_manager.dart';
 import 'package:nc_photos/navigation_manager.dart';
+import 'package:nc_photos/navigator_util.dart';
 import 'package:nc_photos/platform/features.dart';
 import 'package:nc_photos/protected_page_handler.dart';
 import 'package:nc_photos/session_storage.dart';
@@ -143,6 +144,16 @@ class _WrappedAppState extends State<_WrappedApp>
     NavigationManager().setHandler(this);
 
     _bloc.add(const _Init());
+
+    InterruptPageHandler().stream.listen((ev) {
+      final navigator = getNavigator();
+      if (navigator == null) {
+        _log.severe("[initState] No context");
+        return;
+      }
+      _log.info("[initState] Interrupt app with new page: $ev");
+      navigator.pushNamed(ev.name, arguments: ev.arguments);
+    });
   }
 
   @override
