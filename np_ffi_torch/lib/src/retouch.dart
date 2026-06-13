@@ -10,7 +10,7 @@ import 'package:np_platform_raw_image/np_platform_raw_image.dart';
 class Retouch implements Method {
   @override
   Future<void> prepareResource({
-    void Function(double progress)? onProgress,
+    void Function(double progress, int size)? onProgress,
   }) async {
     await _modelDownloader.download(ModelType.retouch, onProgress: onProgress);
   }

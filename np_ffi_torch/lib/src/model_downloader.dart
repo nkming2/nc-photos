@@ -60,7 +60,7 @@ class ModelDownloader {
 
   Future<File> download(
     ModelType model, {
-    void Function(double progress)? onProgress,
+    void Function(double progress, int size)? onProgress,
   }) async {
     final dir = await _openDir();
     final modelFile = model.toLocalFile(dir);
@@ -108,7 +108,7 @@ class ModelDownloader {
   Future<void> _downloadHttp({
     required Uri from,
     required File to,
-    void Function(double progress)? onProgress,
+    void Function(double progress, int size)? onProgress,
   }) async {
     final temp = File("${to.path}.tmp");
     if (await temp.exists()) {
@@ -129,7 +129,7 @@ class ModelDownloader {
             fileWrite.add(value);
             received += value.length;
             if (size != null && size > 0) {
-              onProgress?.call((received / size).clamp(0, 1));
+              onProgress?.call((received / size).clamp(0, 1), size);
             }
           },
           onDone: () {
