@@ -21,12 +21,7 @@ class FindLocalFile {
     _log.info(
       "[call] fileIds: (length: ${fileIds.length}) ${fileIds.toReadableString(truncate: 10)}...",
     );
-    final List<LocalFile> rawFiles;
-    if (prefController.isEnableLocalFileValue) {
-      rawFiles = await localFileRepo.getFiles(fileIds: fileIds);
-    } else {
-      rawFiles = const [];
-    }
+    final rawFiles = await localFileRepo.getFiles(fileIds: fileIds);
     final fileMap = <String, LocalFile>{};
     for (final f in rawFiles) {
       fileMap[f.id] = f;
