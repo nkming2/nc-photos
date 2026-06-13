@@ -39,6 +39,7 @@ import 'package:nc_photos/widget/convert_settings/convert_settings.dart';
 import 'package:nc_photos/widget/enhanced_photo_browser.dart';
 import 'package:nc_photos/widget/home/home.dart';
 import 'package:nc_photos/widget/image_editor/image_editor.dart';
+import 'package:nc_photos/widget/image_enhancer.dart' as legacy;
 import 'package:nc_photos/widget/image_enhancer/image_enhancer.dart';
 import 'package:nc_photos/widget/local_file_viewer.dart';
 import 'package:nc_photos/widget/local_result_viewer/local_result_viewer.dart';
@@ -260,6 +261,7 @@ class _WrappedAppState extends State<_WrappedApp>
     route ??= _handleChangelogRoute(settings);
     route ??= _handleResultViewerRoute(settings);
     route ??= _handleImageEnhancerRoute(settings);
+    route ??= _handleLegacyImageEnhancerRoute(settings);
     route ??= _handleCollectionBrowserRoute(settings);
     route ??= _handleAccountSettingsRoute(settings);
     route ??= _handlePlacePickerRoute(settings);
@@ -542,6 +544,22 @@ class _WrappedAppState extends State<_WrappedApp>
       }
     } catch (e) {
       _log.severe("[_handleImageEnhancerRoute] Failed while handling route", e);
+    }
+    return null;
+  }
+
+  Route<dynamic>? _handleLegacyImageEnhancerRoute(RouteSettings settings) {
+    try {
+      if (settings.name == legacy.ImageEnhancer.routeName &&
+          settings.arguments != null) {
+        final args = settings.arguments as legacy.ImageEnhancerArguments;
+        return legacy.ImageEnhancer.buildRoute(args, settings);
+      }
+    } catch (e) {
+      _log.severe(
+        "[_handleLegacyImageEnhancerRoute] Failed while handling route",
+        e,
+      );
     }
     return null;
   }

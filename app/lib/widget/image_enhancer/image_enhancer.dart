@@ -11,6 +11,7 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc_util.dart';
 import 'package:nc_photos/controller/account_controller.dart';
+import 'package:nc_photos/controller/pref_controller.dart';
 import 'package:nc_photos/di_container.dart';
 import 'package:nc_photos/entity/any_file/any_file.dart';
 import 'package:nc_photos/entity/any_file/content/factory.dart';
@@ -27,6 +28,7 @@ import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/widget/handler/permission_handler.dart';
 import 'package:nc_photos/widget/image_editor_persist_option_dialog.dart';
+import 'package:nc_photos/widget/image_enhancer.dart' as legacy;
 import 'package:np_log/np_log.dart';
 import 'package:to_string/to_string.dart';
 import 'package:workmanager/workmanager.dart';
@@ -227,8 +229,27 @@ class _MethodSelector extends StatelessWidget {
             horizontal: constraints.maxWidth / 2 - 80,
           ),
           scrollDirection: Axis.horizontal,
-          itemCount: _Method.values.length,
+          itemCount: _Method.values.length + 1,
           itemBuilder: (context, index) {
+            if (index >= _Method.values.length) {
+              return _MethodOptionView(
+                // TODO string
+                title: "Legacy",
+                isSelected: false,
+                onTap: () {
+                  Navigator.of(context).pushNamed(
+                    legacy.ImageEnhancer.routeName,
+                    arguments: legacy.ImageEnhancerArguments(
+                      context.bloc.account,
+                      context.bloc.file,
+                      context
+                          .read<PrefController>()
+                          .isSaveEditResultToServerValue,
+                    ),
+                  );
+                },
+              );
+            }
             final m = _Method.values[index];
             return _BlocSelector(
               selector: (state) => state.selectedMethod,

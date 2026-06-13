@@ -45,7 +45,7 @@ class ImageEnhancerArguments {
 }
 
 class ImageEnhancer extends StatefulWidget {
-  static const routeName = "/image-enhancer";
+  static const routeName = "/legacy-image-enhancer";
 
   static Route buildRoute(
     ImageEnhancerArguments args,
@@ -100,7 +100,9 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
         systemNavigationBarColor: Colors.black,
         systemNavigationBarIconBrightness: Brightness.dark,
       ),
-      child: Scaffold(body: Builder(builder: _buildContent)),
+      child: Scaffold(
+        body: SafeArea(child: Builder(builder: _buildContent)),
+      ),
     ),
   );
 
