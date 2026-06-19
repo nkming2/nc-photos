@@ -36,6 +36,7 @@ import 'package:nc_photos/widget/collection_picker/collection_picker.dart';
 import 'package:nc_photos/widget/collection_viewer/collection_viewer.dart';
 import 'package:nc_photos/widget/connect2/connect.dart';
 import 'package:nc_photos/widget/convert_settings/convert_settings.dart';
+import 'package:nc_photos/widget/enhance_result_viewer/enhance_result_viewer.dart';
 import 'package:nc_photos/widget/enhanced_photo_browser.dart';
 import 'package:nc_photos/widget/home/home.dart';
 import 'package:nc_photos/widget/image_editor/image_editor.dart';
@@ -270,6 +271,7 @@ class _WrappedAppState extends State<_WrappedApp>
     route ??= _handleUploadFolderPickerRoute(settings);
     route ??= _handleLocalResultViewerRoute(settings);
     route ??= _handleAnyFileListViewerRoute(settings);
+    route ??= _handleEnhanceResultViewerRoute(settings);
     return route;
   }
 
@@ -682,6 +684,22 @@ class _WrappedAppState extends State<_WrappedApp>
     } catch (e) {
       _log.severe(
         "[_handleAnyFileListViewerRoute] Failed while handling route",
+        e,
+      );
+    }
+    return null;
+  }
+
+  Route<dynamic>? _handleEnhanceResultViewerRoute(RouteSettings settings) {
+    try {
+      if (settings.name == EnhanceResultViewer.routeName &&
+          settings.arguments != null) {
+        final args = settings.arguments as EnhanceResultViewerArguments;
+        return EnhanceResultViewer.buildRoute(args, settings);
+      }
+    } catch (e) {
+      _log.severe(
+        "[_handleEnhanceResultViewerRoute] Failed while handling route",
         e,
       );
     }

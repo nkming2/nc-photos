@@ -13,7 +13,6 @@ import 'package:nc_photos/entity/album.dart';
 import 'package:nc_photos/entity/album/data_source.dart';
 import 'package:nc_photos/entity/album/data_source2.dart';
 import 'package:nc_photos/entity/album/repo2.dart';
-import 'package:nc_photos/entity/any_file/any_file.dart';
 import 'package:nc_photos/entity/face_recognition_person/data_source.dart';
 import 'package:nc_photos/entity/face_recognition_person/repo.dart';
 import 'package:nc_photos/entity/favorite.dart';
@@ -52,7 +51,7 @@ import 'package:nc_photos/navigator_util.dart';
 import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/touch_manager.dart';
-import 'package:nc_photos/widget/anyfile_list_viewer/anyfile_list_viewer.dart';
+import 'package:nc_photos/widget/enhance_result_viewer/enhance_result_viewer.dart';
 import 'package:nc_photos/work_manager.dart';
 import 'package:np_db/np_db.dart';
 import 'package:np_gps_map/np_gps_map.dart';
@@ -290,24 +289,12 @@ Future<void> initLocalNotification() {
         final j = jsonDecode(payload);
         if (j["action"] ==
             ImageEnhancerAndroidConstant.resultNotificationAction) {
-          final platformIdentifier = j["platformIdentifier"] as String;
-          final c = KiwiContainer().resolve<DiContainer>();
-          final result = await c.localFileRepo.getFiles(
-            platformIdentifiers: [platformIdentifier],
-          );
-          if (result.isEmpty) {
-            _log.severe(
-              "[initLocalNotification] Failed to query file for: $platformIdentifier",
-            );
-            return;
-          }
+          final persistResult = j["persistResult"] as String;
           InterruptPageHandler().pushRoute(
             InterruptPageRoute(
-              name: AnyFileListViewer.routeName,
-              arguments: AnyFileListViewerArguments(
-                files: [
-                  AnyFile(provider: AnyFileLocalProvider(file: result[0])),
-                ],
+              name: EnhanceResultViewer.routeName,
+              arguments: EnhanceResultViewerArguments(
+                persistResult: persistResult,
               ),
             ),
           );
