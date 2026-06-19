@@ -2,7 +2,11 @@ part of 'image_enhancer.dart';
 
 @npLog
 class _IeBloc extends Bloc<_Event, _State> with BlocLogger {
-  _IeBloc({required this.account, required this.file}) : super(_State.init()) {
+  _IeBloc({
+    required this.prefController,
+    required this.account,
+    required this.file,
+  }) : super(_State.init()) {
     on<_Apply>(_onApply);
     on<_Help>(_onHelp);
     on<_SelectMethod>(_onSelectMethod);
@@ -97,6 +101,30 @@ class _IeBloc extends Bloc<_Event, _State> with BlocLogger {
       emit(state.copyWith(saveState: null, downloadProgress: 0));
       return;
     }
+    ImageEnhancerServerPersistenceInfo? uploadInfo;
+    if (prefController.isSaveEditResultToServerValue) {
+      final remoteFile = switch (file.provider) {
+        AnyFileNextcloudProvider _ =>
+          (file.provider as AnyFileNextcloudProvider).file,
+        AnyFileLocalProvider _ => null,
+        AnyFileMergedProvider _ =>
+          (file.provider as AnyFileMergedProvider).remote.file,
+      };
+      if (remoteFile != null) {
+        final origPath = remoteFile.fdPath;
+        final epoch = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+        final dirName = path_lib.dirname(origPath);
+        final dstPath =
+            "${dirName == "." ? "" : "$dirName/"}${path_lib.basenameWithoutExtension(origPath)}_enhanced_$epoch.jpg";
+        uploadInfo = ImageEnhancerServerPersistenceInfo(
+          baseUrl: account.url,
+          endpoint: dstPath,
+          headers: {
+            "Authorization": AuthUtil.fromAccount(account).toHeaderValue(),
+          },
+        );
+      }
+    }
     unawaited(
       Workmanager().registerOneOffTask(
         "image-enhancer",
@@ -107,6 +135,7 @@ class _IeBloc extends Bloc<_Event, _State> with BlocLogger {
           type: taskType,
           platformIdentifier: uri.toString(),
           filename: file.name,
+          uploadInfo: uploadInfo,
         ),
         // reuse the legacy one defined in ImageProcessorService
         androidForegroundInfo: AndroidForegroundInfo(
@@ -150,6 +179,7 @@ class _IeBloc extends Bloc<_Event, _State> with BlocLogger {
     emit(state.copyWith(applyError: ExceptionEvent(ev.error, ev.stackTrace)));
   }
 
+  final PrefController prefController;
   final Account account;
   final AnyFile file;
 

@@ -68,12 +68,26 @@ enum InitIsolateType {
   /// Isolates with Flutter engine, e.g., those spawned by flutter_isolate or
   /// flutter_background_service
   flutterIsolate,
+  imageEnhancerTask,
+}
+
+Future<void> _initImageEnhancerTask() async {
+  initLog();
+  await _initPref();
+  await initHttp(
+    appVersion: k.versionStr,
+    isNewHttpEngine: Pref().isNewHttpEngine() ?? false,
+  );
+  await initLocalNotification();
 }
 
 Future<void> init(InitIsolateType isolateType) async {
   if (_hasInitedInThisIsolate) {
     _log.warning("[init] Already initialized in this isolate");
     return;
+  }
+  if (isolateType == InitIsolateType.imageEnhancerTask) {
+    return _initImageEnhancerTask();
   }
 
   initLog();

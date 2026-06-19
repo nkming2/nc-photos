@@ -23,6 +23,7 @@ import 'package:nc_photos/help_utils.dart' as help_util;
 import 'package:nc_photos/image_enhancer_task.dart';
 import 'package:nc_photos/image_enhancer_util.dart';
 import 'package:nc_photos/k.dart' as k;
+import 'package:nc_photos/np_api_util.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/url_launcher_util.dart';
@@ -30,6 +31,7 @@ import 'package:nc_photos/widget/handler/permission_handler.dart';
 import 'package:nc_photos/widget/image_editor_persist_option_dialog.dart';
 import 'package:nc_photos/widget/image_enhancer.dart' as legacy;
 import 'package:np_log/np_log.dart';
+import 'package:path/path.dart' as path_lib;
 import 'package:to_string/to_string.dart';
 import 'package:workmanager/workmanager.dart';
 
@@ -69,6 +71,7 @@ class ImageEnhancer extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => _IeBloc(
+        prefController: context.read(),
         account: context.read<AccountController>().account,
         file: file,
       ),

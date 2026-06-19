@@ -9,6 +9,8 @@ import 'package:image/image.dart' as imagelib;
 import 'package:logging/logging.dart';
 import 'package:nc_photos/app_init.dart' as app_init;
 import 'package:nc_photos/image_enhancer_util.dart';
+import 'package:np_api/np_api.dart';
+import 'package:np_common/object_util.dart';
 import 'package:np_common/size.dart';
 import 'package:np_common/type.dart';
 import 'package:np_exiv2/np_exiv2.dart' as exiv2;
@@ -31,6 +33,7 @@ class ImageEnhancerTask {
     required this.type,
     required this.platformIdentifier,
     required this.filename,
+    this.uploadInfo,
   });
 
   factory ImageEnhancerTask(JsonObj args) {
@@ -38,6 +41,11 @@ class ImageEnhancerTask {
       type: ImageEnhancerTaskType.values[args["type"]],
       platformIdentifier: args["platformIdentifier"],
       filename: args["filename"],
+      uploadInfo: args["uploadInfo"] == null
+          ? null
+          : ImageEnhancerServerPersistenceInfo.fromJson(
+              jsonDecode(args["uploadInfo"]),
+            ),
     );
   }
 
@@ -45,11 +53,13 @@ class ImageEnhancerTask {
     required ImageEnhancerTaskType type,
     required String platformIdentifier,
     required String filename,
+    ImageEnhancerServerPersistenceInfo? uploadInfo,
   }) {
     return {
       "type": type.index,
       "platformIdentifier": platformIdentifier,
       "filename": filename,
+      "uploadInfo": uploadInfo?.toJson().let(jsonEncode),
     };
   }
 
@@ -78,8 +88,8 @@ class ImageEnhancerTask {
 
   Future<void> run() async {
     WidgetsFlutterBinding.ensureInitialized();
-    app_init.initLog();
-    await app_init.initLocalNotification();
+    await app_init.init(app_init.InitIsolateType.imageEnhancerTask);
+
     try {
       final result = await _process();
       if (result == null) {
@@ -89,8 +99,8 @@ class ImageEnhancerTask {
         return;
       }
       final srcBytes = await LocalMedia.readFile(platformIdentifier);
-      final resultPlatformIdentifier = await _persistResult(result, srcBytes);
-      _log.fine("[run] Persisted as $resultPlatformIdentifier");
+      final persistResult = await _persistResult(result, srcBytes);
+      _log.fine("[run] Persisted as $persistResult");
       _showStatusNotif(
         // TODO string
         title: "Successfully processed image",
@@ -98,7 +108,7 @@ class ImageEnhancerTask {
         body: "Tap to view the result",
         payload: jsonEncode({
           "action": ImageEnhancerAndroidConstant.resultNotificationAction,
-          "platformIdentifier": resultPlatformIdentifier,
+          "persistResult": persistResult,
         }),
       );
     } catch (e, stackTrace) {
@@ -180,6 +190,14 @@ class ImageEnhancerTask {
         throw StateError("Unable to copy metadata to JPEG");
       }
 
+      if (uploadInfo != null) {
+        final result = await _persistToServer(file);
+        if (result != null) {
+          return result;
+        } else {
+          _log.warning("[_persistResult] Failed to upload, fallback to local");
+        }
+      }
       return await LocalMedia.copyPrivateFileToPublicDir(
         file.path,
         srcMime: "image/jpeg",
@@ -187,6 +205,25 @@ class ImageEnhancerTask {
       );
     } finally {
       unawaited(dir.delete(recursive: true));
+    }
+  }
+
+  Future<String?> _persistToServer(io.File file) async {
+    try {
+      final response = await Api.fromBaseUrl(Uri.parse(uploadInfo!.baseUrl))
+          .request(
+            "PUT",
+            uploadInfo!.endpoint,
+            header: uploadInfo!.headers,
+            bodyBytes: await file.readAsBytes(),
+          );
+      if (!response.isGood) {
+        throw io.HttpException("HTTP${response.statusCode}");
+      }
+      return "${uploadInfo!.baseUrl}/${uploadInfo!.endpoint}";
+    } catch (e, stackTrace) {
+      _log.severe("[_persistToServer] Failed while uploading", e, stackTrace);
+      return null;
     }
   }
 
@@ -220,6 +257,33 @@ class ImageEnhancerTask {
   final ImageEnhancerTaskType type;
   final String platformIdentifier;
   final String filename;
+  final ImageEnhancerServerPersistenceInfo? uploadInfo;
+}
+
+class ImageEnhancerServerPersistenceInfo {
+  const ImageEnhancerServerPersistenceInfo({
+    required this.baseUrl,
+    required this.endpoint,
+    required this.headers,
+  });
+
+  factory ImageEnhancerServerPersistenceInfo.fromJson(JsonObj json) {
+    return ImageEnhancerServerPersistenceInfo(
+      baseUrl: json["baseUrl"],
+      endpoint: json["endpoint"],
+      headers: (json["headers"] as Map).cast(),
+    );
+  }
+
+  JsonObj toJson() => {
+    "baseUrl": baseUrl,
+    "endpoint": endpoint,
+    "headers": headers,
+  };
+
+  final String baseUrl;
+  final String endpoint;
+  final Map<String, String> headers;
 }
 
 extension ImageEnhancerTaskTypeExtension on ImageEnhancerTaskType {
