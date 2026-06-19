@@ -40,9 +40,9 @@ enum _Method {
   Uri get helpUri {
     return switch (this) {
       retouch => Uri.parse(help_util.enhanceRetouchUrl),
-      superResolution => Uri.parse(help_util.enhanceEsrganUrl),
-      // TODO help url
-      motionDeblur || derain => Uri.parse(help_util.enhanceUrl),
+      superResolution => Uri.parse(help_util.enhanceSuperResolutionUrl),
+      motionDeblur => Uri.parse(help_util.enhanceMotionDeblurUrl),
+      derain => Uri.parse(help_util.enhanceDerainUrl),
     };
   }
 }

@@ -7,10 +7,12 @@ const homeFolderNotFoundUrl =
 const enhanceUrl = "https://bit.ly/3lF5OiT";
 const enhanceZeroDceUrl = "https://bit.ly/3wKJcm9";
 const enhanceDeepLabPortraitBlurUrl = "https://bit.ly/3wIuXy6";
-const enhanceEsrganUrl = "https://bit.ly/3wO0NJP";
 const enhanceStyleTransferUrl = "https://bit.ly/3agpTcF";
 const enhanceDeepLabColorPopUrl = "https://bit.ly/3Rx0YCD";
-const enhanceRetouchUrl = "https://bit.ly/3Ds2cea";
+const enhanceDerainUrl = "https://nc-photos.web.app/link/help/enhance2/derain";
+const enhanceMotionDeblurUrl = "https://nc-photos.web.app/link/help/enhance2/motion-deblur";
+const enhanceRetouchUrl = "https://nc-photos.web.app/link/help/enhance2/retouch";
+const enhanceSuperResolutionUrl = "https://nc-photos.web.app/link/help/enhance2/super-resolution";
 const editPhotosUrl = "https://nc-photos.web.app/link/help/edit-photos";
 const collectionTypesUrl =
     "https://nc-photos.web.app/link/help/differences-between-collections";
