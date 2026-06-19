@@ -1222,6 +1222,10 @@
 		"description": "Automatically improve your photo"
 	},
 	"enhanceRetouchDescription": "Automatically retouch your photos, improve overall color and vibrance",
+	"enhanceMotionDeblurTitle": "Motion deblur",
+	"enhanceMotionDeblurDescription": "Reduce image blur caused by camera shake",
+	"enhanceDerainTitle": "Derain",
+	"enhanceDerainDescription": "Remove rain streaks from your photo",
 	"doubleTapExitNotification": "Tap again to exit",
 	"@doubleTapExitNotification": {
 		"description": "If double tap to exit is enabled in settings, shown when users tap the back button"

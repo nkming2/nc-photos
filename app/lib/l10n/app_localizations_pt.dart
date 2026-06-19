@@ -1235,6 +1235,19 @@ class AppLocalizationsPt extends AppLocalizations {
       'Aprimora as fotos de forma automatizada. Melhora a matiz e saturação';
 
   @override
+  String get enhanceMotionDeblurTitle => 'Motion deblur';
+
+  @override
+  String get enhanceMotionDeblurDescription =>
+      'Reduce image blur caused by camera shake';
+
+  @override
+  String get enhanceDerainTitle => 'Derain';
+
+  @override
+  String get enhanceDerainDescription => 'Remove rain streaks from your photo';
+
+  @override
   String get doubleTapExitNotification => 'Toque novamente pra sair';
 
   @override

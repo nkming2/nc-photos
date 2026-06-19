@@ -1235,6 +1235,19 @@ class AppLocalizationsCs extends AppLocalizations {
       'Automaticky retušuje vaše fotografie, celkově vylepší barvu a živost';
 
   @override
+  String get enhanceMotionDeblurTitle => 'Motion deblur';
+
+  @override
+  String get enhanceMotionDeblurDescription =>
+      'Reduce image blur caused by camera shake';
+
+  @override
+  String get enhanceDerainTitle => 'Derain';
+
+  @override
+  String get enhanceDerainDescription => 'Remove rain streaks from your photo';
+
+  @override
   String get doubleTapExitNotification => 'Klepněte znovu pro ukončení';
 
   @override

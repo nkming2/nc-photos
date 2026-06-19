@@ -1225,6 +1225,19 @@ class AppLocalizationsFi extends AppLocalizations {
       'Paranna kuvia automaattisesti. Parantaa kuvien värisävyjä.';
 
   @override
+  String get enhanceMotionDeblurTitle => 'Motion deblur';
+
+  @override
+  String get enhanceMotionDeblurDescription =>
+      'Reduce image blur caused by camera shake';
+
+  @override
+  String get enhanceDerainTitle => 'Derain';
+
+  @override
+  String get enhanceDerainDescription => 'Remove rain streaks from your photo';
+
+  @override
   String get doubleTapExitNotification => 'Napauta uudelleen poistuaksesi';
 
   @override

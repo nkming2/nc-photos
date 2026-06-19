@@ -1175,6 +1175,18 @@ class AppLocalizationsJa extends AppLocalizations {
   String get enhanceRetouchDescription => '写真を自動的にレタッチし、全体的な色と鮮やかさを向上させます';
 
   @override
+  String get enhanceMotionDeblurTitle => '手ぶれ補正';
+
+  @override
+  String get enhanceMotionDeblurDescription => '写真の手ぶれを軽減します';
+
+  @override
+  String get enhanceDerainTitle => '雨除去';
+
+  @override
+  String get enhanceDerainDescription => '写真から雨を消します';
+
+  @override
   String get doubleTapExitNotification => 'もう一度タップして終了';
 
   @override

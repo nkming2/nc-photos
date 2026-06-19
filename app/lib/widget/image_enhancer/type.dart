@@ -19,10 +19,8 @@ enum _Method {
     return switch (this) {
       retouch => L10n.global().enhanceRetouchTitle,
       superResolution => L10n.global().enhanceSuperResolution4xTitle,
-      // TODO string
-      motionDeblur => "Motion deblur",
-      // TODO string
-      derain => "Derain",
+      motionDeblur => L10n.global().enhanceMotionDeblurTitle,
+      derain => L10n.global().enhanceDerainTitle,
     };
   }
 
@@ -30,10 +28,8 @@ enum _Method {
     return switch (this) {
       retouch => L10n.global().enhanceRetouchDescription,
       superResolution => L10n.global().enhanceSuperResolution4xDescription,
-      // TODO string
-      motionDeblur => "Remove camera shake",
-      // TODO string
-      derain => "Remove rain",
+      motionDeblur => L10n.global().enhanceMotionDeblurDescription,
+      derain => L10n.global().enhanceDerainDescription,
     };
   }
 

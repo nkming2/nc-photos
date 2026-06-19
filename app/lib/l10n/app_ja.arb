@@ -1697,5 +1697,9 @@
 				"example": "IMG_123456789.jpg_original"
 			}
 		}
-	}
+	},
+	"enhanceMotionDeblurTitle": "手ぶれ補正",
+	"enhanceMotionDeblurDescription": "写真の手ぶれを軽減します",
+	"enhanceDerainTitle": "雨除去",
+	"enhanceDerainDescription": "写真から雨を消します"
 }

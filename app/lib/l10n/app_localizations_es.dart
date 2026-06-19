@@ -1235,6 +1235,19 @@ class AppLocalizationsEs extends AppLocalizations {
       'Retoca tu foto automáticamente. Mejora el color y el estado general';
 
   @override
+  String get enhanceMotionDeblurTitle => 'Motion deblur';
+
+  @override
+  String get enhanceMotionDeblurDescription =>
+      'Reduce image blur caused by camera shake';
+
+  @override
+  String get enhanceDerainTitle => 'Derain';
+
+  @override
+  String get enhanceDerainDescription => 'Remove rain streaks from your photo';
+
+  @override
   String get doubleTapExitNotification => 'Toca otra vez para salir';
 
   @override

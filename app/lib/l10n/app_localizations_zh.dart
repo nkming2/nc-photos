@@ -1158,6 +1158,19 @@ class AppLocalizationsZh extends AppLocalizations {
   String get enhanceRetouchDescription => '自动修饰您的照片，提高整体色彩和生动感';
 
   @override
+  String get enhanceMotionDeblurTitle => 'Motion deblur';
+
+  @override
+  String get enhanceMotionDeblurDescription =>
+      'Reduce image blur caused by camera shake';
+
+  @override
+  String get enhanceDerainTitle => 'Derain';
+
+  @override
+  String get enhanceDerainDescription => 'Remove rain streaks from your photo';
+
+  @override
   String get doubleTapExitNotification => '再次点击以退出';
 
   @override

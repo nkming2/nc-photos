@@ -2139,6 +2139,30 @@ abstract class AppLocalizations {
   /// **'Automatically retouch your photos, improve overall color and vibrance'**
   String get enhanceRetouchDescription;
 
+  /// No description provided for @enhanceMotionDeblurTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Motion deblur'**
+  String get enhanceMotionDeblurTitle;
+
+  /// No description provided for @enhanceMotionDeblurDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Reduce image blur caused by camera shake'**
+  String get enhanceMotionDeblurDescription;
+
+  /// No description provided for @enhanceDerainTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Derain'**
+  String get enhanceDerainTitle;
+
+  /// No description provided for @enhanceDerainDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove rain streaks from your photo'**
+  String get enhanceDerainDescription;
+
   /// If double tap to exit is enabled in settings, shown when users tap the back button
   ///
   /// In en, this message translates to:

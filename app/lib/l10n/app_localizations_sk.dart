@@ -1236,6 +1236,19 @@ class AppLocalizationsSk extends AppLocalizations {
       'Automaticky upravte vaše fotografie, zlepšite celkové farby a živost';
 
   @override
+  String get enhanceMotionDeblurTitle => 'Motion deblur';
+
+  @override
+  String get enhanceMotionDeblurDescription =>
+      'Reduce image blur caused by camera shake';
+
+  @override
+  String get enhanceDerainTitle => 'Derain';
+
+  @override
+  String get enhanceDerainDescription => 'Remove rain streaks from your photo';
+
+  @override
   String get doubleTapExitNotification => 'Ťuknite znova pre ukončenie';
 
   @override
