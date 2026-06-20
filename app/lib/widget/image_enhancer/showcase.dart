@@ -31,7 +31,7 @@ class _MethodShowcaseState extends State<_MethodShowcase> {
             child: switch (m) {
               _Method.retouch => const _RetouchShowcase(),
               _Method.superResolution => const _SuperResolutionShowcase(),
-              _Method.derain => Center(child: Text(m.name)),
+              _Method.derain => const _DerainShowcase(),
             },
           );
         },
@@ -75,6 +75,26 @@ class _SuperResolutionShowcase extends StatelessWidget {
       ),
       to: Image.asset(
         "assets/super-resolution1.jpg",
+        fit: BoxFit.contain,
+        gaplessPlayback: true,
+      ),
+    );
+  }
+}
+
+class _DerainShowcase extends StatelessWidget {
+  const _DerainShowcase();
+
+  @override
+  Widget build(BuildContext context) {
+    return _SampleShowcase(
+      from: Image.asset(
+        "assets/derain0.jpg",
+        fit: BoxFit.contain,
+        gaplessPlayback: true,
+      ),
+      to: Image.asset(
+        "assets/derain1.jpg",
         fit: BoxFit.contain,
         gaplessPlayback: true,
       ),
