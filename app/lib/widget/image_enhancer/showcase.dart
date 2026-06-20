@@ -31,7 +31,6 @@ class _MethodShowcaseState extends State<_MethodShowcase> {
             child: switch (m) {
               _Method.retouch => const _RetouchShowcase(),
               _Method.superResolution => const _SuperResolutionShowcase(),
-              _Method.motionDeblur => Center(child: Text(m.name)),
               _Method.derain => Center(child: Text(m.name)),
             },
           );
