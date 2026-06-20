@@ -4,11 +4,11 @@ const sharedAlbumLimitationsUrl =
     "https://nc-photos.web.app/link/help/shared-album";
 const homeFolderNotFoundUrl =
     "https://nc-photos.web.app/link/help/home-dir-not-found";
-const enhanceUrl = "https://bit.ly/3lF5OiT";
 const enhanceZeroDceUrl = "https://bit.ly/3wKJcm9";
 const enhanceDeepLabPortraitBlurUrl = "https://bit.ly/3wIuXy6";
 const enhanceStyleTransferUrl = "https://bit.ly/3agpTcF";
 const enhanceDeepLabColorPopUrl = "https://bit.ly/3Rx0YCD";
+const enhanceUrl = "https://nc-photos.web.app/link/help/enhance2";
 const enhanceDerainUrl = "https://nc-photos.web.app/link/help/enhance2/derain";
 const enhanceMotionDeblurUrl = "https://nc-photos.web.app/link/help/enhance2/motion-deblur";
 const enhanceRetouchUrl = "https://nc-photos.web.app/link/help/enhance2/retouch";
