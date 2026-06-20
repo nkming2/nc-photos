@@ -132,19 +132,36 @@ class _SampleShowcaseState extends State<_SampleShowcase>
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        widget.from,
-        CircularRevealAnimation(
-          animation: CurvedAnimation(
-            parent: _animController,
-            curve: Curves.easeIn,
+    return GestureDetector(
+      onTapDown: (details) {
+        setState(() {
+          _shouldShowResult = false;
+        });
+      },
+      onTapUp: (details) {
+        setState(() {
+          _shouldShowResult = true;
+        });
+      },
+      onTapCancel: () {
+        setState(() {
+          _shouldShowResult = true;
+        });
+      },
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          widget.from,
+          CircularRevealAnimation(
+            animation: CurvedAnimation(
+              parent: _animController,
+              curve: Curves.easeIn,
+            ),
+            centerAlignment: Alignment.bottomCenter,
+            child: _shouldShowResult ? widget.to : const SizedBox.shrink(),
           ),
-          centerAlignment: Alignment.bottomCenter,
-          child: widget.to,
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -152,4 +169,5 @@ class _SampleShowcaseState extends State<_SampleShowcase>
     vsync: this,
     duration: const Duration(seconds: 1),
   );
+  var _shouldShowResult = true;
 }
