@@ -34,7 +34,6 @@ import java.net.URL
 internal class ImageProcessorService : Service() {
 	companion object {
 		const val EXTRA_METHOD = "method"
-		const val METHOD_ZERO_DCE = "zero-dce"
 		const val METHOD_DEEP_LAP_PORTRAIT = "DeepLab3Portrait"
 		const val METHOD_ARBITRARY_STYLE_TRANSFER = "ArbitraryStyleTransfer"
 		const val METHOD_DEEP_LAP_COLOR_POP = "DeepLab3ColorPop"
@@ -119,7 +118,6 @@ internal class ImageProcessorService : Service() {
 
 		val method = intent.getStringExtra(EXTRA_METHOD)
 		when (method) {
-			METHOD_ZERO_DCE -> onZeroDce(startId, intent.extras!!)
 			METHOD_DEEP_LAP_PORTRAIT -> onDeepLapPortrait(
 				startId, intent.extras!!
 			)
@@ -145,14 +143,6 @@ internal class ImageProcessorService : Service() {
 				)
 			}
 		}
-	}
-
-	private fun onZeroDce(startId: Int, extras: Bundle) {
-		return onMethod(startId, extras, { params ->
-			ImageProcessorZeroDceCommand(
-				params, extras.getIntOrNull(EXTRA_ITERATION)
-			)
-		})
 	}
 
 	private fun onDeepLapPortrait(startId: Int, extras: Bundle) {

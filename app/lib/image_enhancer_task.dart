@@ -25,7 +25,13 @@ import 'package:uuid/uuid.dart';
 
 part 'image_enhancer_task.g.dart';
 
-enum ImageEnhancerTaskType { retouch, superResolution, motionDeblur, derain }
+enum ImageEnhancerTaskType {
+  retouch,
+  superResolution,
+  motionDeblur,
+  derain,
+  lowLight,
+}
 
 @npLog
 class ImageEnhancerTask {
@@ -293,6 +299,7 @@ extension ImageEnhancerTaskTypeExtension on ImageEnhancerTaskType {
       ImageEnhancerTaskType.superResolution => torch.SuperResolution(),
       ImageEnhancerTaskType.motionDeblur => torch.MotionDeblur(),
       ImageEnhancerTaskType.derain => torch.Derain(),
+      ImageEnhancerTaskType.lowLight => torch.LowLight(),
     };
   }
 }

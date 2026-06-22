@@ -12,24 +12,6 @@ abstract class ImageFilter {
 class ImageProcessor {
   static Stream<ImageProcessorEvent> get stream => EventHandler.stream;
 
-  static Future<void> zeroDce(
-    Uri fileUri,
-    String filename,
-    int maxWidth,
-    int maxHeight,
-    int iteration, {
-    Map<String, String>? headers,
-    required bool isSaveToServer,
-  }) => _methodChannel.invokeMethod("zeroDce", <String, dynamic>{
-    "fileUri": fileUri.toString(),
-    "headers": headers,
-    "filename": filename,
-    "maxWidth": maxWidth,
-    "maxHeight": maxHeight,
-    "iteration": iteration,
-    "isSaveToServer": isSaveToServer,
-  });
-
   static Future<void> deepLab3Portrait(
     Uri fileUri,
     String filename,

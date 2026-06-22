@@ -42,7 +42,6 @@ add_library( # Sets the name of the library.
              stopwatch.cpp
              tflite_wrapper.cpp
              util.cpp
-             zero_dce.cpp
              )
 set_target_properties( np_platform_image_processor PROPERTIES COMPILE_OPTIONS -fopenmp )
 

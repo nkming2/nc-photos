@@ -197,22 +197,6 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
       account: widget.account,
     );
     switch (_selectedOption.algorithm) {
-      case _Algorithm.zeroDce:
-        await ImageProcessor.zeroDce(
-          await uriGetter.get(),
-          widget.file.name,
-          _c.pref.getEnhanceMaxWidthOr(),
-          _c.pref.getEnhanceMaxHeightOr(),
-          args["iteration"] ?? 8,
-          headers: {
-            "Authorization": AuthUtil.fromAccount(
-              widget.account,
-            ).toHeaderValue(),
-          },
-          isSaveToServer: widget.isSaveToServer,
-        );
-        break;
-
       case _Algorithm.deepLab3Portrait:
         await ImageProcessor.deepLab3Portrait(
           await uriGetter.get(),
@@ -343,9 +327,6 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
     _Algorithm selected,
   ) async {
     switch (selected) {
-      case _Algorithm.zeroDce:
-        return _getZeroDceArgs(context);
-
       case _Algorithm.deepLab3Portrait:
         return _getDeepLab3PortraitArgs(context);
 
@@ -355,49 +336,6 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
       case _Algorithm.deepLab3ColorPop:
         return _getDeepLab3ColorPopArgs(context);
     }
-  }
-
-  Future<Map<String, dynamic>?> _getZeroDceArgs(BuildContext context) async {
-    var current = .8;
-    final iteration = await showDialog<int>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(L10n.global().enhanceLowLightParamBrightnessLabel),
-        contentPadding: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 0),
-        content: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                const Icon(Icons.brightness_low),
-                Expanded(
-                  child: StatefulSlider(
-                    initialValue: current,
-                    onChangeEnd: (value) {
-                      current = value;
-                    },
-                  ),
-                ),
-                const Icon(Icons.brightness_high),
-              ],
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              final iteration = (current * 10).round().clamp(1, 10);
-              Navigator.of(context).pop(iteration);
-            },
-            child: Text(L10n.global().enhanceButtonLabel),
-          ),
-        ],
-      ),
-    );
-    _log.info("[_getZeroDceArgs] iteration: $iteration");
-    return iteration?.run((it) => {"iteration": it});
   }
 
   Future<Map<String, dynamic>?> _getDeepLab3PortraitArgs(
@@ -523,13 +461,6 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
         algorithm: _Algorithm.deepLab3ColorPop,
       ),
       _Option(
-        title: L10n.global().enhanceLowLightTitle,
-        description: L10n.global().enhanceLowLightDescription,
-        link: enhanceZeroDceUrl,
-        showcaseBuilder: (_) => const _LowLightShowcase(),
-        algorithm: _Algorithm.zeroDce,
-      ),
-      _Option(
         title: L10n.global().enhancePortraitBlurTitle,
         description: L10n.global().enhancePortraitBlurDescription,
         link: enhanceDeepLabPortraitBlurUrl,
@@ -553,7 +484,6 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
 }
 
 enum _Algorithm {
-  zeroDce,
   deepLab3Portrait,
   arbitraryStyleTransfer,
   deepLab3ColorPop,
@@ -666,37 +596,6 @@ class _ColorPopShowcaseState extends State<_ColorPopShowcase>
         centerAlignment: Alignment.bottomCenter,
         child: Image.asset(
           "assets/color-pop1.jpg",
-          fit: BoxFit.contain,
-          gaplessPlayback: true,
-        ),
-      ),
-    ],
-  );
-}
-
-class _LowLightShowcase extends StatefulWidget {
-  const _LowLightShowcase();
-
-  @override
-  createState() => _LowLightShowcaseState();
-}
-
-class _LowLightShowcaseState extends State<_LowLightShowcase>
-    with TickerProviderStateMixin, _ShowcaseStateMixin {
-  @override
-  build(BuildContext context) => Stack(
-    fit: StackFit.expand,
-    children: [
-      Image.asset(
-        "assets/low-light0.jpg",
-        fit: BoxFit.contain,
-        gaplessPlayback: true,
-      ),
-      CircularRevealAnimation(
-        animation: anim,
-        centerAlignment: Alignment.bottomCenter,
-        child: Image.asset(
-          "assets/low-light1.jpg",
           fit: BoxFit.contain,
           gaplessPlayback: true,
         ),

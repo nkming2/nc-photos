@@ -33,22 +33,6 @@ internal class ImageProcessorChannelHandler(context: Context) :
 
 	override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
 		when (call.method) {
-			"zeroDce" -> {
-				try {
-					zeroDce(
-						call.argument("fileUri")!!, call.argument("headers"),
-						call.argument("filename")!!,
-						call.argument("maxWidth")!!,
-						call.argument("maxHeight")!!,
-						call.argument<Boolean>("isSaveToServer")!!,
-						call.argument("iteration")!!, result
-					)
-				} catch (e: Throwable) {
-					logE(TAG, "Uncaught exception", e)
-					result.error("systemException", e.toString(), null)
-				}
-			}
-
 			"deepLab3Portrait" -> {
 				try {
 					deepLab3Portrait(
@@ -113,15 +97,6 @@ internal class ImageProcessorChannelHandler(context: Context) :
 			eventSinks.remove(id)
 		}
 	}
-
-	private fun zeroDce(
-		fileUri: String, headers: Map<String, String>?, filename: String,
-		maxWidth: Int, maxHeight: Int, isSaveToServer: Boolean, iteration: Int,
-		result: MethodChannel.Result
-	) = method(fileUri, headers, filename, maxWidth, maxHeight, isSaveToServer,
-		ImageProcessorService.METHOD_ZERO_DCE, result, onIntent = {
-			it.putExtra(ImageProcessorService.EXTRA_ITERATION, iteration)
-		})
 
 	private fun deepLab3Portrait(
 		fileUri: String, headers: Map<String, String>?, filename: String,

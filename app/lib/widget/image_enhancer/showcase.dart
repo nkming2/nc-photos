@@ -32,6 +32,7 @@ class _MethodShowcaseState extends State<_MethodShowcase> {
               _Method.retouch => const _RetouchShowcase(),
               _Method.superResolution => const _SuperResolutionShowcase(),
               _Method.derain => const _DerainShowcase(),
+              _Method.lowLight => const _LowLightShowcase(),
             },
           );
         },
@@ -95,6 +96,26 @@ class _DerainShowcase extends StatelessWidget {
       ),
       to: Image.asset(
         "assets/derain1.jpg",
+        fit: BoxFit.contain,
+        gaplessPlayback: true,
+      ),
+    );
+  }
+}
+
+class _LowLightShowcase extends StatelessWidget {
+  const _LowLightShowcase();
+
+  @override
+  Widget build(BuildContext context) {
+    return _SampleShowcase(
+      from: Image.asset(
+        "assets/low-light0.jpg",
+        fit: BoxFit.contain,
+        gaplessPlayback: true,
+      ),
+      to: Image.asset(
+        "assets/low-light1.jpg",
         fit: BoxFit.contain,
         gaplessPlayback: true,
       ),

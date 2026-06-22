@@ -6,7 +6,6 @@ import android.net.Uri
 import com.nkming.nc_photos.np_platform_image_processor.processor.ArbitraryStyleTransfer
 import com.nkming.nc_photos.np_platform_image_processor.processor.DeepLab3ColorPop
 import com.nkming.nc_photos.np_platform_image_processor.processor.DeepLab3Portrait
-import com.nkming.nc_photos.np_platform_image_processor.processor.ZeroDce
 
 interface ImageProcessorCommand
 
@@ -47,19 +46,6 @@ class ImageProcessorDummyCommand(
 ) : ImageProcessorImageCommand(params) {
 	override fun apply(context: Context, fileUri: Uri): Bitmap {
 		throw UnsupportedOperationException()
-	}
-
-	override fun isEnhanceCommand() = true
-}
-
-class ImageProcessorZeroDceCommand(
-	params: Params,
-	val iteration: Int?,
-) : ImageProcessorImageCommand(params) {
-	override fun apply(context: Context, fileUri: Uri): Bitmap {
-		return ZeroDce(
-			context, maxWidth, maxHeight, iteration ?: 8
-		).infer(fileUri)
 	}
 
 	override fun isEnhanceCommand() = true
