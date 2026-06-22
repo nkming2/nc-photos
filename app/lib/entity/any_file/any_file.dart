@@ -18,8 +18,8 @@ class AnyFile {
       "id: $id, "
       "name: $name, "
       "mime: $mime, "
-      "dateTime: $dateTime"
-      "displayPath: $displayPath"
+      "dateTime: $dateTime, "
+      "displayPath: $displayPath, "
       "logTag: $logTag"
       "}";
 
