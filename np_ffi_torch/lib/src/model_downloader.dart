@@ -21,7 +21,8 @@ enum ModelType {
   realEsrganX4Vk,
   nafnetGopro,
   efficientDerain,
-  retouch;
+  retouch,
+  lowLight;
 
   Uri toRemoteUri() {
     return switch (this) {
@@ -38,6 +39,7 @@ enum ModelType {
         "/link/torch/efficient-derain-spa",
       ),
       retouch => Uri.https("nc-photos.web.app", "/link/torch/neurop-ppr-a"),
+      lowLight => Uri.https("nc-photos.web.app", "/link/torch/zero-dce-sice"),
     };
   }
 
@@ -47,6 +49,7 @@ enum ModelType {
       nafnetGopro => File("${root.path}/nafnet-gopro-32.pte"),
       efficientDerain => File("${root.path}/efficient-derain-spa.pte"),
       retouch => File("${root.path}/neurop-ppr-a.pte"),
+      lowLight => File("${root.path}/zero-dce-sice.pte"),
     };
   }
 }

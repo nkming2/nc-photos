@@ -32,6 +32,9 @@ inferEfficientDerain(const TorchRgb8Image *input, const char *modelPath);
 FFI_PLUGIN_EXPORT TorchRgb8Image *inferNeurop(const TorchRgb8Image *input,
                                               const char *modelPath);
 
+FFI_PLUGIN_EXPORT TorchRgb8Image *inferZeroDce(const TorchRgb8Image *input,
+                                               const char *modelPath);
+
 #ifdef __cplusplus
 }
 #endif

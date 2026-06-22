@@ -30,6 +30,7 @@ add_library(np_ffi_torch SHARED
   "nafnet/nafnet.cpp"
   "neurop/neurop.cpp"
   "real_esrgan/real_esrgan.cpp"
+  "zero_dce/zero_dce.cpp"
   "memory_context.cpp"
   "model_loader.cpp"
   "np_ffi_torch.cpp"
