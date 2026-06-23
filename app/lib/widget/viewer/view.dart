@@ -115,77 +115,82 @@ class _ContentBodyState extends State<_ContentBody> {
           },
         ),
       ],
-      child: GestureDetector(
-        onTap: () {
-          context.addEvent(const _ToggleAppBar());
-        },
-        child: Stack(
-          children: [
-            const Positioned.fill(child: ColoredBox(color: Colors.black)),
-            _BlocBuilder(
-              buildWhen: (previous, current) =>
-                  previous.isZoomed != current.isZoomed ||
-                  previous.removedAfIds != current.removedAfIds,
-              builder: (context, state) => InfinitePageView(
-                key: _key,
-                itemBuilder: (context, i) => _BlocBuilder(
-                  buildWhen: (previous, current) =>
-                      previous.pageAfIdMap[i] != current.pageAfIdMap[i] ||
-                      previous.backwardBound != current.backwardBound ||
-                      previous.forwardBound != current.forwardBound,
-                  builder: (context, state) {
-                    final afId = state.pageAfIdMap[i];
-                    if ((state.backwardBound != null &&
-                            i < state.backwardBound!) ||
-                        (state.forwardBound != null &&
-                            i > state.forwardBound!)) {
-                      return Center(
-                        child: Text(
-                          L10n.global().viewerLastPageText,
-                          style: Theme.of(context).textTheme.headlineSmall,
-                          textAlign: TextAlign.center,
-                        ),
-                      );
-                    } else if (afId == null) {
-                      return const Center(
-                        child: AppIntermediateCircularProgressIndicator(),
-                      );
-                    } else {
-                      return _PageView(
-                        key: Key("Viewer-$afId"),
-                        afId: afId,
-                        pageHeight: MediaQuery.of(context).size.height,
-                      );
-                    }
-                  },
+      child: _BlocSelector(
+        selector: (state) => state.isDetailPaneActive,
+        builder: (context, isDetailPaneActive) => GestureDetector(
+          onTap: isDetailPaneActive
+              ? null
+              : () {
+                  context.addEvent(const _ToggleAppBar());
+                },
+          child: Stack(
+            children: [
+              const Positioned.fill(child: ColoredBox(color: Colors.black)),
+              _BlocBuilder(
+                buildWhen: (previous, current) =>
+                    previous.isZoomed != current.isZoomed ||
+                    previous.removedAfIds != current.removedAfIds,
+                builder: (context, state) => InfinitePageView(
+                  key: _key,
+                  itemBuilder: (context, i) => _BlocBuilder(
+                    buildWhen: (previous, current) =>
+                        previous.pageAfIdMap[i] != current.pageAfIdMap[i] ||
+                        previous.backwardBound != current.backwardBound ||
+                        previous.forwardBound != current.forwardBound,
+                    builder: (context, state) {
+                      final afId = state.pageAfIdMap[i];
+                      if ((state.backwardBound != null &&
+                              i < state.backwardBound!) ||
+                          (state.forwardBound != null &&
+                              i > state.forwardBound!)) {
+                        return Center(
+                          child: Text(
+                            L10n.global().viewerLastPageText,
+                            style: Theme.of(context).textTheme.headlineSmall,
+                            textAlign: TextAlign.center,
+                          ),
+                        );
+                      } else if (afId == null) {
+                        return const Center(
+                          child: AppIntermediateCircularProgressIndicator(),
+                        );
+                      } else {
+                        return _PageView(
+                          key: Key("Viewer-$afId"),
+                          afId: afId,
+                          pageHeight: MediaQuery.of(context).size.height,
+                        );
+                      }
+                    },
+                  ),
+                  controller: _pageViewController,
+                  physics: !state.isZoomed
+                      ? null
+                      : const NeverScrollableScrollPhysics(),
                 ),
-                controller: _pageViewController,
-                physics: !state.isZoomed
-                    ? null
-                    : const NeverScrollableScrollPhysics(),
               ),
-            ),
-            _BlocSelector<bool>(
-              selector: (state) => state.isShowAppBar,
-              builder: (context, isShowAppBar) => isShowAppBar
-                  ? Container(
-                      // + status bar height
-                      height:
-                          kToolbarHeight + MediaQuery.of(context).padding.top,
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment(0, -1),
-                          end: Alignment(0, 1),
-                          colors: [
-                            Color.fromARGB(192, 0, 0, 0),
-                            Color.fromARGB(0, 0, 0, 0),
-                          ],
+              _BlocSelector<bool>(
+                selector: (state) => state.isShowAppBar,
+                builder: (context, isShowAppBar) => isShowAppBar
+                    ? Container(
+                        // + status bar height
+                        height:
+                            kToolbarHeight + MediaQuery.of(context).padding.top,
+                        decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment(0, -1),
+                            end: Alignment(0, 1),
+                            colors: [
+                              Color.fromARGB(192, 0, 0, 0),
+                              Color.fromARGB(0, 0, 0, 0),
+                            ],
+                          ),
                         ),
-                      ),
-                    )
-                  : const SizedBox.shrink(),
-            ),
-          ],
+                      )
+                    : const SizedBox.shrink(),
+              ),
+            ],
+          ),
         ),
       ),
     );
