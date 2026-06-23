@@ -162,7 +162,7 @@ class ImageEnhancerTask {
     _log.info(
       "[_process] Running with type: $type, platformIdentifier: $platformIdentifier",
     );
-    final torch.Method tm = type.toTorchMethod();
+    final tm = type.toTorchMethod();
     final size = tm.getMaxSrcSize();
     final Rgb8Image src;
     try {
@@ -329,7 +329,7 @@ class ImageEnhancerServerPersistenceInfo {
 }
 
 extension ImageEnhancerTaskTypeExtension on ImageEnhancerTaskType {
-  torch.Method toTorchMethod() {
+  torch.RgbMethod toTorchMethod() {
     return switch (this) {
       ImageEnhancerTaskType.retouch => torch.Retouch(),
       ImageEnhancerTaskType.superResolution => torch.SuperResolution(),

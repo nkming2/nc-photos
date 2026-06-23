@@ -7,7 +7,7 @@ import 'package:np_ffi_torch/src/model_downloader.dart';
 import 'package:np_ffi_torch/src/np_ffi_torch.dart';
 import 'package:np_platform_raw_image/np_platform_raw_image.dart';
 
-class SuperResolution implements Method {
+class SuperResolution implements RgbMethod {
   @override
   Future<void> prepareResource({
     void Function(double progress, int size)? onProgress,

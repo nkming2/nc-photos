@@ -22,7 +22,8 @@ enum ModelType {
   nafnetGopro,
   efficientDerain,
   neurop,
-  zeroDce;
+  zeroDce,
+  pointPromptSegmentation;
 
   Uri toRemoteUri() {
     return switch (this) {
@@ -40,6 +41,10 @@ enum ModelType {
       ),
       neurop => Uri.https("nc-photos.web.app", "/link/torch/neurop-ppr-a"),
       zeroDce => Uri.https("nc-photos.web.app", "/link/torch/zero-dce-sice"),
+      pointPromptSegmentation => Uri.https(
+        "nc-photos.web.app",
+        "/link/torch/efficient-sam-ti",
+      ),
     };
   }
 
@@ -50,6 +55,7 @@ enum ModelType {
       efficientDerain => File("${root.path}/efficient-derain-spa.pte"),
       neurop => File("${root.path}/neurop-ppr-a.pte"),
       zeroDce => File("${root.path}/zero-dce-sice.pte"),
+      pointPromptSegmentation => File("${root.path}/efficient-sam-ti.pte"),
     };
   }
 }

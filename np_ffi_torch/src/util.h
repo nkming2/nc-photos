@@ -38,6 +38,9 @@ template <typename T> T *copyVectorToCArray(const std::vector<T> &src);
 TorchRgb8Image *makeRgb8Image(const std::vector<uint8_t> &pixel, unsigned width,
                               unsigned height);
 
+TorchRgba8Image *makeRgba8Image(const std::vector<uint8_t> &pixel,
+                                unsigned width, unsigned height);
+
 TorchRgb8Image *subImage(const TorchRgb8Image *srcImage, const size_t left,
                          const size_t top, const size_t width,
                          const size_t height);

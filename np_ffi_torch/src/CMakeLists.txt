@@ -27,6 +27,8 @@ set(CMAKE_BUILD_TYPE "${_saved_build_type}")
 
 add_library(np_ffi_torch SHARED
   "efficient_derain/efficient_derain.cpp"
+  "efficient_sam/efficient_sam_extract.cpp"
+  "efficient_sam/efficient_sam.cpp"
   "nafnet/nafnet.cpp"
   "neurop/neurop.cpp"
   "real_esrgan/real_esrgan.cpp"
@@ -48,6 +50,11 @@ set_target_properties(np_ffi_torch PROPERTIES
   OUTPUT_NAME "np_ffi_torch"
 )
 
+target_include_directories(
+  np_ffi_torch
+  PRIVATE
+  "${CMAKE_CURRENT_SOURCE_DIR}/../third_party/single-header-image-resampler"
+)
 target_link_libraries(
   np_ffi_torch
   PRIVATE

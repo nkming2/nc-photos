@@ -37,6 +37,17 @@ class NpFfiTorchBindings {
   late final _torchRgb8ImageFree = _torchRgb8ImageFreePtr
       .asFunction<void Function(ffi.Pointer<TorchRgb8Image>)>();
 
+  void torchRgba8ImageFree(ffi.Pointer<TorchRgba8Image> that) {
+    return _torchRgba8ImageFree(that);
+  }
+
+  late final _torchRgba8ImageFreePtr =
+      _lookup<
+        ffi.NativeFunction<ffi.Void Function(ffi.Pointer<TorchRgba8Image>)>
+      >('torchRgba8ImageFree');
+  late final _torchRgba8ImageFree = _torchRgba8ImageFreePtr
+      .asFunction<void Function(ffi.Pointer<TorchRgba8Image>)>();
+
   ffi.Pointer<TorchRgb8Image> inferRealEsrgan(
     ffi.Pointer<TorchRgb8Image> input,
     ffi.Pointer<ffi.Char> modelPath,
@@ -156,6 +167,36 @@ class NpFfiTorchBindings {
           ffi.Pointer<ffi.Char>,
         )
       >();
+
+  ffi.Pointer<TorchRgba8Image> inferEfficientSamExtract(
+    ffi.Pointer<TorchRgb8Image> input,
+    ffi.Pointer<TorchPoint> points,
+    ffi.Pointer<ffi.Int> pointLabels,
+    ffi.Pointer<ffi.Char> modelPath,
+  ) {
+    return _inferEfficientSamExtract(input, points, pointLabels, modelPath);
+  }
+
+  late final _inferEfficientSamExtractPtr =
+      _lookup<
+        ffi.NativeFunction<
+          ffi.Pointer<TorchRgba8Image> Function(
+            ffi.Pointer<TorchRgb8Image>,
+            ffi.Pointer<TorchPoint>,
+            ffi.Pointer<ffi.Int>,
+            ffi.Pointer<ffi.Char>,
+          )
+        >
+      >('inferEfficientSamExtract');
+  late final _inferEfficientSamExtract = _inferEfficientSamExtractPtr
+      .asFunction<
+        ffi.Pointer<TorchRgba8Image> Function(
+          ffi.Pointer<TorchRgb8Image>,
+          ffi.Pointer<TorchPoint>,
+          ffi.Pointer<ffi.Int>,
+          ffi.Pointer<ffi.Char>,
+        )
+      >();
 }
 
 final class TorchRgb8Image extends ffi.Struct {
@@ -166,4 +207,22 @@ final class TorchRgb8Image extends ffi.Struct {
 
   @ffi.UnsignedInt()
   external int height;
+}
+
+final class TorchRgba8Image extends ffi.Struct {
+  external ffi.Pointer<ffi.Uint8> pixel;
+
+  @ffi.UnsignedInt()
+  external int width;
+
+  @ffi.UnsignedInt()
+  external int height;
+}
+
+final class TorchPoint extends ffi.Struct {
+  @ffi.Int()
+  external int x;
+
+  @ffi.Int()
+  external int y;
 }

@@ -44,4 +44,12 @@ extension TorchRgb8ImageExtension on ffi.TorchRgb8Image {
   }
 }
 
+extension TorchRgba8ImageExtension on ffi.TorchRgba8Image {
+  Rgba8Image toDart() {
+    final dPixel = Uint8List(width * height * 4);
+    dPixel.setAll(0, pixel.asTypedList(dPixel.length));
+    return Rgba8Image(dPixel, width, height);
+  }
+}
+
 final _log = Logger("np_ffi_torch.rgb8_image");

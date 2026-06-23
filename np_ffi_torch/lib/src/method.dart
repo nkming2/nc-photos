@@ -11,6 +11,9 @@ abstract class Method {
   Future<bool> isResourceReady();
 
   SizeInt getMaxSrcSize();
+}
 
+// Most common methods that take a rgb8 image and output a rgb8 image
+abstract class RgbMethod extends Method {
   Future<Rgb8Image?> apply(Rgb8Image src);
 }

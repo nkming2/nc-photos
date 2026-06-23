@@ -6,3 +6,9 @@ void torchRgb8ImageFree(TorchRgb8Image *that) {
     free(that->pixel);
   }
 }
+
+void torchRgba8ImageFree(TorchRgba8Image *that) {
+  if (that) {
+    free(that->pixel);
+  }
+}

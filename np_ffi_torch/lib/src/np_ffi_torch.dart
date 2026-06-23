@@ -1,5 +1,6 @@
 import 'dart:ffi';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:ffi/ffi.dart';
 import 'package:np_ffi_torch/src/image_util.dart';
@@ -109,6 +110,61 @@ Future<Rgb8Image?> inferZeroDce(Rgb8Image input, {required String modelPath}) {
       }
     });
   } finally {
+    malloc.free(cModelPath);
+  }
+}
+
+Future<Rgba8Image?> inferEfficientSamExtract(
+  Rgb8Image input, {
+  required List<Point<int>> points,
+  required List<int> pointLabels,
+  required String modelPath,
+}) {
+  if (points.length != pointLabels.length || points.length > 6) {
+    throw ArgumentError(
+      "points and pointLabels must have the same size and <= 6",
+    );
+  }
+  final cModelPath = modelPath.toNativeUtf8();
+  final cPoints = malloc.allocate<ffi.TorchPoint>(6 * sizeOf<ffi.TorchPoint>());
+  final cPointLabels = malloc.allocate<Int>(6 * sizeOf<Int>());
+  try {
+    for (var i = 0; i < points.length; ++i) {
+      cPoints[i].x = points[i].x;
+      cPoints[i].y = points[i].y;
+    }
+    for (var i = points.length; i < 6; ++i) {
+      cPoints[i].x = -1;
+      cPoints[i].y = -1;
+    }
+
+    for (var i = 0; i < pointLabels.length; ++i) {
+      cPointLabels[i] = pointLabels[i];
+    }
+    for (var i = pointLabels.length; i < 6; ++i) {
+      cPointLabels[i] = -1;
+    }
+
+    return input.useNative((cInput) {
+      var result = Pointer<ffi.TorchRgba8Image>.fromAddress(0);
+      try {
+        result = _bindings.inferEfficientSamExtract(
+          cInput,
+          cPoints,
+          cPointLabels,
+          cModelPath.cast(),
+        );
+        if (result.address == 0) {
+          return null;
+        }
+        return result.ref.toDart();
+      } finally {
+        _bindings.torchRgba8ImageFree(result);
+      }
+    });
+  } finally {
+    malloc.free(cPointLabels);
+    malloc.free(cPoints);
     malloc.free(cModelPath);
   }
 }

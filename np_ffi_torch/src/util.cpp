@@ -126,6 +126,26 @@ TorchRgb8Image *makeRgb8Image(const vector<uint8_t> &pixel,
   }
 }
 
+TorchRgba8Image *makeRgba8Image(const vector<uint8_t> &pixel,
+                                const unsigned width, const unsigned height) {
+  auto c_pixel = copyVectorToCArray(pixel);
+  try {
+    TorchRgba8Image *image = (TorchRgba8Image *)malloc(sizeof(TorchRgba8Image));
+    try {
+      image->width = width;
+      image->height = height;
+      image->pixel = c_pixel;
+      return image;
+    } catch (...) {
+      free(image);
+      throw;
+    }
+  } catch (...) {
+    free(c_pixel);
+    throw;
+  }
+}
+
 TorchRgb8Image *subImage(const TorchRgb8Image *srcImage, const size_t left,
                          const size_t top, const size_t width,
                          const size_t height) {
