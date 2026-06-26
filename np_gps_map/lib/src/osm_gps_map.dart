@@ -46,8 +46,11 @@ class OsmGpsMap extends StatelessWidget {
                 ),
               ],
             ),
-            const SimpleAttributionWidget(
-              source: Text("OpenStreetMap contributors"),
+            const RichAttributionWidget(
+              showFlutterMapAttribution: false,
+              attributions: [
+                TextSourceAttribution("OpenStreetMap contributors"),
+              ],
             ),
           ],
         ),
