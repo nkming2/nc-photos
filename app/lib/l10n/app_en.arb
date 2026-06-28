@@ -1659,6 +1659,12 @@
 			}
 		}
 	},
+	"imageEnhancerModelDownloadDialogText": "Downloading AI model...",
+	"imageEnhancerProcessDialogTitle": "Almost there",
+	"imageEnhancerProcessDialogText": "Your image will now be processed in the background. You'll get a notification when it's done.",
+	"imageEnhancerResultFailedNotifTitle": "Failed to process image",
+	"imageEnhancerResultSuccessfulNotifTitle": "Image processed successfully",
+	"imageEnhancerResultSuccessfulNotifContent": "Tap to view the result",
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {

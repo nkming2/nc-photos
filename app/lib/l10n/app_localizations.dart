@@ -3009,6 +3009,42 @@ abstract class AppLocalizations {
   /// **'Original file backed up as {backup}'**
   String metadataEditBackupNotification(Object backup);
 
+  /// No description provided for @imageEnhancerModelDownloadDialogText.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading AI model...'**
+  String get imageEnhancerModelDownloadDialogText;
+
+  /// No description provided for @imageEnhancerProcessDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Almost there'**
+  String get imageEnhancerProcessDialogTitle;
+
+  /// No description provided for @imageEnhancerProcessDialogText.
+  ///
+  /// In en, this message translates to:
+  /// **'Your image will now be processed in the background. You\'ll get a notification when it\'s done.'**
+  String get imageEnhancerProcessDialogText;
+
+  /// No description provided for @imageEnhancerResultFailedNotifTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to process image'**
+  String get imageEnhancerResultFailedNotifTitle;
+
+  /// No description provided for @imageEnhancerResultSuccessfulNotifTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Image processed successfully'**
+  String get imageEnhancerResultSuccessfulNotifTitle;
+
+  /// No description provided for @imageEnhancerResultSuccessfulNotifContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to view the result'**
+  String get imageEnhancerResultSuccessfulNotifContent;
+
   /// Error message when server responds with HTTP401
   ///
   /// In en, this message translates to:

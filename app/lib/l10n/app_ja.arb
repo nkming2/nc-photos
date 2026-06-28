@@ -1701,5 +1701,11 @@
 	"enhanceMotionDeblurTitle": "手ぶれ補正",
 	"enhanceMotionDeblurDescription": "写真の手ぶれを軽減します",
 	"enhanceDerainTitle": "雨除去",
-	"enhanceDerainDescription": "写真から雨を消します"
+	"enhanceDerainDescription": "写真から雨を消します",
+	"imageEnhancerModelDownloadDialogText": "AIモデルをダウンロード中...",
+	"imageEnhancerProcessDialogTitle": "あと少し",
+	"imageEnhancerProcessDialogText": "写真を編集しています。完了次第、通知でお知らせします。",
+	"imageEnhancerResultFailedNotifTitle": "写真の編集に失敗しました",
+	"imageEnhancerResultSuccessfulNotifTitle": "写真の編集が完了しました",
+	"imageEnhancerResultSuccessfulNotifContent": "タップして編集結果を表示"
 }

@@ -132,6 +132,14 @@ class _IeBloc extends Bloc<_Event, _State> with BlocLogger {
         initialDelay: Duration.zero,
         existingWorkPolicy: ExistingWorkPolicy.append,
         inputData: ImageEnhancerTask.encodeArgument(
+          strings: ImageEnhancerTaskStrings(
+            imageEnhancerResultSuccessfulNotifTitle:
+                L10n.global().imageEnhancerResultSuccessfulNotifTitle,
+            imageEnhancerResultSuccessfulNotifContent:
+                L10n.global().imageEnhancerResultSuccessfulNotifContent,
+            imageEnhancerResultFailedNotifTitle:
+                L10n.global().imageEnhancerResultFailedNotifTitle,
+          ),
           type: taskType,
           platformIdentifier: uri.toString(),
           filename: file.name,

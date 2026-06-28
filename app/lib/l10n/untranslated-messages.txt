@@ -340,6 +340,12 @@
     "editMetadataWriteProgressTitle",
     "addLocationTitle",
     "metadataEditBackupNotification",
+    "imageEnhancerModelDownloadDialogText",
+    "imageEnhancerProcessDialogTitle",
+    "imageEnhancerProcessDialogText",
+    "imageEnhancerResultFailedNotifTitle",
+    "imageEnhancerResultSuccessfulNotifTitle",
+    "imageEnhancerResultSuccessfulNotifContent",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -422,6 +428,12 @@
     "editMetadataWriteProgressTitle",
     "addLocationTitle",
     "metadataEditBackupNotification",
+    "imageEnhancerModelDownloadDialogText",
+    "imageEnhancerProcessDialogTitle",
+    "imageEnhancerProcessDialogText",
+    "imageEnhancerResultFailedNotifTitle",
+    "imageEnhancerResultSuccessfulNotifTitle",
+    "imageEnhancerResultSuccessfulNotifContent",
     "errorServerNoCert"
   ],
 
@@ -508,6 +520,12 @@
     "editMetadataWriteProgressTitle",
     "addLocationTitle",
     "metadataEditBackupNotification",
+    "imageEnhancerModelDownloadDialogText",
+    "imageEnhancerProcessDialogTitle",
+    "imageEnhancerProcessDialogText",
+    "imageEnhancerResultFailedNotifTitle",
+    "imageEnhancerResultSuccessfulNotifTitle",
+    "imageEnhancerResultSuccessfulNotifContent",
     "errorServerNoCert"
   ],
 
@@ -740,6 +758,12 @@
     "editMetadataWriteProgressTitle",
     "addLocationTitle",
     "metadataEditBackupNotification",
+    "imageEnhancerModelDownloadDialogText",
+    "imageEnhancerProcessDialogTitle",
+    "imageEnhancerProcessDialogText",
+    "imageEnhancerResultFailedNotifTitle",
+    "imageEnhancerResultSuccessfulNotifTitle",
+    "imageEnhancerResultSuccessfulNotifContent",
     "errorServerNoCert"
   ],
 
@@ -814,6 +838,12 @@
     "editMetadataWriteProgressTitle",
     "addLocationTitle",
     "metadataEditBackupNotification",
+    "imageEnhancerModelDownloadDialogText",
+    "imageEnhancerProcessDialogTitle",
+    "imageEnhancerProcessDialogText",
+    "imageEnhancerResultFailedNotifTitle",
+    "imageEnhancerResultSuccessfulNotifTitle",
+    "imageEnhancerResultSuccessfulNotifContent",
     "errorServerNoCert"
   ],
 
@@ -941,6 +971,12 @@
     "editMetadataWriteProgressTitle",
     "addLocationTitle",
     "metadataEditBackupNotification",
+    "imageEnhancerModelDownloadDialogText",
+    "imageEnhancerProcessDialogTitle",
+    "imageEnhancerProcessDialogText",
+    "imageEnhancerResultFailedNotifTitle",
+    "imageEnhancerResultSuccessfulNotifTitle",
+    "imageEnhancerResultSuccessfulNotifContent",
     "errorServerNoCert"
   ],
 
@@ -1015,6 +1051,12 @@
     "editMetadataWriteProgressTitle",
     "addLocationTitle",
     "metadataEditBackupNotification",
+    "imageEnhancerModelDownloadDialogText",
+    "imageEnhancerProcessDialogTitle",
+    "imageEnhancerProcessDialogText",
+    "imageEnhancerResultFailedNotifTitle",
+    "imageEnhancerResultSuccessfulNotifTitle",
+    "imageEnhancerResultSuccessfulNotifContent",
     "errorServerNoCert"
   ],
 
@@ -1147,6 +1189,12 @@
     "editMetadataWriteProgressTitle",
     "addLocationTitle",
     "metadataEditBackupNotification",
+    "imageEnhancerModelDownloadDialogText",
+    "imageEnhancerProcessDialogTitle",
+    "imageEnhancerProcessDialogText",
+    "imageEnhancerResultFailedNotifTitle",
+    "imageEnhancerResultSuccessfulNotifTitle",
+    "imageEnhancerResultSuccessfulNotifContent",
     "errorServerNoCert"
   ],
 
@@ -1603,6 +1651,12 @@
     "editMetadataWriteProgressTitle",
     "addLocationTitle",
     "metadataEditBackupNotification",
+    "imageEnhancerModelDownloadDialogText",
+    "imageEnhancerProcessDialogTitle",
+    "imageEnhancerProcessDialogText",
+    "imageEnhancerResultFailedNotifTitle",
+    "imageEnhancerResultSuccessfulNotifTitle",
+    "imageEnhancerResultSuccessfulNotifContent",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -1742,6 +1796,12 @@
     "editMetadataWriteProgressTitle",
     "addLocationTitle",
     "metadataEditBackupNotification",
+    "imageEnhancerModelDownloadDialogText",
+    "imageEnhancerProcessDialogTitle",
+    "imageEnhancerProcessDialogText",
+    "imageEnhancerResultFailedNotifTitle",
+    "imageEnhancerResultSuccessfulNotifTitle",
+    "imageEnhancerResultSuccessfulNotifContent",
     "errorServerNoCert"
   ],
 
@@ -1887,6 +1947,12 @@
     "editMetadataWriteProgressTitle",
     "addLocationTitle",
     "metadataEditBackupNotification",
+    "imageEnhancerModelDownloadDialogText",
+    "imageEnhancerProcessDialogTitle",
+    "imageEnhancerProcessDialogText",
+    "imageEnhancerResultFailedNotifTitle",
+    "imageEnhancerResultSuccessfulNotifTitle",
+    "imageEnhancerResultSuccessfulNotifContent",
     "errorServerNoCert"
   ],
 
@@ -2014,6 +2080,12 @@
     "editMetadataWriteProgressTitle",
     "addLocationTitle",
     "metadataEditBackupNotification",
+    "imageEnhancerModelDownloadDialogText",
+    "imageEnhancerProcessDialogTitle",
+    "imageEnhancerProcessDialogText",
+    "imageEnhancerResultFailedNotifTitle",
+    "imageEnhancerResultSuccessfulNotifTitle",
+    "imageEnhancerResultSuccessfulNotifContent",
     "errorServerNoCert"
   ],
 
@@ -2088,6 +2160,12 @@
     "editMetadataWriteProgressTitle",
     "addLocationTitle",
     "metadataEditBackupNotification",
+    "imageEnhancerModelDownloadDialogText",
+    "imageEnhancerProcessDialogTitle",
+    "imageEnhancerProcessDialogText",
+    "imageEnhancerResultFailedNotifTitle",
+    "imageEnhancerResultSuccessfulNotifTitle",
+    "imageEnhancerResultSuccessfulNotifContent",
     "errorServerNoCert"
   ],
 
@@ -2146,7 +2224,13 @@
     "recognizeInstructionDialogButton",
     "editMetadataWriteProgressTitle",
     "addLocationTitle",
-    "metadataEditBackupNotification"
+    "metadataEditBackupNotification",
+    "imageEnhancerModelDownloadDialogText",
+    "imageEnhancerProcessDialogTitle",
+    "imageEnhancerProcessDialogText",
+    "imageEnhancerResultFailedNotifTitle",
+    "imageEnhancerResultSuccessfulNotifTitle",
+    "imageEnhancerResultSuccessfulNotifContent"
   ],
 
   "zh": [
@@ -2304,6 +2388,12 @@
     "editMetadataWriteProgressTitle",
     "addLocationTitle",
     "metadataEditBackupNotification",
+    "imageEnhancerModelDownloadDialogText",
+    "imageEnhancerProcessDialogTitle",
+    "imageEnhancerProcessDialogText",
+    "imageEnhancerResultFailedNotifTitle",
+    "imageEnhancerResultSuccessfulNotifTitle",
+    "imageEnhancerResultSuccessfulNotifContent",
     "errorServerNoCert"
   ],
 
@@ -2552,6 +2642,12 @@
     "editMetadataWriteProgressTitle",
     "addLocationTitle",
     "metadataEditBackupNotification",
+    "imageEnhancerModelDownloadDialogText",
+    "imageEnhancerProcessDialogTitle",
+    "imageEnhancerProcessDialogText",
+    "imageEnhancerResultFailedNotifTitle",
+    "imageEnhancerResultSuccessfulNotifTitle",
+    "imageEnhancerResultSuccessfulNotifContent",
     "errorServerNoCert"
   ]
 }

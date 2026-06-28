@@ -30,9 +30,8 @@ class _PrepareModelSaveDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const _DownloadProgressDialog(
-      // TODO string
-      title: Text("Downloading model..."),
+    return _DownloadProgressDialog(
+      title: Text(L10n.global().imageEnhancerModelDownloadDialogText),
     );
   }
 }
@@ -98,12 +97,8 @@ class _ProcessBackgroundDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      // TODO string
-      title: const Text("Almost there"),
-      // TODO string
-      content: const Text(
-        "Your image will now be processed in the background. A notification will be shown when it's done.",
-      ),
+      title: Text(L10n.global().imageEnhancerProcessDialogTitle),
+      content: Text(L10n.global().imageEnhancerProcessDialogText),
       actions: [
         TextButton(
           onPressed: () {

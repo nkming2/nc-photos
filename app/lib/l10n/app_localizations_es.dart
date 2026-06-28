@@ -1710,6 +1710,27 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String get imageEnhancerModelDownloadDialogText => 'Downloading AI model...';
+
+  @override
+  String get imageEnhancerProcessDialogTitle => 'Almost there';
+
+  @override
+  String get imageEnhancerProcessDialogText =>
+      'Your image will now be processed in the background. You\'ll get a notification when it\'s done.';
+
+  @override
+  String get imageEnhancerResultFailedNotifTitle => 'Failed to process image';
+
+  @override
+  String get imageEnhancerResultSuccessfulNotifTitle =>
+      'Image processed successfully';
+
+  @override
+  String get imageEnhancerResultSuccessfulNotifContent =>
+      'Tap to view the result';
+
+  @override
   String get errorUnauthenticated =>
       'No estás autentificado. Por favor inicia sesión otra vez si el problema continúa.';
 

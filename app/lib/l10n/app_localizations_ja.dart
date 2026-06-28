@@ -1635,6 +1635,24 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
+  String get imageEnhancerModelDownloadDialogText => 'AIモデルをダウンロード中...';
+
+  @override
+  String get imageEnhancerProcessDialogTitle => 'あと少し';
+
+  @override
+  String get imageEnhancerProcessDialogText => '写真を編集しています。完了次第、通知でお知らせします。';
+
+  @override
+  String get imageEnhancerResultFailedNotifTitle => '写真の編集に失敗しました';
+
+  @override
+  String get imageEnhancerResultSuccessfulNotifTitle => '写真の編集が完了しました';
+
+  @override
+  String get imageEnhancerResultSuccessfulNotifContent => 'タップして編集結果を表示';
+
+  @override
   String get errorUnauthenticated => '認証されていないアクセスです。問題が解決しない場合は、再度サインインしてください';
 
   @override

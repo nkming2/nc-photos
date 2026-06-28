@@ -33,9 +33,44 @@ enum ImageEnhancerTaskType {
   lowLight,
 }
 
+class ImageEnhancerTaskStrings {
+  const ImageEnhancerTaskStrings({
+    required this.imageEnhancerResultSuccessfulNotifTitle,
+    required this.imageEnhancerResultSuccessfulNotifContent,
+    required this.imageEnhancerResultFailedNotifTitle,
+  });
+
+  factory ImageEnhancerTaskStrings.fromJson(JsonObj json) {
+    return ImageEnhancerTaskStrings(
+      imageEnhancerResultSuccessfulNotifTitle:
+          json["imageEnhancerResultSuccessfulNotifTitle"],
+      imageEnhancerResultSuccessfulNotifContent:
+          json["imageEnhancerResultSuccessfulNotifContent"],
+      imageEnhancerResultFailedNotifTitle:
+          json["imageEnhancerResultFailedNotifTitle"],
+    );
+  }
+
+  JsonObj toJson() {
+    return {
+      "imageEnhancerResultSuccessfulNotifTitle":
+          imageEnhancerResultSuccessfulNotifTitle,
+      "imageEnhancerResultSuccessfulNotifContent":
+          imageEnhancerResultSuccessfulNotifContent,
+      "imageEnhancerResultFailedNotifTitle":
+          imageEnhancerResultFailedNotifTitle,
+    };
+  }
+
+  final String imageEnhancerResultSuccessfulNotifTitle;
+  final String imageEnhancerResultSuccessfulNotifContent;
+  final String imageEnhancerResultFailedNotifTitle;
+}
+
 @npLog
 class ImageEnhancerTask {
   ImageEnhancerTask._({
+    required this.strings,
     required this.type,
     required this.platformIdentifier,
     required this.filename,
@@ -44,6 +79,7 @@ class ImageEnhancerTask {
 
   factory ImageEnhancerTask(JsonObj args) {
     return ImageEnhancerTask._(
+      strings: ImageEnhancerTaskStrings.fromJson(jsonDecode(args["strings"])),
       type: ImageEnhancerTaskType.values[args["type"]],
       platformIdentifier: args["platformIdentifier"],
       filename: args["filename"],
@@ -56,12 +92,14 @@ class ImageEnhancerTask {
   }
 
   static JsonObj encodeArgument({
+    required ImageEnhancerTaskStrings strings,
     required ImageEnhancerTaskType type,
     required String platformIdentifier,
     required String filename,
     ImageEnhancerServerPersistenceInfo? uploadInfo,
   }) {
     return {
+      "strings": jsonEncode(strings.toJson()),
       "type": type.index,
       "platformIdentifier": platformIdentifier,
       "filename": filename,
@@ -100,18 +138,15 @@ class ImageEnhancerTask {
       final result = await _process();
       if (result == null) {
         _log.severe("[run] Failed while _process");
-        // TODO string
-        _showStatusNotif(title: "Failed to process image");
+        _showStatusNotif(title: strings.imageEnhancerResultFailedNotifTitle);
         return;
       }
       final srcBytes = await LocalMedia.readFile(platformIdentifier);
       final persistResult = await _persistResult(result, srcBytes);
       _log.fine("[run] Persisted as $persistResult");
       _showStatusNotif(
-        // TODO string
-        title: "Successfully processed image",
-        // TODO string
-        body: "Tap to view the result",
+        title: strings.imageEnhancerResultSuccessfulNotifTitle,
+        body: strings.imageEnhancerResultSuccessfulNotifContent,
         payload: jsonEncode({
           "action": ImageEnhancerAndroidConstant.resultNotificationAction,
           "persistResult": persistResult,
@@ -119,7 +154,7 @@ class ImageEnhancerTask {
       );
     } catch (e, stackTrace) {
       _log.severe("[run] Unhandled exception", e, stackTrace);
-      _showStatusNotif(title: "Failed to process image");
+      _showStatusNotif(title: strings.imageEnhancerResultFailedNotifTitle);
     }
   }
 
@@ -260,6 +295,7 @@ class ImageEnhancerTask {
     }
   }
 
+  final ImageEnhancerTaskStrings strings;
   final ImageEnhancerTaskType type;
   final String platformIdentifier;
   final String filename;
