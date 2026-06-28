@@ -106,7 +106,15 @@ class _WrappedEnhancementSettingsState
                       title: Text(
                         L10n.global().settingsEnhanceMaxResolutionTitle2,
                       ),
-                      subtitle: Text("${state.width}x${state.height}"),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Deprecated. New enhancements no longer respect this setting.",
+                          ),
+                          Text("${state.width}x${state.height}"),
+                        ],
+                      ),
                       onTap: () => _onMaxSizeTap(context, state),
                     );
                   },
