@@ -198,7 +198,7 @@ bool SampleKernelBilinearH(const uint8 *src, uint32 src_width,
 
   /* perform the interpolation of our lerp_pixels. */
   for (unsigned i = 0; i < ch; ++i) {
-    output[ch] = pixels[0][ch] * (1.0f - f_delta) + pixels[1][ch] * f_delta;
+    output[i] = pixels[0][i] * (1.0f - f_delta) + pixels[1][i] * f_delta;
   }
 
   return true;
@@ -229,7 +229,7 @@ bool SampleKernelBilinearV(const uint8 *src, uint32 src_width,
 
   /* perform the interpolation of our lerp_pixels. */
   for (unsigned i = 0; i < ch; ++i) {
-    output[ch] = pixels[0][ch] * (1.0f - f_delta) + pixels[1][ch] * f_delta;
+    output[i] = pixels[0][i] * (1.0f - f_delta) + pixels[1][i] * f_delta;
   }
 
   return true;
