@@ -12,17 +12,17 @@ class Retouch implements Method {
   Future<void> prepareResource({
     void Function(double progress, int size)? onProgress,
   }) async {
-    await _modelDownloader.download(ModelType.retouch, onProgress: onProgress);
+    await _modelDownloader.download(ModelType.neurop, onProgress: onProgress);
   }
 
   @override
   Future<void> cleanResource() {
-    return _modelDownloader.delete(ModelType.retouch);
+    return _modelDownloader.delete(ModelType.neurop);
   }
 
   @override
   Future<bool> isResourceReady() {
-    return _modelDownloader.isDownloaded(ModelType.retouch);
+    return _modelDownloader.isDownloaded(ModelType.neurop);
   }
 
   @override
@@ -30,7 +30,7 @@ class Retouch implements Method {
 
   @override
   Future<Rgb8Image?> apply(Rgb8Image src) async {
-    final modelFile = await ModelDownloader().download(ModelType.retouch);
+    final modelFile = await ModelDownloader().download(ModelType.neurop);
     return _applyAsync(src, modelFile: modelFile);
   }
 

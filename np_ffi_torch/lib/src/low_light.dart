@@ -12,17 +12,17 @@ class LowLight implements Method {
   Future<void> prepareResource({
     void Function(double progress, int size)? onProgress,
   }) async {
-    await _modelDownloader.download(ModelType.lowLight, onProgress: onProgress);
+    await _modelDownloader.download(ModelType.zeroDce, onProgress: onProgress);
   }
 
   @override
   Future<void> cleanResource() {
-    return _modelDownloader.delete(ModelType.lowLight);
+    return _modelDownloader.delete(ModelType.zeroDce);
   }
 
   @override
   Future<bool> isResourceReady() {
-    return _modelDownloader.isDownloaded(ModelType.lowLight);
+    return _modelDownloader.isDownloaded(ModelType.zeroDce);
   }
 
   @override
@@ -30,7 +30,7 @@ class LowLight implements Method {
 
   @override
   Future<Rgb8Image?> apply(Rgb8Image src) async {
-    final modelFile = await ModelDownloader().download(ModelType.lowLight);
+    final modelFile = await ModelDownloader().download(ModelType.zeroDce);
     return _applyAsync(src, modelFile: modelFile);
   }
 
