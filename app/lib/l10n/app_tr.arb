@@ -294,6 +294,10 @@
 	"settingsFallbackClientExifFalseText": "Nextcloud dosya meta verilerini çıkarmayı başaramadıysa olduğu gibi bırakın",
 	"settingsFallbackClientExifConfirmDialogTitle": "Uygulama tarafı EXIF işleyiciyi etkinleştir?",
 	"settingsFallbackClientExifConfirmDialogText": "Normalde Nextcloud sunucusu fotoğraflarınızı otomatik olarak işler ve EXIF ​​meta verilerini arka planda depolar. Ancak arka plan görevi yapılandırma sorunu veya sunucu hatası nedeniyle başarısız olabilir. Etkinleştirilirse, bu dosyaları uygulamada işleriz.",
+	"settingsBackupOnRemoteExifEditTitle": "Meta verileri değiştirmeden önce yedek oluştur (sadece sunucu dosyaları için)",
+	"@settingsBackupOnRemoteExifEditTitle": {
+		"description": "Create a backup copy of the original file before editing metadata on server"
+	},
 	"settingsMemoriesTitle": "Anılar",
 	"@settingsMemoriesTitle": {
 		"description": "Memory albums contain photos taken in a specific time range in the past"
@@ -472,6 +476,7 @@
 	"@enableButtonLabel": {
 		"description": "Label of the enable button"
 	},
+	"enableButtonLabel2": "Etkinleştir",
 	"exifSupportDetails": "EXIF desteğinin etkinleştirilmesi, çekilme tarihi, kamera modeli gibi çeşitli üst verileri kullanılabilir hale getirecektir. Bu üst verileri okumak ve orijinal tam boyutlu görüntüyü indirmek için ekstra ağ kullanımı gerekir. Uygulama yalnızca bir Wi-Fi ağına bağlanıldığında indirilmeye başlayacaktır",
 	"@exifSupportDetails": {
 		"description": "Detailed description of the exif support feature"
@@ -581,6 +586,7 @@
 	},
 	"dateSubtitle": "Tarih",
 	"timeSubtitle": "Saat",
+	"timeZoneOffsetSubtitle": "Saat dilimi",
 	"dateYearInputHint": "Yıl",
 	"dateMonthInputHint": "Ay",
 	"dateDayInputHint": "Gün",
@@ -1242,6 +1248,10 @@
 		"description": "Discard the current unsaved content"
 	},
 	"saveTooltip": "Kaydet",
+	"imageEditDownloadDialogTitle": "Fotoğraf sunucudan indiriliyor...",
+	"imageEditProcessDialogTitle": "Fotoğraf işleniyor...",
+	"imageEditSaveDialogTitle": "Değişiklikler kaydediliyor...",
+	"imageEditColorBrightness": "Parlaklık",
 	"@saveTooltip": {
 		"description": "Save the current content"
 	},
@@ -1300,6 +1310,45 @@
 	"imageEditTransformCrop": "Kırp",
 	"@imageEditTransformCrop": {
 		"description": "Crop the image"
+	},
+	"imageEditToolbarEffectLabel": "Efekt",
+	"imageEditEffectHalftone": "Yarı ton",
+	"imageEditEffectPixelation": "Pikselleşme",
+	"imageEditEffectPosterization": "Tonu arttır",
+	"imageEditEffectSketch": "Eskiz efekti",
+	"imageEditEffectToon": "Animasyon",
+	"imageEditEffectFace": "Yüz",
+	"imageEditEffectParamEdge": "Köşe",
+	"imageEditEffectParamColor": "Renk",
+	"imageEditEffectParamHatching": "Tarama",
+	"@imageEditEffectParamHatching": {
+		"description": "Hatching is an artistic technique used to create shading and tonal effects by drawing closely spaced parallel lines"
+	},
+	"imageEditEffectParamJawline": "Çene hattı",
+	"@imageEditEffectParamJawline": {
+		"description": "Adjust face jawline"
+	},
+	"imageEditEffectParamEyeSize": "Göz boyutu",
+	"@imageEditEffectParamEyeSize": {
+		"description": "Adjust size of the eye"
+	},
+	"imageEditFaceDetectionRunningMessage": "Yüzler algılanıyor...",
+	"imageEditNoFaceDetected": "Yüz tespit edilemedi",
+	"imageEditFaceNotSelected": "Efektleri uygulamak için fotoğraflarınızdaki bir veya daha fazla yüzü seçin",
+	"@imageEditFaceNotSelected": {
+		"description": "Shown when there are one or more detected faces but none of them is selected"
+	},
+	"imageEditResetSelectedFaceMessage": "Görüntü dönüştürme ayarları yapıldıktan sonra seçilen yüzler silinir",
+	"@imageEditResetSelectedFaceMessage": {
+		"description": "Changing the image transformation will affect the result of face detection. This message is used to notify user to select the faces again afterwards"
+	},
+	"imageEditOpenErrorMessage": "Dosya açılırken bir hata oluştu",
+	"@imageEditOpenErrorMessage": {
+		"description": "Shown when app failed to open the image for editing"
+	},
+	"imageEditSaveErrorMessage": "Fotoğraf kaydedilirken bir hata oluştu",
+	"@imageEditSaveErrorMessage": {
+		"description": "Shown when app failed to save the edited image"
 	},
 	"categoriesLabel": "Kategoriler",
 	"searchLandingCategoryVideosLabel": "Videolar",
@@ -1537,6 +1586,7 @@
 	"settingsAppLockConfirmPinDialogTitle": "PIN'i tekrar girin",
 	"settingsAppLockSetupPasswordDialogTitle": "Uygulamanın kilidini açmak için şifre ayarlayın",
 	"settingsAppLockConfirmPasswordDialogTitle": "Şifreyi tekrar girin",
+	"settingsViewerUseOriginalImageTitle": "Fotoğraf Görüntüleyicide yüksek kaliteli önizleme yerine orjinal fotoğrafı göster",
 	"appLockUnlockHint": "Uygulamanın kilidini açın",
 	"@appLockUnlockHint": {
 		"description": "Unlock app via selected means (e.g., password) in case app lock is enabled by user"
@@ -1624,6 +1674,85 @@
 	"opOnlySupportLocalFiles": "Bu özellik sadece cihazınızdaki yerel dosyaları destekler. Seçilen buluttaki dosyalar yok sayılır.",
 	"@opOnlySupportLocalFiles": {
 		"description": "While it's possible to select both remote and local files in timeline, some features only work with one kind of them. We'll show this warning when user selected a mixture of files and tried to perform a local only action"
+	},
+	"uploadDialogPath": "Yol",
+	"@uploadDialogPath": {
+		"description": "Upload path"
+	},
+	"uploadDialogBatchConvert": "Toplu dönüştür",
+	"@uploadDialogBatchConvert": {
+		"description": "Batch convert files"
+	},
+	"uploadBatchConvertWarningText1": "Fotoğraflarınız sunucuya yüklenmeden önce sıkıştırılacaktır.",
+	"uploadBatchConvertWarningText2": "Hareketli fotoğraflar DESTEKLENMEMEKTEDİR ve bunlar normal görüntü olarak yüklenecektir.",
+	"uploadBatchConvertWarningText3": "Bazı meta veriler değiştirilebilir veya silinebilir.",
+	"uploadBatchConvertWarningText4": "Desteklenen dosya formatları: JPEG, PNG, WEBP, BMP, HEIC",
+	"uploadBatchConvertSettings": "Dönüştürme ayarları",
+	"uploadBatchConvertSettingsFormat": "Fotoğraf türü",
+	"@uploadBatchConvertSettingsFormat": {
+		"description": "Image format"
+	},
+	"uploadBatchConvertSettingsQuality": "Kalite",
+	"uploadBatchConvertSettingsDownscaling": "Kalite düşürme",
+	"viewerLastPageText": "Başka fotoğraf yok",
+	"deleteMergedFileDialogServerOnlyButton": "Sadece sunucuda tut",
+	"@deleteMergedFileDialogServerOnlyButton": {
+		"description": "Remove the file from server but keep the device copy"
+	},
+	"deleteMergedFileDialogLocalOnlyButton": "Sadece cihazda tut",
+	"@deleteMergedFileDialogLocalOnlyButton": {
+		"description": "Remove the file from device but keep the server copy"
+	},
+	"deleteMergedFileDialogBothButton": "Her ikisinde de tut",
+	"@deleteMergedFileDialogBothButton": {
+		"description": "Remove the file from device and server"
+	},
+	"deleteMergedFileDialogContent": "Bazı dosyalar hem sunucunuzda hem de cihazınızda bulunuyor. Bu dosyaları nereden silmeliyiz?",
+	"deleteSingleMergedFileDialogContent": "Bu dosya hem sunucunuzda hem cihazınıda bulunuyor. Hangisini silmek istiyorsunuz?",
+	"collectionAddItemTitle": "Öğeyi nereye eklemek istersiniz?",
+	"@collectionAddItemTitle": {
+		"description": "When adding an item to a collection, ask the user where should we insert it to"
+	},
+	"greetingsMorning": "Günaydın, {user}",
+	"@greetingsMorning": {
+		"placeholders": {
+			"user": {
+				"example": "alice"
+			}
+		}
+	},
+	"greetingsAfternoon": "Tünaydın, {user}",
+	"@greetingsAfternoon": {
+		"placeholders": {
+			"user": {
+				"example": "alice"
+			}
+		}
+	},
+	"greetingsNight": "İyi akşamlar, {user}",
+	"@greetingsNight": {
+		"placeholders": {
+			"user": {
+				"example": "alice"
+			}
+		}
+	},
+	"recognizeInstructionDialogTitle": "Tanıma entegrasyonu için kurulum gerekiyor",
+	"recognizeInstructionDialogContent": "Nextcloud 33 sürümünden itibaren, Tanıma eklentisinin entegrasyonu için sunucu taraflı uygulama gerekmektedir.",
+	"recognizeInstructionDialogButton": "Rehberi aç",
+	"editMetadataWriteProgressTitle": "Dosya yükleniyor",
+	"@editMetadataWriteProgressTitle": {
+		"description": "Title of the progress dialog when uploading the file after editing its metadata"
+	},
+	"addLocationTitle": "Konum ekle",
+	"metadataEditBackupNotification": "Orjinal dosya şu isimle yedeklendi: {backup}",
+	"@metadataEditBackupNotification": {
+		"description": "Original file is backed up before editing its metadata",
+		"placeholders": {
+			"backup": {
+				"example": "IMG_123456789.jpg_original"
+			}
+		}
 	},
 	"dontShowAgain": "Tekrar gösterme",
 	"errorServerNoCert": "Sunucu sertifikası bulunamadı. Bunun yerine HTTP denemek ister misiniz?",
