@@ -5,12 +5,11 @@ import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/platform/download.dart' as itf;
+import 'package:nc_photos/use_case/download_file2.dart';
 import 'package:nc_photos_plugin/nc_photos_plugin.dart';
 import 'package:np_http/np_http.dart';
 import 'package:np_log/np_log.dart';
 import 'package:np_platform_local_media/np_platform_local_media.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:uuid/uuid.dart';
 
 part 'download.g.dart';
 
@@ -53,10 +52,11 @@ class _Download extends itf.Download {
   @override
   Future<String> call() async {
     if (_isInitialDownload) {
-      await _cleanUp();
-      _isInitialDownload = false;
+      await _downloadFileManager.cleanUp();
+      await _internalFileManager.cleanUp();
+      setIsInitialDownload(false);
     }
-    final (:dir, :file) = await _createTempFile();
+    final (:dir, :file) = await _downloadFileManager.createNamedFile(filename);
     try {
       // download file to a temp dir
       final fileWrite = file.openWrite();
@@ -127,70 +127,10 @@ class _Download extends itf.Download {
     return true;
   }
 
-  Future<Directory> _openTempDir() async {
-    final root = await getTemporaryDirectory();
-    final dir = Directory("${root.path}/downloads");
-    if (!await dir.exists()) {
-      return dir.create();
-    } else {
-      return dir;
-    }
-  }
-
-  Future<({Directory dir, File file})> _createTempFile() async {
-    final dstDir = await _openTempDir();
-    while (true) {
-      final dirName = const Uuid().v4();
-      final dir = Directory("${dstDir.path}/$dirName");
-      if (await FileSystemEntity.type(dir.path) !=
-          FileSystemEntityType.notFound) {
-        continue;
-      }
-      await dir.create();
-      return (dir: dir, file: File("${dir.path}/$filename"));
-    }
-  }
-
-  /// Clean up remaining cache files from previous runs
-  ///
-  /// Normally the files will be deleted automatically
-  Future<void> _cleanUp() async {
-    final tempDir = await _openTempDir();
-    await for (final f in tempDir.list(followLinks: false)) {
-      _log.warning("[_cleanUp] Deleting file: ${f.path}");
-      try {
-        await f.delete(recursive: true);
-      } catch (e, stackTrace) {
-        _log.warning("[_cleanUp] Failed while delete", e, stackTrace);
-      }
-    }
-
-    final shareDir = await _openShareDir();
-    await for (final f in shareDir.list(followLinks: false)) {
-      _log.warning("[_cleanUp] Deleting file: ${f.path}");
-      try {
-        await f.delete(recursive: true);
-      } catch (e, stackTrace) {
-        _log.warning("[_cleanUp] Failed while delete", e, stackTrace);
-      }
-    }
-  }
-
-  Future<Directory> _openShareDir() async {
-    final root = await getTemporaryDirectory();
-    final dir = Directory("${root.path}/shares");
-    if (!await dir.exists()) {
-      return dir.create();
-    } else {
-      return dir;
-    }
-  }
-
   Future<File> _copyFileToInternal(File src) async {
-    final dstDir = await _openShareDir();
-    final dst = File("${dstDir.path}/$filename");
-    await src.copy(dst.path);
-    return dst;
+    final (:dir, :file) = await _internalFileManager.createNamedFile(filename);
+    await src.copy(file.path);
+    return file;
   }
 
   final String url;
@@ -203,5 +143,14 @@ class _Download extends itf.Download {
 
   bool shouldInterrupt = false;
 
-  static bool _isInitialDownload = true;
+  // ignore: deprecated_member_use_from_same_package
+  static bool get _isInitialDownload => LegacyDownloadCompat.isInitialDownload;
+  static void setIsInitialDownload(bool value) {
+    LegacyDownloadCompat.setIsInitialDownload(value);
+  }
+
+  // ignore: deprecated_member_use_from_same_package
+  static const _downloadFileManager = LegacyDownloadCompat.downloadFileManager;
+  // ignore: deprecated_member_use_from_same_package
+  static const _internalFileManager = LegacyDownloadCompat.internalFileManager;
 }

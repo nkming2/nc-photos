@@ -27,6 +27,7 @@ import 'package:nc_photos/exception_util.dart';
 import 'package:nc_photos/help_utils.dart' as help_util;
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/snack_bar_manager.dart';
+import 'package:nc_photos/temp_file_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/use_case/put_file_binary.dart';
@@ -48,9 +49,7 @@ import 'package:np_platform_local_media/np_platform_local_media.dart';
 import 'package:np_platform_raw_image/np_platform_raw_image.dart';
 import 'package:np_ui/np_ui.dart';
 import 'package:path/path.dart' as pathlib;
-import 'package:path_provider/path_provider.dart';
 import 'package:to_string/to_string.dart';
-import 'package:uuid/uuid.dart';
 
 part 'app_bar.dart';
 part 'bloc.dart';

@@ -9,6 +9,7 @@ import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/image_location/image_location.dart';
 import 'package:nc_photos/entity/local_file.dart';
 import 'package:nc_photos/geocoder_util.dart';
+import 'package:nc_photos/temp_file_manager.dart';
 import 'package:nc_photos/use_case/load_metadata.dart';
 import 'package:np_common/size.dart';
 import 'package:np_exiv2/np_exiv2.dart';
@@ -16,8 +17,6 @@ import 'package:np_geocoder/np_geocoder.dart';
 import 'package:np_gps_map/np_gps_map.dart';
 import 'package:np_platform_local_media/np_platform_local_media.dart';
 import 'package:np_platform_raw_image/np_platform_raw_image.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:uuid/uuid.dart';
 
 class AnyFileLocalUriGetter implements AnyFileUriGetter {
   AnyFileLocalUriGetter(AnyFile file)
@@ -206,46 +205,23 @@ class AnyFileLocalPrivateFileCopyGetter
 
   @override
   Future<io.File> get({void Function(double progress)? onProgress}) async {
+    const tempFileManager = TempFileManager("private-file-copy");
     if (_isInitialDownload) {
-      await _cleanUp();
+      await tempFileManager.cleanUp();
       _isInitialDownload = false;
     }
 
     if (_provider.file.filename == null) {
       throw StateError("Can't get filename");
     }
-    final dst = await _createTempFile(_provider.file.filename!);
+    final (dir: _, file: dst) = await tempFileManager.createNamedFile(
+      _provider.file.filename!,
+    );
     await LocalMedia.copyFileToPrivateDir(
       _provider.file.platformIdentifier,
       dstPath: dst.path,
     );
     return dst;
-  }
-
-  static Future<io.File> _createTempFile(String filename) async {
-    final dir = await _openTempDir();
-    final subdir = io.Directory("${dir.path}/${const Uuid().v4()}");
-    await subdir.create();
-    return io.File("${subdir.path}/$filename");
-  }
-
-  static Future<io.Directory> _openTempDir() async {
-    final root = await getTemporaryDirectory();
-    final dir = io.Directory("${root.path}/private-file-copy");
-    if (!await dir.exists()) {
-      return dir.create();
-    } else {
-      return dir;
-    }
-  }
-
-  static Future<void> _cleanUp() async {
-    final tempDir = await _openTempDir();
-    await for (final f in tempDir.list(followLinks: false)) {
-      try {
-        await f.delete(recursive: true);
-      } catch (_) {}
-    }
   }
 
   final AnyFileLocalProvider _provider;

@@ -208,7 +208,11 @@ class _IeBloc extends Bloc<_Event, _State> with BlocLogger {
 
       // do the edits
       emit(state.copyWith(saveState: _SaveState.process));
-      final (:dir, file: jpegFile) = await _createTempFile();
+      const tempFileManager = TempFileManager("image_editor");
+      final (:dir, file: jpegFile) = await tempFileManager.createNamedFile(
+        pathlib.basenameWithoutExtension(file.name),
+        extension: "jpg",
+      );
       try {
         final pixelFilters = await _preparePixelFilters();
         await _processFullBitmapToJpeg(
@@ -409,35 +413,6 @@ class _IeBloc extends Bloc<_Event, _State> with BlocLogger {
       srcMime: "image/jpeg",
       dstDir: "Photos (for Nextcloud)/Edited Photos",
     );
-  }
-
-  Future<io.Directory> _openTempDir() async {
-    final root = await getTemporaryDirectory();
-    final dir = io.Directory("${root.path}/image_editor");
-    if (!await dir.exists()) {
-      return dir.create();
-    } else {
-      return dir;
-    }
-  }
-
-  Future<({io.Directory dir, io.File file})> _createTempFile() async {
-    final dstDir = await _openTempDir();
-    while (true) {
-      final dirName = const Uuid().v4();
-      final dir = io.Directory("${dstDir.path}/$dirName");
-      if (await io.FileSystemEntity.type(dir.path) !=
-          io.FileSystemEntityType.notFound) {
-        continue;
-      }
-      await dir.create();
-      return (
-        dir: dir,
-        file: io.File(
-          "${dir.path}/${pathlib.basenameWithoutExtension(file.name)}.jpg",
-        ),
-      );
-    }
   }
 
   Future<int> _getProcessorToken() async {

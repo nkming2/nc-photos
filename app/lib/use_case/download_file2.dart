@@ -7,12 +7,11 @@ import 'package:nc_photos/account.dart';
 import 'package:nc_photos/entity/file_descriptor.dart';
 import 'package:nc_photos/exception.dart';
 import 'package:nc_photos/np_api_util.dart';
+import 'package:nc_photos/temp_file_manager.dart';
 import 'package:np_http/np_http.dart';
 import 'package:np_log/np_log.dart';
 import 'package:np_platform_local_media/np_platform_local_media.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:uuid/uuid.dart';
 
 part 'download_file2.g.dart';
 
@@ -109,10 +108,9 @@ class DownloadInternalTempFile {
   }
 
   Future<File> _copyFileToInternal(File src, {required String filename}) async {
-    final dstDir = await _openInternalDir();
-    final dst = File("${dstDir.path}/$filename");
-    await src.copy(dst.path);
-    return dst;
+    final (:dir, :file) = await _internalFileManager.createNamedFile(filename);
+    await src.copy(file.path);
+    return file;
   }
 
   final _interruptor = BehaviorSubject.seeded(false);
@@ -127,10 +125,11 @@ Future<void> _download({
   FutureOr<void> Function(File tempFile)? postDownload,
 }) async {
   if (_isInitialDownload) {
-    await _cleanUp();
+    await _downloadFileManager.cleanUp();
+    await _internalFileManager.cleanUp();
     _isInitialDownload = false;
   }
-  final (:dir, :file) = await _createTempFile(name: filename);
+  final (:dir, :file) = await _downloadFileManager.createNamedFile(filename);
   try {
     // download file to a temp dir
     final fileWrite = file.openWrite();
@@ -185,68 +184,20 @@ Future<void> _download({
   }
 }
 
-Future<({Directory dir, File file})> _createTempFile({
-  required String name,
-}) async {
-  final dstDir = await _openTempDir();
-  while (true) {
-    final dirName = const Uuid().v4();
-    final dir = Directory("${dstDir.path}/$dirName");
-    if (await FileSystemEntity.type(dir.path) !=
-        FileSystemEntityType.notFound) {
-      continue;
-    }
-    await dir.create();
-    return (dir: dir, file: File("${dir.path}/$name"));
-  }
-}
-
-Future<Directory> _openTempDir() async {
-  final root = await getTemporaryDirectory();
-  final dir = Directory("${root.path}/downloads");
-  if (!await dir.exists()) {
-    return dir.create();
-  } else {
-    return dir;
-  }
-}
-
-Future<Directory> _openInternalDir() async {
-  final root = await getTemporaryDirectory();
-  final dir = Directory("${root.path}/shares");
-  if (!await dir.exists()) {
-    return dir.create();
-  } else {
-    return dir;
-  }
-}
-
-/// Clean up remaining cache files from previous runs
-///
-/// Normally the files will be deleted automatically
-Future<void> _cleanUp() async {
-  final tempDir = await _openTempDir();
-  await for (final f in tempDir.list(followLinks: false)) {
-    _$__NpLog.log.warning("[_cleanUp] Deleting file: ${f.path}");
-    try {
-      await f.delete(recursive: true);
-    } catch (e, stackTrace) {
-      _$__NpLog.log.warning("[_cleanUp] Failed while delete", e, stackTrace);
-    }
-  }
-
-  final shareDir = await _openInternalDir();
-  await for (final f in shareDir.list(followLinks: false)) {
-    _$__NpLog.log.warning("[_cleanUp] Deleting file: ${f.path}");
-    try {
-      await f.delete(recursive: true);
-    } catch (e, stackTrace) {
-      _$__NpLog.log.warning("[_cleanUp] Failed while delete", e, stackTrace);
-    }
+@Deprecated("For legacy download only, do not use")
+class LegacyDownloadCompat {
+  static const downloadFileManager = _downloadFileManager;
+  static const internalFileManager = _internalFileManager;
+  static bool get isInitialDownload => _isInitialDownload;
+  static void setIsInitialDownload(bool value) {
+    _isInitialDownload = value;
   }
 }
 
 bool _isInitialDownload = true;
+
+const _downloadFileManager = TempFileManager("downloads");
+const _internalFileManager = TempFileManager("shares");
 
 @npLog
 // ignore: camel_case_types
