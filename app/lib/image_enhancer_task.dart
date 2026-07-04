@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io' as io;
+import 'dart:isolate';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -31,6 +32,8 @@ enum ImageEnhancerTaskType {
   motionDeblur,
   derain,
   lowLight,
+  portraitBlur,
+  colorPop,
 }
 
 class ImageEnhancerTaskStrings {
@@ -75,6 +78,7 @@ class ImageEnhancerTask {
     required this.platformIdentifier,
     required this.filename,
     this.uploadInfo,
+    this.imageSegment,
   });
 
   factory ImageEnhancerTask(JsonObj args) {
@@ -88,6 +92,9 @@ class ImageEnhancerTask {
           : ImageEnhancerServerPersistenceInfo.fromJson(
               jsonDecode(args["uploadInfo"]),
             ),
+      imageSegment: args["imageSegment"] == null
+          ? null
+          : io.File(args["imageSegment"]),
     );
   }
 
@@ -97,6 +104,7 @@ class ImageEnhancerTask {
     required String platformIdentifier,
     required String filename,
     ImageEnhancerServerPersistenceInfo? uploadInfo,
+    io.File? imageSegment,
   }) {
     return {
       "strings": jsonEncode(strings.toJson()),
@@ -104,6 +112,7 @@ class ImageEnhancerTask {
       "platformIdentifier": platformIdentifier,
       "filename": filename,
       "uploadInfo": uploadInfo?.toJson().let(jsonEncode),
+      "imageSegment": imageSegment?.path,
     };
   }
 
@@ -162,27 +171,105 @@ class ImageEnhancerTask {
     _log.info(
       "[_process] Running with type: $type, platformIdentifier: $platformIdentifier",
     );
+    if (type.isTorchMethod) {
+      return _processTorchMethod();
+    } else if (type == ImageEnhancerTaskType.portraitBlur) {
+      return _processPortraitBlur();
+    } else if (type == ImageEnhancerTaskType.colorPop) {
+      return _processColorPop();
+    } else {
+      throw UnsupportedError("Unsupported type: $type");
+    }
+  }
+
+  Future<Rgb8Image?> _processTorchMethod() async {
     final tm = type.toTorchMethod();
     final size = tm.getMaxSrcSize();
     final Rgb8Image src;
     try {
       src = await _loadSrc(size);
     } catch (e, stackTrace) {
-      _log.info("[_process] Failed to load image", e, stackTrace);
+      _log.info(
+        "[_processTorchMethod] Failed to load image: $platformIdentifier",
+        e,
+        stackTrace,
+      );
       return null;
     }
-    _log.info("[_process] Loaded src image (${src.width}*${src.height})");
+    _log.info(
+      "[_processTorchMethod] Loaded src image (${src.width}*${src.height})",
+    );
     final Rgb8Image? result;
     try {
       result = await tm.apply(src);
     } catch (e, stackTrace) {
-      _log.severe("[_process] Failed to apply method", e, stackTrace);
+      _log.severe(
+        "[_processTorchMethod] Failed to apply method",
+        e,
+        stackTrace,
+      );
       return null;
     }
     if (result != null) {
       return result;
     } else {
-      _log.severe("[_process] Failed to apply method");
+      _log.severe("[_processTorchMethod] Failed to apply method");
+      return null;
+    }
+  }
+
+  Future<Rgb8Image?> _processPortraitBlur() async {
+    final Rgb8Image src;
+    try {
+      src = await _loadSrc(const SizeInt(2048, 2048));
+    } catch (e, stackTrace) {
+      _log.info(
+        "[_processPortraitBlur] Failed to load image: $platformIdentifier",
+        e,
+        stackTrace,
+      );
+      return null;
+    }
+    _log.info(
+      "[_processPortraitBlur] Loaded src image (${src.width}*${src.height})",
+    );
+    try {
+      return await const _PortraitBlur().apply(
+        src: src,
+        imageSegmentPath: imageSegment!.path,
+      );
+    } catch (e, stackTrace) {
+      _log.severe(
+        "[_processPortraitBlur] Failed to apply method",
+        e,
+        stackTrace,
+      );
+      return null;
+    }
+  }
+
+  Future<Rgb8Image?> _processColorPop() async {
+    final Rgb8Image src;
+    try {
+      src = await _loadSrc(const SizeInt(2048, 2048));
+    } catch (e, stackTrace) {
+      _log.info(
+        "[_processColorPop] Failed to load image: $platformIdentifier",
+        e,
+        stackTrace,
+      );
+      return null;
+    }
+    _log.info(
+      "[_processColorPop] Loaded src image (${src.width}*${src.height})",
+    );
+    try {
+      return await const _ColorPop().apply(
+        src: src,
+        imageSegmentPath: imageSegment!.path,
+      );
+    } catch (e, stackTrace) {
+      _log.severe("[_processColorPop] Failed to apply method", e, stackTrace);
       return null;
     }
   }
@@ -300,6 +387,7 @@ class ImageEnhancerTask {
   final String platformIdentifier;
   final String filename;
   final ImageEnhancerServerPersistenceInfo? uploadInfo;
+  final io.File? imageSegment;
 }
 
 class ImageEnhancerServerPersistenceInfo {
@@ -328,7 +416,106 @@ class ImageEnhancerServerPersistenceInfo {
   final Map<String, String> headers;
 }
 
+@npLog
+class _PortraitBlur {
+  const _PortraitBlur();
+
+  Future<Rgb8Image?> apply({
+    required Rgb8Image src,
+    required String imageSegmentPath,
+  }) {
+    return Isolate.run(() async {
+      final imagelib.Image segment;
+      try {
+        segment = (await imagelib.decodePngFile(imageSegmentPath))!;
+      } catch (e, stackTrace) {
+        _log.info("[apply] Failed to load image segment", e, stackTrace);
+        return null;
+      }
+      try {
+        var image = imagelib.Image.fromBytes(
+          width: src.width,
+          height: src.height,
+          bytes: src.pixel.buffer,
+          numChannels: 3,
+          order: imagelib.ChannelOrder.rgb,
+        );
+        image = imagelib.gaussianBlur(image, radius: 24);
+        image = imagelib.compositeImage(
+          image,
+          segment,
+          dstW: image.width,
+          dstH: image.height,
+        );
+        return Rgb8Image(
+          Uint8List.fromList(image.buffer.asUint8List()),
+          image.width,
+          image.height,
+        );
+      } catch (e, stackTrace) {
+        _log.severe("[apply] Failed to apply method", e, stackTrace);
+        return null;
+      }
+    });
+  }
+}
+
+@npLog
+class _ColorPop {
+  const _ColorPop();
+
+  Future<Rgb8Image?> apply({
+    required Rgb8Image src,
+    required String imageSegmentPath,
+  }) {
+    return Isolate.run(() async {
+      final imagelib.Image segment;
+      try {
+        segment = (await imagelib.decodePngFile(imageSegmentPath))!;
+      } catch (e, stackTrace) {
+        _log.info("[apply] Failed to load image segment", e, stackTrace);
+        return null;
+      }
+      try {
+        var image = imagelib.Image.fromBytes(
+          width: src.width,
+          height: src.height,
+          bytes: src.pixel.buffer,
+          numChannels: 3,
+          order: imagelib.ChannelOrder.rgb,
+        );
+        image = imagelib.grayscale(image);
+        image = imagelib.compositeImage(
+          image,
+          segment,
+          dstW: image.width,
+          dstH: image.height,
+        );
+        return Rgb8Image(
+          Uint8List.fromList(image.buffer.asUint8List()),
+          image.width,
+          image.height,
+        );
+      } catch (e, stackTrace) {
+        _log.severe("[apply] Failed to apply method", e, stackTrace);
+        return null;
+      }
+    });
+  }
+}
+
 extension ImageEnhancerTaskTypeExtension on ImageEnhancerTaskType {
+  bool get isTorchMethod {
+    return switch (this) {
+      ImageEnhancerTaskType.retouch ||
+      ImageEnhancerTaskType.superResolution ||
+      ImageEnhancerTaskType.motionDeblur ||
+      ImageEnhancerTaskType.derain ||
+      ImageEnhancerTaskType.lowLight => true,
+      _ => false,
+    };
+  }
+
   torch.RgbMethod toTorchMethod() {
     return switch (this) {
       ImageEnhancerTaskType.retouch => torch.Retouch(),
@@ -336,6 +523,7 @@ extension ImageEnhancerTaskTypeExtension on ImageEnhancerTaskType {
       ImageEnhancerTaskType.motionDeblur => torch.MotionDeblur(),
       ImageEnhancerTaskType.derain => torch.Derain(),
       ImageEnhancerTaskType.lowLight => torch.LowLight(),
+      _ => throw UnsupportedError("Unsupported type: $this"),
     };
   }
 }

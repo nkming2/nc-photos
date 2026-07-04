@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:io' as io;
 
 import 'package:circular_reveal_animation/circular_reveal_animation.dart';
 import 'package:copy_with/copy_with.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image/image.dart' as image_lib;
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
@@ -25,12 +27,17 @@ import 'package:nc_photos/image_enhancer_util.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/np_api_util.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
+import 'package:nc_photos/temp_file_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/widget/handler/permission_handler.dart';
 import 'package:nc_photos/widget/image_editor_persist_option_dialog.dart';
 import 'package:nc_photos/widget/image_enhancer.dart' as legacy;
+import 'package:nc_photos/widget/image_segment_picker/image_segment_picker.dart';
+import 'package:np_common/unique.dart';
+import 'package:np_ffi_torch/np_ffi_torch.dart';
 import 'package:np_log/np_log.dart';
+import 'package:np_platform_raw_image/np_platform_raw_image.dart';
 import 'package:path/path.dart' as path_lib;
 import 'package:to_string/to_string.dart';
 import 'package:workmanager/workmanager.dart';
@@ -131,6 +138,30 @@ class _WrappedImageEnhancerState extends State<_WrappedImageEnhancer> {
                       duration: k.snackBarDurationNormal,
                     ),
                   );
+                }
+              },
+            ),
+            _BlocListenerT(
+              selector: (state) => state.imageSegmentRequest,
+              listener: (context, imageSegmentRequest) async {
+                if (imageSegmentRequest != null) {
+                  final result = await Navigator.of(context)
+                      .pushNamed<Rgba8Image>(
+                        ImageSegmentPicker.routeName,
+                        arguments: ImageSegmentPickerArguments(
+                          file: context.bloc.file,
+                        ),
+                      );
+                  if (result != null) {
+                    context.addEvent(
+                      _SetImageSegmentResult(
+                        request: imageSegmentRequest.value,
+                        result: result,
+                      ),
+                    );
+                  } else {
+                    Navigator.of(context).pop();
+                  }
                 }
               },
             ),

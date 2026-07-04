@@ -33,6 +33,8 @@ class _MethodShowcaseState extends State<_MethodShowcase> {
               _Method.superResolution => const _SuperResolutionShowcase(),
               _Method.derain => const _DerainShowcase(),
               _Method.lowLight => const _LowLightShowcase(),
+              _Method.portraitBlur => const _PortraitBlurShowcase(),
+              _Method.colorPop => const _ColorPopShowcase(),
             },
           );
         },
@@ -116,6 +118,46 @@ class _LowLightShowcase extends StatelessWidget {
       ),
       to: Image.asset(
         "assets/low-light1.jpg",
+        fit: BoxFit.contain,
+        gaplessPlayback: true,
+      ),
+    );
+  }
+}
+
+class _PortraitBlurShowcase extends StatelessWidget {
+  const _PortraitBlurShowcase();
+
+  @override
+  Widget build(BuildContext context) {
+    return _SampleShowcase(
+      from: Image.asset(
+        "assets/portrait-blur0.jpg",
+        fit: BoxFit.contain,
+        gaplessPlayback: true,
+      ),
+      to: Image.asset(
+        "assets/portrait-blur1.jpg",
+        fit: BoxFit.contain,
+        gaplessPlayback: true,
+      ),
+    );
+  }
+}
+
+class _ColorPopShowcase extends StatelessWidget {
+  const _ColorPopShowcase();
+
+  @override
+  Widget build(BuildContext context) {
+    return _SampleShowcase(
+      from: Image.asset(
+        "assets/color-pop0.jpg",
+        fit: BoxFit.contain,
+        gaplessPlayback: true,
+      ),
+      to: Image.asset(
+        "assets/color-pop1.jpg",
         fit: BoxFit.contain,
         gaplessPlayback: true,
       ),

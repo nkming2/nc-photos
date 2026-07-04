@@ -2,6 +2,24 @@ part of 'image_enhancer.dart';
 
 enum _ApplyState { init, prepareModel, download, background }
 
+@toString
+class _ImageSegmentRequest {
+  const _ImageSegmentRequest({
+    required this.method,
+    required this.platformIdentifier,
+    required this.filename,
+    required this.uploadInfo,
+  });
+
+  @override
+  String toString() => _$toString();
+
+  final _Method method;
+  final String platformIdentifier;
+  final String filename;
+  final ImageEnhancerServerPersistenceInfo? uploadInfo;
+}
+
 @genCopyWith
 @toString
 class _State {
@@ -10,6 +28,7 @@ class _State {
     this.saveState,
     required this.downloadProgress,
     this.downloadSize,
+    this.imageSegmentRequest,
     this.error,
     this.applyError,
   });
@@ -25,6 +44,8 @@ class _State {
   final _ApplyState? saveState;
   final double downloadProgress;
   final int? downloadSize;
+
+  final Unique<_ImageSegmentRequest>? imageSegmentRequest;
 
   final ExceptionEvent? error;
   final ExceptionEvent? applyError;
@@ -56,6 +77,17 @@ class _SelectMethod implements _Event {
   String toString() => _$toString();
 
   final _Method value;
+}
+
+@toString
+class _SetImageSegmentResult implements _Event {
+  const _SetImageSegmentResult({required this.request, required this.result});
+
+  @override
+  String toString() => _$toString();
+
+  final _ImageSegmentRequest request;
+  final Rgba8Image result;
 }
 
 @toString

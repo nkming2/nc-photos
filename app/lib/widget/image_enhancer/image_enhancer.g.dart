@@ -18,6 +18,7 @@ abstract class $_StateCopyWithWorker {
     _ApplyState? saveState,
     double? downloadProgress,
     int? downloadSize,
+    Unique<_ImageSegmentRequest>? imageSegmentRequest,
     ExceptionEvent? error,
     ExceptionEvent? applyError,
   });
@@ -32,6 +33,7 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
     dynamic saveState = copyWithNull,
     dynamic downloadProgress,
     dynamic downloadSize = copyWithNull,
+    dynamic imageSegmentRequest = copyWithNull,
     dynamic error = copyWithNull,
     dynamic applyError = copyWithNull,
   }) {
@@ -44,6 +46,9 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
       downloadSize: downloadSize == copyWithNull
           ? that.downloadSize
           : downloadSize as int?,
+      imageSegmentRequest: imageSegmentRequest == copyWithNull
+          ? that.imageSegmentRequest
+          : imageSegmentRequest as Unique<_ImageSegmentRequest>?,
       error: error == copyWithNull ? that.error : error as ExceptionEvent?,
       applyError: applyError == copyWithNull
           ? that.applyError
@@ -74,10 +79,17 @@ extension _$_IeBlocNpLog on _IeBloc {
 // ToStringGenerator
 // **************************************************************************
 
+extension _$_ImageSegmentRequestToString on _ImageSegmentRequest {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_ImageSegmentRequest {method: ${method.name}, platformIdentifier: $platformIdentifier, filename: $filename, uploadInfo: $uploadInfo}";
+  }
+}
+
 extension _$_StateToString on _State {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_State {selectedMethod: ${selectedMethod.name}, saveState: ${saveState == null ? null : "${saveState!.name}"}, downloadProgress: ${downloadProgress.toStringAsFixed(3)}, downloadSize: $downloadSize, error: $error, applyError: $applyError}";
+    return "_State {selectedMethod: ${selectedMethod.name}, saveState: ${saveState == null ? null : "${saveState!.name}"}, downloadProgress: ${downloadProgress.toStringAsFixed(3)}, downloadSize: $downloadSize, imageSegmentRequest: $imageSegmentRequest, error: $error, applyError: $applyError}";
   }
 }
 
@@ -99,6 +111,13 @@ extension _$_SelectMethodToString on _SelectMethod {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
     return "_SelectMethod {value: ${value.name}}";
+  }
+}
+
+extension _$_SetImageSegmentResultToString on _SetImageSegmentResult {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_SetImageSegmentResult {request: $request, result: $result}";
   }
 }
 

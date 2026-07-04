@@ -5,7 +5,9 @@ enum _Method {
   lowLight,
   superResolution,
   // motionDeblur,
-  derain;
+  derain,
+  portraitBlur,
+  colorPop;
 
   ImageEnhancerTaskType toImageEnhancerTask() {
     return switch (this) {
@@ -14,6 +16,8 @@ enum _Method {
       superResolution => ImageEnhancerTaskType.superResolution,
       // motionDeblur => ImageEnhancerTaskType.motionDeblur,
       derain => ImageEnhancerTaskType.derain,
+      portraitBlur => ImageEnhancerTaskType.portraitBlur,
+      colorPop => ImageEnhancerTaskType.colorPop,
     };
   }
 
@@ -24,6 +28,8 @@ enum _Method {
       superResolution => L10n.global().enhanceSuperResolution4xTitle,
       // motionDeblur => L10n.global().enhanceMotionDeblurTitle,
       derain => L10n.global().enhanceDerainTitle,
+      portraitBlur => L10n.global().enhancePortraitBlurTitle,
+      colorPop => L10n.global().enhanceColorPopTitle,
     };
   }
 
@@ -34,6 +40,8 @@ enum _Method {
       superResolution => L10n.global().enhanceSuperResolution4xDescription,
       // motionDeblur => L10n.global().enhanceMotionDeblurDescription,
       derain => L10n.global().enhanceDerainDescription,
+      portraitBlur => L10n.global().enhancePortraitBlurDescription,
+      colorPop => L10n.global().enhanceColorPopDescription,
     };
   }
 
@@ -44,6 +52,13 @@ enum _Method {
       superResolution => Uri.parse(help_util.enhanceSuperResolutionUrl),
       // motionDeblur => Uri.parse(help_util.enhanceMotionDeblurUrl),
       derain => Uri.parse(help_util.enhanceDerainUrl),
+      portraitBlur => Uri.parse(help_util.enhancePortraitBlurUrl),
+      colorPop => Uri.parse(help_util.enhanceColorPopUrl),
     };
   }
+
+  bool get isRequireImageSegment => switch (this) {
+    portraitBlur || colorPop => true,
+    _ => false,
+  };
 }
