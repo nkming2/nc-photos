@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
@@ -167,6 +169,9 @@ class AnyFileNextcloudImageViewerPresenter
     ValueChanged<double>? onHeightChanged,
     VoidCallback? onZoomStarted,
     VoidCallback? onZoomEnded,
+    void Function(Point<double> position)? onTapAt,
+    void Function(Point<double> position)? onLongPressStartAt,
+    Widget Function(BuildContext context, Widget child)? frameBuilder,
   }) {
     return RemoteImageViewer(
       account: account,
@@ -176,6 +181,9 @@ class AnyFileNextcloudImageViewerPresenter
       onHeightChanged: onHeightChanged,
       onZoomStarted: onZoomStarted,
       onZoomEnded: onZoomEnded,
+      onTapAt: onTapAt,
+      onLongPressStartAt: onLongPressStartAt,
+      frameBuilder: frameBuilder,
     );
   }
 

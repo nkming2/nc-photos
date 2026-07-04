@@ -17,6 +17,9 @@ class _State {
     required this.videoIsLooping,
     required this.videoVolume,
     this.contentHeight,
+    this.onTapAt,
+    this.onLongPressStartAt,
+    this.frameBuilder,
     this.error,
     this.loadError,
   });
@@ -27,6 +30,9 @@ class _State {
     required bool canPlay,
     required bool canLoop,
     required bool isPlayControlVisible,
+    required void Function(Point<double> position)? onTapAt,
+    required void Function(Point<double> position)? onLongPressStartAt,
+    required Widget Function(BuildContext context, Widget child)? frameBuilder,
   }) => _State(
     shouldPlayLivePhoto: shouldPlayLivePhoto,
     canZoom: canZoom,
@@ -40,6 +46,9 @@ class _State {
     videoDuration: Duration.zero,
     videoIsLooping: false,
     videoVolume: 0,
+    onTapAt: onTapAt,
+    onLongPressStartAt: onLongPressStartAt,
+    frameBuilder: frameBuilder,
   );
 
   @override
@@ -60,6 +69,10 @@ class _State {
   final Duration videoDuration;
   final bool videoIsLooping;
   final double videoVolume;
+
+  final void Function(Point<double> position)? onTapAt;
+  final void Function(Point<double> position)? onLongPressStartAt;
+  final Widget Function(BuildContext context, Widget child)? frameBuilder;
 
   final ({Object error, StackTrace? stackTrace})? error;
   final ({Object error, StackTrace? stackTrace})? loadError;
@@ -196,6 +209,36 @@ class _UpdateVideoPlayerValue implements _Event {
   String toString() => _$toString();
 
   final VideoPlayerValue value;
+}
+
+@toString
+class _SetOnTapAtCallback implements _Event {
+  const _SetOnTapAtCallback(this.value);
+
+  @override
+  String toString() => _$toString();
+
+  final void Function(Point<double> position)? value;
+}
+
+@toString
+class _SetOnLongPressStartAtCallback implements _Event {
+  const _SetOnLongPressStartAtCallback(this.value);
+
+  @override
+  String toString() => _$toString();
+
+  final void Function(Point<double> position)? value;
+}
+
+@toString
+class _SetFrameBuilderCallback implements _Event {
+  const _SetFrameBuilderCallback(this.value);
+
+  @override
+  String toString() => _$toString();
+
+  final Widget Function(BuildContext context, Widget child)? value;
 }
 
 @toString

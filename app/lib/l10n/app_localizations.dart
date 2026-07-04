@@ -3045,6 +3045,24 @@ abstract class AppLocalizations {
   /// **'Tap to view the result'**
   String get imageEnhancerResultSuccessfulNotifContent;
 
+  /// No description provided for @imageSegmentPicker6PointLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Only up to 6 points are allowed'**
+  String get imageSegmentPicker6PointLimit;
+
+  /// No description provided for @imageSegmentPickerInitFailedText.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to initialize'**
+  String get imageSegmentPickerInitFailedText;
+
+  /// No description provided for @imageSegmentPickerInstruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap on screen to add or remove points of interest'**
+  String get imageSegmentPickerInstruction;
+
   /// Error message when server responds with HTTP401
   ///
   /// In en, this message translates to:

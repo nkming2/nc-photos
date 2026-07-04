@@ -1653,6 +1653,16 @@ class AppLocalizationsJa extends AppLocalizations {
   String get imageEnhancerResultSuccessfulNotifContent => 'タップして編集結果を表示';
 
   @override
+  String get imageSegmentPicker6PointLimit => 'ポイントは6つまで指定できます';
+
+  @override
+  String get imageSegmentPickerInitFailedText => '初期化に失敗しました';
+
+  @override
+  String get imageSegmentPickerInstruction =>
+      'タップでポイントを指定し、写真の一部を切り取ります。指定したポイントをもう一度タップすると消えます';
+
+  @override
   String get errorUnauthenticated => '認証されていないアクセスです。問題が解決しない場合は、再度サインインしてください';
 
   @override

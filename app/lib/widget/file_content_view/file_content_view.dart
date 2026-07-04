@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:copy_with/copy_with.dart';
 import 'package:flutter/material.dart';
@@ -46,6 +47,9 @@ class FileContentView extends StatefulWidget {
     this.onVideoPlayingChanged,
     this.onLoaded,
     this.onLoadFailure,
+    this.onTapAt,
+    this.onLongPressStartAt,
+    this.frameBuilder,
   });
 
   @override
@@ -62,6 +66,9 @@ class FileContentView extends StatefulWidget {
   final void Function(bool isPlaying)? onVideoPlayingChanged;
   final void Function()? onLoaded;
   final void Function()? onLoadFailure;
+  final void Function(Point<double> position)? onTapAt;
+  final void Function(Point<double> position)? onLongPressStartAt;
+  final Widget Function(BuildContext context, Widget child)? frameBuilder;
 }
 
 class _FileContentViewState extends State<FileContentView> {
@@ -77,6 +84,9 @@ class _FileContentViewState extends State<FileContentView> {
       canPlay: widget.canPlay,
       canLoop: widget.canLoop,
       isPlayControlVisible: widget.isPlayControlVisible,
+      onTapAt: widget.onTapAt,
+      onLongPressStartAt: widget.onLongPressStartAt,
+      frameBuilder: widget.frameBuilder,
     )..add(const _Init());
   }
 
@@ -160,6 +170,15 @@ class _FileContentViewState extends State<FileContentView> {
     }
     if (widget.isPlayControlVisible != oldWidget.isPlayControlVisible) {
       _bloc.add(_SetIsPlayControlVisible(widget.isPlayControlVisible));
+    }
+    if (widget.onTapAt != oldWidget.onTapAt) {
+      _bloc.add(_SetOnTapAtCallback(widget.onTapAt));
+    }
+    if (widget.onLongPressStartAt != oldWidget.onLongPressStartAt) {
+      _bloc.add(_SetOnLongPressStartAtCallback(widget.onLongPressStartAt));
+    }
+    if (widget.frameBuilder != oldWidget.frameBuilder) {
+      _bloc.add(_SetFrameBuilderCallback(widget.frameBuilder));
     }
   }
 

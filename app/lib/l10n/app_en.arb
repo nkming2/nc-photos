@@ -1665,6 +1665,9 @@
 	"imageEnhancerResultFailedNotifTitle": "Failed to process image",
 	"imageEnhancerResultSuccessfulNotifTitle": "Image processed successfully",
 	"imageEnhancerResultSuccessfulNotifContent": "Tap to view the result",
+	"imageSegmentPicker6PointLimit": "Only up to 6 points are allowed",
+	"imageSegmentPickerInitFailedText": "Failed to initialize",
+	"imageSegmentPickerInstruction": "Tap on screen to add or remove points of interest",
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {

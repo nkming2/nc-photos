@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/controller/pref_controller.dart';
@@ -118,6 +120,9 @@ abstract interface class AnyFileImageViewerPresenter {
     ValueChanged<double>? onHeightChanged,
     VoidCallback? onZoomStarted,
     VoidCallback? onZoomEnded,
+    void Function(Point<double> position)? onTapAt,
+    void Function(Point<double> position)? onLongPressStartAt,
+    Widget Function(BuildContext context, Widget child)? frameBuilder,
   });
 
   void preloadImage();

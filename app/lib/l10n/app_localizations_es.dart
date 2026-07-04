@@ -1731,6 +1731,16 @@ class AppLocalizationsEs extends AppLocalizations {
       'Tap to view the result';
 
   @override
+  String get imageSegmentPicker6PointLimit => 'Only up to 6 points are allowed';
+
+  @override
+  String get imageSegmentPickerInitFailedText => 'Failed to initialize';
+
+  @override
+  String get imageSegmentPickerInstruction =>
+      'Tap on screen to add or remove points of interest';
+
+  @override
   String get errorUnauthenticated =>
       'No estás autentificado. Por favor inicia sesión otra vez si el problema continúa.';
 

@@ -1707,5 +1707,8 @@
 	"imageEnhancerProcessDialogText": "写真を編集しています。完了次第、通知でお知らせします。",
 	"imageEnhancerResultFailedNotifTitle": "写真の編集に失敗しました",
 	"imageEnhancerResultSuccessfulNotifTitle": "写真の編集が完了しました",
-	"imageEnhancerResultSuccessfulNotifContent": "タップして編集結果を表示"
+	"imageEnhancerResultSuccessfulNotifContent": "タップして編集結果を表示",
+	"imageSegmentPicker6PointLimit": "ポイントは6つまで指定できます",
+	"imageSegmentPickerInitFailedText": "初期化に失敗しました",
+	"imageSegmentPickerInstruction": "タップでポイントを指定し、写真の一部を切り取ります。指定したポイントをもう一度タップすると消えます"
 }

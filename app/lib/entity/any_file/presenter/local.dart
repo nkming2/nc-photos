@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/entity/any_file/any_file.dart';
@@ -83,6 +85,9 @@ class AnyFileLocalImageViewerPresenter implements AnyFileImageViewerPresenter {
     ValueChanged<double>? onHeightChanged,
     VoidCallback? onZoomStarted,
     VoidCallback? onZoomEnded,
+    void Function(Point<double> position)? onTapAt,
+    void Function(Point<double> position)? onLongPressStartAt,
+    Widget Function(BuildContext context, Widget child)? frameBuilder,
   }) {
     return LocalImageViewer(
       file: _provider.file,
@@ -91,6 +96,9 @@ class AnyFileLocalImageViewerPresenter implements AnyFileImageViewerPresenter {
       onHeightChanged: onHeightChanged,
       onZoomStarted: onZoomStarted,
       onZoomEnded: onZoomEnded,
+      onTapAt: onTapAt,
+      onLongPressStartAt: onLongPressStartAt,
+      frameBuilder: frameBuilder,
     );
   }
 

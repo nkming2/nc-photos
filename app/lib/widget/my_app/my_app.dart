@@ -42,6 +42,7 @@ import 'package:nc_photos/widget/home/home.dart';
 import 'package:nc_photos/widget/image_editor/image_editor.dart';
 import 'package:nc_photos/widget/image_enhancer.dart' as legacy;
 import 'package:nc_photos/widget/image_enhancer/image_enhancer.dart';
+import 'package:nc_photos/widget/image_segment_picker/image_segment_picker.dart';
 import 'package:nc_photos/widget/local_file_viewer.dart';
 import 'package:nc_photos/widget/local_result_viewer/local_result_viewer.dart';
 import 'package:nc_photos/widget/map_browser/map_browser.dart';
@@ -272,6 +273,7 @@ class _WrappedAppState extends State<_WrappedApp>
     route ??= _handleLocalResultViewerRoute(settings);
     route ??= _handleAnyFileListViewerRoute(settings);
     route ??= _handleEnhanceResultViewerRoute(settings);
+    route ??= _handleImageSegmentPickerRoute(settings);
     return route;
   }
 
@@ -700,6 +702,22 @@ class _WrappedAppState extends State<_WrappedApp>
     } catch (e) {
       _log.severe(
         "[_handleEnhanceResultViewerRoute] Failed while handling route",
+        e,
+      );
+    }
+    return null;
+  }
+
+  Route<dynamic>? _handleImageSegmentPickerRoute(RouteSettings settings) {
+    try {
+      if (settings.name == ImageSegmentPicker.routeName &&
+          settings.arguments != null) {
+        final args = settings.arguments as ImageSegmentPickerArguments;
+        return ImageSegmentPicker.buildRoute(args, settings);
+      }
+    } catch (e) {
+      _log.severe(
+        "[_handleImageSegmentPickerRoute] Failed while handling route",
         e,
       );
     }

@@ -346,6 +346,9 @@
     "imageEnhancerResultFailedNotifTitle",
     "imageEnhancerResultSuccessfulNotifTitle",
     "imageEnhancerResultSuccessfulNotifContent",
+    "imageSegmentPicker6PointLimit",
+    "imageSegmentPickerInitFailedText",
+    "imageSegmentPickerInstruction",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -434,6 +437,9 @@
     "imageEnhancerResultFailedNotifTitle",
     "imageEnhancerResultSuccessfulNotifTitle",
     "imageEnhancerResultSuccessfulNotifContent",
+    "imageSegmentPicker6PointLimit",
+    "imageSegmentPickerInitFailedText",
+    "imageSegmentPickerInstruction",
     "errorServerNoCert"
   ],
 
@@ -526,6 +532,9 @@
     "imageEnhancerResultFailedNotifTitle",
     "imageEnhancerResultSuccessfulNotifTitle",
     "imageEnhancerResultSuccessfulNotifContent",
+    "imageSegmentPicker6PointLimit",
+    "imageSegmentPickerInitFailedText",
+    "imageSegmentPickerInstruction",
     "errorServerNoCert"
   ],
 
@@ -764,6 +773,9 @@
     "imageEnhancerResultFailedNotifTitle",
     "imageEnhancerResultSuccessfulNotifTitle",
     "imageEnhancerResultSuccessfulNotifContent",
+    "imageSegmentPicker6PointLimit",
+    "imageSegmentPickerInitFailedText",
+    "imageSegmentPickerInstruction",
     "errorServerNoCert"
   ],
 
@@ -844,6 +856,9 @@
     "imageEnhancerResultFailedNotifTitle",
     "imageEnhancerResultSuccessfulNotifTitle",
     "imageEnhancerResultSuccessfulNotifContent",
+    "imageSegmentPicker6PointLimit",
+    "imageSegmentPickerInitFailedText",
+    "imageSegmentPickerInstruction",
     "errorServerNoCert"
   ],
 
@@ -977,6 +992,9 @@
     "imageEnhancerResultFailedNotifTitle",
     "imageEnhancerResultSuccessfulNotifTitle",
     "imageEnhancerResultSuccessfulNotifContent",
+    "imageSegmentPicker6PointLimit",
+    "imageSegmentPickerInitFailedText",
+    "imageSegmentPickerInstruction",
     "errorServerNoCert"
   ],
 
@@ -1057,6 +1075,9 @@
     "imageEnhancerResultFailedNotifTitle",
     "imageEnhancerResultSuccessfulNotifTitle",
     "imageEnhancerResultSuccessfulNotifContent",
+    "imageSegmentPicker6PointLimit",
+    "imageSegmentPickerInitFailedText",
+    "imageSegmentPickerInstruction",
     "errorServerNoCert"
   ],
 
@@ -1195,6 +1216,9 @@
     "imageEnhancerResultFailedNotifTitle",
     "imageEnhancerResultSuccessfulNotifTitle",
     "imageEnhancerResultSuccessfulNotifContent",
+    "imageSegmentPicker6PointLimit",
+    "imageSegmentPickerInitFailedText",
+    "imageSegmentPickerInstruction",
     "errorServerNoCert"
   ],
 
@@ -1657,6 +1681,9 @@
     "imageEnhancerResultFailedNotifTitle",
     "imageEnhancerResultSuccessfulNotifTitle",
     "imageEnhancerResultSuccessfulNotifContent",
+    "imageSegmentPicker6PointLimit",
+    "imageSegmentPickerInitFailedText",
+    "imageSegmentPickerInstruction",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -1802,6 +1829,9 @@
     "imageEnhancerResultFailedNotifTitle",
     "imageEnhancerResultSuccessfulNotifTitle",
     "imageEnhancerResultSuccessfulNotifContent",
+    "imageSegmentPicker6PointLimit",
+    "imageSegmentPickerInitFailedText",
+    "imageSegmentPickerInstruction",
     "errorServerNoCert"
   ],
 
@@ -1953,6 +1983,9 @@
     "imageEnhancerResultFailedNotifTitle",
     "imageEnhancerResultSuccessfulNotifTitle",
     "imageEnhancerResultSuccessfulNotifContent",
+    "imageSegmentPicker6PointLimit",
+    "imageSegmentPickerInitFailedText",
+    "imageSegmentPickerInstruction",
     "errorServerNoCert"
   ],
 
@@ -2086,6 +2119,9 @@
     "imageEnhancerResultFailedNotifTitle",
     "imageEnhancerResultSuccessfulNotifTitle",
     "imageEnhancerResultSuccessfulNotifContent",
+    "imageSegmentPicker6PointLimit",
+    "imageSegmentPickerInitFailedText",
+    "imageSegmentPickerInstruction",
     "errorServerNoCert"
   ],
 
@@ -2166,6 +2202,9 @@
     "imageEnhancerResultFailedNotifTitle",
     "imageEnhancerResultSuccessfulNotifTitle",
     "imageEnhancerResultSuccessfulNotifContent",
+    "imageSegmentPicker6PointLimit",
+    "imageSegmentPickerInitFailedText",
+    "imageSegmentPickerInstruction",
     "errorServerNoCert"
   ],
 
@@ -2230,7 +2269,10 @@
     "imageEnhancerProcessDialogText",
     "imageEnhancerResultFailedNotifTitle",
     "imageEnhancerResultSuccessfulNotifTitle",
-    "imageEnhancerResultSuccessfulNotifContent"
+    "imageEnhancerResultSuccessfulNotifContent",
+    "imageSegmentPicker6PointLimit",
+    "imageSegmentPickerInitFailedText",
+    "imageSegmentPickerInstruction"
   ],
 
   "zh": [
@@ -2394,6 +2436,9 @@
     "imageEnhancerResultFailedNotifTitle",
     "imageEnhancerResultSuccessfulNotifTitle",
     "imageEnhancerResultSuccessfulNotifContent",
+    "imageSegmentPicker6PointLimit",
+    "imageSegmentPickerInitFailedText",
+    "imageSegmentPickerInstruction",
     "errorServerNoCert"
   ],
 
@@ -2648,6 +2693,9 @@
     "imageEnhancerResultFailedNotifTitle",
     "imageEnhancerResultSuccessfulNotifTitle",
     "imageEnhancerResultSuccessfulNotifContent",
+    "imageSegmentPicker6PointLimit",
+    "imageSegmentPickerInitFailedText",
+    "imageSegmentPickerInstruction",
     "errorServerNoCert"
   ]
 }
