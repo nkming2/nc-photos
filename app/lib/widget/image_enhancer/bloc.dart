@@ -111,6 +111,9 @@ class _IeBloc extends Bloc<_Event, _State> with BlocLogger {
         return;
       }
       ImageEnhancerServerPersistenceInfo? uploadInfo;
+      final epoch = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+      final outputFilename =
+          "${path_lib.basenameWithoutExtension(file.name)}_enhanced_$epoch.jpg";
       if (prefController.isSaveEditResultToServerValue) {
         final remoteFile = switch (file.provider) {
           AnyFileNextcloudProvider _ =>
@@ -121,10 +124,8 @@ class _IeBloc extends Bloc<_Event, _State> with BlocLogger {
         };
         if (remoteFile != null) {
           final origPath = remoteFile.fdPath;
-          final epoch = DateTime.now().millisecondsSinceEpoch ~/ 1000;
           final dirName = path_lib.dirname(origPath);
-          final dstPath =
-              "${dirName == "." ? "" : "$dirName/"}${path_lib.basenameWithoutExtension(origPath)}_enhanced_$epoch.jpg";
+          final dstPath = "${dirName == "." ? "" : "$dirName/"}$outputFilename";
           uploadInfo = ImageEnhancerServerPersistenceInfo(
             baseUrl: account.url,
             endpoint: dstPath,
@@ -142,7 +143,7 @@ class _IeBloc extends Bloc<_Event, _State> with BlocLogger {
               _ImageSegmentRequest(
                 method: selectedMethod,
                 platformIdentifier: uri.toString(),
-                filename: file.name,
+                outputFilename: outputFilename,
                 uploadInfo: uploadInfo,
               ),
             ),
@@ -153,6 +154,7 @@ class _IeBloc extends Bloc<_Event, _State> with BlocLogger {
       _startEnhanceTask(
         type: taskType,
         platformIdentifier: uri.toString(),
+        outputFilename: outputFilename,
         uploadInfo: uploadInfo,
       );
       emit(
@@ -198,6 +200,7 @@ class _IeBloc extends Bloc<_Event, _State> with BlocLogger {
       _startEnhanceTask(
         type: ev.request.method.toImageEnhancerTask(),
         platformIdentifier: ev.request.platformIdentifier,
+        outputFilename: ev.request.outputFilename,
         uploadInfo: ev.request.uploadInfo,
         imageSegment: file,
       );
@@ -222,6 +225,7 @@ class _IeBloc extends Bloc<_Event, _State> with BlocLogger {
   void _startEnhanceTask({
     required ImageEnhancerTaskType type,
     required String platformIdentifier,
+    required String outputFilename,
     required ImageEnhancerServerPersistenceInfo? uploadInfo,
     io.File? imageSegment,
   }) {
@@ -241,7 +245,7 @@ class _IeBloc extends Bloc<_Event, _State> with BlocLogger {
         ),
         type: type,
         platformIdentifier: platformIdentifier,
-        filename: file.name,
+        outputFilename: outputFilename,
         uploadInfo: uploadInfo,
         imageSegment: imageSegment,
       ),

@@ -7,7 +7,7 @@ class _ImageSegmentRequest {
   const _ImageSegmentRequest({
     required this.method,
     required this.platformIdentifier,
-    required this.filename,
+    required this.outputFilename,
     required this.uploadInfo,
   });
 
@@ -16,7 +16,7 @@ class _ImageSegmentRequest {
 
   final _Method method;
   final String platformIdentifier;
-  final String filename;
+  final String outputFilename;
   final ImageEnhancerServerPersistenceInfo? uploadInfo;
 }
 

@@ -76,7 +76,7 @@ class ImageEnhancerTask {
     required this.strings,
     required this.type,
     required this.platformIdentifier,
-    required this.filename,
+    required this.outputFilename,
     this.uploadInfo,
     this.imageSegment,
   });
@@ -86,7 +86,7 @@ class ImageEnhancerTask {
       strings: ImageEnhancerTaskStrings.fromJson(jsonDecode(args["strings"])),
       type: ImageEnhancerTaskType.values[args["type"]],
       platformIdentifier: args["platformIdentifier"],
-      filename: args["filename"],
+      outputFilename: args["outputFilename"],
       uploadInfo: args["uploadInfo"] == null
           ? null
           : ImageEnhancerServerPersistenceInfo.fromJson(
@@ -102,7 +102,7 @@ class ImageEnhancerTask {
     required ImageEnhancerTaskStrings strings,
     required ImageEnhancerTaskType type,
     required String platformIdentifier,
-    required String filename,
+    required String outputFilename,
     ImageEnhancerServerPersistenceInfo? uploadInfo,
     io.File? imageSegment,
   }) {
@@ -110,7 +110,7 @@ class ImageEnhancerTask {
       "strings": jsonEncode(strings.toJson()),
       "type": type.index,
       "platformIdentifier": platformIdentifier,
-      "filename": filename,
+      "outputFilename": outputFilename,
       "uploadInfo": uploadInfo?.toJson().let(jsonEncode),
       "imageSegment": imageSegment?.path,
     };
@@ -377,7 +377,9 @@ class ImageEnhancerTask {
       await dir.create();
       return (
         dir: dir,
-        file: io.File("${dir.path}/${basenameWithoutExtension(filename)}.jpg"),
+        file: io.File(
+          "${dir.path}/${basenameWithoutExtension(outputFilename)}.jpg",
+        ),
       );
     }
   }
@@ -385,7 +387,7 @@ class ImageEnhancerTask {
   final ImageEnhancerTaskStrings strings;
   final ImageEnhancerTaskType type;
   final String platformIdentifier;
-  final String filename;
+  final String outputFilename;
   final ImageEnhancerServerPersistenceInfo? uploadInfo;
   final io.File? imageSegment;
 }

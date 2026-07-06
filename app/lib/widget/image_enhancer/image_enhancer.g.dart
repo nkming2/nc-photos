@@ -82,7 +82,7 @@ extension _$_IeBlocNpLog on _IeBloc {
 extension _$_ImageSegmentRequestToString on _ImageSegmentRequest {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_ImageSegmentRequest {method: ${method.name}, platformIdentifier: $platformIdentifier, filename: $filename, uploadInfo: $uploadInfo}";
+    return "_ImageSegmentRequest {method: ${method.name}, platformIdentifier: $platformIdentifier, outputFilename: $outputFilename, uploadInfo: $uploadInfo}";
   }
 }
 
