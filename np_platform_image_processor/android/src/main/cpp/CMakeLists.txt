@@ -33,11 +33,8 @@ add_library( # Sets the name of the library.
              SHARED
 
              # Provides a relative path to your source file(s).
-             core/filter/hslhsv.cpp
-             core/filter/saturation.cpp
              arbitrary_style_transfer.cpp
              exception.cpp
-             image_splitter.cpp
              stopwatch.cpp
              tflite_wrapper.cpp
              util.cpp
