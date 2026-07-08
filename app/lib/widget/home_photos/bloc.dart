@@ -710,8 +710,8 @@ class _Bloc extends Bloc<_Event, _State>
     var count = 0;
     var visibleCount = 0;
     if (prefController.homePhotosZoomLevelValue >= 0) {
-      groups = state.visibleDates.groupFoldBy<Date, int>(
-        (e) => e,
+      groups = state.visibleDateItems.groupFoldBy<Date, int>(
+        (e) => e.date,
         (previous, element) => (previous ?? 0) + 1,
       );
       final firstDate = groups.keys.sortedBySelf().lastOrNull;
@@ -723,8 +723,8 @@ class _Bloc extends Bloc<_Event, _State>
       visibleCount = groups[firstDate] ?? 0;
       date = firstDate;
     } else {
-      groups = state.visibleDates.groupFoldBy<Date, int>(
-        (e) => e.copyWith(day: 1),
+      groups = state.visibleDateItems.groupFoldBy<Date, int>(
+        (e) => e.date.copyWith(day: 1),
         (previous, element) => (previous ?? 0) + 1,
       );
       final firstMonth = groups.keys.sortedBySelf().lastOrNull;
