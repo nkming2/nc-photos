@@ -12,24 +12,6 @@ abstract class ImageFilter {
 class ImageProcessor {
   static Stream<ImageProcessorEvent> get stream => EventHandler.stream;
 
-  static Future<void> deepLab3Portrait(
-    Uri fileUri,
-    String filename,
-    int maxWidth,
-    int maxHeight,
-    int radius, {
-    Map<String, String>? headers,
-    required bool isSaveToServer,
-  }) => _methodChannel.invokeMethod("deepLab3Portrait", <String, dynamic>{
-    "fileUri": fileUri.toString(),
-    "headers": headers,
-    "filename": filename,
-    "maxWidth": maxWidth,
-    "maxHeight": maxHeight,
-    "radius": radius,
-    "isSaveToServer": isSaveToServer,
-  });
-
   static Future<void> arbitraryStyleTransfer(
     Uri fileUri,
     String filename,
@@ -46,24 +28,6 @@ class ImageProcessor {
     "maxWidth": maxWidth,
     "maxHeight": maxHeight,
     "styleUri": styleUri,
-    "weight": weight,
-    "isSaveToServer": isSaveToServer,
-  });
-
-  static Future<void> deepLab3ColorPop(
-    Uri fileUri,
-    String filename,
-    int maxWidth,
-    int maxHeight,
-    double weight, {
-    Map<String, String>? headers,
-    required bool isSaveToServer,
-  }) => _methodChannel.invokeMethod("deepLab3ColorPop", <String, dynamic>{
-    "fileUri": fileUri.toString(),
-    "headers": headers,
-    "filename": filename,
-    "maxWidth": maxWidth,
-    "maxHeight": maxHeight,
     "weight": weight,
     "isSaveToServer": isSaveToServer,
   });

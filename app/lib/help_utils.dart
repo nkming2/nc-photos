@@ -4,9 +4,7 @@ const sharedAlbumLimitationsUrl =
     "https://nc-photos.web.app/link/help/shared-album";
 const homeFolderNotFoundUrl =
     "https://nc-photos.web.app/link/help/home-dir-not-found";
-const enhanceDeepLabPortraitBlurUrl = "https://bit.ly/3wIuXy6";
 const enhanceStyleTransferUrl = "https://bit.ly/3agpTcF";
-const enhanceDeepLabColorPopUrl = "https://bit.ly/3Rx0YCD";
 const enhanceUrl = "https://nc-photos.web.app/link/help/enhance2";
 const enhanceColorPopUrl = "https://nc-photos.web.app/link/help/enhance2/color-pop";
 const enhanceDerainUrl = "https://nc-photos.web.app/link/help/enhance2/derain";

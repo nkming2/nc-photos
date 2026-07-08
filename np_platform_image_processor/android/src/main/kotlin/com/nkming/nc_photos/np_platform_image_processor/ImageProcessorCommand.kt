@@ -4,8 +4,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import com.nkming.nc_photos.np_platform_image_processor.processor.ArbitraryStyleTransfer
-import com.nkming.nc_photos.np_platform_image_processor.processor.DeepLab3ColorPop
-import com.nkming.nc_photos.np_platform_image_processor.processor.DeepLab3Portrait
 
 interface ImageProcessorCommand
 
@@ -51,19 +49,6 @@ class ImageProcessorDummyCommand(
 	override fun isEnhanceCommand() = true
 }
 
-class ImageProcessorDeepLapPortraitCommand(
-	params: Params,
-	val radius: Int?,
-) : ImageProcessorImageCommand(params) {
-	override fun apply(context: Context, fileUri: Uri): Bitmap {
-		return DeepLab3Portrait(
-			context, maxWidth, maxHeight, radius ?: 16
-		).infer(fileUri)
-	}
-
-	override fun isEnhanceCommand() = true
-}
-
 class ImageProcessorArbitraryStyleTransferCommand(
 	params: Params,
 	val styleUri: Uri,
@@ -72,19 +57,6 @@ class ImageProcessorArbitraryStyleTransferCommand(
 	override fun apply(context: Context, fileUri: Uri): Bitmap {
 		return ArbitraryStyleTransfer(
 			context, maxWidth, maxHeight, styleUri, weight
-		).infer(fileUri)
-	}
-
-	override fun isEnhanceCommand() = true
-}
-
-class ImageProcessorDeepLapColorPopCommand(
-	params: Params,
-	val weight: Float,
-) : ImageProcessorImageCommand(params) {
-	override fun apply(context: Context, fileUri: Uri): Bitmap {
-		return DeepLab3ColorPop(
-			context, maxWidth, maxHeight, weight
 		).infer(fileUri)
 	}
 

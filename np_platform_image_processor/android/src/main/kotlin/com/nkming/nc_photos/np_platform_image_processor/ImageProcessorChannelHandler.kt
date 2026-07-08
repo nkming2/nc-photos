@@ -33,22 +33,6 @@ internal class ImageProcessorChannelHandler(context: Context) :
 
 	override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
 		when (call.method) {
-			"deepLab3Portrait" -> {
-				try {
-					deepLab3Portrait(
-						call.argument("fileUri")!!, call.argument("headers"),
-						call.argument("filename")!!,
-						call.argument("maxWidth")!!,
-						call.argument("maxHeight")!!,
-						call.argument<Boolean>("isSaveToServer")!!,
-						call.argument("radius")!!, result
-					)
-				} catch (e: Throwable) {
-					logE(TAG, "Uncaught exception", e)
-					result.error("systemException", e.toString(), null)
-				}
-			}
-
 			"arbitraryStyleTransfer" -> {
 				try {
 					arbitraryStyleTransfer(
@@ -59,22 +43,6 @@ internal class ImageProcessorChannelHandler(context: Context) :
 						call.argument<Boolean>("isSaveToServer")!!,
 						call.argument("styleUri")!!, call.argument("weight")!!,
 						result
-					)
-				} catch (e: Throwable) {
-					logE(TAG, "Uncaught exception", e)
-					result.error("systemException", e.toString(), null)
-				}
-			}
-
-			"deepLab3ColorPop" -> {
-				try {
-					deepLab3ColorPop(
-						call.argument("fileUri")!!, call.argument("headers"),
-						call.argument("filename")!!,
-						call.argument("maxWidth")!!,
-						call.argument("maxHeight")!!,
-						call.argument<Boolean>("isSaveToServer")!!,
-						call.argument("weight")!!, result
 					)
 				} catch (e: Throwable) {
 					logE(TAG, "Uncaught exception", e)
@@ -98,15 +66,6 @@ internal class ImageProcessorChannelHandler(context: Context) :
 		}
 	}
 
-	private fun deepLab3Portrait(
-		fileUri: String, headers: Map<String, String>?, filename: String,
-		maxWidth: Int, maxHeight: Int, isSaveToServer: Boolean, radius: Int,
-		result: MethodChannel.Result
-	) = method(fileUri, headers, filename, maxWidth, maxHeight, isSaveToServer,
-		ImageProcessorService.METHOD_DEEP_LAP_PORTRAIT, result, onIntent = {
-			it.putExtra(ImageProcessorService.EXTRA_RADIUS, radius)
-		})
-
 	private fun arbitraryStyleTransfer(
 		fileUri: String, headers: Map<String, String>?, filename: String,
 		maxWidth: Int, maxHeight: Int, isSaveToServer: Boolean,
@@ -117,15 +76,6 @@ internal class ImageProcessorChannelHandler(context: Context) :
 			it.putExtra(
 				ImageProcessorService.EXTRA_STYLE_URI, Uri.parse(styleUri)
 			)
-			it.putExtra(ImageProcessorService.EXTRA_WEIGHT, weight)
-		})
-
-	private fun deepLab3ColorPop(
-		fileUri: String, headers: Map<String, String>?, filename: String,
-		maxWidth: Int, maxHeight: Int, isSaveToServer: Boolean, weight: Float,
-		result: MethodChannel.Result
-	) = method(fileUri, headers, filename, maxWidth, maxHeight, isSaveToServer,
-		ImageProcessorService.METHOD_DEEP_LAP_COLOR_POP, result, onIntent = {
 			it.putExtra(ImageProcessorService.EXTRA_WEIGHT, weight)
 		})
 

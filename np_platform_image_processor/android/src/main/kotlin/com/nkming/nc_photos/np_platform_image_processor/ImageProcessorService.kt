@@ -34,9 +34,7 @@ import java.net.URL
 internal class ImageProcessorService : Service() {
 	companion object {
 		const val EXTRA_METHOD = "method"
-		const val METHOD_DEEP_LAP_PORTRAIT = "DeepLab3Portrait"
 		const val METHOD_ARBITRARY_STYLE_TRANSFER = "ArbitraryStyleTransfer"
-		const val METHOD_DEEP_LAP_COLOR_POP = "DeepLab3ColorPop"
 		const val EXTRA_FILE_URI = "fileUri"
 		const val EXTRA_HEADERS = "headers"
 		const val EXTRA_FILENAME = "filename"
@@ -118,15 +116,7 @@ internal class ImageProcessorService : Service() {
 
 		val method = intent.getStringExtra(EXTRA_METHOD)
 		when (method) {
-			METHOD_DEEP_LAP_PORTRAIT -> onDeepLapPortrait(
-				startId, intent.extras!!
-			)
-
 			METHOD_ARBITRARY_STYLE_TRANSFER -> onArbitraryStyleTransfer(
-				startId, intent.extras!!
-			)
-
-			METHOD_DEEP_LAP_COLOR_POP -> onDeepLapColorPop(
 				startId, intent.extras!!
 			)
 
@@ -145,14 +135,6 @@ internal class ImageProcessorService : Service() {
 		}
 	}
 
-	private fun onDeepLapPortrait(startId: Int, extras: Bundle) {
-		return onMethod(startId, extras, { params ->
-			ImageProcessorDeepLapPortraitCommand(
-				params, extras.getIntOrNull(EXTRA_RADIUS)
-			)
-		})
-	}
-
 	private fun onArbitraryStyleTransfer(startId: Int, extras: Bundle) {
 		return onMethod(startId, extras, { params ->
 			ImageProcessorArbitraryStyleTransferCommand(
@@ -160,17 +142,6 @@ internal class ImageProcessorService : Service() {
 				extras.getFloat(EXTRA_WEIGHT)
 			)
 		})
-	}
-
-	private fun onDeepLapColorPop(startId: Int, extras: Bundle) {
-		return onMethod(
-			startId, extras,
-			{ params ->
-				ImageProcessorDeepLapColorPopCommand(
-					params, extras.getFloat(EXTRA_WEIGHT)
-				)
-			},
-		)
 	}
 
 	/**
