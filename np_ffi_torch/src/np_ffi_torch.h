@@ -1,0 +1,57 @@
+#pragma once
+
+#include <stdint.h>
+
+#if _WIN32
+#define FFI_PLUGIN_EXPORT __declspec(dllexport)
+#else
+#define FFI_PLUGIN_EXPORT
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+typedef struct {
+  uint8_t *pixel;
+  unsigned width;
+  unsigned height;
+} TorchRgb8Image;
+
+typedef struct {
+  uint8_t *pixel;
+  unsigned width;
+  unsigned height;
+} TorchRgba8Image;
+
+typedef struct {
+  int x;
+  int y;
+} TorchPoint;
+
+FFI_PLUGIN_EXPORT void torchRgb8ImageFree(TorchRgb8Image *that);
+
+FFI_PLUGIN_EXPORT void torchRgba8ImageFree(TorchRgba8Image *that);
+
+FFI_PLUGIN_EXPORT TorchRgb8Image *inferRealEsrgan(const TorchRgb8Image *input,
+                                                  const char *modelPath);
+
+FFI_PLUGIN_EXPORT TorchRgb8Image *inferNafnet(const TorchRgb8Image *input,
+                                              const char *modelPath);
+
+FFI_PLUGIN_EXPORT TorchRgb8Image *
+inferEfficientDerain(const TorchRgb8Image *input, const char *modelPath);
+
+FFI_PLUGIN_EXPORT TorchRgb8Image *inferNeurop(const TorchRgb8Image *input,
+                                              const char *modelPath);
+
+FFI_PLUGIN_EXPORT TorchRgb8Image *inferZeroDce(const TorchRgb8Image *input,
+                                               const char *modelPath);
+
+FFI_PLUGIN_EXPORT TorchRgba8Image *
+inferEfficientSamExtract(const TorchRgb8Image *input, const TorchPoint *points,
+                         const int *pointLabels, const char *modelPath);
+
+#ifdef __cplusplus
+}
+#endif

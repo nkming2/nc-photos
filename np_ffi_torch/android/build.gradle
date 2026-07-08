@@ -1,0 +1,55 @@
+// The Android Gradle Plugin builds the native code with the Android NDK.
+
+group = "com.nkming.nc_photos.np_ffi_torch"
+version = "1.0"
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        // The Android Gradle Plugin knows how to build native code with the NDK.
+        classpath("com.android.tools.build:gradle:8.8.2")
+    }
+}
+
+rootProject.allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+apply plugin: "com.android.library"
+
+android {
+    namespace = "com.nkming.nc_photos.np_ffi_torch"
+    compileSdk = 35
+    ndkVersion "29.0.14206865"
+
+    // Invoke the shared CMake build with the Android Gradle Plugin.
+    externalNativeBuild {
+        cmake {
+            path = "../src/CMakeLists.txt"
+            version '3.31.6'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    defaultConfig {
+        minSdk = 24
+    }
+
+    buildTypes {
+        all {
+            ndk.abiFilters.clear()
+            ndk.abiFilters.addAll(["arm64-v8a"])
+        }
+    }
+}

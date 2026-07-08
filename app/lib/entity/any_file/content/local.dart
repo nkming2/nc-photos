@@ -50,7 +50,7 @@ class AnyFileLocalLocalFileUriGetter implements AnyFileLocalFileUriGetter {
     : _impl = AnyFileLocalUriGetter(file);
 
   @override
-  Future<Uri> get() => _impl.get();
+  Future<Uri> get({void Function(double progress)? onProgress}) => _impl.get();
 
   final AnyFileLocalUriGetter _impl;
 }

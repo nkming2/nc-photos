@@ -155,7 +155,7 @@ abstract interface class AnyFileLargePreviewUriGetter {
 abstract interface class AnyFileLocalFileUriGetter {
   /// Return the content uri of this file, accessible locally. For remote files,
   /// this should download the file and return the uri of the downloaded file
-  Future<Uri> get();
+  Future<Uri> get({void Function(double progress)? onProgress});
 }
 
 abstract interface class AnyFileLocalPreviewUriGetter {

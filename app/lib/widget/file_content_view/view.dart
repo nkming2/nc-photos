@@ -39,7 +39,11 @@ class _PhotoPageContentView extends StatelessWidget {
       prefController: context.read(),
     );
     return _BlocBuilder(
-      buildWhen: (previous, current) => previous.canZoom != current.canZoom,
+      buildWhen: (previous, current) =>
+          previous.canZoom != current.canZoom ||
+          previous.onTapAt != current.onTapAt ||
+          previous.onLongPressStartAt != current.onLongPressStartAt ||
+          previous.frameBuilder != current.frameBuilder,
       builder: (context, state) => presenter.buildWidget(
         canZoom: state.canZoom,
         onLoaded: () {
@@ -54,6 +58,9 @@ class _PhotoPageContentView extends StatelessWidget {
         onZoomEnded: () {
           context.addEvent(const _SetIsZoomed(false));
         },
+        onTapAt: state.onTapAt,
+        onLongPressStartAt: state.onLongPressStartAt,
+        frameBuilder: state.frameBuilder,
       ),
     );
   }

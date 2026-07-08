@@ -229,7 +229,7 @@ class MessagesPigeonCodec: FlutterStandardMessageCodec, @unchecked Sendable {
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol MyHostApi {
   func getFilesSummary(dirWhitelist: [String]?, completion: @escaping (Result<[String: Int64], Error>) -> Void)
-  func queryFiles(fileIds: [String]?, timeRangeBeg: Int64?, isTimeRangeBegInclusive: Bool?, timeRangeEnd: Int64?, isTimeRangeEndInclusive: Bool?, dirWhitelist: [String]?, isAscending: Bool, offset: Int64?, limit: Int64?, completion: @escaping (Result<[QueryResult], Error>) -> Void)
+  func queryFiles(fileIds: [String]?, platformIdentifiers: [String]?, timeRangeBeg: Int64?, isTimeRangeBegInclusive: Bool?, timeRangeEnd: Int64?, isTimeRangeEndInclusive: Bool?, dirWhitelist: [String]?, isAscending: Bool, offset: Int64?, limit: Int64?, completion: @escaping (Result<[QueryResult], Error>) -> Void)
   /// Read the content of a file identified by [platformIdentifier]
   ///
   /// [platformIdentifier] is platform-specific and should be a value returned
@@ -245,6 +245,16 @@ protocol MyHostApi {
   /// On Android, the file will be copied to Download/. On iOS, the file will be
   /// copied to the Photos library.
   func copyPrivateFileToPublicDir(srcFilePath: String, srcMime: String?, dstDir: String?, completion: @escaping (Result<String, Error>) -> Void)
+  /// Copy a file identified by [platformIdentifier] to [dstPath]. No checking
+  /// is done by this function so caller must ensure [privateDir] is a valid and
+  /// accessible dir. Typically you can only write to one of the app private
+  /// dirs.
+  func copyFileToPrivateDir(platformIdentifier: String, dstPath: String, completion: @escaping (Result<Void, Error>) -> Void)
+  /// Replace the content of a file identified by [platformIdentifier] with
+  /// [bytes].
+  ///
+  /// On Android, [platformIdentifier] is a content URI managed by MediaStore.
+  func replaceFile(platformIdentifier: String, bytes: FlutterStandardTypedData, completion: @escaping (Result<Void, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -275,15 +285,16 @@ class MyHostApiSetup {
       queryFilesChannel.setMessageHandler { message, reply in
         let args = message as! [Any?]
         let fileIdsArg: [String]? = nilOrValue(args[0])
-        let timeRangeBegArg: Int64? = nilOrValue(args[1])
-        let isTimeRangeBegInclusiveArg: Bool? = nilOrValue(args[2])
-        let timeRangeEndArg: Int64? = nilOrValue(args[3])
-        let isTimeRangeEndInclusiveArg: Bool? = nilOrValue(args[4])
-        let dirWhitelistArg: [String]? = nilOrValue(args[5])
-        let isAscendingArg = args[6] as! Bool
-        let offsetArg: Int64? = nilOrValue(args[7])
-        let limitArg: Int64? = nilOrValue(args[8])
-        api.queryFiles(fileIds: fileIdsArg, timeRangeBeg: timeRangeBegArg, isTimeRangeBegInclusive: isTimeRangeBegInclusiveArg, timeRangeEnd: timeRangeEndArg, isTimeRangeEndInclusive: isTimeRangeEndInclusiveArg, dirWhitelist: dirWhitelistArg, isAscending: isAscendingArg, offset: offsetArg, limit: limitArg) { result in
+        let platformIdentifiersArg: [String]? = nilOrValue(args[1])
+        let timeRangeBegArg: Int64? = nilOrValue(args[2])
+        let isTimeRangeBegInclusiveArg: Bool? = nilOrValue(args[3])
+        let timeRangeEndArg: Int64? = nilOrValue(args[4])
+        let isTimeRangeEndInclusiveArg: Bool? = nilOrValue(args[5])
+        let dirWhitelistArg: [String]? = nilOrValue(args[6])
+        let isAscendingArg = args[7] as! Bool
+        let offsetArg: Int64? = nilOrValue(args[8])
+        let limitArg: Int64? = nilOrValue(args[9])
+        api.queryFiles(fileIds: fileIdsArg, platformIdentifiers: platformIdentifiersArg, timeRangeBeg: timeRangeBegArg, isTimeRangeBegInclusive: isTimeRangeBegInclusiveArg, timeRangeEnd: timeRangeEndArg, isTimeRangeEndInclusive: isTimeRangeEndInclusiveArg, dirWhitelist: dirWhitelistArg, isAscending: isAscendingArg, offset: offsetArg, limit: limitArg) { result in
           switch result {
           case .success(let res):
             reply(wrapResult(res))
@@ -361,6 +372,50 @@ class MyHostApiSetup {
       }
     } else {
       copyPrivateFileToPublicDirChannel.setMessageHandler(nil)
+    }
+    /// Copy a file identified by [platformIdentifier] to [dstPath]. No checking
+    /// is done by this function so caller must ensure [privateDir] is a valid and
+    /// accessible dir. Typically you can only write to one of the app private
+    /// dirs.
+    let copyFileToPrivateDirChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.np_platform_local_media.MyHostApi.copyFileToPrivateDir\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      copyFileToPrivateDirChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let platformIdentifierArg = args[0] as! String
+        let dstPathArg = args[1] as! String
+        api.copyFileToPrivateDir(platformIdentifier: platformIdentifierArg, dstPath: dstPathArg) { result in
+          switch result {
+          case .success:
+            reply(wrapResult(nil))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      copyFileToPrivateDirChannel.setMessageHandler(nil)
+    }
+    /// Replace the content of a file identified by [platformIdentifier] with
+    /// [bytes].
+    ///
+    /// On Android, [platformIdentifier] is a content URI managed by MediaStore.
+    let replaceFileChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.np_platform_local_media.MyHostApi.replaceFile\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      replaceFileChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let platformIdentifierArg = args[0] as! String
+        let bytesArg = args[1] as! FlutterStandardTypedData
+        api.replaceFile(platformIdentifier: platformIdentifierArg, bytes: bytesArg) { result in
+          switch result {
+          case .success:
+            reply(wrapResult(nil))
+          case .failure(let error):
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      replaceFileChannel.setMessageHandler(nil)
     }
   }
 }

@@ -479,15 +479,7 @@ class _Bloc extends Bloc<_Event, _State>
       return;
     }
     emit(
-      state.copyWith(
-        imageEnhancerRequest: Unique(
-          ImageEnhancerArguments(
-            account,
-            f,
-            prefController.isSaveEditResultToServerValue,
-          ),
-        ),
-      ),
+      state.copyWith(imageEnhancerRequest: Unique(ImageEnhancerArguments(f))),
     );
   }
 
@@ -779,4 +771,5 @@ class _Bloc extends Bloc<_Event, _State>
   final _subscriptions = <StreamSubscription>[];
   StreamSubscription? _collectionItemsSubscription;
   var _isHandlingError = false;
+  var _isPopped = false;
 }

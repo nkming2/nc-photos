@@ -25,6 +25,7 @@ class ResultViewerArguments {
 
 /// This is an intermediate widget in charge of preparing the file to be
 /// eventually shown in [Viewer]
+@Deprecated("For legacy photo enhancer only")
 class ResultViewer extends StatefulWidget {
   static const routeName = "/result-viewer";
 

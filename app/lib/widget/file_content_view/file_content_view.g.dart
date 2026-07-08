@@ -27,6 +27,9 @@ abstract class $_StateCopyWithWorker {
     Duration? videoDuration,
     bool? videoIsLooping,
     double? videoVolume,
+    void Function(Point<double> position)? onTapAt,
+    void Function(Point<double> position)? onLongPressStartAt,
+    Widget Function(BuildContext context, Widget child)? frameBuilder,
     ({Object error, StackTrace? stackTrace})? error,
     ({Object error, StackTrace? stackTrace})? loadError,
   });
@@ -50,6 +53,9 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
     dynamic videoDuration,
     dynamic videoIsLooping,
     dynamic videoVolume,
+    dynamic onTapAt = copyWithNull,
+    dynamic onLongPressStartAt = copyWithNull,
+    dynamic frameBuilder = copyWithNull,
     dynamic error = copyWithNull,
     dynamic loadError = copyWithNull,
   }) {
@@ -71,6 +77,16 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
       videoDuration: videoDuration as Duration? ?? that.videoDuration,
       videoIsLooping: videoIsLooping as bool? ?? that.videoIsLooping,
       videoVolume: videoVolume as double? ?? that.videoVolume,
+      onTapAt: onTapAt == copyWithNull
+          ? that.onTapAt
+          : onTapAt as void Function(Point<double> position)?,
+      onLongPressStartAt: onLongPressStartAt == copyWithNull
+          ? that.onLongPressStartAt
+          : onLongPressStartAt as void Function(Point<double> position)?,
+      frameBuilder: frameBuilder == copyWithNull
+          ? that.frameBuilder
+          : frameBuilder
+                as Widget Function(BuildContext context, Widget child)?,
       error: error == copyWithNull
           ? that.error
           : error as ({Object error, StackTrace? stackTrace})?,
@@ -124,7 +140,7 @@ extension _$_BlocNpLog on _Bloc {
 extension _$_StateToString on _State {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_State {shouldPlayLivePhoto: $shouldPlayLivePhoto, canZoom: $canZoom, canPlay: $canPlay, canLoop: $canLoop, isPlayControlVisible: $isPlayControlVisible, isLoaded: $isLoaded, isZoomed: $isZoomed, isPlaying: $isPlaying, contentHeight: ${contentHeight == null ? null : "${contentHeight!.toStringAsFixed(3)}"}, videoAspectRatio: ${videoAspectRatio.toStringAsFixed(3)}, videoDuration: $videoDuration, videoIsLooping: $videoIsLooping, videoVolume: ${videoVolume.toStringAsFixed(3)}, error: $error, loadError: $loadError}";
+    return "_State {shouldPlayLivePhoto: $shouldPlayLivePhoto, canZoom: $canZoom, canPlay: $canPlay, canLoop: $canLoop, isPlayControlVisible: $isPlayControlVisible, isLoaded: $isLoaded, isZoomed: $isZoomed, isPlaying: $isPlaying, contentHeight: ${contentHeight == null ? null : "${contentHeight!.toStringAsFixed(3)}"}, videoAspectRatio: ${videoAspectRatio.toStringAsFixed(3)}, videoDuration: $videoDuration, videoIsLooping: $videoIsLooping, videoVolume: ${videoVolume.toStringAsFixed(3)}, onTapAt: $onTapAt, onLongPressStartAt: $onLongPressStartAt, frameBuilder: $frameBuilder, error: $error, loadError: $loadError}";
   }
 }
 
@@ -223,6 +239,28 @@ extension _$_UpdateVideoPlayerValueToString on _UpdateVideoPlayerValue {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
     return "_UpdateVideoPlayerValue {value: $value}";
+  }
+}
+
+extension _$_SetOnTapAtCallbackToString on _SetOnTapAtCallback {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_SetOnTapAtCallback {value: $value}";
+  }
+}
+
+extension _$_SetOnLongPressStartAtCallbackToString
+    on _SetOnLongPressStartAtCallback {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_SetOnLongPressStartAtCallback {value: $value}";
+  }
+}
+
+extension _$_SetFrameBuilderCallbackToString on _SetFrameBuilderCallback {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_SetFrameBuilderCallback {value: $value}";
   }
 }
 

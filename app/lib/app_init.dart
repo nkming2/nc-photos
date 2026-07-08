@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
 import 'package:event_bus/event_bus.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:kiwi/kiwi.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/di_container.dart';
@@ -41,12 +43,16 @@ import 'package:nc_photos/entity/tag.dart';
 import 'package:nc_photos/entity/tag/data_source.dart';
 import 'package:nc_photos/entity/tagged_file.dart';
 import 'package:nc_photos/entity/tagged_file/data_source.dart';
+import 'package:nc_photos/image_enhancer_util.dart';
 import 'package:nc_photos/k.dart' as k;
 import 'package:nc_photos/mobile/android/android_info.dart';
 import 'package:nc_photos/mobile/self_signed_cert_manager.dart';
+import 'package:nc_photos/navigator_util.dart';
 import 'package:nc_photos/platform/features.dart' as features;
 import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/touch_manager.dart';
+import 'package:nc_photos/widget/enhance_result_viewer/enhance_result_viewer.dart';
+import 'package:nc_photos/work_manager.dart';
 import 'package:np_db/np_db.dart';
 import 'package:np_gps_map/np_gps_map.dart';
 import 'package:np_http/np_http.dart';
@@ -61,12 +67,26 @@ enum InitIsolateType {
   /// Isolates with Flutter engine, e.g., those spawned by flutter_isolate or
   /// flutter_background_service
   flutterIsolate,
+  imageEnhancerTask,
+}
+
+Future<void> _initImageEnhancerTask() async {
+  initLog();
+  await _initPref();
+  await initHttp(
+    appVersion: k.versionStr,
+    isNewHttpEngine: Pref().isNewHttpEngine() ?? false,
+  );
+  await initLocalNotification();
 }
 
 Future<void> init(InitIsolateType isolateType) async {
   if (_hasInitedInThisIsolate) {
     _log.warning("[init] Already initialized in this isolate");
     return;
+  }
+  if (isolateType == InitIsolateType.imageEnhancerTask) {
+    return _initImageEnhancerTask();
   }
 
   initLog();
@@ -92,6 +112,10 @@ Future<void> init(InitIsolateType isolateType) async {
     unawaited(_initRefreshRate());
   }
   await _initTimeZone();
+  if (isolateType == InitIsolateType.main) {
+    initWorkManager();
+    unawaited(initLocalNotification());
+  }
 
   _hasInitedInThisIsolate = true;
 }
@@ -250,6 +274,34 @@ Future<void> _initTimeZone() async {
   } catch (e, stackTrace) {
     _log.severe("[_initTimeZone] Failed while initialize", e, stackTrace);
   }
+}
+
+Future<void> initLocalNotification() {
+  return FlutterLocalNotificationsPlugin().initialize(
+    settings: const InitializationSettings(
+      android: AndroidInitializationSettings(
+        "@drawable/outline_error_outline_white_24",
+      ),
+    ),
+    onDidReceiveNotificationResponse: (response) async {
+      final payload = response.payload;
+      if (payload != null) {
+        final j = jsonDecode(payload);
+        if (j["action"] ==
+            ImageEnhancerAndroidConstant.resultNotificationAction) {
+          final persistResult = j["persistResult"] as String;
+          InterruptPageHandler().pushRoute(
+            InterruptPageRoute(
+              name: EnhanceResultViewer.routeName,
+              arguments: EnhanceResultViewerArguments(
+                persistResult: persistResult,
+              ),
+            ),
+          );
+        }
+      }
+    },
+  );
 }
 
 Future<NpDb> _createDb(InitIsolateType isolateType) async {

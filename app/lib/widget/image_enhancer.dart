@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math' as math;
 
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:circular_reveal_animation/circular_reveal_animation.dart';
@@ -21,14 +20,12 @@ import 'package:nc_photos/mobile/android/android_info.dart';
 import 'package:nc_photos/mobile/android/k.dart' as android;
 import 'package:nc_photos/mobile/local_media_image.dart';
 import 'package:nc_photos/np_api_util.dart';
-import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/widget/handler/permission_handler.dart';
 import 'package:nc_photos/widget/image_editor_persist_option_dialog.dart';
 import 'package:nc_photos/widget/selectable.dart';
-import 'package:nc_photos/widget/settings/enhancement_settings.dart';
 import 'package:np_log/np_log.dart';
 import 'package:np_platform_image_processor/np_platform_image_processor.dart';
 import 'package:np_platform_util/np_platform_util.dart';
@@ -45,7 +42,7 @@ class ImageEnhancerArguments {
 }
 
 class ImageEnhancer extends StatefulWidget {
-  static const routeName = "/image-enhancer";
+  static const routeName = "/legacy-image-enhancer";
 
   static Route buildRoute(
     ImageEnhancerArguments args,
@@ -100,7 +97,9 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
         systemNavigationBarColor: Colors.black,
         systemNavigationBarIconBrightness: Brightness.dark,
       ),
-      child: Scaffold(body: Builder(builder: _buildContent)),
+      child: Scaffold(
+        body: SafeArea(child: Builder(builder: _buildContent)),
+      ),
     ),
   );
 
@@ -195,98 +194,14 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
       account: widget.account,
     );
     switch (_selectedOption.algorithm) {
-      case _Algorithm.zeroDce:
-        await ImageProcessor.zeroDce(
-          await uriGetter.get(),
-          widget.file.name,
-          _c.pref.getEnhanceMaxWidthOr(),
-          _c.pref.getEnhanceMaxHeightOr(),
-          args["iteration"] ?? 8,
-          headers: {
-            "Authorization": AuthUtil.fromAccount(
-              widget.account,
-            ).toHeaderValue(),
-          },
-          isSaveToServer: widget.isSaveToServer,
-        );
-        break;
-
-      case _Algorithm.deepLab3Portrait:
-        await ImageProcessor.deepLab3Portrait(
-          await uriGetter.get(),
-          widget.file.name,
-          _c.pref.getEnhanceMaxWidthOr(),
-          _c.pref.getEnhanceMaxHeightOr(),
-          args["radius"] ?? 16,
-          headers: {
-            "Authorization": AuthUtil.fromAccount(
-              widget.account,
-            ).toHeaderValue(),
-          },
-          isSaveToServer: widget.isSaveToServer,
-        );
-        break;
-
-      case _Algorithm.esrgan:
-        await ImageProcessor.esrgan(
-          await uriGetter.get(),
-          widget.file.name,
-          _c.pref.getEnhanceMaxWidthOr(),
-          _c.pref.getEnhanceMaxHeightOr(),
-          headers: {
-            "Authorization": AuthUtil.fromAccount(
-              widget.account,
-            ).toHeaderValue(),
-          },
-          isSaveToServer: widget.isSaveToServer,
-        );
-        break;
-
       case _Algorithm.arbitraryStyleTransfer:
         await ImageProcessor.arbitraryStyleTransfer(
           await uriGetter.get(),
           widget.file.name,
-          math.min(
-            _c.pref.getEnhanceMaxWidthOr(),
-            _isAtLeast5GbRam() ? 1600 : 1280,
-          ),
-          math.min(
-            _c.pref.getEnhanceMaxHeightOr(),
-            _isAtLeast5GbRam() ? 1200 : 960,
-          ),
+          _isAtLeast5GbRam() ? 1400 : 1152,
+          _isAtLeast5GbRam() ? 1050 : 864,
           args["styleUri"],
           args["weight"],
-          headers: {
-            "Authorization": AuthUtil.fromAccount(
-              widget.account,
-            ).toHeaderValue(),
-          },
-          isSaveToServer: widget.isSaveToServer,
-        );
-        break;
-
-      case _Algorithm.deepLab3ColorPop:
-        await ImageProcessor.deepLab3ColorPop(
-          await uriGetter.get(),
-          widget.file.name,
-          _c.pref.getEnhanceMaxWidthOr(),
-          _c.pref.getEnhanceMaxHeightOr(),
-          args["weight"],
-          headers: {
-            "Authorization": AuthUtil.fromAccount(
-              widget.account,
-            ).toHeaderValue(),
-          },
-          isSaveToServer: widget.isSaveToServer,
-        );
-        break;
-
-      case _Algorithm.neurOp:
-        await ImageProcessor.neurOp(
-          await uriGetter.get(),
-          widget.file.name,
-          _c.pref.getEnhanceMaxWidthOr(),
-          _c.pref.getEnhanceMaxHeightOr(),
           headers: {
             "Authorization": AuthUtil.fromAccount(
               widget.account,
@@ -300,9 +215,6 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
   }
 
   Future<void> _showInitialDialogs() async {
-    if (!_c.pref.hasShownEnhanceInfoOr()) {
-      await _showInfo(context);
-    }
     if (!mounted) {
       return;
     }
@@ -326,37 +238,6 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
     }
   }
 
-  Future<void> _showInfo(BuildContext context) async {
-    await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(L10n.global().enhanceIntroDialogTitle),
-        content: Text(L10n.global().enhanceIntroDialogDescription),
-        actions: [
-          TextButton(
-            onPressed: () {
-              launch(enhanceUrl);
-            },
-            child: Text(L10n.global().learnMoreButtonLabel),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pushNamed(EnhancementSettings.routeName);
-            },
-            child: Text(L10n.global().configButtonLabel),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text(MaterialLocalizations.of(context).closeButtonLabel),
-          ),
-        ],
-      ),
-    );
-    unawaited(_c.pref.setHasShownEnhanceInfo(true));
-  }
-
   Future<void> _showSaveEditResultDialog(BuildContext context) async {
     await showDialog(
       context: context,
@@ -371,112 +252,9 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
     _Algorithm selected,
   ) async {
     switch (selected) {
-      case _Algorithm.zeroDce:
-        return _getZeroDceArgs(context);
-
-      case _Algorithm.deepLab3Portrait:
-        return _getDeepLab3PortraitArgs(context);
-
-      case _Algorithm.esrgan:
-        return {};
-
       case _Algorithm.arbitraryStyleTransfer:
         return _getArbitraryStyleTransferArgs(context);
-
-      case _Algorithm.deepLab3ColorPop:
-        return _getDeepLab3ColorPopArgs(context);
-
-      case _Algorithm.neurOp:
-        return {};
     }
-  }
-
-  Future<Map<String, dynamic>?> _getZeroDceArgs(BuildContext context) async {
-    var current = .8;
-    final iteration = await showDialog<int>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(L10n.global().enhanceLowLightParamBrightnessLabel),
-        contentPadding: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 0),
-        content: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                const Icon(Icons.brightness_low),
-                Expanded(
-                  child: StatefulSlider(
-                    initialValue: current,
-                    onChangeEnd: (value) {
-                      current = value;
-                    },
-                  ),
-                ),
-                const Icon(Icons.brightness_high),
-              ],
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              final iteration = (current * 10).round().clamp(1, 10);
-              Navigator.of(context).pop(iteration);
-            },
-            child: Text(L10n.global().enhanceButtonLabel),
-          ),
-        ],
-      ),
-    );
-    _log.info("[_getZeroDceArgs] iteration: $iteration");
-    return iteration?.run((it) => {"iteration": it});
-  }
-
-  Future<Map<String, dynamic>?> _getDeepLab3PortraitArgs(
-    BuildContext context,
-  ) async {
-    var current = .5;
-    final radius = await showDialog<int>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(L10n.global().enhancePortraitBlurParamBlurLabel),
-        contentPadding: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 0),
-        content: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                const Icon(Icons.circle, size: 20),
-                Expanded(
-                  child: StatefulSlider(
-                    initialValue: current,
-                    onChangeEnd: (value) {
-                      current = value;
-                    },
-                  ),
-                ),
-                const Icon(Icons.blur_on),
-              ],
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              final radius = (current * 25).round().clamp(1, 25);
-              Navigator.of(context).pop(radius);
-            },
-            child: Text(L10n.global().enhanceButtonLabel),
-          ),
-        ],
-      ),
-    );
-    _log.info("[_getDeepLab3PortraitArgs] radius: $radius");
-    return radius?.run((it) => {"radius": it});
   }
 
   Future<Map<String, dynamic>?> _getArbitraryStyleTransferArgs(
@@ -494,50 +272,6 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
     }
   }
 
-  Future<Map<String, dynamic>?> _getDeepLab3ColorPopArgs(
-    BuildContext context,
-  ) async {
-    var current = 1.0;
-    final weight = await showDialog<double>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(L10n.global().enhanceGenericParamWeightLabel),
-        contentPadding: const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 0),
-        content: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                const Icon(Icons.water_drop, size: 20),
-                Expanded(
-                  child: StatefulSlider(
-                    initialValue: current,
-                    onChangeEnd: (value) {
-                      current = value;
-                    },
-                  ),
-                ),
-                const Icon(Icons.water_drop_outlined),
-              ],
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(current);
-            },
-            child: Text(L10n.global().enhanceButtonLabel),
-          ),
-        ],
-      ),
-    );
-    _log.info("[_getDeepLab3ColorPopArgs] weight: $weight");
-    return weight?.run((it) => {"weight": it});
-  }
-
   bool _isAtLeast4GbRam() {
     // We can't compare with 4096 directly as some RAM are preserved
     return AndroidInfo().totalMemMb > 3584;
@@ -550,48 +284,12 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
   late final _options = [
     if (getRawPlatform() == NpPlatform.android) ...[
       _Option(
-        title: L10n.global().enhanceRetouchTitle,
-        description: L10n.global().enhanceRetouchDescription,
-        link: enhanceRetouchUrl,
-        showcaseBuilder: (_) => const _RetouchShowcase(),
-        algorithm: _Algorithm.neurOp,
+        title: L10n.global().enhanceStyleTransferTitle,
+        description: L10n.global().enhanceStyleTransferStyleDialogDescription,
+        link: enhanceStyleTransferUrl,
+        showcaseBuilder: (_) => const _StyleTransferShowcase(),
+        algorithm: _Algorithm.arbitraryStyleTransfer,
       ),
-      _Option(
-        title: L10n.global().enhanceColorPopTitle,
-        description: L10n.global().enhanceColorPopDescription,
-        link: enhanceDeepLabColorPopUrl,
-        showcaseBuilder: (_) => const _ColorPopShowcase(),
-        algorithm: _Algorithm.deepLab3ColorPop,
-      ),
-      _Option(
-        title: L10n.global().enhanceLowLightTitle,
-        description: L10n.global().enhanceLowLightDescription,
-        link: enhanceZeroDceUrl,
-        showcaseBuilder: (_) => const _LowLightShowcase(),
-        algorithm: _Algorithm.zeroDce,
-      ),
-      _Option(
-        title: L10n.global().enhancePortraitBlurTitle,
-        description: L10n.global().enhancePortraitBlurDescription,
-        link: enhanceDeepLabPortraitBlurUrl,
-        showcaseBuilder: (_) => const _PortraitBlurShowcase(),
-        algorithm: _Algorithm.deepLab3Portrait,
-      ),
-      _Option(
-        title: L10n.global().enhanceSuperResolution4xTitle,
-        description: L10n.global().enhanceSuperResolution4xDescription,
-        link: enhanceEsrganUrl,
-        showcaseBuilder: (_) => const _SuperResolutionShowcase(),
-        algorithm: _Algorithm.esrgan,
-      ),
-      if (_isAtLeast4GbRam())
-        _Option(
-          title: L10n.global().enhanceStyleTransferTitle,
-          description: L10n.global().enhanceStyleTransferStyleDialogDescription,
-          link: enhanceStyleTransferUrl,
-          showcaseBuilder: (_) => const _StyleTransferShowcase(),
-          algorithm: _Algorithm.arbitraryStyleTransfer,
-        ),
     ],
   ];
 
@@ -600,14 +298,7 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
   late final _pageController = PageController(keepPage: false);
 }
 
-enum _Algorithm {
-  zeroDce,
-  deepLab3Portrait,
-  esrgan,
-  arbitraryStyleTransfer,
-  deepLab3ColorPop,
-  neurOp,
-}
+enum _Algorithm { arbitraryStyleTransfer }
 
 class _Option {
   const _Option({
@@ -690,161 +381,6 @@ mixin _ShowcaseStateMixin<T extends StatefulWidget>
   late final Animation<double> anim = CurvedAnimation(
     parent: animController,
     curve: Curves.easeIn,
-  );
-}
-
-class _RetouchShowcase extends StatefulWidget {
-  const _RetouchShowcase();
-
-  @override
-  createState() => _RetouchShowcaseState();
-}
-
-class _RetouchShowcaseState extends State<_RetouchShowcase>
-    with TickerProviderStateMixin, _ShowcaseStateMixin {
-  @override
-  build(BuildContext context) => Stack(
-    fit: StackFit.expand,
-    children: [
-      Image.asset(
-        "assets/retouch0.jpg",
-        fit: BoxFit.contain,
-        gaplessPlayback: true,
-      ),
-      CircularRevealAnimation(
-        animation: anim,
-        centerAlignment: Alignment.bottomCenter,
-        child: Image.asset(
-          "assets/retouch1.jpg",
-          fit: BoxFit.contain,
-          gaplessPlayback: true,
-        ),
-      ),
-    ],
-  );
-}
-
-class _ColorPopShowcase extends StatefulWidget {
-  const _ColorPopShowcase();
-
-  @override
-  createState() => _ColorPopShowcaseState();
-}
-
-class _ColorPopShowcaseState extends State<_ColorPopShowcase>
-    with TickerProviderStateMixin, _ShowcaseStateMixin {
-  @override
-  build(BuildContext context) => Stack(
-    fit: StackFit.expand,
-    children: [
-      Image.asset(
-        "assets/color-pop0.jpg",
-        fit: BoxFit.contain,
-        gaplessPlayback: true,
-      ),
-      CircularRevealAnimation(
-        animation: anim,
-        centerAlignment: Alignment.bottomCenter,
-        child: Image.asset(
-          "assets/color-pop1.jpg",
-          fit: BoxFit.contain,
-          gaplessPlayback: true,
-        ),
-      ),
-    ],
-  );
-}
-
-class _LowLightShowcase extends StatefulWidget {
-  const _LowLightShowcase();
-
-  @override
-  createState() => _LowLightShowcaseState();
-}
-
-class _LowLightShowcaseState extends State<_LowLightShowcase>
-    with TickerProviderStateMixin, _ShowcaseStateMixin {
-  @override
-  build(BuildContext context) => Stack(
-    fit: StackFit.expand,
-    children: [
-      Image.asset(
-        "assets/low-light0.jpg",
-        fit: BoxFit.contain,
-        gaplessPlayback: true,
-      ),
-      CircularRevealAnimation(
-        animation: anim,
-        centerAlignment: Alignment.bottomCenter,
-        child: Image.asset(
-          "assets/low-light1.jpg",
-          fit: BoxFit.contain,
-          gaplessPlayback: true,
-        ),
-      ),
-    ],
-  );
-}
-
-class _PortraitBlurShowcase extends StatefulWidget {
-  const _PortraitBlurShowcase();
-
-  @override
-  createState() => _PortraitBlurShowcaseState();
-}
-
-class _PortraitBlurShowcaseState extends State<_PortraitBlurShowcase>
-    with TickerProviderStateMixin, _ShowcaseStateMixin {
-  @override
-  build(BuildContext context) => Stack(
-    fit: StackFit.expand,
-    children: [
-      Image.asset(
-        "assets/portrait-blur0.jpg",
-        fit: BoxFit.contain,
-        gaplessPlayback: true,
-      ),
-      CircularRevealAnimation(
-        animation: anim,
-        centerAlignment: Alignment.bottomCenter,
-        child: Image.asset(
-          "assets/portrait-blur1.jpg",
-          fit: BoxFit.contain,
-          gaplessPlayback: true,
-        ),
-      ),
-    ],
-  );
-}
-
-class _SuperResolutionShowcase extends StatefulWidget {
-  const _SuperResolutionShowcase();
-
-  @override
-  createState() => _SuperResolutionShowcaseState();
-}
-
-class _SuperResolutionShowcaseState extends State<_SuperResolutionShowcase>
-    with TickerProviderStateMixin, _ShowcaseStateMixin {
-  @override
-  build(BuildContext context) => Stack(
-    fit: StackFit.expand,
-    children: [
-      Image.asset(
-        "assets/super-resolution0.jpg",
-        fit: BoxFit.contain,
-        gaplessPlayback: true,
-      ),
-      CircularRevealAnimation(
-        animation: anim,
-        centerAlignment: Alignment.bottomCenter,
-        child: Image.asset(
-          "assets/super-resolution1.jpg",
-          fit: BoxFit.contain,
-          gaplessPlayback: true,
-        ),
-      ),
-    ],
   );
 }
 

@@ -42,7 +42,7 @@ import 'package:nc_photos/widget/delete_result_snack_bar.dart';
 import 'package:nc_photos/widget/disposable.dart';
 import 'package:nc_photos/widget/file_content_view/file_content_view.dart';
 import 'package:nc_photos/widget/image_editor/image_editor.dart';
-import 'package:nc_photos/widget/image_enhancer.dart';
+import 'package:nc_photos/widget/image_enhancer/image_enhancer.dart';
 import 'package:nc_photos/widget/page_visibility_mixin.dart';
 import 'package:nc_photos/widget/png_icon.dart';
 import 'package:nc_photos/widget/processing_dialog.dart';

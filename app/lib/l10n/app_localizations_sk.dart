@@ -377,14 +377,6 @@ class AppLocalizationsSk extends AppLocalizations {
       'Prispôsobiť vylepšenia obrázkov a editor obrázkov';
 
   @override
-  String get settingsEnhanceMaxResolutionTitle2 =>
-      'Rozlíšenie obrázkov pre vylepšenia';
-
-  @override
-  String get settingsEnhanceMaxResolutionDescription =>
-      'Fotografie väčšie než zvolené rozlíšenie budú zmenšené.\n\nVeľmi vysoké rozlíšenie vyžaduje podstatne viac pamäte a času na spracovanie. Ak aplikácia padá pri vylepšovaní fotiek, znížte túto hodnotu.';
-
-  @override
   String get settingsImageEditSaveResultsToServerTitle =>
       'Ukladať výsledky na server';
 
@@ -1164,13 +1156,6 @@ class AppLocalizationsSk extends AppLocalizations {
   String get enhanceButtonLabel => 'VYLEPŠIŤ';
 
   @override
-  String get enhanceIntroDialogTitle => 'Vylepšite svoje fotografie';
-
-  @override
-  String get enhanceIntroDialogDescription =>
-      'Vaše fotografie sa spracovávajú lokálne na vašom zariadení. Predvolene sa zmenšia na 2048x1536. Výstupné rozlíšenie môžete upraviť v Nastaveniach';
-
-  @override
   String get enhanceLowLightTitle => 'Vylepšenie pri slabom svetle';
 
   @override
@@ -1234,6 +1219,19 @@ class AppLocalizationsSk extends AppLocalizations {
   @override
   String get enhanceRetouchDescription =>
       'Automaticky upravte vaše fotografie, zlepšite celkové farby a živost';
+
+  @override
+  String get enhanceMotionDeblurTitle => 'Motion deblur';
+
+  @override
+  String get enhanceMotionDeblurDescription =>
+      'Reduce image blur caused by camera shake';
+
+  @override
+  String get enhanceDerainTitle => 'Derain';
+
+  @override
+  String get enhanceDerainDescription => 'Remove rain streaks from your photo';
 
   @override
   String get doubleTapExitNotification => 'Ťuknite znova pre ukončenie';
@@ -1697,6 +1695,37 @@ class AppLocalizationsSk extends AppLocalizations {
   String metadataEditBackupNotification(Object backup) {
     return 'Original file backed up as $backup';
   }
+
+  @override
+  String get imageEnhancerModelDownloadDialogText => 'Downloading AI model...';
+
+  @override
+  String get imageEnhancerProcessDialogTitle => 'Almost there';
+
+  @override
+  String get imageEnhancerProcessDialogText =>
+      'Your image will now be processed in the background. You\'ll get a notification when it\'s done.';
+
+  @override
+  String get imageEnhancerResultFailedNotifTitle => 'Failed to process image';
+
+  @override
+  String get imageEnhancerResultSuccessfulNotifTitle =>
+      'Image processed successfully';
+
+  @override
+  String get imageEnhancerResultSuccessfulNotifContent =>
+      'Tap to view the result';
+
+  @override
+  String get imageSegmentPicker6PointLimit => 'Only up to 6 points are allowed';
+
+  @override
+  String get imageSegmentPickerInitFailedText => 'Failed to initialize';
+
+  @override
+  String get imageSegmentPickerInstruction =>
+      'Tap on screen to add or remove points of interest';
 
   @override
   String get errorUnauthenticated =>

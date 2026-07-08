@@ -344,8 +344,6 @@
 		"description": "Include settings for image enhancements and the image editor"
 	},
 	"settingsImageEditDescription": "画像の強化と画像エディタをカスタマイズ",
-	"settingsEnhanceMaxResolutionTitle2": "強化のための画像解像度",
-	"settingsEnhanceMaxResolutionDescription": "選択した解像度より大きい写真は縮小されます。高解像度の写真は、処理に多くのメモリと時間を必要とします。写真の補正中にアプリがクラッシュした場合は、この設定を下げてください。",
 	"settingsImageEditSaveResultsToServerTitle": "結果をサーバーに保存する",
 	"@settingsImageEditSaveResultsToServerTitle": {
 		"description": "Whether to save the edit/enhance results to server instead of the current device"
@@ -1100,8 +1098,6 @@
 		"description": "Enhance a photo"
 	},
 	"enhanceButtonLabel": "補正",
-	"enhanceIntroDialogTitle": "写真を補正",
-	"enhanceIntroDialogDescription": "写真はデバイス上でローカルに処理されます。デフォルトでは、2048x1536に縮小されます。出力解像度は設定で調整できます",
 	"enhanceLowLightTitle": "低照度補正",
 	"@enhanceLowLightTitle": {
 		"description": "Enhance a photo taken in low-light environment"
@@ -1697,5 +1693,18 @@
 				"example": "IMG_123456789.jpg_original"
 			}
 		}
-	}
+	},
+	"enhanceMotionDeblurTitle": "手ぶれ補正",
+	"enhanceMotionDeblurDescription": "写真の手ぶれを軽減します",
+	"enhanceDerainTitle": "雨除去",
+	"enhanceDerainDescription": "写真から雨を消します",
+	"imageEnhancerModelDownloadDialogText": "AIモデルをダウンロード中...",
+	"imageEnhancerProcessDialogTitle": "あと少し",
+	"imageEnhancerProcessDialogText": "写真を編集しています。完了次第、通知でお知らせします。",
+	"imageEnhancerResultFailedNotifTitle": "写真の編集に失敗しました",
+	"imageEnhancerResultSuccessfulNotifTitle": "写真の編集が完了しました",
+	"imageEnhancerResultSuccessfulNotifContent": "タップして編集結果を表示",
+	"imageSegmentPicker6PointLimit": "ポイントは6つまで指定できます",
+	"imageSegmentPickerInitFailedText": "初期化に失敗しました",
+	"imageSegmentPickerInstruction": "タップでポイントを指定し、写真の一部を切り取ります。指定したポイントをもう一度タップすると消えます"
 }

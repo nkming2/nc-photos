@@ -19,6 +19,7 @@ import 'package:nc_photos/l10n/app_localizations.dart';
 import 'package:nc_photos/language_util.dart' as language_util;
 import 'package:nc_photos/mobile/self_signed_cert_manager.dart';
 import 'package:nc_photos/navigation_manager.dart';
+import 'package:nc_photos/navigator_util.dart';
 import 'package:nc_photos/platform/features.dart';
 import 'package:nc_photos/protected_page_handler.dart';
 import 'package:nc_photos/session_storage.dart';
@@ -27,6 +28,7 @@ import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/widget/album_dir_picker.dart';
 import 'package:nc_photos/widget/album_importer.dart';
 import 'package:nc_photos/widget/album_share_outlier_browser.dart';
+import 'package:nc_photos/widget/anyfile_list_viewer/anyfile_list_viewer.dart';
 import 'package:nc_photos/widget/archive_browser/archive_browser.dart';
 import 'package:nc_photos/widget/changelog/changelog.dart';
 import 'package:nc_photos/widget/collection_browser/collection_browser.dart';
@@ -34,10 +36,13 @@ import 'package:nc_photos/widget/collection_picker/collection_picker.dart';
 import 'package:nc_photos/widget/collection_viewer/collection_viewer.dart';
 import 'package:nc_photos/widget/connect2/connect.dart';
 import 'package:nc_photos/widget/convert_settings/convert_settings.dart';
+import 'package:nc_photos/widget/enhance_result_viewer/enhance_result_viewer.dart';
 import 'package:nc_photos/widget/enhanced_photo_browser.dart';
 import 'package:nc_photos/widget/home/home.dart';
 import 'package:nc_photos/widget/image_editor/image_editor.dart';
-import 'package:nc_photos/widget/image_enhancer.dart';
+import 'package:nc_photos/widget/image_enhancer.dart' as legacy;
+import 'package:nc_photos/widget/image_enhancer/image_enhancer.dart';
+import 'package:nc_photos/widget/image_segment_picker/image_segment_picker.dart';
 import 'package:nc_photos/widget/local_file_viewer.dart';
 import 'package:nc_photos/widget/local_result_viewer/local_result_viewer.dart';
 import 'package:nc_photos/widget/map_browser/map_browser.dart';
@@ -143,6 +148,16 @@ class _WrappedAppState extends State<_WrappedApp>
     NavigationManager().setHandler(this);
 
     _bloc.add(const _Init());
+
+    InterruptPageHandler().stream.listen((ev) {
+      final navigator = getNavigator();
+      if (navigator == null) {
+        _log.severe("[initState] No context");
+        return;
+      }
+      _log.info("[initState] Interrupt app with new page: $ev");
+      navigator.pushNamed(ev.name, arguments: ev.arguments);
+    });
   }
 
   @override
@@ -248,6 +263,7 @@ class _WrappedAppState extends State<_WrappedApp>
     route ??= _handleChangelogRoute(settings);
     route ??= _handleResultViewerRoute(settings);
     route ??= _handleImageEnhancerRoute(settings);
+    route ??= _handleLegacyImageEnhancerRoute(settings);
     route ??= _handleCollectionBrowserRoute(settings);
     route ??= _handleAccountSettingsRoute(settings);
     route ??= _handlePlacePickerRoute(settings);
@@ -255,6 +271,9 @@ class _WrappedAppState extends State<_WrappedApp>
     route ??= _handleCollectionViewerRoute(settings);
     route ??= _handleUploadFolderPickerRoute(settings);
     route ??= _handleLocalResultViewerRoute(settings);
+    route ??= _handleAnyFileListViewerRoute(settings);
+    route ??= _handleEnhanceResultViewerRoute(settings);
+    route ??= _handleImageSegmentPickerRoute(settings);
     return route;
   }
 
@@ -533,6 +552,22 @@ class _WrappedAppState extends State<_WrappedApp>
     return null;
   }
 
+  Route<dynamic>? _handleLegacyImageEnhancerRoute(RouteSettings settings) {
+    try {
+      if (settings.name == legacy.ImageEnhancer.routeName &&
+          settings.arguments != null) {
+        final args = settings.arguments as legacy.ImageEnhancerArguments;
+        return legacy.ImageEnhancer.buildRoute(args, settings);
+      }
+    } catch (e) {
+      _log.severe(
+        "[_handleLegacyImageEnhancerRoute] Failed while handling route",
+        e,
+      );
+    }
+    return null;
+  }
+
   Route<dynamic>? _handleCollectionBrowserRoute(RouteSettings settings) {
     try {
       if (settings.name == CollectionBrowser.routeName &&
@@ -635,6 +670,54 @@ class _WrappedAppState extends State<_WrappedApp>
     } catch (e) {
       _log.severe(
         "[_handleLocalResultViewerRoute] Failed while handling route",
+        e,
+      );
+    }
+    return null;
+  }
+
+  Route<dynamic>? _handleAnyFileListViewerRoute(RouteSettings settings) {
+    try {
+      if (settings.name == AnyFileListViewer.routeName &&
+          settings.arguments != null) {
+        final args = settings.arguments as AnyFileListViewerArguments;
+        return AnyFileListViewer.buildRoute(args, settings);
+      }
+    } catch (e) {
+      _log.severe(
+        "[_handleAnyFileListViewerRoute] Failed while handling route",
+        e,
+      );
+    }
+    return null;
+  }
+
+  Route<dynamic>? _handleEnhanceResultViewerRoute(RouteSettings settings) {
+    try {
+      if (settings.name == EnhanceResultViewer.routeName &&
+          settings.arguments != null) {
+        final args = settings.arguments as EnhanceResultViewerArguments;
+        return EnhanceResultViewer.buildRoute(args, settings);
+      }
+    } catch (e) {
+      _log.severe(
+        "[_handleEnhanceResultViewerRoute] Failed while handling route",
+        e,
+      );
+    }
+    return null;
+  }
+
+  Route<dynamic>? _handleImageSegmentPickerRoute(RouteSettings settings) {
+    try {
+      if (settings.name == ImageSegmentPicker.routeName &&
+          settings.arguments != null) {
+        final args = settings.arguments as ImageSegmentPickerArguments;
+        return ImageSegmentPicker.buildRoute(args, settings);
+      }
+    } catch (e) {
+      _log.severe(
+        "[_handleImageSegmentPickerRoute] Failed while handling route",
         e,
       );
     }

@@ -195,6 +195,7 @@ private class PigeonApiImpl : MyHostApi, ActivityAware, PluginRegistry.ActivityR
 
     override fun queryFiles(
         fileIds: List<String>?,
+        platformIdentifiers: List<String>?,
         timeRangeBeg: Long?,
         isTimeRangeBegInclusive: Boolean?,
         timeRangeEnd: Long?,
@@ -223,6 +224,12 @@ private class PigeonApiImpl : MyHostApi, ActivityAware, PluginRegistry.ActivityR
             )
             return
         }
+        var fileIdsSet = fileIds?.toMutableSet()
+        if (platformIdentifiers != null) {
+            fileIdsSet = fileIdsSet ?: mutableSetOf()
+            fileIdsSet.addAll(
+                platformIdentifiers.map { ContentUris.parseId(it.toUri()).toString() })
+        }
         launch(Dispatchers.IO) {
             try {
                 val wheres = mutableListOf<String>()
@@ -230,8 +237,8 @@ private class PigeonApiImpl : MyHostApi, ActivityAware, PluginRegistry.ActivityR
                 wheres.add(
                     "(${MediaStore.Files.FileColumns.MEDIA_TYPE}=${MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE} OR ${MediaStore.Files.FileColumns.MEDIA_TYPE}=${MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO})"
                 )
-                if (fileIds != null) {
-                    val args = fileIds.joinToString(",", transform = { it.toString() })
+                if (fileIdsSet != null) {
+                    val args = fileIdsSet.joinToString(",", transform = { it.toString() })
                     wheres.add("${MediaStore.MediaColumns._ID} IN (${args})")
                 }
                 if (timeRangeBeg != null) {
@@ -376,19 +383,19 @@ private class PigeonApiImpl : MyHostApi, ActivityAware, PluginRegistry.ActivityR
     }
 
     override fun readFile(platformIdentifier: String, callback: (Result<ByteArray>) -> Unit) {
-        if (activity == null) {
-            callback(Result.failure(IllegalStateException("Context is null")))
-            return
-        }
+        // if (activity == null) {
+        //     callback(Result.failure(IllegalStateException("Context is null")))
+        //     return
+        // }
         launch(Dispatchers.IO) {
             try {
                 val uri = platformIdentifier.toUri()
                 val bytes = if (UriUtil.isAssetUri(uri)) {
-                    context!!.assets.open(UriUtil.getAssetUriPath(uri)).use {
+                    contextWithFallback.assets.open(UriUtil.getAssetUriPath(uri)).use {
                         it.readBytes()
                     }
                 } else {
-                    context!!.contentResolver.openInputStream(uri)!!.use {
+                    contextWithFallback.contentResolver.openInputStream(uri)!!.use {
                         it.readBytes()
                     }
                 }
@@ -434,15 +441,15 @@ private class PigeonApiImpl : MyHostApi, ActivityAware, PluginRegistry.ActivityR
     override fun copyPrivateFileToPublicDir(
         srcFilePath: String, srcMime: String?, dstDir: String?, callback: (Result<String>) -> Unit
     ) {
-        if (activity == null) {
-            callback(Result.failure(IllegalStateException("Context is null")))
-            return
-        }
+        // if (activity == null) {
+        //     callback(Result.failure(IllegalStateException("Context is null")))
+        //     return
+        // }
         launch(Dispatchers.IO) {
             try {
                 val fromUri = Uri.fromFile(File(srcFilePath))
                 val uri = MediaStoreUtil.copyFileToDownload(
-                    context!!, fromUri, null, dstDir
+                    contextWithFallback, fromUri, null, dstDir
                 )
                 callback(Result.success(uri.toString()))
             } catch (e: PermissionException) {
@@ -551,6 +558,9 @@ private class PigeonApiImpl : MyHostApi, ActivityAware, PluginRegistry.ActivityR
     private val context: Context?
         get() = activity
 
+    private val contextWithFallback: Context
+        get() = context ?: NpPlatformLocalMediaPlugin.appContext
+
     private var activity: Activity? = null
     private var pluginBinding: ActivityPluginBinding? = null
 
@@ -560,9 +570,14 @@ private class PigeonApiImpl : MyHostApi, ActivityAware, PluginRegistry.ActivityR
 }
 
 class NpPlatformLocalMediaPlugin : FlutterPlugin, ActivityAware {
+    companion object {
+        lateinit var appContext: Context
+    }
+
     override fun onAttachedToEngine(
         flutterPluginBinding: FlutterPlugin.FlutterPluginBinding
     ) {
+        appContext = flutterPluginBinding.applicationContext
         val api = PigeonApiImpl()
         MyHostApi.setUp(flutterPluginBinding.binaryMessenger, api)
         this.api = api

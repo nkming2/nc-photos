@@ -358,13 +358,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get settingsImageEditDescription => '画像の強化と画像エディタをカスタマイズ';
 
   @override
-  String get settingsEnhanceMaxResolutionTitle2 => '強化のための画像解像度';
-
-  @override
-  String get settingsEnhanceMaxResolutionDescription =>
-      '選択した解像度より大きい写真は縮小されます。高解像度の写真は、処理に多くのメモリと時間を必要とします。写真の補正中にアプリがクラッシュした場合は、この設定を下げてください。';
-
-  @override
   String get settingsImageEditSaveResultsToServerTitle => '結果をサーバーに保存する';
 
   @override
@@ -1109,13 +1102,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get enhanceButtonLabel => '補正';
 
   @override
-  String get enhanceIntroDialogTitle => '写真を補正';
-
-  @override
-  String get enhanceIntroDialogDescription =>
-      '写真はデバイス上でローカルに処理されます。デフォルトでは、2048x1536に縮小されます。出力解像度は設定で調整できます';
-
-  @override
   String get enhanceLowLightTitle => '低照度補正';
 
   @override
@@ -1173,6 +1159,18 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get enhanceRetouchDescription => '写真を自動的にレタッチし、全体的な色と鮮やかさを向上させます';
+
+  @override
+  String get enhanceMotionDeblurTitle => '手ぶれ補正';
+
+  @override
+  String get enhanceMotionDeblurDescription => '写真の手ぶれを軽減します';
+
+  @override
+  String get enhanceDerainTitle => '雨除去';
+
+  @override
+  String get enhanceDerainDescription => '写真から雨を消します';
 
   @override
   String get doubleTapExitNotification => 'もう一度タップして終了';
@@ -1621,6 +1619,34 @@ class AppLocalizationsJa extends AppLocalizations {
   String metadataEditBackupNotification(Object backup) {
     return 'バックアップファイル$backupが作成されました';
   }
+
+  @override
+  String get imageEnhancerModelDownloadDialogText => 'AIモデルをダウンロード中...';
+
+  @override
+  String get imageEnhancerProcessDialogTitle => 'あと少し';
+
+  @override
+  String get imageEnhancerProcessDialogText => '写真を編集しています。完了次第、通知でお知らせします。';
+
+  @override
+  String get imageEnhancerResultFailedNotifTitle => '写真の編集に失敗しました';
+
+  @override
+  String get imageEnhancerResultSuccessfulNotifTitle => '写真の編集が完了しました';
+
+  @override
+  String get imageEnhancerResultSuccessfulNotifContent => 'タップして編集結果を表示';
+
+  @override
+  String get imageSegmentPicker6PointLimit => 'ポイントは6つまで指定できます';
+
+  @override
+  String get imageSegmentPickerInitFailedText => '初期化に失敗しました';
+
+  @override
+  String get imageSegmentPickerInstruction =>
+      'タップでポイントを指定し、写真の一部を切り取ります。指定したポイントをもう一度タップすると消えます';
 
   @override
   String get errorUnauthenticated => '認証されていないアクセスです。問題が解決しない場合は、再度サインインしてください';

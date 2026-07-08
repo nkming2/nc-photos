@@ -1,4 +1,5 @@
 import 'dart:io' as io;
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,6 +18,7 @@ import 'package:nc_photos/mobile/local_media_image.dart';
 import 'package:nc_photos/np_api_util.dart';
 import 'package:nc_photos/widget/network_thumbnail.dart';
 import 'package:nc_photos/widget/zoomable_viewer.dart';
+import 'package:np_common/object_util.dart';
 import 'package:np_common/size.dart';
 import 'package:np_log/np_log.dart';
 
@@ -31,6 +33,9 @@ class LocalImageViewer extends StatelessWidget {
     this.onHeightChanged,
     this.onZoomStarted,
     this.onZoomEnded,
+    this.onTapAt,
+    this.onLongPressStartAt,
+    this.frameBuilder,
   });
 
   @override
@@ -45,6 +50,9 @@ class LocalImageViewer extends StatelessWidget {
       onHeightChanged: onHeightChanged,
       onZoomStarted: onZoomStarted,
       onZoomEnded: onZoomEnded,
+      onTapAt: onTapAt,
+      onLongPressStartAt: onLongPressStartAt,
+      frameBuilder: frameBuilder,
       child: _ImageViewHeroContainer(
         file: file.toAnyFile(),
         heroImageBuilder: (context) => Image(
@@ -80,6 +88,9 @@ class LocalImageViewer extends StatelessWidget {
   final ValueChanged<double>? onHeightChanged;
   final VoidCallback? onZoomStarted;
   final VoidCallback? onZoomEnded;
+  final void Function(Point<double> position)? onTapAt;
+  final void Function(Point<double> position)? onLongPressStartAt;
+  final Widget Function(BuildContext context, Widget child)? frameBuilder;
 }
 
 class RemoteImageViewer extends StatelessWidget {
@@ -92,6 +103,9 @@ class RemoteImageViewer extends StatelessWidget {
     this.onHeightChanged,
     this.onZoomStarted,
     this.onZoomEnded,
+    this.onTapAt,
+    this.onLongPressStartAt,
+    this.frameBuilder,
   });
 
   static void preloadImage(
@@ -131,6 +145,9 @@ class RemoteImageViewer extends StatelessWidget {
       onHeightChanged: onHeightChanged,
       onZoomStarted: onZoomStarted,
       onZoomEnded: onZoomEnded,
+      onTapAt: onTapAt,
+      onLongPressStartAt: onLongPressStartAt,
+      frameBuilder: frameBuilder,
       child: _ImageViewHeroContainer(
         file: file.toAnyFile(),
         heroImageBuilder: (context) =>
@@ -152,6 +169,9 @@ class RemoteImageViewer extends StatelessWidget {
   final ValueChanged<double>? onHeightChanged;
   final VoidCallback? onZoomStarted;
   final VoidCallback? onZoomEnded;
+  final void Function(Point<double> position)? onTapAt;
+  final void Function(Point<double> position)? onLongPressStartAt;
+  final Widget Function(BuildContext context, Widget child)? frameBuilder;
 }
 
 class IoFileImageViewer extends StatelessWidget {
@@ -203,6 +223,9 @@ class _ImageViewer extends StatefulWidget {
     this.onHeightChanged,
     this.onZoomStarted,
     this.onZoomEnded,
+    this.onTapAt,
+    this.onLongPressStartAt,
+    this.frameBuilder,
   });
 
   @override
@@ -213,6 +236,11 @@ class _ImageViewer extends StatefulWidget {
   final ValueChanged<double>? onHeightChanged;
   final VoidCallback? onZoomStarted;
   final VoidCallback? onZoomEnded;
+
+  /// Called when user tap on child. The position is normalized
+  final void Function(Point<double> position)? onTapAt;
+  final void Function(Point<double> position)? onLongPressStartAt;
+  final Widget Function(BuildContext context, Widget child)? frameBuilder;
 }
 
 @npLog
@@ -221,6 +249,7 @@ class _ImageViewerState extends State<_ImageViewer>
   @override
   Widget build(BuildContext context) {
     final content = Container(
+      key: _containerKey,
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
       alignment: Alignment.center,
@@ -235,7 +264,11 @@ class _ImageViewerState extends State<_ImageViewer>
         },
         child: SizeChangedLayoutNotifier(
           key: _key,
-          child: IntrinsicHeight(child: widget.child),
+          child: IntrinsicHeight(
+            child:
+                widget.frameBuilder?.call(context, widget.child) ??
+                widget.child,
+          ),
         ),
       ),
     );
@@ -243,6 +276,18 @@ class _ImageViewerState extends State<_ImageViewer>
       return ZoomableViewer(
         onZoomStarted: widget.onZoomStarted,
         onZoomEnded: widget.onZoomEnded,
+        onTapAt: widget.onTapAt?.let(
+          (cb) => (position) {
+            final childPosition = _toChildPosition(position);
+            childPosition?.let((e) => widget.onTapAt?.call(e));
+          },
+        ),
+        onLongPressStartAt: widget.onLongPressStartAt?.let(
+          (cb) => (position) {
+            final childPosition = _toChildPosition(position);
+            childPosition?.let((e) => widget.onLongPressStartAt?.call(e));
+          },
+        ),
         child: content,
       );
     } else {
@@ -250,7 +295,30 @@ class _ImageViewerState extends State<_ImageViewer>
     }
   }
 
+  Point<double>? _toChildPosition(Offset position) {
+    final containerBox =
+        _containerKey.currentContext?.findRenderObject() as RenderBox?;
+    final childBox = _key.currentContext?.findRenderObject() as RenderBox?;
+    if (containerBox != null && childBox != null) {
+      final globalPos = containerBox.localToGlobal(position);
+      final local = childBox.globalToLocal(globalPos);
+      // make sure the point is located inside the image, not in the black
+      // borders
+      if (local.dx >= 0 &&
+          local.dy >= 0 &&
+          local.dx <= childBox.size.width &&
+          local.dy <= childBox.size.height) {
+        return Point(
+          local.dx / childBox.size.width,
+          local.dy / childBox.size.height,
+        );
+      }
+    }
+    return null;
+  }
+
   final _key = GlobalKey();
+  final _containerKey = GlobalKey();
 }
 
 class _ImageViewHeroContainer extends StatefulWidget {

@@ -11,6 +11,9 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     required bool canPlay,
     required bool canLoop,
     required bool isPlayControlVisible,
+    required void Function(Point<double> position)? onTapAt,
+    required void Function(Point<double> position)? onLongPressStartAt,
+    required Widget Function(BuildContext context, Widget child)? frameBuilder,
   }) : super(
          _State.init(
            shouldPlayLivePhoto: shouldPlayLivePhoto,
@@ -18,6 +21,9 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
            canPlay: canPlay,
            canLoop: canLoop,
            isPlayControlVisible: isPlayControlVisible,
+           onTapAt: onTapAt,
+           onLongPressStartAt: onLongPressStartAt,
+           frameBuilder: frameBuilder,
          ),
        ) {
     on<_Init>(_onInit);
@@ -30,10 +36,16 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
     on<_SetVideoMetadata>(_onSetVideoMetadata);
     on<_SetIsZoomed>(_onSetIsZoomed);
     on<_SetContentHeight>(_onSetContentHeight);
+
     on<_ToggleVideoPlay>(_onToggleVideoPlay);
     on<_ToggleVideoLoop>(_onToggleVideoLoop);
     on<_ToggleVideoMute>(_onToggleVideoMute);
     on<_UpdateVideoPlayerValue>(_onUpdateVideoPlayerValue);
+
+    on<_SetOnTapAtCallback>(_onSetOnTapAtCallback);
+    on<_SetOnLongPressStartAtCallback>(_onSetOnLongPressStartAtCallback);
+    on<_SetFrameBuilderCallback>(_onSetFrameBuilderCallback);
+
     on<_SetLivePhotoLoadFailed>(_onSetLivePhotoLoadFailed);
 
     on<_SetError>(_onSetError);
@@ -187,6 +199,24 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
       // finished
       _videoController?.pause();
     }
+  }
+
+  void _onSetOnTapAtCallback(_SetOnTapAtCallback ev, _Emitter emit) {
+    _log.info(ev);
+    emit(state.copyWith(onTapAt: ev.value));
+  }
+
+  void _onSetOnLongPressStartAtCallback(
+    _SetOnLongPressStartAtCallback ev,
+    _Emitter emit,
+  ) {
+    _log.info(ev);
+    emit(state.copyWith(onLongPressStartAt: ev.value));
+  }
+
+  void _onSetFrameBuilderCallback(_SetFrameBuilderCallback ev, _Emitter emit) {
+    _log.info(ev);
+    emit(state.copyWith(frameBuilder: ev.value));
   }
 
   void _onSetLivePhotoLoadFailed(_SetLivePhotoLoadFailed ev, _Emitter emit) {

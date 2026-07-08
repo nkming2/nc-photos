@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:nc_photos/k.dart' as k;
+import 'package:np_common/object_util.dart';
 import 'package:np_log/np_log.dart';
 
 part 'zoomable_viewer.g.dart';
@@ -11,6 +12,8 @@ class ZoomableViewer extends StatefulWidget {
     super.key,
     this.onZoomStarted,
     this.onZoomEnded,
+    this.onTapAt,
+    this.onLongPressStartAt,
     required this.child,
   });
 
@@ -19,6 +22,8 @@ class ZoomableViewer extends StatefulWidget {
 
   final VoidCallback? onZoomStarted;
   final VoidCallback? onZoomEnded;
+  final void Function(Offset position)? onTapAt;
+  final void Function(Offset position)? onLongPressStartAt;
   final Widget child;
 }
 
@@ -74,6 +79,22 @@ class _ZoomableViewerState extends State<ZoomableViewer>
             _autoZoomIn();
           }
         },
+        onTapUp: widget.onTapAt?.let(
+          (cb) => (details) {
+            final childPosition = _transformationController.toScene(
+              details.localPosition,
+            );
+            widget.onTapAt?.call(childPosition);
+          },
+        ),
+        onLongPressStart: widget.onLongPressStartAt?.let(
+          (cb) => (details) {
+            final childPosition = _transformationController.toScene(
+              details.localPosition,
+            );
+            widget.onLongPressStartAt?.call(childPosition);
+          },
+        ),
         child: InteractiveViewer(
           minScale: 1.0,
           maxScale: 10,

@@ -8,12 +8,10 @@ class _Bloc extends Bloc<_Event, _State>
         _State(
           isSaveEditResultToServer:
               prefController.isSaveEditResultToServerValue,
-          maxSize: prefController.enhanceMaxSizeValue,
         ),
       ) {
     on<_Init>(_onInit);
     on<_SetSaveEditResultToServer>(_onSetSaveEditResultToServer);
-    on<_SetMaxSize>(_onSetMaxSize);
   }
 
   @override
@@ -31,15 +29,6 @@ class _Bloc extends Bloc<_Event, _State>
           return state.copyWith(error: ExceptionEvent(e, stackTrace));
         },
       ),
-      forEach(
-        emit,
-        prefController.enhanceMaxSizeChange,
-        onData: (data) => state.copyWith(maxSize: data),
-        onError: (e, stackTrace) {
-          _log.severe("[_onInit] Uncaught exception", e, stackTrace);
-          return state.copyWith(error: ExceptionEvent(e, stackTrace));
-        },
-      ),
     ]);
   }
 
@@ -49,11 +38,6 @@ class _Bloc extends Bloc<_Event, _State>
   ) {
     _log.info(ev);
     prefController.setSaveEditResultToServer(ev.value);
-  }
-
-  void _onSetMaxSize(_SetMaxSize ev, Emitter<_State> emit) {
-    _log.info(ev);
-    prefController.setEnhanceMaxSize(ev.value);
   }
 
   final PrefController prefController;

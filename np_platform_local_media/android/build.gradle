@@ -53,7 +53,7 @@ android {
     }
 
     dependencies {
-        coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.3")
+        coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
         implementation("com.nkming.nc_photos.np_android_core:np_android_core")
     }
 }

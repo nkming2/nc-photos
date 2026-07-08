@@ -5,7 +5,6 @@ part of '../enhancement_settings.dart';
 class _State {
   const _State({
     required this.isSaveEditResultToServer,
-    required this.maxSize,
     this.error,
   });
 
@@ -13,7 +12,6 @@ class _State {
   String toString() => _$toString();
 
   final bool isSaveEditResultToServer;
-  final SizeInt maxSize;
 
   final ExceptionEvent? error;
 }
@@ -38,14 +36,4 @@ class _SetSaveEditResultToServer implements _Event {
   String toString() => _$toString();
 
   final bool value;
-}
-
-@toString
-class _SetMaxSize implements _Event {
-  const _SetMaxSize(this.value);
-
-  @override
-  String toString() => _$toString();
-
-  final SizeInt value;
 }

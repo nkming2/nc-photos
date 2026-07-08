@@ -6,6 +6,7 @@ import 'package:nc_photos/app_init.dart' as app_init;
 import 'package:nc_photos/app_localizations.dart';
 import 'package:nc_photos/bloc/scan_local_dir.dart';
 import 'package:nc_photos/di_container.dart';
+import 'package:nc_photos/entity/any_file/any_file.dart';
 import 'package:nc_photos/entity/file_util.dart' as file_util;
 import 'package:nc_photos/entity/local_file.dart';
 import 'package:nc_photos/entity/pref.dart';
@@ -16,6 +17,7 @@ import 'package:nc_photos/mobile/android/permission_util.dart';
 import 'package:nc_photos/object_extension.dart';
 import 'package:nc_photos/share_handler.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
+import 'package:nc_photos/widget/anyfile_list_viewer/anyfile_list_viewer.dart';
 import 'package:nc_photos/widget/empty_list_indicator.dart';
 import 'package:nc_photos/widget/handler/delete_local_selection_handler.dart';
 import 'package:nc_photos/widget/local_file_viewer.dart';
@@ -37,6 +39,7 @@ part 'enhanced_photo_browser.g.dart';
 class EnhancedPhotoBrowserArguments {
   const EnhancedPhotoBrowserArguments(this.filename);
 
+  @Deprecated("For legacy photo enhancer only")
   final String? filename;
 }
 
@@ -57,8 +60,9 @@ class EnhancedPhotoBrowser extends StatefulWidget {
     : this(key: key, filename: args.filename);
 
   @override
-  createState() => _EnhancedPhotoBrowserState();
+  State<StatefulWidget> createState() => _EnhancedPhotoBrowserState();
 
+  @Deprecated("For legacy photo enhancer only")
   final String? filename;
 }
 
@@ -66,7 +70,7 @@ class EnhancedPhotoBrowser extends StatefulWidget {
 class _EnhancedPhotoBrowserState extends State<EnhancedPhotoBrowser>
     with SelectableItemStreamListMixin<EnhancedPhotoBrowser> {
   @override
-  initState() {
+  void initState() {
     super.initState();
     _thumbZoomLevel = Pref().getAlbumBrowserZoomLevelOr(0);
     _ensurePermission().then((value) {
@@ -83,7 +87,7 @@ class _EnhancedPhotoBrowserState extends State<EnhancedPhotoBrowser>
   }
 
   @override
-  build(BuildContext context) {
+  Widget build(BuildContext context) {
     return Scaffold(
       body: BlocListener<ScanLocalDirBloc, ScanLocalDirBlocState>(
         bloc: _bloc,
@@ -97,12 +101,17 @@ class _EnhancedPhotoBrowserState extends State<EnhancedPhotoBrowser>
   }
 
   @override
-  onItemTap(SelectableItem item, int index) {
+  void onItemTap(SelectableItem item, int index) {
     item.as<PhotoListLocalFileItem>()?.run((fileItem) {
       Navigator.pushNamed(
         context,
-        LocalFileViewer.routeName,
-        arguments: LocalFileViewerArguments(_backingFiles, fileItem.fileIndex),
+        AnyFileListViewer.routeName,
+        arguments: AnyFileListViewerArguments(
+          files: _backingFiles
+              .map((e) => AnyFile(provider: AnyFileLocalProvider(file: e)))
+              .toList(),
+          initialIndex: fileItem.fileIndex,
+        ),
       );
     });
   }
@@ -322,6 +331,7 @@ class _EnhancedPhotoBrowserState extends State<EnhancedPhotoBrowser>
     });
   }
 
+  @Deprecated("For legacy photo enhancer only")
   void _openInitialImage(String filename) {
     final index = _backingFiles.indexWhere((f) => f.filename == filename);
     if (index == -1) {

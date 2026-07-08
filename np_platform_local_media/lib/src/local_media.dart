@@ -29,6 +29,7 @@ interface class LocalMedia {
 
   static Future<List<LocalMediaQueryResult>> queryFiles({
     List<String>? fileIds,
+    List<String>? platformIdentifiers,
     TimeRange? timeRange,
     List<String>? dirWhitelist,
     bool? isAscending,
@@ -38,6 +39,7 @@ interface class LocalMedia {
     try {
       final results = await _hostApi.queryFiles(
         fileIds: fileIds,
+        platformIdentifiers: platformIdentifiers,
         timeRangeBeg: timeRange?.from?.millisecondsSinceEpoch,
         isTimeRangeBegInclusive: timeRange?.let(
           (e) => e.fromBound == TimeRangeBound.inclusive,

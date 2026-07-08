@@ -52,7 +52,7 @@ class _ViewerContentController {
   }
 
   bool needQueryForward(int page) {
-    if (page > _pageContentMap.keys.last) {
+    if (_pageContentMap.isEmpty || page > _pageContentMap.keys.last) {
       if (!_isQueryingForward) {
         return true;
       }
@@ -61,7 +61,7 @@ class _ViewerContentController {
   }
 
   bool needQueryBackward(int page) {
-    if (page < _pageContentMap.keys.first) {
+    if (_pageContentMap.isEmpty || page < _pageContentMap.keys.first) {
       if (!_isQueryingBackward) {
         return true;
       }

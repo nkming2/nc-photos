@@ -352,8 +352,6 @@
 		"description": "Include settings for image enhancements and the image editor"
 	},
 	"settingsImageEditDescription": "Customize image enhancements and the image editor",
-	"settingsEnhanceMaxResolutionTitle2": "Image resolution for enhancements",
-	"settingsEnhanceMaxResolutionDescription": "Photos larger than the selected resolution will be downscaled.\n\nHigh resolution photos require significantly more memory and time to process. Please lower this setting if the app crashed while enhancing your photos.",
 	"settingsImageEditSaveResultsToServerTitle": "Save results to server",
 	"@settingsImageEditSaveResultsToServerTitle": {
 		"description": "Whether to save the edit/enhance results to server instead of the current device"
@@ -1162,8 +1160,6 @@
 		"description": "Enhance a photo"
 	},
 	"enhanceButtonLabel": "ENHANCE",
-	"enhanceIntroDialogTitle": "Enhance your photos",
-	"enhanceIntroDialogDescription": "Your photos are processed locally on your device. By default, they are downscaled to 2048x1536. You can adjust the output resolution in Settings",
 	"enhanceLowLightTitle": "Low-light enhancement",
 	"@enhanceLowLightTitle": {
 		"description": "Enhance a photo taken in low-light environment"
@@ -1222,6 +1218,10 @@
 		"description": "Automatically improve your photo"
 	},
 	"enhanceRetouchDescription": "Automatically retouch your photos, improve overall color and vibrance",
+	"enhanceMotionDeblurTitle": "Motion deblur",
+	"enhanceMotionDeblurDescription": "Reduce image blur caused by camera shake",
+	"enhanceDerainTitle": "Derain",
+	"enhanceDerainDescription": "Remove rain streaks from your photo",
 	"doubleTapExitNotification": "Tap again to exit",
 	"@doubleTapExitNotification": {
 		"description": "If double tap to exit is enabled in settings, shown when users tap the back button"
@@ -1655,6 +1655,15 @@
 			}
 		}
 	},
+	"imageEnhancerModelDownloadDialogText": "Downloading AI model...",
+	"imageEnhancerProcessDialogTitle": "Almost there",
+	"imageEnhancerProcessDialogText": "Your image will now be processed in the background. You'll get a notification when it's done.",
+	"imageEnhancerResultFailedNotifTitle": "Failed to process image",
+	"imageEnhancerResultSuccessfulNotifTitle": "Image processed successfully",
+	"imageEnhancerResultSuccessfulNotifContent": "Tap to view the result",
+	"imageSegmentPicker6PointLimit": "Only up to 6 points are allowed",
+	"imageSegmentPickerInitFailedText": "Failed to initialize",
+	"imageSegmentPickerInstruction": "Tap on screen to add or remove points of interest",
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {

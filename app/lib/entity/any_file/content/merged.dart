@@ -45,7 +45,8 @@ class AnyFileMergedLocalFileUriGetter implements AnyFileLocalFileUriGetter {
       );
 
   @override
-  Future<Uri> get() => _delegate.get();
+  Future<Uri> get({void Function(double progress)? onProgress}) =>
+      _delegate.get();
 
   final AnyFileUriGetter _delegate;
 }

@@ -681,18 +681,6 @@ abstract class AppLocalizations {
   /// **'Customize image enhancements and the image editor'**
   String get settingsImageEditDescription;
 
-  /// No description provided for @settingsEnhanceMaxResolutionTitle2.
-  ///
-  /// In en, this message translates to:
-  /// **'Image resolution for enhancements'**
-  String get settingsEnhanceMaxResolutionTitle2;
-
-  /// No description provided for @settingsEnhanceMaxResolutionDescription.
-  ///
-  /// In en, this message translates to:
-  /// **'Photos larger than the selected resolution will be downscaled.\n\nHigh resolution photos require significantly more memory and time to process. Please lower this setting if the app crashed while enhancing your photos.'**
-  String get settingsEnhanceMaxResolutionDescription;
-
   /// Whether to save the edit/enhance results to server instead of the current device
   ///
   /// In en, this message translates to:
@@ -2013,18 +2001,6 @@ abstract class AppLocalizations {
   /// **'ENHANCE'**
   String get enhanceButtonLabel;
 
-  /// No description provided for @enhanceIntroDialogTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Enhance your photos'**
-  String get enhanceIntroDialogTitle;
-
-  /// No description provided for @enhanceIntroDialogDescription.
-  ///
-  /// In en, this message translates to:
-  /// **'Your photos are processed locally on your device. By default, they are downscaled to 2048x1536. You can adjust the output resolution in Settings'**
-  String get enhanceIntroDialogDescription;
-
   /// Enhance a photo taken in low-light environment
   ///
   /// In en, this message translates to:
@@ -2138,6 +2114,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Automatically retouch your photos, improve overall color and vibrance'**
   String get enhanceRetouchDescription;
+
+  /// No description provided for @enhanceMotionDeblurTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Motion deblur'**
+  String get enhanceMotionDeblurTitle;
+
+  /// No description provided for @enhanceMotionDeblurDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Reduce image blur caused by camera shake'**
+  String get enhanceMotionDeblurDescription;
+
+  /// No description provided for @enhanceDerainTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Derain'**
+  String get enhanceDerainTitle;
+
+  /// No description provided for @enhanceDerainDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove rain streaks from your photo'**
+  String get enhanceDerainDescription;
 
   /// If double tap to exit is enabled in settings, shown when users tap the back button
   ///
@@ -2984,6 +2984,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Original file backed up as {backup}'**
   String metadataEditBackupNotification(Object backup);
+
+  /// No description provided for @imageEnhancerModelDownloadDialogText.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloading AI model...'**
+  String get imageEnhancerModelDownloadDialogText;
+
+  /// No description provided for @imageEnhancerProcessDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Almost there'**
+  String get imageEnhancerProcessDialogTitle;
+
+  /// No description provided for @imageEnhancerProcessDialogText.
+  ///
+  /// In en, this message translates to:
+  /// **'Your image will now be processed in the background. You\'ll get a notification when it\'s done.'**
+  String get imageEnhancerProcessDialogText;
+
+  /// No description provided for @imageEnhancerResultFailedNotifTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to process image'**
+  String get imageEnhancerResultFailedNotifTitle;
+
+  /// No description provided for @imageEnhancerResultSuccessfulNotifTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Image processed successfully'**
+  String get imageEnhancerResultSuccessfulNotifTitle;
+
+  /// No description provided for @imageEnhancerResultSuccessfulNotifContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to view the result'**
+  String get imageEnhancerResultSuccessfulNotifContent;
+
+  /// No description provided for @imageSegmentPicker6PointLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Only up to 6 points are allowed'**
+  String get imageSegmentPicker6PointLimit;
+
+  /// No description provided for @imageSegmentPickerInitFailedText.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to initialize'**
+  String get imageSegmentPickerInitFailedText;
+
+  /// No description provided for @imageSegmentPickerInstruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap on screen to add or remove points of interest'**
+  String get imageSegmentPickerInstruction;
 
   /// Error message when server responds with HTTP401
   ///
