@@ -13,19 +13,19 @@ class SuperResolution implements RgbMethod {
     void Function(double progress, int size)? onProgress,
   }) async {
     await _modelDownloader.download(
-      ModelType.realEsrganX4Vk,
+      ModelType.realEsrganX4,
       onProgress: onProgress,
     );
   }
 
   @override
   Future<void> cleanResource() {
-    return _modelDownloader.delete(ModelType.realEsrganX4Vk);
+    return _modelDownloader.delete(ModelType.realEsrganX4);
   }
 
   @override
   Future<bool> isResourceReady() {
-    return _modelDownloader.isDownloaded(ModelType.realEsrganX4Vk);
+    return _modelDownloader.isDownloaded(ModelType.realEsrganX4);
   }
 
   @override
@@ -33,9 +33,7 @@ class SuperResolution implements RgbMethod {
 
   @override
   Future<Rgb8Image?> apply(Rgb8Image src) async {
-    final modelFile = await ModelDownloader().download(
-      ModelType.realEsrganX4Vk,
-    );
+    final modelFile = await ModelDownloader().download(ModelType.realEsrganX4);
     return _applyAsync(src, modelFile: modelFile);
   }
 

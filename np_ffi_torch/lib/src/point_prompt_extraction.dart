@@ -20,19 +20,19 @@ class PointPromptExtraction implements Method {
     void Function(double progress, int size)? onProgress,
   }) async {
     await _modelDownloader.download(
-      ModelType.pointPromptSegmentation,
+      ModelType.efficientSam,
       onProgress: onProgress,
     );
   }
 
   @override
   Future<void> cleanResource() {
-    return _modelDownloader.delete(ModelType.pointPromptSegmentation);
+    return _modelDownloader.delete(ModelType.efficientSam);
   }
 
   @override
   Future<bool> isResourceReady() {
-    return _modelDownloader.isDownloaded(ModelType.pointPromptSegmentation);
+    return _modelDownloader.isDownloaded(ModelType.efficientSam);
   }
 
   @override
@@ -44,9 +44,7 @@ class PointPromptExtraction implements Method {
     required List<int> pointLabels,
   }) async {
     _log.info("[apply] points: $points");
-    final modelFile = await ModelDownloader().download(
-      ModelType.pointPromptSegmentation,
-    );
+    final modelFile = await ModelDownloader().download(ModelType.efficientSam);
     return _applyAsync(
       src,
       points: points,

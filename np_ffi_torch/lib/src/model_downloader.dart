@@ -18,44 +18,41 @@ class JobCanceledException implements Exception {
 }
 
 enum ModelType {
-  realEsrganX4Vk,
+  realEsrganX4,
   nafnetGopro,
   efficientDerain,
   neurop,
   zeroDce,
-  pointPromptSegmentation;
+  efficientSam;
 
   Uri toRemoteUri() {
     return switch (this) {
-      realEsrganX4Vk => Uri.https(
+      realEsrganX4 => Uri.https(
         "nc-photos.web.app",
-        "/link/torch/real-esrgan-x4-vk",
+        "/link/torch/real-esrgan/v1",
       ),
-      nafnetGopro => Uri.https(
-        "nc-photos.web.app",
-        "/link/torch/nafnet-gopro-32",
-      ),
+      nafnetGopro => Uri.https("nc-photos.web.app", "/link/torch/nafnet/v1"),
       efficientDerain => Uri.https(
         "nc-photos.web.app",
-        "/link/torch/efficient-derain-spa",
+        "/link/torch/efficient-derain/v1",
       ),
-      neurop => Uri.https("nc-photos.web.app", "/link/torch/neurop-ppr-a"),
-      zeroDce => Uri.https("nc-photos.web.app", "/link/torch/zero-dce-sice"),
-      pointPromptSegmentation => Uri.https(
+      neurop => Uri.https("nc-photos.web.app", "/link/torch/neurop/v1"),
+      zeroDce => Uri.https("nc-photos.web.app", "/link/torch/zero-dce/v1"),
+      efficientSam => Uri.https(
         "nc-photos.web.app",
-        "/link/torch/efficient-sam-ti",
+        "/link/torch/efficient-sam/v1",
       ),
     };
   }
 
   File toLocalFile(Directory root) {
     return switch (this) {
-      realEsrganX4Vk => File("${root.path}/real-esrgan-x4-vk-1.pte"),
-      nafnetGopro => File("${root.path}/nafnet-gopro-32.pte"),
-      efficientDerain => File("${root.path}/efficient-derain-spa.pte"),
-      neurop => File("${root.path}/neurop-ppr-a.pte"),
-      zeroDce => File("${root.path}/zero-dce-sice.pte"),
-      pointPromptSegmentation => File("${root.path}/efficient-sam-ti.pte"),
+      realEsrganX4 => File("${root.path}/real-esrgan/v1.pte"),
+      nafnetGopro => File("${root.path}/nafnet/v1.pte"),
+      efficientDerain => File("${root.path}/efficient-derain/v1.pte"),
+      neurop => File("${root.path}/neurop/v1.pte"),
+      zeroDce => File("${root.path}/zero-dce/v1.pte"),
+      efficientSam => File("${root.path}/efficient-sam/v1.pte"),
     };
   }
 }
@@ -77,6 +74,7 @@ class ModelDownloader {
       _log.fine("[download] Return cached model at ${modelFile.path}");
       return modelFile;
     }
+    await modelFile.parent.create(recursive: true);
 
     final remoteUri = model.toRemoteUri();
     if (remoteUri.scheme == "file") {
