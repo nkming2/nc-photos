@@ -378,14 +378,6 @@ class AppLocalizationsPt extends AppLocalizations {
       'Customize o editor de aprimoramento de imagens';
 
   @override
-  String get settingsEnhanceMaxResolutionTitle2 =>
-      'Resolução das imagens aprimoradas';
-
-  @override
-  String get settingsEnhanceMaxResolutionDescription =>
-      'Resoluções de entrara maiores que a determinada serão reduzidas. Fotos em alta resolução requerem significativamente mais memória RAM e processamento. Por gentileza reduza o parâmetro de resolução das imagens aprimoradas caso o app trave';
-
-  @override
   String get settingsImageEditSaveResultsToServerTitle =>
       'Salve os resultados diretamente no servidor';
 
@@ -1161,13 +1153,6 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get enhanceButtonLabel => 'APRIMORAR';
-
-  @override
-  String get enhanceIntroDialogTitle => 'Aprimore uma foto';
-
-  @override
-  String get enhanceIntroDialogDescription =>
-      'Suas fotos são processadas localmente no aparelho. Por padrão, elas são reduzidas a 2048x1536. Você pode ajustar a resolução en configurações';
 
   @override
   String get enhanceLowLightTitle => 'Retoque para pouca luz';

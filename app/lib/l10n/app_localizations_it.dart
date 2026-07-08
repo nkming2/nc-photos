@@ -380,14 +380,6 @@ class AppLocalizationsIt extends AppLocalizations {
       'Personalizza i miglioramenti e l\'editor dell\'immagine';
 
   @override
-  String get settingsEnhanceMaxResolutionTitle2 =>
-      'Risoluzione dell\'immagine per i miglioramenti';
-
-  @override
-  String get settingsEnhanceMaxResolutionDescription =>
-      'Le immagini più grandi della risoluzione selezionata verranno scalate.\n\nLe immagini ad alta risoluzione richiedono memoria e tempo di processo significativamente più lunghi. Per favore riduci gquesto parametro se l\'app va in crash durante il miglioramento delle tue foto.';
-
-  @override
   String get settingsImageEditSaveResultsToServerTitle =>
       'Salva i risultati sul server';
 
@@ -1169,13 +1161,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get enhanceButtonLabel => 'MIGLIORA';
-
-  @override
-  String get enhanceIntroDialogTitle => 'Migliora le tue foto';
-
-  @override
-  String get enhanceIntroDialogDescription =>
-      'Le tue foto sono processate localmente nel tuo dispositivo. Sono ridotte a 2048x1536 per preimpostazione. Puoi modificare la risoluzione di uscita su Impostazioni';
 
   @override
   String get enhanceLowLightTitle => 'Migliora sottoesposizione';

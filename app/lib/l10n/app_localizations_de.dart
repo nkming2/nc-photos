@@ -378,14 +378,6 @@ class AppLocalizationsDe extends AppLocalizations {
       'Personalisiere Bildverbesserungen und den Bildeditor';
 
   @override
-  String get settingsEnhanceMaxResolutionTitle2 =>
-      'Bildauflösung für Verbesserungen';
-
-  @override
-  String get settingsEnhanceMaxResolutionDescription =>
-      'Fotos, die größer als die gewählte Auflösung sind, werden herunterskaliert.\n\nFotos mit hoher Auflösung benötigen deutlich mehr Speicher und Zeit für die Verarbeitung. Bitte verringern Sie diese Einstellung, falls die App beim Verbessern Ihrer Fotos abgestürzt ist.';
-
-  @override
   String get settingsImageEditSaveResultsToServerTitle =>
       'Ergebnisse auf dem Server speichern';
 
@@ -1166,13 +1158,6 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get enhanceButtonLabel => 'VERBESSERN';
-
-  @override
-  String get enhanceIntroDialogTitle => 'Verbessern Sie ihre Fotos';
-
-  @override
-  String get enhanceIntroDialogDescription =>
-      'Ihre Fotos werden lokal auf Ihrem Gerät verarbeitet. Standardmäßig werden sie auf 2048x1536 herunterskaliert. Sie können die Ausgabeauflösung in den Einstellungen anpassen';
 
   @override
   String get enhanceLowLightTitle =>

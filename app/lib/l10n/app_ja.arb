@@ -344,8 +344,6 @@
 		"description": "Include settings for image enhancements and the image editor"
 	},
 	"settingsImageEditDescription": "画像の強化と画像エディタをカスタマイズ",
-	"settingsEnhanceMaxResolutionTitle2": "強化のための画像解像度",
-	"settingsEnhanceMaxResolutionDescription": "選択した解像度より大きい写真は縮小されます。高解像度の写真は、処理に多くのメモリと時間を必要とします。写真の補正中にアプリがクラッシュした場合は、この設定を下げてください。",
 	"settingsImageEditSaveResultsToServerTitle": "結果をサーバーに保存する",
 	"@settingsImageEditSaveResultsToServerTitle": {
 		"description": "Whether to save the edit/enhance results to server instead of the current device"
@@ -1100,8 +1098,6 @@
 		"description": "Enhance a photo"
 	},
 	"enhanceButtonLabel": "補正",
-	"enhanceIntroDialogTitle": "写真を補正",
-	"enhanceIntroDialogDescription": "写真はデバイス上でローカルに処理されます。デフォルトでは、2048x1536に縮小されます。出力解像度は設定で調整できます",
 	"enhanceLowLightTitle": "低照度補正",
 	"@enhanceLowLightTitle": {
 		"description": "Enhance a photo taken in low-light environment"

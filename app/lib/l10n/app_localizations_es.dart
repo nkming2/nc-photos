@@ -376,14 +376,6 @@ class AppLocalizationsEs extends AppLocalizations {
       'Personaliza la edición y retoque de imágenes';
 
   @override
-  String get settingsEnhanceMaxResolutionTitle2 =>
-      'Resolución máxima al guardar retoques';
-
-  @override
-  String get settingsEnhanceMaxResolutionDescription =>
-      'Las fotos con mayor resolución que la ajustada serán reducidas.\n\nLas fotos con resolución alta requerirán más memoria y tiempo para procesarlas. Reduce el valor de este ajuste si la aplicación se cuelga.';
-
-  @override
   String get settingsImageEditSaveResultsToServerTitle =>
       'Guardar en el servidor';
 
@@ -1161,13 +1153,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get enhanceButtonLabel => 'RETOCAR';
-
-  @override
-  String get enhanceIntroDialogTitle => 'Retoca tus fotos';
-
-  @override
-  String get enhanceIntroDialogDescription =>
-      'Tus fotos son procesadas localmente en tu dispositivo. Por defecto, son reducidas a 2048x1536. Puedes ajustar la resolución de guardado en Ajustes>Editor';
 
   @override
   String get enhanceLowLightTitle => 'Mejorar poca luz';

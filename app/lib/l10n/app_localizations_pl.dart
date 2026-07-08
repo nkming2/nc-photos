@@ -375,14 +375,6 @@ class AppLocalizationsPl extends AppLocalizations {
       'Dostosuj ulepszenia obrazu i edytor obrazów';
 
   @override
-  String get settingsEnhanceMaxResolutionTitle2 =>
-      'Rozdzielczość obrazu dla ulepszeń';
-
-  @override
-  String get settingsEnhanceMaxResolutionDescription =>
-      'Zdjęcia większe niż wybrana rozdzielczość zostaną zmniejszone. Zdjęcia w wysokiej rozdzielczości wymagają znacznie więcej pamięci i czasu na przetwarzanie. Obniż to ustawienie, jeśli aplikacja uległa awarii podczas poprawiania zdjęć.';
-
-  @override
   String get settingsImageEditSaveResultsToServerTitle =>
       'Zapisz rezultat na serwerze';
 
@@ -1157,13 +1149,6 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get enhanceButtonLabel => 'ULEPSZ';
-
-  @override
-  String get enhanceIntroDialogTitle => 'Ulepsz swoje zdjęcia';
-
-  @override
-  String get enhanceIntroDialogDescription =>
-      'Twoje zdjęcia są przetwarzane lokalnie na Twoim urządzeniu. Domyślnie są one skalowane do rozdzielczości 2048x1536. Rozdzielczość wyjściową możesz dostosować w Ustawieniach';
 
   @override
   String get enhanceLowLightTitle => 'Ulepszenia przy słabym oświetleniu';

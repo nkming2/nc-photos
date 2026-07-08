@@ -351,13 +351,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settingsImageEditDescription => '自定义图片增强与编辑器';
 
   @override
-  String get settingsEnhanceMaxResolutionTitle2 => '图片增强的分辨率';
-
-  @override
-  String get settingsEnhanceMaxResolutionDescription =>
-      '大于选定分辨率的图片会被缩小。\n\n高分辨率的图片需要更多的内存和时间进行处理。如果增强图片时应用发生了崩溃，请降低该数值。';
-
-  @override
   String get settingsImageEditSaveResultsToServerTitle => '将编辑后的图片保存至服务器';
 
   @override
@@ -1090,13 +1083,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get enhanceButtonLabel => '图片增强';
-
-  @override
-  String get enhanceIntroDialogTitle => '增强你的图片';
-
-  @override
-  String get enhanceIntroDialogDescription =>
-      '你的图片将会在本地处理，默认情况下会降低分辨率至2048x1536，你可以随时在设置的输出分辨率中调整';
 
   @override
   String get enhanceLowLightTitle => '弱光优化';

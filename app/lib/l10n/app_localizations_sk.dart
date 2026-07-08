@@ -377,14 +377,6 @@ class AppLocalizationsSk extends AppLocalizations {
       'Prispôsobiť vylepšenia obrázkov a editor obrázkov';
 
   @override
-  String get settingsEnhanceMaxResolutionTitle2 =>
-      'Rozlíšenie obrázkov pre vylepšenia';
-
-  @override
-  String get settingsEnhanceMaxResolutionDescription =>
-      'Fotografie väčšie než zvolené rozlíšenie budú zmenšené.\n\nVeľmi vysoké rozlíšenie vyžaduje podstatne viac pamäte a času na spracovanie. Ak aplikácia padá pri vylepšovaní fotiek, znížte túto hodnotu.';
-
-  @override
   String get settingsImageEditSaveResultsToServerTitle =>
       'Ukladať výsledky na server';
 
@@ -1162,13 +1154,6 @@ class AppLocalizationsSk extends AppLocalizations {
 
   @override
   String get enhanceButtonLabel => 'VYLEPŠIŤ';
-
-  @override
-  String get enhanceIntroDialogTitle => 'Vylepšite svoje fotografie';
-
-  @override
-  String get enhanceIntroDialogDescription =>
-      'Vaše fotografie sa spracovávajú lokálne na vašom zariadení. Predvolene sa zmenšia na 2048x1536. Výstupné rozlíšenie môžete upraviť v Nastaveniach';
 
   @override
   String get enhanceLowLightTitle => 'Vylepšenie pri slabom svetle';

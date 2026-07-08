@@ -681,18 +681,6 @@ abstract class AppLocalizations {
   /// **'Customize image enhancements and the image editor'**
   String get settingsImageEditDescription;
 
-  /// No description provided for @settingsEnhanceMaxResolutionTitle2.
-  ///
-  /// In en, this message translates to:
-  /// **'Image resolution for enhancements'**
-  String get settingsEnhanceMaxResolutionTitle2;
-
-  /// No description provided for @settingsEnhanceMaxResolutionDescription.
-  ///
-  /// In en, this message translates to:
-  /// **'Photos larger than the selected resolution will be downscaled.\n\nHigh resolution photos require significantly more memory and time to process. Please lower this setting if the app crashed while enhancing your photos.'**
-  String get settingsEnhanceMaxResolutionDescription;
-
   /// Whether to save the edit/enhance results to server instead of the current device
   ///
   /// In en, this message translates to:
@@ -2012,18 +2000,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'ENHANCE'**
   String get enhanceButtonLabel;
-
-  /// No description provided for @enhanceIntroDialogTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Enhance your photos'**
-  String get enhanceIntroDialogTitle;
-
-  /// No description provided for @enhanceIntroDialogDescription.
-  ///
-  /// In en, this message translates to:
-  /// **'Your photos are processed locally on your device. By default, they are downscaled to 2048x1536. You can adjust the output resolution in Settings'**
-  String get enhanceIntroDialogDescription;
 
   /// Enhance a photo taken in low-light environment
   ///

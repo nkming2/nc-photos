@@ -96,8 +96,11 @@ enum PrefKey implements PrefKeyInterface {
   isAlbumBrowserShowDate,
   gpsMapProvider,
   hasShownSharedAlbumInfo,
+  @Deprecated("unused")
   enhanceMaxWidth,
+  @Deprecated("unused")
   enhanceMaxHeight,
+  @Deprecated("unused")
   hasShownEnhanceInfo,
   firstRunTime,
   @Deprecated("unused")
@@ -158,8 +161,11 @@ enum PrefKey implements PrefKeyInterface {
       PrefKey.isAlbumBrowserShowDate => "isAlbumBrowserShowDate",
       PrefKey.gpsMapProvider => "gpsMapProvider",
       PrefKey.hasShownSharedAlbumInfo => "hasShownSharedAlbumInfo",
+      // ignore: deprecated_member_use_from_same_package
       PrefKey.enhanceMaxWidth => "enhanceMaxWidth",
+      // ignore: deprecated_member_use_from_same_package
       PrefKey.enhanceMaxHeight => "enhanceMaxHeight",
+      // ignore: deprecated_member_use_from_same_package
       PrefKey.hasShownEnhanceInfo => "hasShownEnhanceInfo",
       PrefKey.firstRunTime => "firstRunTime",
       // ignore: deprecated_member_use_from_same_package

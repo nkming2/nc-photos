@@ -358,13 +358,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get settingsImageEditDescription => '画像の強化と画像エディタをカスタマイズ';
 
   @override
-  String get settingsEnhanceMaxResolutionTitle2 => '強化のための画像解像度';
-
-  @override
-  String get settingsEnhanceMaxResolutionDescription =>
-      '選択した解像度より大きい写真は縮小されます。高解像度の写真は、処理に多くのメモリと時間を必要とします。写真の補正中にアプリがクラッシュした場合は、この設定を下げてください。';
-
-  @override
   String get settingsImageEditSaveResultsToServerTitle => '結果をサーバーに保存する';
 
   @override
@@ -1107,13 +1100,6 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get enhanceButtonLabel => '補正';
-
-  @override
-  String get enhanceIntroDialogTitle => '写真を補正';
-
-  @override
-  String get enhanceIntroDialogDescription =>
-      '写真はデバイス上でローカルに処理されます。デフォルトでは、2048x1536に縮小されます。出力解像度は設定で調整できます';
 
   @override
   String get enhanceLowLightTitle => '低照度補正';

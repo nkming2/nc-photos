@@ -380,14 +380,6 @@ class AppLocalizationsEl extends AppLocalizations {
       'Customize image enhancements and the image editor';
 
   @override
-  String get settingsEnhanceMaxResolutionTitle2 =>
-      'Image resolution for enhancements';
-
-  @override
-  String get settingsEnhanceMaxResolutionDescription =>
-      'Οι φωτογραφίες μεγαλύτερες από την επιλεγμένη ανάλυση θα μειωθούν.\n\nΟι φωτογραφίες υψηλής ανάλυσης απαιτούν πολύ περισσότερη μνήμη και χρόνο για επεξεργασία. Μειώστε αυτή τη ρύθμιση εάν η εφαρμογή διακοπεί κατά τη βελτίωση των φωτογραφιών.';
-
-  @override
   String get settingsImageEditSaveResultsToServerTitle =>
       'Save results to server';
 
@@ -1163,13 +1155,6 @@ class AppLocalizationsEl extends AppLocalizations {
 
   @override
   String get enhanceButtonLabel => 'ΒΕΛΤΙΩΣΗ';
-
-  @override
-  String get enhanceIntroDialogTitle => 'Βελτίωση φωτογραφιών';
-
-  @override
-  String get enhanceIntroDialogDescription =>
-      'Οι φωτογραφίες επεξεργάζονται τοπικά στη συσκευή. Από προεπιλογή μειώνονται σε 2048x1536. Μπορείτε να προσαρμόσετε την ανάλυση εξόδου στις Ρυθμίσεις';
 
   @override
   String get enhanceLowLightTitle => 'Βελτίωση χαμηλού φωτισμού';

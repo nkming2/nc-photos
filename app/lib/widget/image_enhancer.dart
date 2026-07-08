@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math' as math;
 
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:circular_reveal_animation/circular_reveal_animation.dart';
@@ -27,7 +26,6 @@ import 'package:nc_photos/url_launcher_util.dart';
 import 'package:nc_photos/widget/handler/permission_handler.dart';
 import 'package:nc_photos/widget/image_editor_persist_option_dialog.dart';
 import 'package:nc_photos/widget/selectable.dart';
-import 'package:nc_photos/widget/settings/enhancement_settings.dart';
 import 'package:np_log/np_log.dart';
 import 'package:np_platform_image_processor/np_platform_image_processor.dart';
 import 'package:np_platform_util/np_platform_util.dart';
@@ -200,14 +198,8 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
         await ImageProcessor.arbitraryStyleTransfer(
           await uriGetter.get(),
           widget.file.name,
-          math.min(
-            _c.pref.getEnhanceMaxWidthOr(),
-            _isAtLeast5GbRam() ? 1600 : 1280,
-          ),
-          math.min(
-            _c.pref.getEnhanceMaxHeightOr(),
-            _isAtLeast5GbRam() ? 1200 : 960,
-          ),
+          _isAtLeast5GbRam() ? 1400 : 1152,
+          _isAtLeast5GbRam() ? 1050 : 864,
           args["styleUri"],
           args["weight"],
           headers: {
@@ -223,9 +215,6 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
   }
 
   Future<void> _showInitialDialogs() async {
-    if (!_c.pref.hasShownEnhanceInfoOr()) {
-      await _showInfo(context);
-    }
     if (!mounted) {
       return;
     }
@@ -247,37 +236,6 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
     } else {
       return true;
     }
-  }
-
-  Future<void> _showInfo(BuildContext context) async {
-    await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(L10n.global().enhanceIntroDialogTitle),
-        content: Text(L10n.global().enhanceIntroDialogDescription),
-        actions: [
-          TextButton(
-            onPressed: () {
-              launch(enhanceUrl);
-            },
-            child: Text(L10n.global().learnMoreButtonLabel),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pushNamed(EnhancementSettings.routeName);
-            },
-            child: Text(L10n.global().configButtonLabel),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text(MaterialLocalizations.of(context).closeButtonLabel),
-          ),
-        ],
-      ),
-    );
-    unawaited(_c.pref.setHasShownEnhanceInfo(true));
   }
 
   Future<void> _showSaveEditResultDialog(BuildContext context) async {
@@ -325,14 +283,13 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
 
   late final _options = [
     if (getRawPlatform() == NpPlatform.android) ...[
-      if (_isAtLeast4GbRam())
-        _Option(
-          title: L10n.global().enhanceStyleTransferTitle,
-          description: L10n.global().enhanceStyleTransferStyleDialogDescription,
-          link: enhanceStyleTransferUrl,
-          showcaseBuilder: (_) => const _StyleTransferShowcase(),
-          algorithm: _Algorithm.arbitraryStyleTransfer,
-        ),
+      _Option(
+        title: L10n.global().enhanceStyleTransferTitle,
+        description: L10n.global().enhanceStyleTransferStyleDialogDescription,
+        link: enhanceStyleTransferUrl,
+        showcaseBuilder: (_) => const _StyleTransferShowcase(),
+        algorithm: _Algorithm.arbitraryStyleTransfer,
+      ),
     ],
   ];
 

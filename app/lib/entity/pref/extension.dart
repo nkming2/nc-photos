@@ -111,31 +111,6 @@ extension PrefExtension on Pref {
     (key, value) => provider.setBool(key, value),
   );
 
-  int? getEnhanceMaxWidth() => provider.getInt(PrefKey.enhanceMaxWidth);
-  int getEnhanceMaxWidthOr([int def = 2048]) => getEnhanceMaxWidth() ?? def;
-  Future<bool> setEnhanceMaxWidth(int value) => _set<int>(
-    PrefKey.enhanceMaxWidth,
-    value,
-    (key, value) => provider.setInt(key, value),
-  );
-
-  int? getEnhanceMaxHeight() => provider.getInt(PrefKey.enhanceMaxHeight);
-  int getEnhanceMaxHeightOr([int def = 1536]) => getEnhanceMaxHeight() ?? def;
-  Future<bool> setEnhanceMaxHeight(int value) => _set<int>(
-    PrefKey.enhanceMaxHeight,
-    value,
-    (key, value) => provider.setInt(key, value),
-  );
-
-  bool? hasShownEnhanceInfo() => provider.getBool(PrefKey.hasShownEnhanceInfo);
-  bool hasShownEnhanceInfoOr([bool def = false]) =>
-      hasShownEnhanceInfo() ?? def;
-  Future<bool> setHasShownEnhanceInfo(bool value) => _set<bool>(
-    PrefKey.hasShownEnhanceInfo,
-    value,
-    (key, value) => provider.setBool(key, value),
-  );
-
   bool? isDoubleTapExit() => provider.getBool(PrefKey.doubleTapExit);
   bool isDoubleTapExitOr([bool def = false]) => isDoubleTapExit() ?? def;
   Future<bool> setDoubleTapExit(bool value) => _set<bool>(

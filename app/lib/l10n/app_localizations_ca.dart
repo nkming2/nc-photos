@@ -377,14 +377,6 @@ class AppLocalizationsCa extends AppLocalizations {
       'Customize image enhancements and the image editor';
 
   @override
-  String get settingsEnhanceMaxResolutionTitle2 =>
-      'Image resolution for enhancements';
-
-  @override
-  String get settingsEnhanceMaxResolutionDescription =>
-      'Photos larger than the selected resolution will be downscaled.\n\nHigh resolution photos require significantly more memory and time to process. Please lower this setting if the app crashed while enhancing your photos.';
-
-  @override
   String get settingsImageEditSaveResultsToServerTitle =>
       'Save results to server';
 
@@ -1155,13 +1147,6 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String get enhanceButtonLabel => 'ENHANCE';
-
-  @override
-  String get enhanceIntroDialogTitle => 'Enhance your photos';
-
-  @override
-  String get enhanceIntroDialogDescription =>
-      'Your photos are processed locally on your device. By default, they are downscaled to 2048x1536. You can adjust the output resolution in Settings';
 
   @override
   String get enhanceLowLightTitle => 'Low-light enhancement';

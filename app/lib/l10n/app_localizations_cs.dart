@@ -381,14 +381,6 @@ class AppLocalizationsCs extends AppLocalizations {
       'Přizpůsobit vylepšení a editor obrázků';
 
   @override
-  String get settingsEnhanceMaxResolutionTitle2 =>
-      'Rozlišení obrázků pro vylepšení';
-
-  @override
-  String get settingsEnhanceMaxResolutionDescription =>
-      'Fotky větší než zadaná hodnota budou zmenšeny.\n\nFotky s vyšším rozlišením vyžadují výrazně vyšší množství paměti a času ke zpracování. Snižte toto nastavení, pokud aplikace spadla při vylepšování vašich fotek.';
-
-  @override
   String get settingsImageEditSaveResultsToServerTitle =>
       'Ukládat výsledky na server';
 
@@ -1162,13 +1154,6 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get enhanceButtonLabel => 'VYLEPŠIT';
-
-  @override
-  String get enhanceIntroDialogTitle => 'Vylepšit vaše fotky';
-
-  @override
-  String get enhanceIntroDialogDescription =>
-      'Fotografie jsou zpracovávány lokálně v zařízení. Ve výchozím nastavení jsou zmenšeny na 2048x1536. Výstupní rozlišení můžete upravit v nastavení';
 
   @override
   String get enhanceLowLightTitle => 'Vylepšení při slabém osvětlení';

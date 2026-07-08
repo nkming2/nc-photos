@@ -15,7 +15,6 @@ import 'package:nc_photos/widget/viewer/viewer.dart';
 import 'package:np_codegen/np_codegen.dart';
 import 'package:np_common/color.dart';
 import 'package:np_common/object_util.dart';
-import 'package:np_common/size.dart';
 import 'package:np_common/type.dart';
 import 'package:np_gps_map/np_gps_map.dart';
 import 'package:np_log/np_log.dart';
@@ -116,17 +115,6 @@ class PrefController {
   Future<bool> setSaveEditResultToServer(bool value) => _set<bool>(
     controller: _isSaveEditResultToServerController,
     setter: (pref, value) => pref.setSaveEditResultToServer(value),
-    value: value,
-  );
-
-  Future<bool> setEnhanceMaxSize(SizeInt value) => _set<SizeInt>(
-    controller: _enhanceMaxSizeController,
-    setter: (pref, value) async {
-      return (await Future.wait([
-        pref.setEnhanceMaxWidth(value.width),
-        pref.setEnhanceMaxHeight(value.height),
-      ])).reduce((a, b) => a && b);
-    },
     value: value,
   );
 
@@ -433,10 +421,6 @@ class PrefController {
   @npSubjectAccessor
   late final _isSaveEditResultToServerController = BehaviorSubject.seeded(
     pref.isSaveEditResultToServer() ?? true,
-  );
-  @npSubjectAccessor
-  late final _enhanceMaxSizeController = BehaviorSubject.seeded(
-    SizeInt(pref.getEnhanceMaxWidthOr(), pref.getEnhanceMaxHeightOr()),
   );
   @npSubjectAccessor
   late final _isDarkThemeController = BehaviorSubject.seeded(

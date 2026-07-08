@@ -376,14 +376,6 @@ class AppLocalizationsTr extends AppLocalizations {
       'Görüntü iyileştirmelerini ve görüntü düzenleyiciyi özelleştirin';
 
   @override
-  String get settingsEnhanceMaxResolutionTitle2 =>
-      'İyileştirmeler için görüntü çözünürlüğü';
-
-  @override
-  String get settingsEnhanceMaxResolutionDescription =>
-      'Seçilen çözünürlükten daha büyük fotoğrafların çözünürlüğü otomatik olarak küçültülecektir.\n\nYüksek çözünürlüklü fotoğrafların işlenmesi daha fazla bellek ve zaman gerektirir. Fotoğraflarınızı iyileştirirken uygulama çökerse lütfen bu ayarı düşürün.';
-
-  @override
   String get settingsImageEditSaveResultsToServerTitle =>
       'Düzenlenmiş versiyonu Sunucuya kaydet';
 
@@ -1156,13 +1148,6 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get enhanceButtonLabel => 'İYİLEŞTİR';
-
-  @override
-  String get enhanceIntroDialogTitle => 'Fotoğrafları iyileştir';
-
-  @override
-  String get enhanceIntroDialogDescription =>
-      'Fotoğraflarınız cihazınızda yerel olarak işlenir. Varsayılan olarak 2048x1536 boyutundadır. Bu çözünürlüğü Ayarlar\'dan ayarlayabilirsiniz';
 
   @override
   String get enhanceLowLightTitle => 'Düşük ışık iyileştirmesi';

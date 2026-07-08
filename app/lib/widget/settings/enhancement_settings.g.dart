@@ -13,11 +13,7 @@ part of 'enhancement_settings.dart';
 // **************************************************************************
 
 abstract class $_StateCopyWithWorker {
-  _State call({
-    bool? isSaveEditResultToServer,
-    SizeInt? maxSize,
-    ExceptionEvent? error,
-  });
+  _State call({bool? isSaveEditResultToServer, ExceptionEvent? error});
 }
 
 class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
@@ -26,13 +22,11 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
   @override
   _State call({
     dynamic isSaveEditResultToServer,
-    dynamic maxSize,
     dynamic error = copyWithNull,
   }) {
     return _State(
       isSaveEditResultToServer:
           isSaveEditResultToServer as bool? ?? that.isSaveEditResultToServer,
-      maxSize: maxSize as SizeInt? ?? that.maxSize,
       error: error == copyWithNull ? that.error : error as ExceptionEvent?,
     );
   }
@@ -63,7 +57,7 @@ extension _$_BlocNpLog on _Bloc {
 extension _$_StateToString on _State {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_State {isSaveEditResultToServer: $isSaveEditResultToServer, maxSize: $maxSize, error: $error}";
+    return "_State {isSaveEditResultToServer: $isSaveEditResultToServer, error: $error}";
   }
 }
 
@@ -78,12 +72,5 @@ extension _$_SetSaveEditResultToServerToString on _SetSaveEditResultToServer {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
     return "_SetSaveEditResultToServer {value: $value}";
-  }
-}
-
-extension _$_SetMaxSizeToString on _SetMaxSize {
-  String _$toString() {
-    // ignore: unnecessary_string_interpolations
-    return "_SetMaxSize {value: $value}";
   }
 }

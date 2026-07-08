@@ -112,11 +112,6 @@ extension $PrefControllerNpSubjectAccessor on PrefController {
       isSaveEditResultToServer.distinct().skip(1);
   bool get isSaveEditResultToServerValue =>
       _isSaveEditResultToServerController.value;
-  // _enhanceMaxSizeController
-  ValueStream<SizeInt> get enhanceMaxSize => _enhanceMaxSizeController.stream;
-  Stream<SizeInt> get enhanceMaxSizeNew => enhanceMaxSize.skip(1);
-  Stream<SizeInt> get enhanceMaxSizeChange => enhanceMaxSize.distinct().skip(1);
-  SizeInt get enhanceMaxSizeValue => _enhanceMaxSizeController.value;
   // _isDarkThemeController
   ValueStream<bool> get isDarkTheme => _isDarkThemeController.stream;
   Stream<bool> get isDarkThemeNew => isDarkTheme.skip(1);

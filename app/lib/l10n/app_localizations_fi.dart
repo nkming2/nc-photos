@@ -374,14 +374,6 @@ class AppLocalizationsFi extends AppLocalizations {
       'Muokkaa kuvien parannusta ja kuvaeditoria';
 
   @override
-  String get settingsEnhanceMaxResolutionTitle2 =>
-      'Kuvaresoluutio muokkausta varten';
-
-  @override
-  String get settingsEnhanceMaxResolutionDescription =>
-      'Määritettyä resoluutiota suuremmat kuvat skaalataan määritettyyn resoluutioon.\n\nKorkean resoluution kuvien käsittely vie huomattavasti enemmän muistia ja aikaa. Mikäli sovellus kaatuu käsittelyn aikana, vähennä tämän asetuksen arvoa.';
-
-  @override
   String get settingsImageEditSaveResultsToServerTitle =>
       'Tallenna muokkaus palvelimelle';
 
@@ -1152,13 +1144,6 @@ class AppLocalizationsFi extends AppLocalizations {
 
   @override
   String get enhanceButtonLabel => 'PARANNA';
-
-  @override
-  String get enhanceIntroDialogTitle => 'Paranna kuviasi';
-
-  @override
-  String get enhanceIntroDialogDescription =>
-      'Kuviasi käsitellään paikallisesti laitteellasi. Oletuksena kuvat skaalataan resoluutioon 2048x1536. Voit muuttaa tämän resoluution asetuksista.';
 
   @override
   String get enhanceLowLightTitle => 'Hämärässä otettujen kuvien parannus';

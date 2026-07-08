@@ -374,14 +374,6 @@ class AppLocalizationsRu extends AppLocalizations {
       'Настроить параметры улучшений и редактора изображений';
 
   @override
-  String get settingsEnhanceMaxResolutionTitle2 =>
-      'Разрешение изображения для улучшений';
-
-  @override
-  String get settingsEnhanceMaxResolutionDescription =>
-      'Фотографии, размер которых превышает выбранное разрешение, будут уменьшены.\n\nДля обработки фотографий высокого разрешения требуется значительно больше памяти и времени. Уменьшите этот параметр, если при улучшении фотографий произошел сбой приложения.';
-
-  @override
   String get settingsImageEditSaveResultsToServerTitle =>
       'Сохранить результат на сервер';
 
@@ -1155,13 +1147,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get enhanceButtonLabel => 'УЛУЧШИТЬ';
-
-  @override
-  String get enhanceIntroDialogTitle => 'Улучшите ваши фото';
-
-  @override
-  String get enhanceIntroDialogDescription =>
-      'Обработка фотографий производится на устройстве. По умолчанию они уменьшаются до 2048x1536. Настроить выходное разрешение можно в Настройках';
 
   @override
   String get enhanceLowLightTitle => 'Улучшение освещения';
