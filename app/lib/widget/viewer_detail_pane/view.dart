@@ -592,8 +592,9 @@ class _LocationItem extends StatelessWidget {
     return _BlocBuilder(
       buildWhen: (previous, current) => previous.location != current.location,
       builder: (context, state) {
-        if (state.gps == null) {
-          // no gps, show edit button
+        if (state.gps == null &&
+            file_util.isSupportedEditMetadataMime(state.file.mime ?? "")) {
+          // no gps, show edit button if supported
           return ListTile(
             leading: const ListTileCenterLeading(
               child: Icon(Icons.location_on_outlined),
