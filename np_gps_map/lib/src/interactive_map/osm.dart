@@ -118,8 +118,11 @@ class _OsmInteractiveMapState extends State<OsmInteractiveMap> {
           ),
         Padding(
           padding: widget.contentPadding ?? EdgeInsets.zero,
-          child: const SimpleAttributionWidget(
-            source: Text("OpenStreetMap contributors"),
+          child: const RichAttributionWidget(
+            showFlutterMapAttribution: false,
+            attributions: [
+              TextSourceAttribution("OpenStreetMap contributors"),
+            ],
           ),
         ),
         Align(
