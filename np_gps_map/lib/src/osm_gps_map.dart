@@ -10,51 +10,44 @@ class OsmGpsMap extends StatelessWidget {
   Widget build(BuildContext context) {
     const double pinSize = 48;
     final center = LatLng(location.center.latitude, location.center.longitude);
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      // IgnorePointer is needed to prevent FlutterMap absorbing all pointer
-      // events
-      child: IgnorePointer(
-        child: FlutterMap(
-          options: MapOptions(
-            initialCenter: center,
-            initialZoom: location.zoom,
-            initialRotation: (360 - location.rotation) % 360,
-            interactionOptions: const InteractionOptions(
-              flags: InteractiveFlag.none,
-            ),
-          ),
-          children: [
-            TileLayer(
-              urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-              userAgentPackageName: "com.nkming.nc_photos",
-            ),
-            MarkerLayer(
-              rotate: true,
-              markers: [
-                Marker(
-                  width: pinSize,
-                  height: pinSize,
-                  point: center,
-                  alignment: Alignment.topCenter,
-                  child: const Image(
-                    image: AssetImage(
-                      "packages/np_gps_map/assets/gps_map_pin.png",
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const RichAttributionWidget(
-              showFlutterMapAttribution: false,
-              attributions: [
-                TextSourceAttribution("OpenStreetMap contributors"),
-              ],
+    return FlutterMap(
+      options: MapOptions(
+        initialCenter: center,
+        initialZoom: location.zoom,
+        initialRotation: (360 - location.rotation) % 360,
+        interactionOptions: const InteractionOptions(
+          flags: InteractiveFlag.none,
+        ),
+        onTap: onTap == null
+            ? null
+            : (tapPosition, point) {
+                onTap?.call();
+              },
+      ),
+      children: [
+        TileLayer(
+          urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+          userAgentPackageName: "com.nkming.nc_photos",
+        ),
+        MarkerLayer(
+          rotate: true,
+          markers: [
+            Marker(
+              width: pinSize,
+              height: pinSize,
+              point: center,
+              alignment: Alignment.topCenter,
+              child: const Image(
+                image: AssetImage("packages/np_gps_map/assets/gps_map_pin.png"),
+              ),
             ),
           ],
         ),
-      ),
+        const RichAttributionWidget(
+          showFlutterMapAttribution: false,
+          attributions: [TextSourceAttribution("OpenStreetMap contributors")],
+        ),
+      ],
     );
   }
 
