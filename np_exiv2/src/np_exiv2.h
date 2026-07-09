@@ -96,10 +96,9 @@ exiv2ReadHttp(const char *url, const char **header_keys,
  *
  * @return boolean
  */
-FFI_PLUGIN_EXPORT int
-exiv2CopyMetadataFromBuffer(const uint8_t *from_buffer, const size_t from_size,
-                            const char *to_path,
-                            const int should_copy_orientation);
+FFI_PLUGIN_EXPORT int exiv2CopyMetadataFromBuffer(
+    const uint8_t *from_buffer, const size_t from_size, const char *to_path,
+    const int should_copy_orientation, const int should_copy_thumbnail);
 
 /**
  * Write or remove the EXIF DateTimeOriginal and OffsetTimeOriginal tags in

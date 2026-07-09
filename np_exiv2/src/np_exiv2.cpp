@@ -94,7 +94,8 @@ const Exiv2ReadResult *exiv2ReadHttp(const char *url, const char **header_keys,
 
 int exiv2CopyMetadataFromBuffer(const uint8_t *from_buffer,
                                 const size_t from_size, const char *to,
-                                const int should_copy_orientation) {
+                                const int should_copy_orientation,
+                                const int should_copy_thumbnail) {
   try {
     auto src = Exiv2::ImageFactory::open(from_buffer, from_size);
     auto dst = Exiv2::ImageFactory::open(to);
@@ -113,6 +114,15 @@ int exiv2CopyMetadataFromBuffer(const uint8_t *from_buffer,
         LOGE(TAG, "Exception setting exif orientation: %s", e.what());
       } catch (...) {
         LOGE(TAG, "Exception setting exif orientation");
+      }
+    }
+    if (!should_copy_thumbnail) {
+      try {
+        Exiv2::ExifThumb(dst->exifData()).erase();
+      } catch (const exception &e) {
+        LOGE(TAG, "Exception erasing exif thumbnail: %s", e.what());
+      } catch (...) {
+        LOGE(TAG, "Exception erasing exif thumbnail");
       }
     }
     dst->writeMetadata();

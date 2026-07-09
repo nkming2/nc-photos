@@ -110,23 +110,29 @@ class NpExiv2Bindings {
     int from_size,
     ffi.Pointer<ffi.Char> to_path,
     int should_copy_orientation,
+    int should_copy_thumbnail,
   ) {
     return _exiv2CopyMetadataFromBuffer(
       from_buffer,
       from_size,
       to_path,
       should_copy_orientation,
+      should_copy_thumbnail,
     );
   }
 
   late final _exiv2CopyMetadataFromBufferPtr = _lookup<
       ffi.NativeFunction<
-          ffi.Int Function(ffi.Pointer<ffi.Uint8>, ffi.Size,
-              ffi.Pointer<ffi.Char>, ffi.Int)>>('exiv2CopyMetadataFromBuffer');
+          ffi.Int Function(
+              ffi.Pointer<ffi.Uint8>,
+              ffi.Size,
+              ffi.Pointer<ffi.Char>,
+              ffi.Int,
+              ffi.Int)>>('exiv2CopyMetadataFromBuffer');
   late final _exiv2CopyMetadataFromBuffer =
       _exiv2CopyMetadataFromBufferPtr.asFunction<
           int Function(
-              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Char>, int)>();
+              ffi.Pointer<ffi.Uint8>, int, ffi.Pointer<ffi.Char>, int, int)>();
 
   /// Write or remove the EXIF DateTimeOriginal and OffsetTimeOriginal tags in
   /// the file at @a path
@@ -155,22 +161,24 @@ class NpExiv2Bindings {
           int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Char>,
               ffi.Pointer<ffi.Char>)>();
 
-  /// Write the EXIF GPS tags in the file at @a path.
+  /// Write or remove the EXIF GPS tags (GPSLatitudeRef, GPSLatitude,
+  /// GPSLongitudeRef and GPSLongitude) in the file at @a path
   ///
+  /// If either one of the four GPS values is null, all tags will be removed.
   /// @return boolean
   int exiv2WriteFileGps(
     ffi.Pointer<ffi.Char> path,
-    ffi.Pointer<ffi.Char> gpsLatitudeRef,
-    ffi.Pointer<ffi.Uint32> gpsLatitude,
-    ffi.Pointer<ffi.Char> gpsLongitudeRef,
-    ffi.Pointer<ffi.Uint32> gpsLongitude,
+    ffi.Pointer<ffi.Char> latitudeRef,
+    ffi.Pointer<ffi.Uint32> latitude,
+    ffi.Pointer<ffi.Char> longitudeRef,
+    ffi.Pointer<ffi.Uint32> longitude,
   ) {
     return _exiv2WriteFileGps(
       path,
-      gpsLatitudeRef,
-      gpsLatitude,
-      gpsLongitudeRef,
-      gpsLongitude,
+      latitudeRef,
+      latitude,
+      longitudeRef,
+      longitude,
     );
   }
 

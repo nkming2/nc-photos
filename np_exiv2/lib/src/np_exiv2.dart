@@ -397,12 +397,14 @@ Future<bool> copyMetadata(
   Uint8List from,
   File to, {
   bool shouldCopyOrientation = true,
+  bool shouldCopyThumbnail = true,
 }) async {
   try {
     return await _copyMetadata(
       from,
       to.path,
       shouldCopyOrientation: shouldCopyOrientation,
+      shouldCopyThumbnail: shouldCopyThumbnail,
     );
   } catch (e, stackTrace) {
     _log.severe("[copyMetadata] Failed while copyMetadata", e, stackTrace);
@@ -527,6 +529,7 @@ Future<bool> _copyMetadata(
   Uint8List from,
   String toPath, {
   required bool shouldCopyOrientation,
+  required bool shouldCopyThumbnail,
 }) {
   return Isolate.run(() {
     Pointer<Uint8>? fromBufferC;
@@ -542,6 +545,7 @@ Future<bool> _copyMetadata(
             from.length,
             toC.cast(),
             shouldCopyOrientation ? 1 : 0,
+            shouldCopyThumbnail ? 1 : 0,
           ) !=
           0;
       return result;

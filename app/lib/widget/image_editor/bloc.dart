@@ -380,6 +380,7 @@ class _IeBloc extends Bloc<_Event, _State> with BlocLogger {
         srcBytes,
         io.File(dstJpegPath),
         shouldCopyOrientation: false,
+        shouldCopyThumbnail: false,
       )) {
         throw StateError("Unable to copy metadata to JPEG");
       }

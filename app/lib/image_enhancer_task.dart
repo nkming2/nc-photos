@@ -314,6 +314,7 @@ class ImageEnhancerTask {
         srcBytes,
         file,
         shouldCopyOrientation: false,
+        shouldCopyThumbnail: false,
       )) {
         throw StateError("Unable to copy metadata to JPEG");
       }
