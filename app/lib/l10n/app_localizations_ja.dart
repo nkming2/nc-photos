@@ -1118,7 +1118,7 @@ class AppLocalizationsJa extends AppLocalizations {
       '選択したアイテムはこのデバイスから完全に削除されます。\n\nこの操作は元に戻せません';
 
   @override
-  String get enhancePortraitBlurTitle => 'ポートレートぼかし';
+  String get enhancePortraitBlurTitle => '背景ぼかし';
 
   @override
   String get enhancePortraitBlurDescription => '写真の背景をぼかします。ポートレートに最適です';

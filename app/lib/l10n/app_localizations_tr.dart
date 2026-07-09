@@ -260,7 +260,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get settingsBackupOnRemoteExifEditTitle =>
-      'Create backup before modifying metadata (for server files only)';
+      'Meta verileri değiştirmeden önce yedek oluştur (sadece sunucu dosyaları için)';
 
   @override
   String get settingsMemoriesTitle => 'Anılar';
@@ -480,7 +480,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get settingsViewerUseOriginalImageTitle =>
-      'Show original image instead of high quality preview in viewer';
+      'Fotoğraf Görüntüleyicide yüksek kaliteli önizleme yerine orjinal fotoğrafı göster';
 
   @override
   String get settingsExperimentalTitle => 'Deneysel';
@@ -555,7 +555,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get enableButtonLabel => 'ETKİNLEŞTİR';
 
   @override
-  String get enableButtonLabel2 => 'Enable';
+  String get enableButtonLabel2 => 'Etkinleştir';
 
   @override
   String get exifSupportNextcloud28Notes =>
@@ -639,7 +639,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get timeSubtitle => 'Saat';
 
   @override
-  String get timeZoneOffsetSubtitle => 'Time zone';
+  String get timeZoneOffsetSubtitle => 'Saat dilimi';
 
   @override
   String get dateYearInputHint => 'Yıl';
@@ -1243,13 +1243,14 @@ class AppLocalizationsTr extends AppLocalizations {
   String get saveTooltip => 'Kaydet';
 
   @override
-  String get imageEditDownloadDialogTitle => 'Downloading image from server...';
+  String get imageEditDownloadDialogTitle =>
+      'Fotoğraf sunucudan indiriliyor...';
 
   @override
-  String get imageEditProcessDialogTitle => 'Processing image...';
+  String get imageEditProcessDialogTitle => 'Fotoğraf işleniyor...';
 
   @override
-  String get imageEditSaveDialogTitle => 'Saving result...';
+  String get imageEditSaveDialogTitle => 'Değişiklikler kaydediliyor...';
 
   @override
   String get imageEditColorBrightness => 'Parlaklık';
@@ -1294,60 +1295,61 @@ class AppLocalizationsTr extends AppLocalizations {
   String get imageEditTransformCrop => 'Kırp';
 
   @override
-  String get imageEditToolbarEffectLabel => 'Effect';
+  String get imageEditToolbarEffectLabel => 'Efekt';
 
   @override
-  String get imageEditEffectHalftone => 'Halftone';
+  String get imageEditEffectHalftone => 'Yarı ton';
 
   @override
-  String get imageEditEffectPixelation => 'Pixelation';
+  String get imageEditEffectPixelation => 'Pikselleşme';
 
   @override
-  String get imageEditEffectPosterization => 'Posterization';
+  String get imageEditEffectPosterization => 'Tonu arttır';
 
   @override
-  String get imageEditEffectSketch => 'Sketch';
+  String get imageEditEffectSketch => 'Eskiz efekti';
 
   @override
-  String get imageEditEffectToon => 'Toon';
+  String get imageEditEffectToon => 'Animasyon';
 
   @override
-  String get imageEditEffectFace => 'Face';
+  String get imageEditEffectFace => 'Yüz';
 
   @override
-  String get imageEditEffectParamEdge => 'Edge';
+  String get imageEditEffectParamEdge => 'Köşe';
 
   @override
-  String get imageEditEffectParamColor => 'Color';
+  String get imageEditEffectParamColor => 'Renk';
 
   @override
-  String get imageEditEffectParamHatching => 'Hatching';
+  String get imageEditEffectParamHatching => 'Tarama';
 
   @override
-  String get imageEditEffectParamJawline => 'Jawline';
+  String get imageEditEffectParamJawline => 'Çene hattı';
 
   @override
-  String get imageEditEffectParamEyeSize => 'Eye size';
+  String get imageEditEffectParamEyeSize => 'Göz boyutu';
 
   @override
-  String get imageEditFaceDetectionRunningMessage => 'Detecting faces...';
+  String get imageEditFaceDetectionRunningMessage => 'Yüzler algılanıyor...';
 
   @override
-  String get imageEditNoFaceDetected => 'No faces detected';
+  String get imageEditNoFaceDetected => 'Yüz tespit edilemedi';
 
   @override
   String get imageEditFaceNotSelected =>
-      'Select one or more faces on your photos to apply the effects';
+      'Efektleri uygulamak için fotoğraflarınızdaki bir veya daha fazla yüzü seçin';
 
   @override
   String get imageEditResetSelectedFaceMessage =>
-      'Selected faces are cleared after adjusting image transformation settings';
+      'Görüntü dönüştürme ayarları yapıldıktan sonra seçilen yüzler silinir';
 
   @override
-  String get imageEditOpenErrorMessage => 'Unable to open file';
+  String get imageEditOpenErrorMessage => 'Dosya açılırken bir hata oluştu';
 
   @override
-  String get imageEditSaveErrorMessage => 'Error saving image';
+  String get imageEditSaveErrorMessage =>
+      'Fotoğraf kaydedilirken bir hata oluştu';
 
   @override
   String get categoriesLabel => 'Kategoriler';
@@ -1595,97 +1597,97 @@ class AppLocalizationsTr extends AppLocalizations {
       'Bu özellik sadece cihazınızdaki yerel dosyaları destekler. Seçilen buluttaki dosyalar yok sayılır.';
 
   @override
-  String get uploadDialogPath => 'Path';
+  String get uploadDialogPath => 'Yol';
 
   @override
-  String get uploadDialogBatchConvert => 'Batch convert';
+  String get uploadDialogBatchConvert => 'Toplu dönüştür';
 
   @override
   String get uploadBatchConvertWarningText1 =>
-      'Your photos will be compressed before uploading to your server.';
+      'Fotoğraflarınız sunucuya yüklenmeden önce sıkıştırılacaktır.';
 
   @override
   String get uploadBatchConvertWarningText2 =>
-      'Motion photos are NOT supported and they will be uploaded as a still image.';
+      'Hareketli fotoğraflar DESTEKLENMEMEKTEDİR ve bunlar normal görüntü olarak yüklenecektir.';
 
   @override
   String get uploadBatchConvertWarningText3 =>
-      'Some metadata may be altered or dropped.';
+      'Bazı meta veriler değiştirilebilir veya silinebilir.';
 
   @override
   String get uploadBatchConvertWarningText4 =>
-      'Supported source formats: JPEG, PNG, WEBP, BMP, HEIC';
+      'Desteklenen dosya formatları: JPEG, PNG, WEBP, BMP, HEIC';
 
   @override
-  String get uploadBatchConvertSettings => 'Conversion settings';
+  String get uploadBatchConvertSettings => 'Dönüştürme ayarları';
 
   @override
-  String get uploadBatchConvertSettingsFormat => 'Format';
+  String get uploadBatchConvertSettingsFormat => 'Fotoğraf türü';
 
   @override
-  String get uploadBatchConvertSettingsQuality => 'Quality';
+  String get uploadBatchConvertSettingsQuality => 'Kalite';
 
   @override
-  String get uploadBatchConvertSettingsDownscaling => 'Downscaling';
+  String get uploadBatchConvertSettingsDownscaling => 'Kalite düşürme';
 
   @override
-  String get viewerLastPageText => 'No more photos';
+  String get viewerLastPageText => 'Başka fotoğraf yok';
 
   @override
-  String get deleteMergedFileDialogServerOnlyButton => 'Server only';
+  String get deleteMergedFileDialogServerOnlyButton => 'Sadece sunucuda tut';
 
   @override
-  String get deleteMergedFileDialogLocalOnlyButton => 'Device only';
+  String get deleteMergedFileDialogLocalOnlyButton => 'Sadece cihazda tut';
 
   @override
-  String get deleteMergedFileDialogBothButton => 'Both';
+  String get deleteMergedFileDialogBothButton => 'Her ikisinde de tut';
 
   @override
   String get deleteMergedFileDialogContent =>
-      'Some of the files exist both on your server and your device. Where should we delete these files from?';
+      'Bazı dosyalar hem sunucunuzda hem de cihazınızda bulunuyor. Bu dosyaları nereden silmeliyiz?';
 
   @override
   String get deleteSingleMergedFileDialogContent =>
-      'File exists both on your server and your device. Where should we delete this file from?';
+      'Bu dosya hem sunucunuzda hem cihazınıda bulunuyor. Hangisini silmek istiyorsunuz?';
 
   @override
-  String get collectionAddItemTitle => 'Where to insert item?';
+  String get collectionAddItemTitle => 'Öğeyi nereye eklemek istersiniz?';
 
   @override
   String greetingsMorning(Object user) {
-    return 'Good morning, $user';
+    return 'Günaydın, $user';
   }
 
   @override
   String greetingsAfternoon(Object user) {
-    return 'Good afternoon, $user';
+    return 'Tünaydın, $user';
   }
 
   @override
   String greetingsNight(Object user) {
-    return 'Good evening, $user';
+    return 'İyi akşamlar, $user';
   }
 
   @override
   String get recognizeInstructionDialogTitle =>
-      'Setup required for Recognize integration';
+      'Tanıma entegrasyonu için kurulum gerekiyor';
 
   @override
   String get recognizeInstructionDialogContent =>
-      'Since Nextcloud 33, a server-side app is required to support Recognize.';
+      'Nextcloud 33 sürümünden itibaren, Tanıma eklentisinin entegrasyonu için sunucu taraflı uygulama gerekmektedir.';
 
   @override
-  String get recognizeInstructionDialogButton => 'Open Guide';
+  String get recognizeInstructionDialogButton => 'Rehberi aç';
 
   @override
-  String get editMetadataWriteProgressTitle => 'Uploading file';
+  String get editMetadataWriteProgressTitle => 'Dosya yükleniyor';
 
   @override
-  String get addLocationTitle => 'Add location';
+  String get addLocationTitle => 'Konum ekle';
 
   @override
   String metadataEditBackupNotification(Object backup) {
-    return 'Original file backed up as $backup';
+    return 'Orjinal dosya şu isimle yedeklendi: $backup';
   }
 
   @override

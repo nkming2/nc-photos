@@ -1115,7 +1115,7 @@
 	"@deletePermanentlyLocalConfirmationDialogContent": {
 		"description": "Make sure the user wants to delete the items from the current device"
 	},
-	"enhancePortraitBlurTitle": "ポートレートぼかし",
+	"enhancePortraitBlurTitle": "背景ぼかし",
 	"@enhancePortraitBlurTitle": {
 		"description": "Blur the background of a photo"
 	},
