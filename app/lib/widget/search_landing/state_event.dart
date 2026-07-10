@@ -78,6 +78,7 @@ class _TransformPlaceItems implements _Event {
 
 @toString
 class _SetError implements _Event {
+  // ignore: unused_element_parameter
   const _SetError(this.error, [this.stackTrace]);
 
   @override

@@ -272,12 +272,8 @@ class _ImageEnhancerState extends State<ImageEnhancer> {
     }
   }
 
-  bool _isAtLeast4GbRam() {
-    // We can't compare with 4096 directly as some RAM are preserved
-    return AndroidInfo().totalMemMb > 3584;
-  }
-
   bool _isAtLeast5GbRam() {
+    // We can't compare with 5 * 1024 directly as some RAM are preserved
     return AndroidInfo().totalMemMb > 4608;
   }
 

@@ -46,7 +46,6 @@ import 'package:nc_photos/progress_util.dart';
 import 'package:nc_photos/remote_storage_util.dart' as remote_storage_util;
 import 'package:nc_photos/session_storage.dart';
 import 'package:nc_photos/snack_bar_manager.dart';
-import 'package:nc_photos/stream_extension.dart';
 import 'package:nc_photos/theme.dart';
 import 'package:nc_photos/theme/dimension.dart';
 import 'package:nc_photos/url_launcher_util.dart';
