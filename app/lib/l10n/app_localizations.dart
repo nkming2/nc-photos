@@ -21,6 +21,7 @@ import 'app_localizations_pt.dart';
 import 'app_localizations_ru.dart';
 import 'app_localizations_sk.dart';
 import 'app_localizations_tr.dart';
+import 'app_localizations_uk.dart';
 import 'app_localizations_zh.dart';
 
 // ignore_for_file: type=lint
@@ -125,6 +126,7 @@ abstract class AppLocalizations {
     Locale('ru'),
     Locale('sk'),
     Locale('tr'),
+    Locale('uk'),
     Locale('zh'),
     Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hant'),
   ];
@@ -3121,6 +3123,7 @@ class _AppLocalizationsDelegate
     'ru',
     'sk',
     'tr',
+    'uk',
     'zh',
   ].contains(locale.languageCode);
 
@@ -3175,6 +3178,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
       return AppLocalizationsSk();
     case 'tr':
       return AppLocalizationsTr();
+    case 'uk':
+      return AppLocalizationsUk();
     case 'zh':
       return AppLocalizationsZh();
   }

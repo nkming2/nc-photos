@@ -2215,6 +2215,22 @@
     "imageSegmentPickerInstruction"
   ],
 
+  "uk": [
+    "enhanceMotionDeblurTitle",
+    "enhanceMotionDeblurDescription",
+    "enhanceDerainTitle",
+    "enhanceDerainDescription",
+    "imageEnhancerModelDownloadDialogText",
+    "imageEnhancerProcessDialogTitle",
+    "imageEnhancerProcessDialogText",
+    "imageEnhancerResultFailedNotifTitle",
+    "imageEnhancerResultSuccessfulNotifTitle",
+    "imageEnhancerResultSuccessfulNotifContent",
+    "imageSegmentPicker6PointLimit",
+    "imageSegmentPickerInitFailedText",
+    "imageSegmentPickerInstruction"
+  ],
+
   "zh": [
     "settingsMetadataTitle",
     "settingsExifSupportTitle2",

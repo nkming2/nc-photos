@@ -141,6 +141,12 @@ final supportedLanguages = {
     "Turkish",
     const Locale("tr"),
   ),
+  _AppLanguageEnum.ukrainian.index: AppLanguage(
+    _AppLanguageEnum.ukrainian.index,
+    "Українська",
+    "Ukrainian",
+    const Locale("uk"),
+  ),
 };
 
 enum _AppLanguageEnum {
@@ -164,6 +170,7 @@ enum _AppLanguageEnum {
   turkish,
   slovak,
   japanese,
+  ukrainian,
 }
 
 AppLanguage _getSelectedLanguage() {
