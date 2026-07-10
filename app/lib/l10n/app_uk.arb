@@ -1,0 +1,1700 @@
+{
+    "_meta": {
+        "lang": "uk",
+        "lang_name": "Українська",
+        "flag": "",
+        "country": "ua"
+    },
+    "appTitle": "Фото",
+    "translator": "Vic",
+    "@translator": {
+        "description": "Name of the translator(s) for this language"
+    },
+    "photosTabLabel": "Фото",
+    "@photosTabLabel": {
+        "description": "Label of the tab that lists user photos"
+    },
+    "collectionsTooltip": "Колекції",
+    "@collectionsTooltip": {
+        "description": "Groups of photos, e.g., albums, trash bin, etc"
+    },
+    "zoomTooltip": "Приближення",
+    "@zoomTooltip": {
+        "description": "Tooltip of the zoom button"
+    },
+    "settingsMenuLabel": "Налаштування",
+    "@settingsMenuLabel": {
+        "description": "Label of the settings entry in menu"
+    },
+    "selectionAppBarTitle": "{count, plural, other{{count} selected}}",
+    "@selectionAppBarTitle": {
+        "description": "Title of the contextual app bar that shows number of selected items",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "deleteSelectedProcessingNotification": "\t {count, plural, one{Deleting 1 item} other{Deleting {count} items}}",
+    "@deleteSelectedProcessingNotification": {
+        "description": "Inform user that the selected items are being deleted",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "deleteSelectedSuccessNotification": "Всі предмети успішно видалено",
+    "@deleteSelectedSuccessNotification": {
+        "description": "Inform user that the selected items are deleted successfully"
+    },
+    "deleteSelectedFailureNotification": "\t {count, plural, one{Failed deleting 1 item} other{Failed deleting {count} items}}",
+    "@deleteSelectedFailureNotification": {
+        "description": "Inform user that some/all the selected items cannot be deleted",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "archiveTooltip": "Архів",
+    "@archiveTooltip": {
+        "description": "Archive selected items"
+    },
+    "archiveSelectedSuccessNotification": "Всі предмети успішно заархівовано",
+    "@archiveSelectedSuccessNotification": {
+        "description": "Archived all selected items successfully"
+    },
+    "archiveSelectedFailureNotification": "\t {count, plural, one{Failed archiving 1 item} other{Failed archiving {count} items}}",
+    "@archiveSelectedFailureNotification": {
+        "description": "Cannot archive some of the selected items",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "unarchiveTooltip": "Розархівувати",
+    "@unarchiveTooltip": {
+        "description": "Unarchive selected items"
+    },
+    "unarchiveSelectedSuccessNotification": "Всі предмети успішно розархівовано",
+    "@unarchiveSelectedSuccessNotification": {
+        "description": "Unarchived all selected items successfully"
+    },
+    "unarchiveSelectedFailureNotification": "{count, plural, one{Failed unarchiving 1 item} other{Failed unarchiving {count} items}}",
+    "@unarchiveSelectedFailureNotification": {
+        "description": "Cannot unarchive some of the selected items",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "deleteTooltip": "Видалити",
+    "@deleteTooltip": {
+        "description": "Delete selected items"
+    },
+    "deleteSuccessNotification": "Успішно видалено предмет",
+    "@deleteSuccessNotification": {
+        "description": "Inform user that the item is deleted successfully"
+    },
+    "deleteFailureNotification": "Помилка видалення предмету",
+    "@deleteFailureNotification": {
+        "description": "Inform user that the item cannot be deleted"
+    },
+    "removeSelectedFromAlbumFailureNotification": "Не вдалося видалити предмети з альбому",
+    "@removeSelectedFromAlbumFailureNotification": {
+        "description": "Inform user that the selected items cannot be removed from an album"
+    },
+    "addServerTooltip": "Додати сервер",
+    "@addServerTooltip": {
+        "description": "Tooltip of the button that adds a new server"
+    },
+    "removeServerSuccessNotification": "{server} видалено успішно",
+    "@removeServerSuccessNotification": {
+        "description": "Inform user that a server is removed successfully",
+        "placeholders": {
+            "server": {
+                "example": "http://www.example.com"
+            }
+        }
+    },
+    "createAlbumTooltip": "Новий альбом",
+    "@createAlbumTooltip": {
+        "description": "Tooltip of the button that creates a new album"
+    },
+    "albumSize": "\t {count, plural, =0{Empty} one{1 item} other{{count} items}}",
+    "@albumSize": {
+        "description": "Number of items inside an album",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "albumArchiveLabel": "Архів",
+    "@albumArchiveLabel": {
+        "description": "A collection containing all archived photos"
+    },
+    "connectingToServer": "Підключення до {server}",
+    "@connectingToServer": {
+        "description": "(deprecated, may be removed in the future) Inform user that the app is connecting to a server",
+        "placeholders": {
+            "server": {
+                "example": "http://www.example.com"
+            }
+        }
+    },
+    "connectingToServer2": "Очікуємо на підтвердження авторизації сервера",
+    "@connectingToServer2": {
+        "description": "Shown when the app is waiting for the user to sign in via an external browser"
+    },
+    "connectingToServerInstruction": "Будь ласка, увійдіть через відкритий браузер ",
+    "@connectingToServerInstruction": {
+        "description": "Shown when the app is waiting for the user to sign in via an external browser"
+    },
+    "nameInputHint": "Імʼя",
+    "@nameInputHint": {
+        "description": "Hint of the text field expecting name data"
+    },
+    "nameInputInvalidEmpty": "Імʼя обовʼязкове",
+    "@nameInputInvalidEmpty": {
+        "description": "Shown when a name input is required but value not given. This is intended to be a generic message and does not assume what this 'name' represents"
+    },
+    "skipButtonLabel": "Пропустити",
+    "@skipButtonLabel": {
+        "description": "Label of the skip button"
+    },
+    "confirmButtonLabel": "Підтвердити",
+    "@confirmButtonLabel": {
+        "description": "Label of the confirm button"
+    },
+    "signInHeaderText": "Увійти до серверу Nextcloud",
+    "@signInHeaderText": {
+        "description": "(deprecated, may be removed in the future)"
+    },
+    "signIn2faHintText": "Використайте пароль застосунку, якщо на сервері ввімкнуто двофакторну автентифікацію",
+    "@signIn2faHintText": {
+        "description": "(deprecated, may be removed in the future)"
+    },
+    "signInHeaderText2": "Увійти до Nextcloud",
+    "@signInHeaderText2": {
+        "description": "Sign in to Nextcloud server"
+    },
+    "serverAddressInputHint": "Адреса серверу",
+    "@serverAddressInputHint": {
+        "description": "Hint of the text field expecting server address data"
+    },
+    "serverAddressInputInvalidEmpty": "Будь ласка, введіть адресу серверу",
+    "@serverAddressInputInvalidEmpty": {
+        "description": "Inform user that the server address input field cannot be empty"
+    },
+    "usernameInputHint": "Імʼя користувача",
+    "@usernameInputHint": {
+        "description": "Hint of the text field expecting username data"
+    },
+    "usernameInputInvalidEmpty": "Будь ласка, введіть імʼя користувача",
+    "@usernameInputInvalidEmpty": {
+        "description": "Inform user that the username input field cannot be empty"
+    },
+    "passwordInputHint": "Пароль",
+    "@passwordInputHint": {
+        "description": "Hint of the text field expecting password data"
+    },
+    "passwordInputInvalidEmpty": "Будь ласка, введіть ваш пароль",
+    "@passwordInputInvalidEmpty": {
+        "description": "Inform user that the password input field cannot be empty"
+    },
+    "rootPickerHeaderText": "Виберіть папки, які потрібно включити",
+    "@rootPickerHeaderText": {
+        "description": "Inform user what to do in root picker widget"
+    },
+    "rootPickerSubHeaderText": "Буде показано фото лише з вибраних папок. Натисніть «Пропустити», щоб включити всі",
+    "@rootPickerSubHeaderText": {
+        "description": "Inform user what to do in root picker widget"
+    },
+    "rootPickerNavigateUpItemText": "Назад",
+    "@rootPickerNavigateUpItemText": {
+        "description": "Text of the list item to navigate up the directory tree"
+    },
+    "rootPickerUnpickFailureNotification": "Не вдалося скасувати вибір предмета",
+    "@rootPickerUnpickFailureNotification": {
+        "description": "Failed while unpicking an item in the root picker list"
+    },
+    "rootPickerListEmptyNotification": "Будь ласка, виберіть хоча б одну папку або натисніть «Пропустити» щоб вибрати все",
+    "@rootPickerListEmptyNotification": {
+        "description": "Error when user pressing confirm without picking any folders"
+    },
+    "setupWidgetTitle": "Почати",
+    "@setupWidgetTitle": {
+        "description": "Title of the introductory widget"
+    },
+    "setupSettingsModifyLaterHint": "Ви можете змінити це в налаштуваннях пізніше",
+    "@setupSettingsModifyLaterHint": {
+        "description": "Inform user that they can modify this setting after the setup process"
+    },
+    "setupHiddenPrefDirNoticeDetail": "Цей застосунок створює папку на сервері Nextcloud для зберігання файлів налаштувань. Будь ласка, не змінюйте та не видаляйте її, якщо не плануєте видалити цей застосунок.",
+    "@setupHiddenPrefDirNoticeDetail": {
+        "description": "Inform user about the preference folder created by this app"
+    },
+    "settingsWidgetTitle": "Налаштування",
+    "@settingsWidgetTitle": {
+        "description": "Title of the Settings widget"
+    },
+    "settingsLanguageTitle": "Мова",
+    "@settingsLanguageTitle": {
+        "description": "Set display language"
+    },
+    "settingsLanguageOptionSystemDefaultLabel": "Система «за замовчуванням»",
+    "@settingsLanguageOptionSystemDefaultLabel": {
+        "description": "Follow the Android system language"
+    },
+    "settingsMetadataTitle": "Файл метаданих",
+    "@settingsMetadataTitle": {
+        "description": "Metadata (e.g., date, resolution, GPS, etc)"
+    },
+    "settingsExifSupportTitle2": "Підтримка EXIF на стороні клієнта",
+    "@settingsExifSupportTitle2": {
+        "description": "Title of the EXIF support setting"
+    },
+    "settingsExifSupportTrueSubtitle": "Потребує додаткового використання мережі",
+    "@settingsExifSupportTrueSubtitle": {
+        "description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
+    },
+    "settingsFallbackClientExifTitle": "Використовувати аналізатор на стороні клієнта як резервний",
+    "@settingsFallbackClientExifTitle": {
+        "description": "Fallback to client side EXIF parser"
+    },
+    "settingsFallbackClientExifTrueText": "Якщо Nextcloud не вдалося отримати метадані файлу, використовувати аналізатор на стороні клієнта",
+    "settingsFallbackClientExifFalseText": "Якщо Nextcloud не вдалося отримати метадані файлу, залишити його без змін",
+    "settingsFallbackClientExifConfirmDialogTitle": "Увімкнути резервну обробку на стороні клієнта?",
+    "settingsFallbackClientExifConfirmDialogText": "Зазвичай сервер Nextcloud автоматично обробляє ваші фотографії та зберігає метадані EXIF у фоновому режимі. Однак це фонове завдання може завдання може завершитися невдало через помилку конфігурації або збій сервера. Якщо ввімкнути цю опцію, застосунок самостійно оброблятиме такі файли.",
+    "settingsBackupOnRemoteExifEditTitle": "Створювати резервну копію перед зміною метаданих (лише для файлів на сервері)",
+    "@settingsBackupOnRemoteExifEditTitle": {
+        "description": "Create a backup copy of the original file before editing metadata on server"
+    },
+    "settingsMemoriesTitle": "Спогади",
+    "@settingsMemoriesTitle": {
+        "description": "Memory albums contain photos taken in a specific time range in the past"
+    },
+    "settingsMemoriesSubtitle": "Показати фото зроблені в минулому",
+    "@settingsMemoriesSubtitle": {
+        "description": "Memory albums contain photos taken in a specific time range in the past"
+    },
+    "settingsAccountTitle": "Акаунт",
+    "settingsAccountLabelTitle": "Мітка",
+    "@settingsAccountLabelTitle": {
+        "description": "An account label is used to replace the server URL in the app bar, could be useful for privacy reason"
+    },
+    "settingsAccountLabelDescription": "Установіть мітку, яка відображатиметься замість URL-адреси сервера",
+    "settingsIncludedFoldersTitle": "Включені папки",
+    "@settingsIncludedFoldersTitle": {
+        "description": "Change the included folders of an account"
+    },
+    "settingsShareFolderTitle": "Поділитися папкою",
+    "@settingsShareFolderTitle": {
+        "description": "Set the share folder such that it matches the parameter in config.php"
+    },
+    "settingsShareFolderDialogTitle": "Знайти папку спільного доступу",
+    "@settingsShareFolderDialogTitle": {
+        "description": "Set the share folder such that it matches the parameter in config.php"
+    },
+    "settingsShareFolderDialogDescription": "Це налаштування відповідає параметру share_folder у файлі config.php. Обидва значення мають бути однаковими.\r\n\r\nБудь ласка, виберіть ту саму папку, що вказана в config.php.",
+    "@settingsShareFolderDialogDescription": {
+        "description": "Set the share folder such that it matches the parameter in config.php"
+    },
+    "settingsShareFolderPickerDescription": "Будь ласка, виберіть ту саму папку, що вказана в config.php. Натисніть «за замовчуванням», якщо параметр не встановлено.",
+    "@settingsShareFolderPickerDescription": {
+        "description": "Set the share folder such that it matches the parameter in config.php"
+    },
+    "settingsPersonProviderTitle": "Постачальник осіб",
+    "@settingsPersonProviderTitle": {
+        "description": "Select the server app for face recognition"
+    },
+    "settingsServerAppSectionTitle": "Підтримка додатку сервера",
+    "@settingsServerAppSectionTitle": {
+        "description": "Enable/disable various server apps"
+    },
+    "settingsPhotosDescription": "Налаштуйте вміст вкладки «Фотографії»",
+    "@settingsPhotosDescription": {
+        "description": "The 'Photos' here means the tab called 'Photos', not literally a photo. The title of this setting will also reuse the label of that tab"
+    },
+    "settingsMemoriesRangeTitle": "Діапазон спогадів",
+    "@settingsMemoriesRangeTitle": {
+        "description": "How many adjacent days to be included in memories for a particular year"
+    },
+    "settingsMemoriesRangeValueText": "{range, plural, one{+-{range} day} other{+-{range} days}}",
+    "@settingsMemoriesRangeValueText": {
+        "description": "How many adjacent days to be included in memories for a particular year, could be 0",
+        "placeholders": {
+            "range": {
+                "example": "1"
+            }
+        }
+    },
+    "settingsDeviceMediaTitle": "Показати медіа з пристрою",
+    "@settingsDeviceMediaTitle": {
+        "description": "Control which device folders to be included in the timeline"
+    },
+    "settingsDeviceMediaDescription": "Відображатимуться вибрані папки",
+    "@settingsDeviceMediaDescription": {
+        "description": "Control which device folders to be included in the timeline"
+    },
+    "settingsViewerTitle": "Переглядач",
+    "settingsViewerDescription": "Налаштувати переглядач зображень/відео",
+    "settingsScreenBrightnessTitle": "Яскравість екрану",
+    "settingsScreenBrightnessDescription": "Перевизначити рівень яскравості системи",
+    "settingsForceRotationTitle": "Ігнорувати блокування обертання",
+    "settingsForceRotationDescription": "Обертати екран навіть коли автоматичне обертання вимкнено",
+    "settingsMapProviderTitle": "Постачальник мап",
+    "settingsViewerCustomizeAppBarTitle": "Налаштувати панель",
+    "settingsViewerCustomizeBottomAppBarTitle": "Налаштувати нижню панель",
+    "settingsShowDateInAlbumTitle": "Групувати фото за датою",
+    "settingsShowDateInAlbumDescription": "Застосовувати лише коли альбом відсортовано за часом",
+    "settingsCollectionsCustomizeNavigationBarTitle": "Налаштувати панель навігації",
+    "settingsImageEditTitle": "Редактор",
+    "@settingsImageEditTitle": {
+        "description": "Include settings for image enhancements and the image editor"
+    },
+    "settingsImageEditDescription": "Налаштувати покращення зображень і редактор зображень",
+    "settingsEnhanceMaxResolutionTitle2": "Роздільна здатність зображення для покращень",
+    "settingsEnhanceMaxResolutionDescription": "Фотографії, більші за вибрану роздільну здатність, буде зменшено.\r\n\r\nФотографії високої роздільної здатності потребують значно більше пам’яті та часу для обробки. Якщо застосунок завершує роботу під час покращення фотографій, зменште це значення.",
+    "settingsImageEditSaveResultsToServerTitle": "Зберегти результати до сервера",
+    "@settingsImageEditSaveResultsToServerTitle": {
+        "description": "Whether to save the edit/enhance results to server instead of the current device"
+    },
+    "settingsImageEditSaveResultsToServerTrueDescription": "Результати зберігаються на сервері, а в разі помилки завантаження - на пристрої",
+    "settingsImageEditSaveResultsToServerFalseDescription": "Результати зберігаються на цьому пристрої",
+    "settingsThemeTitle": "Тема",
+    "settingsThemeDescription": "Налаштувати вигляд застосунку",
+    "settingsFollowSystemThemeTitle": "Використовувати темну тему",
+    "@settingsFollowSystemThemeTitle": {
+        "description": "Respect the system dark mode settings introduced on Android 10"
+    },
+    "settingsSeedColorTitle": "Колір теми",
+    "@settingsSeedColorTitle": {
+        "description": "Customize the colors used in app"
+    },
+    "settingsSeedColorDescription": "Використовується для формування всіх кольорів застосунку",
+    "@settingsSeedColorDescription": {
+        "description": "Customize the colors used in app"
+    },
+    "settingsSeedColorSystemColorDescription": "Використовувати системний колір",
+    "@settingsSeedColorSystemColorDescription": {
+        "description": "Use color provided by the OS, i.e., Material You"
+    },
+    "settingsSeedColorPickerTitle": "Виберіть колір",
+    "@settingsSeedColorPickerTitle": {
+        "description": "Dialog to customize the colors used in app"
+    },
+    "settingsThemePrimaryColor": "Основний",
+    "settingsThemeSecondaryColor": "Вторинний",
+    "settingsThemePresets": "Шаблони",
+    "settingsSeedColorPickerSystemColorButtonLabel": "Використовувати системний колір",
+    "@settingsSeedColorPickerSystemColorButtonLabel": {
+        "description": "Use color provided by the OS, i.e., Material You"
+    },
+    "settingsUseBlackInDarkThemeTitle": "Темніша тема",
+    "@settingsUseBlackInDarkThemeTitle": {
+        "description": "Make the dark theme darker"
+    },
+    "settingsUseBlackInDarkThemeTrueDescription": "Використовувати чорний в темній темі",
+    "@settingsUseBlackInDarkThemeTrueDescription": {
+        "description": "When black in dark theme is set to true"
+    },
+    "settingsUseBlackInDarkThemeFalseDescription": "Використовувати темно-сірий в темній темі",
+    "@settingsUseBlackInDarkThemeFalseDescription": {
+        "description": "When black in dark theme is set to false"
+    },
+    "settingsMiscellaneousTitle": "Різне",
+    "settingsDoubleTapExitTitle": "Подвійний натиск для виходу",
+    "@settingsDoubleTapExitTitle": {
+        "description": "If enabled, users need to tap the back button twice to exit app"
+    },
+    "settingsPhotosTabSortByNameTitle": "Сортувати за імʼям файлу в Фото",
+    "@settingsPhotosTabSortByNameTitle": {
+        "description": "Sort photos listed in the Photos tab by filename (descending)"
+    },
+    "settingsAppLock": "Блокування застосунку",
+    "@settingsAppLock": {
+        "description": "If enabled, users need to authenticate themselves when opening the app"
+    },
+    "settingsAppLockTypeBiometric": "Біометрія",
+    "@settingsAppLockTypeBiometric": {
+        "description": "Unlock app with fingerprint, face, etc"
+    },
+    "settingsAppLockTypePin": "PIN",
+    "@settingsAppLockTypePin": {
+        "description": "Unlock app with 4 to 6 digits PIN"
+    },
+    "settingsAppLockTypePassword": "Пароль",
+    "@settingsAppLockTypePassword": {
+        "description": "Unlock app with password"
+    },
+    "settingsAppLockDescription": "Якщо ввімкнено, під час відкриття застосунку потрібно буде пройти автентифікацію. Ця функція НЕ захищає від реальних атак.",
+    "settingsAppLockSetupBiometricFallbackDialogTitle": "Виберіть резервний спосіб автентифікації, якщо біометрична автентифікація недоступна",
+    "settingsAppLockSetupPinDialogTitle": "Установіть PIN-код для розблокування застосунку",
+    "settingsAppLockConfirmPinDialogTitle": "Повторно введіть PIN-код",
+    "settingsAppLockSetupPasswordDialogTitle": "Установіть пароль для розблокування застосунку",
+    "settingsAppLockConfirmPasswordDialogTitle": "Повторно введіть пароль",
+    "settingsViewerUseOriginalImageTitle": "Показувати оригінальне зображення замість високоякісного попереднього перегляду в переглядачі",
+    "settingsExperimentalTitle": "Експерементальні",
+    "settingsExperimentalDescription": "Функції, які ще не готові для щоденного використання",
+    "settingsExpertTitle": "Додатково",
+    "@settingsExpertTitle": {
+        "description": "Settings that must be tweaked with caution"
+    },
+    "settingsExpertWarningText": "Будь ласка, переконайтеся, що ви повністю розумієте призначення кожної опції, перш ніж продовжити",
+    "settingsClearCacheDatabaseTitle": "Очистити базу даних файлів",
+    "settingsClearCacheDatabaseDescription": "Очистити кешовану інформацію про файли та запустити повну повторну синхронізацію із сервером",
+    "settingsClearCacheDatabaseSuccessNotification": "Базу даних успішно очищено. Рекомендуємо перезапустити застосунок",
+    "settingsManageTrustedCertificateTitle": "Керування довіреними сертифікатами",
+    "settingsUseNewHttpEngine": "Використовувати новий HTTP-рушій",
+    "settingsUseNewHttpEngineDescription": "Новий HTTP-рушій на основі Chromium із підтримкою сучасних стандартів, зокрема HTTP/2 і HTTP/3 (QUIC).  Обмеження: Самопідписані сертифікати більше не можна керувати через застосунок. Щоб вони працювали, потрібно імпортувати сертифікати вашого центру сертифікації (CA) до системного сховища довірених сертифікатів.  * Для використання HTTP/2 і HTTP/3 потрібне з’єднання HTTPS",
+    "settingsAboutSectionTitle": "Про застосунок",
+    "@settingsAboutSectionTitle": {
+        "description": "Title of the about section in settings widget"
+    },
+    "settingsVersionTitle": "Версія",
+    "@settingsVersionTitle": {
+        "description": "Title of the version data item"
+    },
+    "settingsServerVersionTitle": "Сервер",
+    "@settingsServerVersionTitle": {
+        "description": "This item will show the server software version, e.g., Nextcloud 25"
+    },
+    "settingsSourceCodeTitle": "Вихідний код",
+    "@settingsSourceCodeTitle": {
+        "description": "Title of the source code item"
+    },
+    "settingsBugReportTitle": "Повідомити про проблему",
+    "@settingsBugReportTitle": {
+        "description": "Report issue"
+    },
+    "settingsCaptureLogsTitle": "Зібрати журнали",
+    "@settingsCaptureLogsTitle": {
+        "description": "Capture app logs for bug report"
+    },
+    "settingsCaptureLogsDescription": "Допоможіть розробникам знайти помилки",
+    "settingsTranslatorTitle": "Перекладач",
+    "@settingsTranslatorTitle": {
+        "description": "Title of the translator item"
+    },
+    "settingsRestartNeededDialog": "Будь ласка, перезавантажте додаток, щоб застосувати зміни",
+    "writePreferenceFailureNotification": "Не вдалося змінити налаштування",
+    "@writePreferenceFailureNotification": {
+        "description": "Inform user that the preference file cannot be modified"
+    },
+    "enableButtonLabel": "Увімкнути",
+    "@enableButtonLabel": {
+        "description": "Label of the enable button"
+    },
+    "enableButtonLabel2": "Увімкнути",
+    "exifSupportNextcloud28Notes": "Підтримка на стороні клієнта доповнює можливості сервера. Застосунок оброблятиме файли й атрибути, які не підтримуються Nextcloud",
+    "@exifSupportNextcloud28Notes": {
+        "description": "Extra notes for Nextcloud 28+"
+    },
+    "exifSupportConfirmationDialogTitle2": "Увімкнути підтримку EXIF на стороні клієнта?",
+    "@exifSupportConfirmationDialogTitle2": {
+        "description": "Title of the dialog to confirm enabling exif support"
+    },
+    "captureLogDetails": "Щоб зібрати журнали для повідомлення про помилку:\r\n\r\n1. Увімкніть цю опцію.\r\n2. Відтворіть проблему.\r\n3. Вимкніть цю опцію.\r\n4. Знайдіть файл nc-photos.log у папці «Завантаження».\r\n\r\n* Якщо проблема призводить до аварійного завершення роботи застосунку, журнали не вдасться зібрати. У такому разі зверніться до розробника для отримання подальших інструкцій.",
+    "@captureLogDetails": {
+        "description": "Detailed description on capturing logs"
+    },
+    "captureLogSuccessNotification": "Журнали успішно збережено",
+    "@captureLogSuccessNotification": {
+        "description": "Captured logs are successfully saved to the download directory"
+    },
+    "doneButtonLabel": "Готово",
+    "@doneButtonLabel": {
+        "description": "Label of the done button"
+    },
+    "nextButtonLabel": "Далі",
+    "@nextButtonLabel": {
+        "description": "Label of the next button"
+    },
+    "connectButtonLabel": "Підключення",
+    "@connectButtonLabel": {
+        "description": "Label of the connect button"
+    },
+    "rootPickerSkipConfirmationDialogContent2": "Буде включено всі ваші файли. Це може збільшити використання пам’яті та знизити продуктивність",
+    "@rootPickerSkipConfirmationDialogContent2": {
+        "description": "Warn user not to include all files in their server"
+    },
+    "megapixelCount": "{count}MP",
+    "@megapixelCount": {
+        "description": "Resolution of an image in megapixel",
+        "placeholders": {
+            "count": {
+                "example": "1.3"
+            }
+        }
+    },
+    "secondCountSymbol": "{count}s",
+    "@secondCountSymbol": {
+        "description": "Number of seconds",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "millimeterCountSymbol": "{count}mm",
+    "@millimeterCountSymbol": {
+        "description": "Number of millimeters",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "detailsTooltip": "Деталі",
+    "@detailsTooltip": {
+        "description": "Tooltip of the details button"
+    },
+    "downloadTooltip": "Завантажити",
+    "@downloadTooltip": {
+        "description": "Tooltip of the download button"
+    },
+    "downloadProcessingNotification": "Завантаження файлів",
+    "@downloadProcessingNotification": {
+        "description": "Inform user that the file is being downloaded"
+    },
+    "downloadSuccessNotification": "Файли успішно завантажено",
+    "@downloadSuccessNotification": {
+        "description": "Inform user that the file is downloaded successfully"
+    },
+    "downloadFailureNotification": "Завантаження файлів не здійснено.",
+    "@downloadFailureNotification": {
+        "description": "Inform user that the file cannot be downloaded"
+    },
+    "nextTooltip": "Далі",
+    "@nextTooltip": {
+        "description": "Tooltip of the next button"
+    },
+    "previousTooltip": "Попереднє",
+    "@previousTooltip": {
+        "description": "Tooltip of the previous button"
+    },
+    "webSelectRangeNotification": "Утримуйте shift + натисніть, щоб виділити все всередині",
+    "@webSelectRangeNotification": {
+        "description": "Inform web user how to select items in range"
+    },
+    "mobileSelectRangeNotification": "Натисніть і утримуйте інший елемент, щоб вибрати все всередині",
+    "@mobileSelectRangeNotification": {
+        "description": "Inform mobile user how to select items in range"
+    },
+    "updateDateTimeDialogTitle": "Змінити дату й час",
+    "@updateDateTimeDialogTitle": {
+        "description": "Dialog to modify the date & time of a file"
+    },
+    "dateSubtitle": "Дата",
+    "timeSubtitle": "Час",
+    "timeZoneOffsetSubtitle": "Часовий пояс",
+    "dateYearInputHint": "Рік",
+    "dateMonthInputHint": "Місяць",
+    "dateDayInputHint": "День",
+    "timeHourInputHint": "Година",
+    "timeMinuteInputHint": "Хвилина",
+    "timeSecondInputHint": "Секунда",
+    "dateTimeInputInvalid": "Неприпустиме значення",
+    "@dateTimeInputInvalid": {
+        "description": "Invalid date/time input (e.g., non-numeric characters)"
+    },
+    "updateDateTimeFailureNotification": "Змінення дати і часу не здійснено ",
+    "@updateDateTimeFailureNotification": {
+        "description": "Failed to set the date & time of a file"
+    },
+    "albumDirPickerHeaderText": "Виберіть папки, які потрібно повʼязати",
+    "@albumDirPickerHeaderText": {
+        "description": "Pick the folders for a folder based album"
+    },
+    "albumDirPickerSubHeaderText": "Лише фото в повʼязаних папках будуть включено в цей альбом",
+    "@albumDirPickerSubHeaderText": {
+        "description": "Pick the folders for a folder based album"
+    },
+    "albumDirPickerListEmptyNotification": "Будь ласка, виберіть хоча б одну папку",
+    "@albumDirPickerListEmptyNotification": {
+        "description": "Error when user pressing confirm without picking any folders"
+    },
+    "importFoldersTooltip": "Імпортувати папки",
+    "@importFoldersTooltip": {
+        "description": "Menu entry in the album page to import folders as albums"
+    },
+    "albumImporterHeaderText": "Імпортувати папки як альбоми",
+    "@albumImporterHeaderText": {
+        "description": "Import folders as albums"
+    },
+    "albumImporterSubHeaderText": "Нижче наведено рекомендовані папки. Залежно від кількості файлів на вашому сервері це може зайняти деякий час",
+    "@albumImporterSubHeaderText": {
+        "description": "Import folders as albums"
+    },
+    "importButtonLabel": "Імпортувати ",
+    "albumImporterProgressText": "Імпортувати папки",
+    "@albumImporterProgressText": {
+        "description": "Message shown while importing"
+    },
+    "doneButtonTooltip": "Готово",
+    "editTooltip": "Редагувати",
+    "editAccountConflictFailureNotification": "Акаунт вже існує з тими самими налаштуваннями",
+    "@editAccountConflictFailureNotification": {
+        "description": "Error when user modified an account such that it's identical to another one"
+    },
+    "genericProcessingDialogContent": "Будь ласка, зачекайте",
+    "@genericProcessingDialogContent": {
+        "description": "Generic dialog shown when the app is temporarily blocking user input to work on something"
+    },
+    "sortTooltip": "Сортування",
+    "sortOptionDialogTitle": "Сортувати за",
+    "@sortOptionDialogTitle": {
+        "description": "Select how the photos should be sorted"
+    },
+    "sortOptionTimeAscendingLabel": "Найстаріші",
+    "@sortOptionTimeAscendingLabel": {
+        "description": "Sort by time, in ascending order"
+    },
+    "sortOptionTimeDescendingLabel": "Найновіші",
+    "@sortOptionTimeDescendingLabel": {
+        "description": "Sort by time, in descending order"
+    },
+    "sortOptionFilenameAscendingLabel": "Назва файлу",
+    "@sortOptionFilenameAscendingLabel": {
+        "description": "Sort by filename, in ascending order"
+    },
+    "sortOptionFilenameDescendingLabel": "Назва файлу (за спаданням)",
+    "@sortOptionFilenameDescendingLabel": {
+        "description": "Sort by filename, in descending order"
+    },
+    "sortOptionAlbumNameLabel": "Назва альбому",
+    "@sortOptionAlbumNameLabel": {
+        "description": "Sort by album name, in ascending order"
+    },
+    "sortOptionAlbumNameDescendingLabel": "Назва альбому (за спаданням)",
+    "@sortOptionAlbumNameDescendingLabel": {
+        "description": "Sort by album name, in descending order"
+    },
+    "sortOptionManualLabel": "Посібник",
+    "@sortOptionManualLabel": {
+        "description": "Sort manually"
+    },
+    "albumEditDragRearrangeNotification": "Натисніть і утримуйте елемент, а потім перетягніть його, щоб змінити порядок вручну",
+    "@albumEditDragRearrangeNotification": {
+        "description": "Instructions on how to rearrange photos"
+    },
+    "albumAddTextTooltip": "Додати текст",
+    "@albumAddTextTooltip": {
+        "description": "Add some text that display between photos to an album"
+    },
+    "shareTooltip": "Поділитися",
+    "@shareTooltip": {
+        "description": "Share selected items to other apps"
+    },
+    "shareSelectedEmptyNotification": "Виберіть фото щоб поділитися",
+    "@shareSelectedEmptyNotification": {
+        "description": "Shown when user pressed the share button with only non-sharable items (e.g., text labels) selected"
+    },
+    "shareDownloadingDialogContent": "Завантаження ",
+    "@shareDownloadingDialogContent": {
+        "description": "Downloading photos to be shared"
+    },
+    "searchTooltip": "Пошук",
+    "clearTooltip": "Очистити",
+    "@clearTooltip": {
+        "description": "Clear some sort of user input, typically a text field"
+    },
+    "listNoResultsText": "Немає результатів ",
+    "@listNoResultsText": {
+        "description": "When there's nothing in a list"
+    },
+    "listEmptyText": "Пусто",
+    "@listEmptyText": {
+        "description": "When there's nothing in a list"
+    },
+    "albumTrashLabel": "Сміття",
+    "@albumTrashLabel": {
+        "description": "Deleted photos"
+    },
+    "restoreTooltip": "Відновити",
+    "@restoreTooltip": {
+        "description": "Restore selected items from trashbin"
+    },
+    "restoreSelectedProcessingNotification": "\t {count, plural, one{Restoring 1 item} other{Restoring {count} items}}",
+    "@restoreSelectedProcessingNotification": {
+        "description": "Restoring selected items from trashbin",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "restoreSelectedSuccessNotification": "Усі елементи успішно відновлено",
+    "@restoreSelectedSuccessNotification": {
+        "description": "Restored all selected items from trashbin successfully"
+    },
+    "restoreSelectedFailureNotification": "\t {count, plural, one{Failed restoring 1 item} other{Failed restoring {count} items}}",
+    "@restoreSelectedFailureNotification": {
+        "description": "Cannot restore some of the selected items from trashbin",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "restoreProcessingNotification": "Відновлення елементу",
+    "@restoreProcessingNotification": {
+        "description": "Restoring the opened item from trashbin"
+    },
+    "restoreSuccessNotification": "Успішно відновлено елемент",
+    "@restoreSuccessNotification": {
+        "description": "Restored the opened item from trashbin successfully"
+    },
+    "restoreFailureNotification": "Не вдалося відновити елемент",
+    "@restoreFailureNotification": {
+        "description": "Cannot restore the opened item from trashbin"
+    },
+    "deletePermanentlyTooltip": "Видалити назавжди",
+    "@deletePermanentlyTooltip": {
+        "description": "Permanently delete selected items from trashbin"
+    },
+    "deletePermanentlyConfirmationDialogTitle": "Видалити назавжди",
+    "@deletePermanentlyConfirmationDialogTitle": {
+        "description": "Make sure the user wants to delete the items"
+    },
+    "deletePermanentlyConfirmationDialogContent": "Вибрані елементи буде видалено з серверу назавжди. Цю дію неможливо скасувати",
+    "@deletePermanentlyConfirmationDialogContent": {
+        "description": "Make sure the user wants to delete the items"
+    },
+    "albumSharedLabel": "Поширено",
+    "@albumSharedLabel": {
+        "description": "A small label placed next to a shared album"
+    },
+    "metadataTaskProcessingNotification": "Обробка метаданих зображень у фоновому режимі",
+    "@metadataTaskProcessingNotification": {
+        "description": "Shown when the app is reading image metadata"
+    },
+    "configButtonLabel": "Конфігурація",
+    "useAsAlbumCoverTooltip": "Використовувати як обкладинку альбому",
+    "helpTooltip": "Допомога",
+    "helpButtonLabel": "Допомога",
+    "removeFromAlbumTooltip": "Виключити з альбому ",
+    "@removeFromAlbumTooltip": {
+        "description": "Remove the opened photo from an album"
+    },
+    "changelogTitle": "Історія змін",
+    "@changelogTitle": {
+        "description": "Title of the changelog page"
+    },
+    "serverCertErrorDialogTitle": "Сертифікату сервера не можна довіряти",
+    "@serverCertErrorDialogTitle": {
+        "description": "Title of the dialog to warn user about an untrusted SSL certificate"
+    },
+    "serverCertErrorDialogContent": "Сервер може бути зламаний або хтось намагається вкрасти ваші дані",
+    "@serverCertErrorDialogContent": {
+        "description": "Warn user about an untrusted SSL certificate"
+    },
+    "advancedButtonLabel": "Додатково",
+    "@advancedButtonLabel": {
+        "description": "Label of the advanced button"
+    },
+    "whitelistCertDialogTitle": "Довіряти невідомому сертифікату?",
+    "@whitelistCertDialogTitle": {
+        "description": "Title of the dialog to let user decide whether to whitelist an untrusted SSL certificate"
+    },
+    "whitelistCertDialogContent": "Ви можете додати цей сертифікат до довірених, щоб застосунок його приймав.\r\nУВАГА: це становить серйозний ризик для безпеки. Переконайтеся, що сертифікат є самопідписаним вами або виданий довіреною стороною\r\nХост: {host}\r\nВідбиток: {fingerprint}",
+    "@whitelistCertDialogContent": {
+        "description": "Let user decide whether to whitelist an untrusted SSL certificate",
+        "placeholders": {
+            "host": {
+                "example": "www.example.com"
+            },
+            "fingerprint": {
+                "example": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+            }
+        }
+    },
+    "whitelistCertButtonLabel": "Прийняти ризик і додати до довірених",
+    "@whitelistCertButtonLabel": {
+        "description": "Label of the whitelist certificate button"
+    },
+    "fileSharedByDescription": "Надіслано вам цим користувачем",
+    "@fileSharedByDescription": {
+        "description": "The app will show the owner of the file if it's being shared with you by others. The name of the owner is displayed above this line"
+    },
+    "emptyTrashbinTooltip": "Очистити смітник",
+    "@emptyTrashbinTooltip": {
+        "description": "Permanently delete all items from trashbin"
+    },
+    "emptyTrashbinConfirmationDialogTitle": "Очистити смітник ",
+    "@emptyTrashbinConfirmationDialogTitle": {
+        "description": "Make sure the user wants to delete all items"
+    },
+    "emptyTrashbinConfirmationDialogContent": "Всі елементи буде видалено з сервера назавжди. Цю дію буде неможливо скасувати",
+    "@emptyTrashbinConfirmationDialogContent": {
+        "description": "Make sure the user wants to delete all items"
+    },
+    "unsetAlbumCoverTooltip": "Прибрати обкладинку",
+    "@unsetAlbumCoverTooltip": {
+        "description": "Unset the cover of the opened album"
+    },
+    "muteTooltip": "Вимкнути звук",
+    "@muteTooltip": {
+        "description": "Mute the video player"
+    },
+    "unmuteTooltip": "Увімкнути звук",
+    "@unmuteTooltip": {
+        "description": "Unmute the video player"
+    },
+    "collectionPeopleLabel": "Люди",
+    "@collectionPeopleLabel": {
+        "description": "Browse photos grouped by person"
+    },
+    "slideshowTooltip": "Слайд-шоу ",
+    "@slideshowTooltip": {
+        "description": "A button to start a slideshow from the current collection"
+    },
+    "slideshowSetupDialogTitle": "Налаштувати слайд-шоу",
+    "@slideshowSetupDialogTitle": {
+        "description": "Set up slideshow before starting"
+    },
+    "slideshowSetupDialogDurationTitle": "Тривалість показу зображення (ХХ:СС)",
+    "@slideshowSetupDialogDurationTitle": {
+        "description": "Set the duration of each image in MM:SS format. This setting is ignored for videos"
+    },
+    "slideshowSetupDialogShuffleTitle": "Перемішати",
+    "@slideshowSetupDialogShuffleTitle": {
+        "description": "Whether to shuffle the collection"
+    },
+    "slideshowSetupDialogRepeatTitle": "Повторити",
+    "@slideshowSetupDialogRepeatTitle": {
+        "description": "Whether to restart the slideshow from the beginning after the last slide"
+    },
+    "slideshowSetupDialogReverseTitle": "Перевернути",
+    "@slideshowSetupDialogReverseTitle": {
+        "description": "Whether to play the slideshow in reverse order"
+    },
+    "linkCopiedNotification": "Посилання скопійовано ",
+    "@linkCopiedNotification": {
+        "description": "Copied the share link to clipboard"
+    },
+    "shareMethodDialogTitle": "Поширити як",
+    "@shareMethodDialogTitle": {
+        "description": "Let the user pick how they want to share"
+    },
+    "shareMethodPreviewTitle": "Попередній перегляд",
+    "@shareMethodPreviewTitle": {
+        "description": "Share the preview of a file"
+    },
+    "shareMethodPreviewDescription": "Надсилати зменшену копію зображення для попереднього перегляду в інших застосунках (лише зображення)",
+    "shareMethodOriginalFileTitle": "Оригінальний файл",
+    "@shareMethodOriginalFileTitle": {
+        "description": "Share the original file"
+    },
+    "shareMethodOriginalFileDescription": "Завантажити оригінальний файл і поділитися в інших додатках",
+    "shareMethodPublicLinkTitle": "Публічне посилання",
+    "@shareMethodPublicLinkTitle": {
+        "description": "Create a share link on server and share it"
+    },
+    "shareMethodPublicLinkDescription": "Створити нове публічне посилання. Всі, хто мають посилання мають доступ до файлу",
+    "shareMethodPasswordLinkTitle": "Посилання захищене паролем",
+    "@shareMethodPasswordLinkTitle": {
+        "description": "Create a password protected share link on server and share it"
+    },
+    "shareMethodPasswordLinkDescription": "Створити нове посилання захищене паролем",
+    "collectionSharingLabel": "Ділитися",
+    "@collectionSharingLabel": {
+        "description": "List items being shared by the current account"
+    },
+    "fileLastSharedDescription": "Останній раз поширено {date}",
+    "@fileLastSharedDescription": {
+        "description": "The date when this file was last shared by you",
+        "placeholders": {
+            "date": {
+                "example": "Jan 1, 2021",
+                "description": "The date string is formatted according to the current locale"
+            }
+        }
+    },
+    "fileLastSharedByOthersDescription": "\t {user} ділився/лась з Вами {date}",
+    "@fileLastSharedByOthersDescription": {
+        "description": "The date when this file was shared with you",
+        "placeholders": {
+            "user": {
+                "example": "Alice"
+            },
+            "date": {
+                "example": "Jan 1, 2021",
+                "description": "The date string is formatted according to the current locale"
+            }
+        }
+    },
+    "albumLastSharedByOthersDescription": "\t {user} ділився/лась альбомом з Вами {date}",
+    "@albumLastSharedByOthersDescription": {
+        "description": "The date when this album was shared with you",
+        "placeholders": {
+            "user": {
+                "example": "Alice"
+            },
+            "date": {
+                "example": "Jan 1, 2021",
+                "description": "The date string is formatted according to the current locale"
+            }
+        }
+    },
+    "sharedWithLabel": "Поділився/лась з",
+    "@sharedWithLabel": {
+        "description": "A list of users or links where this file is sharing with"
+    },
+    "unshareTooltip": "Прибрати доступ",
+    "@unshareTooltip": {
+        "description": "Remove a share"
+    },
+    "unshareSuccessNotification": "Скасований доступ",
+    "@unshareSuccessNotification": {
+        "description": "Removed a share"
+    },
+    "locationLabel": "Локація",
+    "@locationLabel": {
+        "description": "Show where the file is located"
+    },
+    "multipleFilesLinkShareDialogContent": "Nextcloud не підтримує посилання для спільного доступу до кількох файлів. Застосунок натомість СКОПІЮЄ файли в нову папку і поділиться вже цією папкою",
+    "@multipleFilesLinkShareDialogContent": {
+        "description": "Dialog shown when sharing multiple files as link"
+    },
+    "folderNameInputHint": "Назва папки",
+    "@folderNameInputHint": {
+        "description": "Input field for folder name"
+    },
+    "folderNameInputInvalidEmpty": "Будь ласка, введіть назву папки",
+    "@folderNameInputInvalidEmpty": {
+        "description": "Folder name cannot be left empty"
+    },
+    "folderNameInputInvalidCharacters": "Містить недопустимі елементи",
+    "@folderNameInputInvalidCharacters": {
+        "description": "Folder name contains characters that are not allowed"
+    },
+    "createShareProgressText": "Створення поширення",
+    "@createShareProgressText": {
+        "description": "Message shown when sharing files"
+    },
+    "copyItemsFailureNotification": "{count, plural, one{Failed copying 1 item} other{Failed copying {count} items}}",
+    "@copyItemsFailureNotification": {
+        "description": "Error message shown when some files cannot be copied",
+        "placeholders": {
+            "count": {
+                "example": "1"
+            }
+        }
+    },
+    "unshareLinkShareDirDialogTitle": "Видалити папку?",
+    "@unshareLinkShareDirDialogTitle": {
+        "description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
+    },
+    "unshareLinkShareDirDialogContent": "Цю папку створено застосунком для спільного доступу до кількох файлів через посилання. Наразі вона більше ні з ким не спільна. Видалити цю папку?",
+    "@unshareLinkShareDirDialogContent": {
+        "description": "Dialog shown after user unshared a dir originally created by the app to share multiple files"
+    },
+    "addToCollectionsViewTooltip": "Додати до колекції ",
+    "@addToCollectionsViewTooltip": {
+        "description": "Albums shared with you are not automatically added to the Collections view, unless you choose to do so, which is what this button does"
+    },
+    "shareAlbumDialogTitle": "Поділитися з користувачем",
+    "@shareAlbumDialogTitle": {
+        "description": "Dialog to share an album with another user"
+    },
+    "shareAlbumSuccessWithErrorNotification": "Альбом поширено для {user}, але не вдалося поділитися деякими файлами",
+    "@shareAlbumSuccessWithErrorNotification": {
+        "description": "Shared an album with another user successfully, but some files inside the album cannot be shared",
+        "placeholders": {
+            "user": {
+                "example": "Alice"
+            }
+        }
+    },
+    "unshareAlbumSuccessWithErrorNotification": "Спільний доступ до альбому скасовано для {user}, але не вдалося скасувати доступ до деяких файлам",
+    "@unshareAlbumSuccessWithErrorNotification": {
+        "description": "Unshared an album with another user successfully, but some files inside the album cannot be unshared",
+        "placeholders": {
+            "user": {
+                "example": "Alice"
+            }
+        }
+    },
+    "fixSharesTooltip": "Виправити спільний доступ",
+    "@fixSharesTooltip": {
+        "description": "Fix file shares in an album. Due to limitation of the server API, album and its files are shared separately, but they are both needed for shared album to work correctly. This button will attempt to synchronize them"
+    },
+    "fixTooltip": "Виправити",
+    "@fixTooltip": {
+        "description": "Fix an issue"
+    },
+    "fixAllTooltip": "Виправити все",
+    "@fixAllTooltip": {
+        "description": "Fix all listed issues"
+    },
+    "missingShareDescription": "Не поширено для {user}",
+    "@missingShareDescription": {
+        "description": "The album is shared with user but a file is NOT",
+        "placeholders": {
+            "user": {
+                "example": "Alice"
+            }
+        }
+    },
+    "extraShareDescription": "Поширено для {user}",
+    "@extraShareDescription": {
+        "description": "The album is NOT shared with user but a file is",
+        "placeholders": {
+            "user": {
+                "example": "Alice"
+            }
+        }
+    },
+    "defaultButtonLabel": "Стандарт",
+    "addUserInputHint": "Додати користувача",
+    "@addUserInputHint": {
+        "description": "Input a user name to share this album with"
+    },
+    "sharedAlbumInfoDialogTitle": "Створення спільного альбому",
+    "@sharedAlbumInfoDialogTitle": {
+        "description": "This dialog is shown when user first open a shared album"
+    },
+    "sharedAlbumInfoDialogContent": "Спільний альбом дозволяє кільком користувачам одного сервера отримувати доступ до одного й того самого альбому. Перш ніж продовжити, уважно ознайомтеся з обмеженнями",
+    "@sharedAlbumInfoDialogContent": {
+        "description": "This dialog is shown when user first open a shared album"
+    },
+    "learnMoreButtonLabel": "Дізнатися більше",
+    "migrateDatabaseProcessingNotification": "Оновлення бази даних",
+    "@migrateDatabaseProcessingNotification": {
+        "description": "Migrate database to work with the updated app"
+    },
+    "migrateDatabaseFailureNotification": "Не вдалося перенести базу даних",
+    "memoryAlbumName": "{count, plural, one{1 year ago} other{{count} years ago}}",
+    "@memoryAlbumName": {
+        "description": "Memory albums are generated by the app and include photos in the past years",
+        "placeholders": {
+            "count": {
+                "example": "2"
+            }
+        }
+    },
+    "homeFolderNotFoundDialogTitle": "Домашню папку не знайдено",
+    "@homeFolderNotFoundDialogTitle": {
+        "description": "The app failed to scan the user's home folder on signing in"
+    },
+    "homeFolderNotFoundDialogContent": "Будь ласка, виправте наведений нижче URL-адрес WebDAV. Його можна знайти у вебінтерфейсі Nextcloud",
+    "@homeFolderNotFoundDialogContent": {
+        "description": "Ask the user to provide us the correct WebDAV URL"
+    },
+    "homeFolderInputInvalidEmpty": "Будь ласка, введіть назву домашньої папки",
+    "@homeFolderInputInvalidEmpty": {
+        "description": "Home folder can't be left empty"
+    },
+    "createCollectionTooltip": "Нова колекція ",
+    "@createCollectionTooltip": {
+        "description": "Create a new collection. A collection can be an album, a folder, or something else in the future"
+    },
+    "createCollectionDialogAlbumLabel2": "Альбом на стороні клієнта",
+    "@createCollectionDialogAlbumLabel2": {
+        "description": "Create an album as collection"
+    },
+    "createCollectionDialogAlbumDescription2": "Альбом із додатковими функціями, доступний лише в цьому застосунку",
+    "@createCollectionDialogAlbumDescription2": {
+        "description": "Describe how an album collection works"
+    },
+    "createCollectionDialogFolderLabel": "Папка",
+    "@createCollectionDialogFolderLabel": {
+        "description": "Create a folder as collection"
+    },
+    "createCollectionDialogFolderDescription": "Показати фото у папці",
+    "@createCollectionDialogFolderDescription": {
+        "description": "Describe how a folder collection works"
+    },
+    "collectionFavoritesLabel": "Обране",
+    "@collectionFavoritesLabel": {
+        "description": "Browse photos added to favorites"
+    },
+    "favoriteTooltip": "Обране",
+    "@favoriteTooltip": {
+        "description": "Add photo to favorites"
+    },
+    "favoriteSuccessNotification": "Додано до обраного",
+    "@favoriteSuccessNotification": {
+        "description": "Successfully added photos to favorites"
+    },
+    "favoriteFailureNotification": "Не вдалося додати до обраного",
+    "@favoriteFailureNotification": {
+        "description": "Failed adding photos to favorites"
+    },
+    "unfavoriteTooltip": "Виключити з обраного",
+    "@unfavoriteTooltip": {
+        "description": "Remove photo to favorites"
+    },
+    "unfavoriteSuccessNotification": "Виключене з обраного",
+    "@unfavoriteSuccessNotification": {
+        "description": "Successfully removed photos from favorites"
+    },
+    "unfavoriteFailureNotification": "Не вдалося виключити з обраного",
+    "@unfavoriteFailureNotification": {
+        "description": "Failed removing photos from favorites"
+    },
+    "createCollectionDialogTagLabel": "Мітка",
+    "@createCollectionDialogTagLabel": {
+        "description": "Create a collection containing files with tags"
+    },
+    "createCollectionDialogTagDescription": "Показати фото зі спеціальними мітками",
+    "@createCollectionDialogTagDescription": {
+        "description": "Describe how a tag collection works"
+    },
+    "addTagInputHint": "Додати мітку",
+    "@addTagInputHint": {
+        "description": "Input a tag"
+    },
+    "tagPickerNoTagSelectedNotification": "Будь ласка, додайте хоча б одну мітку",
+    "@tagPickerNoTagSelectedNotification": {
+        "description": "At least 1 tag is required to create a tag collection. This error is shown when user try to create one without selecting any tags"
+    },
+    "backgroundServiceStopping": "Зупинка служби",
+    "@backgroundServiceStopping": {
+        "description": "The background service is stopping itself"
+    },
+    "metadataTaskPauseLowBatteryNotification": "Низька батарея",
+    "@metadataTaskPauseLowBatteryNotification": {
+        "description": "Shown when the app has paused reading image metadata due to low battery"
+    },
+    "enhanceTooltip": "Покращити",
+    "@enhanceTooltip": {
+        "description": "Enhance a photo"
+    },
+    "enhanceButtonLabel": "Покращити",
+    "enhanceIntroDialogTitle": "Покращити Ваші фото",
+    "enhanceIntroDialogDescription": "Ваші фотографії обробляються локально на вашому пристрої. За замовчуванням їхню роздільну здатність зменшено до 2048×1536. Ви можете змінити роздільну здатність результату в налаштуваннях",
+    "enhanceLowLightTitle": "Покращення знімків за слабкого освітлення ",
+    "@enhanceLowLightTitle": {
+        "description": "Enhance a photo taken in low-light environment"
+    },
+    "enhanceLowLightDescription": "Освітити ваші фотографії, зроблені в умовах слабкого освітлення",
+    "enhanceLowLightParamBrightnessLabel": "Яскравість",
+    "@enhanceLowLightParamBrightnessLabel": {
+        "description": "This parameter sets how much brighter the output will be"
+    },
+    "collectionEditedPhotosLabel": "Відредаговано (локально)",
+    "@collectionEditedPhotosLabel": {
+        "description": "List photos on your device that were modified by the app, via image enhancements or the image editor"
+    },
+    "deletePermanentlyLocalConfirmationDialogContent": "Вибрані зображення буде видалено з пристрою назавжди. Цю дію неможна скасувати",
+    "@deletePermanentlyLocalConfirmationDialogContent": {
+        "description": "Make sure the user wants to delete the items from the current device"
+    },
+    "enhancePortraitBlurTitle": "Потретне розмиття",
+    "@enhancePortraitBlurTitle": {
+        "description": "Blur the background of a photo"
+    },
+    "enhancePortraitBlurDescription": "Розмити задній фон ваших зображень, найкраще для портретів",
+    "enhancePortraitBlurParamBlurLabel": "Розмиття",
+    "@enhancePortraitBlurParamBlurLabel": {
+        "description": "This parameter sets the radius of the blur filter"
+    },
+    "enhanceSuperResolution4xTitle": "Суперроздільність (4х)",
+    "@enhanceSuperResolution4xTitle": {
+        "description": "Upscale an image. The algorithm implemented in the app will upscale to 4x the original resolution (eg, 100x100 to 400x400)"
+    },
+    "enhanceSuperResolution4xDescription": "Збільште роздільну здатність ваших фотографій у 4 рази від початкової (докладніше про обмеження максимальної роздільної здатності див. у розділі «Довідка»)",
+    "enhanceStyleTransferTitle": "Перенесення стилю",
+    "@enhanceStyleTransferTitle": {
+        "description": "Transfer the image style from a reference image to a photo"
+    },
+    "enhanceStyleTransferStyleDialogTitle": "Вибрати стиль",
+    "@enhanceStyleTransferStyleDialogTitle": {
+        "description": "Pick a reference image for the style transfer algorithm"
+    },
+    "enhanceStyleTransferStyleDialogDescription": "Перенести стиль з допоміжного зображення у ваше фото",
+    "enhanceStyleTransferNoStyleSelectedNotification": "Буль ласка, виберіть стиль ",
+    "@enhanceStyleTransferNoStyleSelectedNotification": {
+        "description": "Show this error if users did not pick a reference image"
+    },
+    "enhanceColorPopTitle": "Кольоровий акцент",
+    "@enhanceColorPopTitle": {
+        "description": "Desaturate the background of a photo"
+    },
+    "enhanceColorPopDescription": "Знебарвлюйте фон фотографій. Найкраще працює з портретами.",
+    "enhanceGenericParamWeightLabel": "Вага",
+    "@enhanceGenericParamWeightLabel": {
+        "description": "This generic parameter sets the weight of the applied effect. The effect will be more obvious when the weight is high."
+    },
+    "enhanceRetouchTitle": "Авто ретуш",
+    "@enhanceRetouchTitle": {
+        "description": "Automatically improve your photo"
+    },
+    "enhanceRetouchDescription": "Автоматично ретушуйте свої фотографії, покращуйте загальну передачу кольорів і насиченість",
+    "doubleTapExitNotification": "Натисніть знову щоби вийти",
+    "@doubleTapExitNotification": {
+        "description": "If double tap to exit is enabled in settings, shown when users tap the back button"
+    },
+    "imageEditDiscardDialogTitle": "Скасувати зміни?",
+    "@imageEditDiscardDialogTitle": {
+        "description": "Warn before dismissing image editor (e.g., user pressing back button)"
+    },
+    "imageEditDiscardDialogContent": "Ваші зміни не збережено",
+    "discardButtonLabel": "Скасувати",
+    "@discardButtonLabel": {
+        "description": "Discard the current unsaved content"
+    },
+    "saveTooltip": "Зберегти",
+    "@saveTooltip": {
+        "description": "Save the current content"
+    },
+    "imageEditDownloadDialogTitle": "Завантаження зображення з сервера…",
+    "imageEditProcessDialogTitle": "Обробка зображення...",
+    "imageEditSaveDialogTitle": "Збереження результату…",
+    "imageEditColorBrightness": "Яскравість",
+    "@imageEditColorBrightness": {
+        "description": "Adjust the brightness of an image"
+    },
+    "imageEditColorContrast": "Контраст",
+    "@imageEditColorContrast": {
+        "description": "Adjust the contrast of an image"
+    },
+    "imageEditColorWhitePoint": "Точка білого",
+    "@imageEditColorWhitePoint": {
+        "description": "Adjust the white point of an image. Learn more about this adjustment: https://www.photoreview.com.au/tips/editing/advanced-levels-adjustments"
+    },
+    "imageEditColorBlackPoint": "Точка чорного",
+    "@imageEditColorBlackPoint": {
+        "description": "Adjust the black point of an image"
+    },
+    "imageEditColorSaturation": "Насиченість",
+    "@imageEditColorSaturation": {
+        "description": "Adjust the color saturation of an image"
+    },
+    "imageEditColorWarmth": "Теплота",
+    "@imageEditColorWarmth": {
+        "description": "This roughly equals to adjusting the color temperature of an image. The end result is to shift the image colors such that it looks 'warmer' or 'cooler'"
+    },
+    "imageEditColorTint": "Тонування",
+    "@imageEditColorTint": {
+        "description": "Shift colors from a green to a magenta tint"
+    },
+    "imageEditTitle": "Попередній перегляд редагування",
+    "@imageEditTitle": {
+        "description": "Title of the image editor"
+    },
+    "imageEditToolbarColorLabel": "Колір",
+    "@imageEditToolbarColorLabel": {
+        "description": "Label of the color tools. These can be used to adjust the color of an image"
+    },
+    "imageEditToolbarTransformLabel": "Трансформація",
+    "@imageEditToolbarTransformLabel": {
+        "description": "Label of the transformation tools. These can be used to transform an image, e.g., rotate it"
+    },
+    "imageEditTransformOrientation": "Орієнтація",
+    "@imageEditTransformOrientation": {
+        "description": "Change the orientation of the image, 90 degree per step"
+    },
+    "imageEditTransformOrientationClockwise": "cw",
+    "@imageEditTransformOrientationClockwise": {
+        "description": "Indicate a clockwise rotation. This text must be short as there's only minimal space"
+    },
+    "imageEditTransformOrientationCounterclockwise": "ccw",
+    "@imageEditTransformOrientationCounterclockwise": {
+        "description": "Indicate a counterclockwise rotation. This text must be short as there's only minimal space"
+    },
+    "imageEditTransformCrop": "Обрізати",
+    "@imageEditTransformCrop": {
+        "description": "Crop the image"
+    },
+    "imageEditToolbarEffectLabel": "Ефект",
+    "imageEditEffectHalftone": "Полутон",
+    "imageEditEffectPixelation": "Пікселізація",
+    "imageEditEffectPosterization": "Постеризація",
+    "imageEditEffectSketch": "Ескіз",
+    "imageEditEffectToon": "Toon",
+    "imageEditEffectFace": "Обличчя",
+    "imageEditEffectParamEdge": "Контури",
+    "imageEditEffectParamColor": "Колір",
+    "imageEditEffectParamHatching": "Штрихування",
+    "@imageEditEffectParamHatching": {
+        "description": "Hatching is an artistic technique used to create shading and tonal effects by drawing closely spaced parallel lines"
+    },
+    "imageEditEffectParamJawline": "Щелепа",
+    "@imageEditEffectParamJawline": {
+        "description": "Adjust face jawline"
+    },
+    "imageEditEffectParamEyeSize": "Розмір очей",
+    "@imageEditEffectParamEyeSize": {
+        "description": "Adjust size of the eye"
+    },
+    "imageEditFaceDetectionRunningMessage": "Виявлення облич…",
+    "imageEditNoFaceDetected": "Облич не виявлено",
+    "imageEditFaceNotSelected": "Виберіть одне або кілька облич на своїх фотографіях, щоб застосувати ефекти",
+    "@imageEditFaceNotSelected": {
+        "description": "Shown when there are one or more detected faces but none of them is selected"
+    },
+    "imageEditResetSelectedFaceMessage": "Вибрані обличчя видаляються після коригування налаштувань трансформації зображення",
+    "@imageEditResetSelectedFaceMessage": {
+        "description": "Changing the image transformation will affect the result of face detection. This message is used to notify user to select the faces again afterwards"
+    },
+    "imageEditOpenErrorMessage": "Не вдалося відкрити файл",
+    "@imageEditOpenErrorMessage": {
+        "description": "Shown when app failed to open the image for editing"
+    },
+    "imageEditSaveErrorMessage": "Помилка при збереженні зображення ",
+    "@imageEditSaveErrorMessage": {
+        "description": "Shown when app failed to save the edited image"
+    },
+    "categoriesLabel": "Категорії ",
+    "searchLandingPeopleListEmptyText2": "Натисніть «Налаштування», щоб змінити постачальника, або «Допомога», щоб дізнатися більше",
+    "@searchLandingPeopleListEmptyText2": {
+        "description": "Shown in the search landing page under the People section when there are no people"
+    },
+    "searchLandingCategoryVideosLabel": "Відео",
+    "@searchLandingCategoryVideosLabel": {
+        "description": "Search all videos"
+    },
+    "searchFilterButtonLabel": "Фільтри",
+    "@searchFilterButtonLabel": {
+        "description": "Modify search filters"
+    },
+    "searchFilterDialogTitle": "Пошук фільтрів",
+    "@searchFilterDialogTitle": {
+        "description": "Dialog to modify search filters"
+    },
+    "applyButtonLabel": "Застосувати ",
+    "@applyButtonLabel": {
+        "description": "A confirmation button, typically in a dialog, that apply the current settings"
+    },
+    "searchFilterOptionAnyLabel": "Всі",
+    "@searchFilterOptionAnyLabel": {
+        "description": "This is the default option for all search filters. Filters with this value will be ignored"
+    },
+    "searchFilterOptionTrueLabel": "True",
+    "@searchFilterOptionTrueLabel": {
+        "description": "Positive option for a boolean filter"
+    },
+    "searchFilterOptionFalseLabel": "False",
+    "@searchFilterOptionFalseLabel": {
+        "description": "Negative option for a boolean filter"
+    },
+    "searchFilterTypeLabel": "Тип",
+    "@searchFilterTypeLabel": {
+        "description": "Filter search results by file type"
+    },
+    "searchFilterTypeOptionImageLabel": "Зображення ",
+    "@searchFilterTypeOptionImageLabel": {
+        "description": "Filter search results by file type"
+    },
+    "searchFilterBubbleTypeImageText": "Зображення ",
+    "@searchFilterBubbleTypeImageText": {
+        "description": "List of active search filters shown in the result page (by file type, image)"
+    },
+    "searchFilterTypeOptionVideoLabel": "Відео",
+    "@searchFilterTypeOptionVideoLabel": {
+        "description": "Filter search results by file type"
+    },
+    "searchFilterBubbleTypeVideoText": "Відео",
+    "@searchFilterBubbleTypeVideoText": {
+        "description": "List of active search filters shown in the result page (by file type, video)"
+    },
+    "searchFilterFavoriteLabel": "Обране",
+    "@searchFilterFavoriteLabel": {
+        "description": "Filter search results by whether it's in favorites"
+    },
+    "searchFilterBubbleFavoriteTrueText": "Обрані",
+    "@searchFilterBubbleFavoriteTrueText": {
+        "description": "List of active search filters shown in the result page (by favorites, true)"
+    },
+    "searchFilterBubbleFavoriteFalseText": "Не обрані",
+    "@searchFilterBubbleFavoriteFalseText": {
+        "description": "List of active search filters shown in the result page (by favorites, false)"
+    },
+    "showAllButtonLabel": "Показати всі",
+    "@showAllButtonLabel": {
+        "description": "A button to show all items of a certain item group (e.g., show all recognized faces)"
+    },
+    "gpsPlaceText": "Поряд {place}",
+    "@gpsPlaceText": {
+        "description": "The estimated place where a photo was taken at. The place could be a town, a city, an administrative region, or a country.",
+        "placeholders": {
+            "place": []
+        }
+    },
+    "gpsPlaceAboutDialogTitle": "Про місце",
+    "@gpsPlaceAboutDialogTitle": {
+        "description": "Warn about the inaccurate nature of our offline reverse geocoding feature (i.e., converting coordinates into addresses)"
+    },
+    "gpsPlaceAboutDialogContent": "Позначене тут місце є лише приблизним і не гарантує точності. Воно не відображає нашу позицію щодо будь-яких спірних територій",
+    "@gpsPlaceAboutDialogContent": {
+        "description": "Warn about the inaccurate nature of our offline reverse geocoding feature (i.e., converting coordinates into addresses)"
+    },
+    "collectionPlacesLabel": "Місця",
+    "@collectionPlacesLabel": {
+        "description": "Browse photos grouped by place"
+    },
+    "imageSaveOptionDialogTitle": "Зберегти результат",
+    "@imageSaveOptionDialogTitle": {
+        "description": "This dialog asks users to choose between saving the edited/enhanced result on the device or server"
+    },
+    "imageSaveOptionDialogContent": "Виберіть місце для збереження цього та майбутніх оброблених зображень. Якщо ви вибрали сервер, але програмі не вдалося завантажити на нього файл, його буде збережено на вашому пристрої",
+    "@imageSaveOptionDialogContent": {
+        "description": "This dialog asks users to choose between saving the edited/enhanced result on the device or server"
+    },
+    "imageSaveOptionDialogDeviceButtonLabel": "Пристрій",
+    "@imageSaveOptionDialogDeviceButtonLabel": {
+        "description": "Save the image on the current device"
+    },
+    "imageSaveOptionDialogServerButtonLabel": "Сервер",
+    "@imageSaveOptionDialogServerButtonLabel": {
+        "description": "Save the image on your Nextcloud server"
+    },
+    "initialSyncMessage": "Синхронізація з вашим сервером вперше",
+    "@initialSyncMessage": {
+        "description": "After adding a new account, the app need to sync with the server before showing anything. This message will be shown on screen instead with a proper progress bar and the folder being synced."
+    },
+    "loopTooltip": "Петля",
+    "@loopTooltip": {
+        "description": "Enable or disable loop in the video player"
+    },
+    "createCollectionFailureNotification": "Не вдалося створити колекцію ",
+    "@createCollectionFailureNotification": {
+        "description": "Inform user that a collection cannot be created"
+    },
+    "addItemToCollectionTooltip": "Додати до колекції",
+    "@addItemToCollectionTooltip": {
+        "description": "Add one or more items to a collection"
+    },
+    "addItemToCollectionFailureNotification": "Не вдалося додати до колекції ",
+    "@addItemToCollectionFailureNotification": {
+        "description": "Inform user that the item cannot be added to a collection"
+    },
+    "setCollectionCoverFailureNotification": "Не вдалося встановити обкладинку колекції ",
+    "@setCollectionCoverFailureNotification": {
+        "description": "Cannot set the opened item as the collection cover"
+    },
+    "exportCollectionTooltip": "Експортувати",
+    "@exportCollectionTooltip": {
+        "description": "Export an arbitrary Collection (typical one with generated contents) as a new static Collection"
+    },
+    "exportCollectionDialogTitle": "Експортувати колекцію",
+    "createCollectionDialogNextcloudAlbumLabel2": "Серверний альбом",
+    "@createCollectionDialogNextcloudAlbumLabel2": {
+        "description": "Server-side albums that are available in Nextcloud 25+"
+    },
+    "createCollectionDialogNextcloudAlbumDescription2": "Створити альбом на сервері, доступний у будь-якому додатку",
+    "removeCollectionsFailedNotification": "Не вдалося виключити деякі колекції ",
+    "accountSettingsTooltip": "Налаштування акаунту",
+    "contributorsTooltip": "Учасники",
+    "setAsTooltip": "Встановити як",
+    "@setAsTooltip": {
+        "description": "e.g., set as wallpaper"
+    },
+    "deleteAccountConfirmDialogText": "Ви збираєтеся вийти з {server}",
+    "@deleteAccountConfirmDialogText": {
+        "description": "Confirmation dialog when deleting an account (i.e., signing out)",
+        "placeholders": {
+            "server": {
+                "example": "http://www.example.com"
+            }
+        }
+    },
+    "appLockUnlockHint": "Розблокувати додаток",
+    "@appLockUnlockHint": {
+        "description": "Unlock app via selected means (e.g., password) in case app lock is enabled by user"
+    },
+    "appLockUnlockWrongPassword": "Невірний пароль",
+    "@appLockUnlockWrongPassword": {
+        "description": "Unlock app via selected means (e.g., password) in case app lock is enabled by user"
+    },
+    "enabledText": "Увімкнено",
+    "disabledText": "Вимкнено",
+    "trustedCertManagerPageTitle": "Довірені сертифікат",
+    "@trustedCertManagerPageTitle": {
+        "description": "A page to manage trusted certificates"
+    },
+    "trustedCertManagerAlreadyTrustedError": "Вже довірено",
+    "@trustedCertManagerAlreadyTrustedError": {
+        "description": "The selected cert has been trusted already"
+    },
+    "trustedCertManagerSelectServer": "Вибрати HTTPS сервер",
+    "@trustedCertManagerSelectServer": {
+        "description": "Select a server from the account list"
+    },
+    "trustedCertManagerNoHttpsServerError": "Сервера не доступні",
+    "@trustedCertManagerNoHttpsServerError": {
+        "description": "There's no HTTPS server in the account list"
+    },
+    "trustedCertManagerFailedToRemoveCertError": "Не вдалося видалити сертифікат ",
+    "missingVideoThumbnailHelpDialogTitle": "Виникли проблеми з мініатюрами відео?",
+    "dontShowAgain": "Не показувати більше",
+    "mapBrowserDateRangeLabel": "Діапазон дат",
+    "@mapBrowserDateRangeLabel": {
+        "description": "Filter photos by date range"
+    },
+    "mapBrowserDateRangeThisMonth": "Цього місяця",
+    "mapBrowserDateRangePrevMonth": "Минулого місяця ",
+    "mapBrowserDateRangeThisYear": "Цього року",
+    "mapBrowserDateRangeCustom": "Налаштувати",
+    "homeTabMapBrowser": "Мапа",
+    "mapBrowserSetDefaultDateRangeButton": "Встановити за замовчуванням ",
+    "todayText": "Сьогодні",
+    "livePhotoTooltip": "Живе фото",
+    "dragAndDropRearrangeButtons": "Перетягніть, щоб змінити порядок кнопок",
+    "@dragAndDropRearrangeButtons": {
+        "description": "Instruction to customize buttons layout"
+    },
+    "customizeCollectionsNavBarDescription": "Перетягніть, щоб змінити порядок кнопок, торкніться кнопок вище, щоб згорнути їх",
+    "@customizeCollectionsNavBarDescription": {
+        "description": "Instruction to customize navigation bar buttons in the Collections page"
+    },
+    "customizeButtonsUnsupportedWarning": "Цю кнопку не можна налаштувати",
+    "@customizeButtonsUnsupportedWarning": {
+        "description": "Some button can't be removed. This message will be shown instead when user try to do so"
+    },
+    "placePickerTitle": "Виберіть місце",
+    "albumAddMapTooltip": "Додати мапу",
+    "@albumAddMapTooltip": {
+        "description": "Add a map that display between photos to an album"
+    },
+    "fileNotFound": "Файл не знайдено",
+    "signInViaNextcloudLoginFlowV2": "Через Nextcloud Login Flow v2",
+    "signInViaUsernamePassword": "Через ім'я користувача або пароль",
+    "fileOnDevice": "На пристрої",
+    "@fileOnDevice": {
+        "description": "Local files on your device"
+    },
+    "fileOnCloud": "У хмарі",
+    "@fileOnCloud": {
+        "description": "Filed uploaded to your Nextcloud server"
+    },
+    "uploadTooltip": "Завантажити ",
+    "@uploadTooltip": {
+        "description": "Upload files to your Nextcloud server"
+    },
+    "uploadFolderPickerTitle": "Завантажити до",
+    "@uploadFolderPickerTitle": {
+        "description": "Pick a folder on your server where the files will be uploaded to"
+    },
+    "opOnlySupportRemoteFiles": "Ця функція підтримує лише віддалені файли на вашому сервері Nextcloud. Будь-які вибрані локальні файли ігноруються",
+    "@opOnlySupportRemoteFiles": {
+        "description": "While it's possible to select both remote and local files in timeline, some features only work with one kind of them. We'll show this warning when user selected a mixture of files and tried to perform a remote only action"
+    },
+    "opOnlySupportLocalFiles": "Ця функція підтримує лише локальні файли на вашому пристрої. Будь-які вибрані віддалені файли ігноруються.",
+    "@opOnlySupportLocalFiles": {
+        "description": "While it's possible to select both remote and local files in timeline, some features only work with one kind of them. We'll show this warning when user selected a mixture of files and tried to perform a local only action"
+    },
+    "uploadDialogPath": "Шлях",
+    "@uploadDialogPath": {
+        "description": "Upload path"
+    },
+    "uploadDialogBatchConvert": "Пакетне перетворення ",
+    "@uploadDialogBatchConvert": {
+        "description": "Batch convert files"
+    },
+    "uploadBatchConvertWarningText1": "Ваші фотографії будуть стиснуті перед завантаженням на сервер",
+    "uploadBatchConvertWarningText2": "Фотографії з рухом НЕ підтримуються, і вони будуть завантажені як нерухомі зображення.",
+    "uploadBatchConvertWarningText3": "Деякі метадані можуть бути змінені або видалені.",
+    "uploadBatchConvertWarningText4": "Підтримувані вихідні формати: JPEG, PNG, WEBP, BMP, HEIC",
+    "uploadBatchConvertSettings": "Налаштування конверсії",
+    "uploadBatchConvertSettingsFormat": "Формат",
+    "@uploadBatchConvertSettingsFormat": {
+        "description": "Image format"
+    },
+    "uploadBatchConvertSettingsQuality": "Якість",
+    "uploadBatchConvertSettingsDownscaling": "Зменшення масштабу",
+    "viewerLastPageText": "Більше фотографій немає",
+    "deleteMergedFileDialogServerOnlyButton": "Лише сервер",
+    "@deleteMergedFileDialogServerOnlyButton": {
+        "description": "Remove the file from server but keep the device copy"
+    },
+    "deleteMergedFileDialogLocalOnlyButton": "Лише пристрій",
+    "@deleteMergedFileDialogLocalOnlyButton": {
+        "description": "Remove the file from device but keep the server copy"
+    },
+    "deleteMergedFileDialogBothButton": "Обидва ",
+    "@deleteMergedFileDialogBothButton": {
+        "description": "Remove the file from device and server"
+    },
+    "deleteMergedFileDialogContent": "Деякі файли існують як на вашому сервері, так і на вашому пристрої. Звідки нам слід видалити ці файли?",
+    "deleteSingleMergedFileDialogContent": "Файл існує як на вашому сервері, так і на вашому пристрої. Звідки нам видалити цей файл?",
+    "collectionAddItemTitle": "Куди вставити елемент?",
+    "@collectionAddItemTitle": {
+        "description": "When adding an item to a collection, ask the user where should we insert it to"
+    },
+    "greetingsMorning": "Доброго ранку, {user}",
+    "@greetingsMorning": {
+        "placeholders": {
+            "user": {
+                "example": "alice"
+            }
+        }
+    },
+    "greetingsAfternoon": "Добрий день, {user}",
+    "@greetingsAfternoon": {
+        "placeholders": {
+            "user": {
+                "example": "alice"
+            }
+        }
+    },
+    "greetingsNight": "Доброго вечора, {user}",
+    "@greetingsNight": {
+        "placeholders": {
+            "user": {
+                "example": "alice"
+            }
+        }
+    },
+    "recognizeInstructionDialogTitle": "Налаштування, необхідне для інтеграції Recognize",
+    "recognizeInstructionDialogContent": "Починаючи з Nextcloud 33, для підтримки Recognize потрібен серверний застосунок.",
+    "recognizeInstructionDialogButton": "Відкрити путівник",
+    "editMetadataWriteProgressTitle": "Завантаження файлу",
+    "@editMetadataWriteProgressTitle": {
+        "description": "Title of the progress dialog when uploading the file after editing its metadata"
+    },
+    "addLocationTitle": "Додати локацію",
+    "metadataEditBackupNotification": "Оригінальний файл збережено як {backup}",
+    "@metadataEditBackupNotification": {
+        "description": "Original file is backed up before editing its metadata",
+        "placeholders": {
+            "backup": {
+                "example": "IMG_123456789.jpg_original"
+            }
+        }
+    },
+    "errorUnauthenticated": "Неавторизований доступ. Будь ласка, увійдіть ще раз, якщо проблема не зникне",
+    "@errorUnauthenticated": {
+        "description": "Error message when server responds with HTTP401"
+    },
+    "errorDisconnected": "Не вдається підключитися. Сервер може бути офлайн або ваш пристрій може бути відключений",
+    "@errorDisconnected": {
+        "description": "Error message when the app can't connect to the server"
+    },
+    "errorLocked": "Файл заблоковано на сервері. Спробуйте пізніше",
+    "@errorLocked": {
+        "description": "Error message when server responds with HTTP423"
+    },
+    "errorInvalidBaseUrl": "Не вдалося зв’язатися. Переконайтеся, що адреса є базовою URL-адресою вашого екземпляра Nextcloud",
+    "@errorInvalidBaseUrl": {
+        "description": "Error message when the base URL is invalid"
+    },
+    "errorWrongPassword": "Не вдалося автентифікувати. Будь ласка, перевірте ім'я користувача та пароль",
+    "@errorWrongPassword": {
+        "description": "Error message when the username or password is wrong"
+    },
+    "errorServerError": "Помилка сервера. Переконайтеся, що сервер налаштовано правильно",
+    "@errorServerError": {
+        "description": "HTTP 500"
+    },
+    "errorAlbumDowngrade": "Неможливо змінити цей альбом, оскільки його було створено пізнішою версією цього додатка. Оновіть додаток і повторіть спробу",
+    "@errorAlbumDowngrade": {
+        "description": "Album files are versioned. Overwriting a newer version is disallowed as it will lead to unexpected data loss"
+    },
+    "errorNoStoragePermission": "Потрібен дозвіл на доступ до сховища",
+    "@errorNoStoragePermission": {
+        "description": "Missing permission on Android"
+    },
+    "errorServerNoCert": "Сертифікат сервера не знайдено. Спробувати HTTP?",
+    "@errorServerNoCert": {
+        "description": "No cert to establish HTTPS connection"
+    }
+}
