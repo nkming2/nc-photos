@@ -16,10 +16,6 @@
 	"@zoomTooltip": {
 		"description": "Tooltip of the zoom button"
 	},
-	"refreshMenuLabel": "Refrescar",
-	"@refreshMenuLabel": {
-		"description": "Label of the refresh entry in menu"
-	},
 	"settingsMenuLabel": "Configuració",
 	"@settingsMenuLabel": {
 		"description": "Label of the settings entry in menu"
@@ -59,15 +55,6 @@
 	"@archiveTooltip": {
 		"description": "Archive selected items"
 	},
-	"archiveSelectedProcessingNotification": "{count, plural, one{Arxivant 1 element} other{Arxivant {count} elements}}",
-	"@archiveSelectedProcessingNotification": {
-		"description": "Archiving the selected items",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
 	"archiveSelectedSuccessNotification": "Elements arxivats correctament",
 	"@archiveSelectedSuccessNotification": {
 		"description": "Archived all selected items successfully"
@@ -85,15 +72,6 @@
 	"@unarchiveTooltip": {
 		"description": "Unarchive selected items"
 	},
-	"unarchiveSelectedProcessingNotification": "{count, plural, one{Desarxivant 1 element} other{Desarxivant {count}  elements}}",
-	"@unarchiveSelectedProcessingNotification": {
-		"description": "Unarchiving selected items",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
 	"unarchiveSelectedSuccessNotification": "Elements desarxivats correctament",
 	"@unarchiveSelectedSuccessNotification": {
 		"description": "Unarchived all selected items successfully"
@@ -110,10 +88,6 @@
 	"deleteTooltip": "Eliminar",
 	"@deleteTooltip": {
 		"description": "Delete selected items"
-	},
-	"deleteProcessingNotification": "Eliminant element",
-	"@deleteProcessingNotification": {
-		"description": "Inform user that the item is being deleted"
 	},
 	"deleteSuccessNotification": "Element eliminat correctament",
 	"@deleteSuccessNotification": {
@@ -273,14 +247,6 @@
 	"settingsExifSupportTrueSubtitle": "Requereix un ús extra de la xarxa",
 	"@settingsExifSupportTrueSubtitle": {
 		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
-	},
-	"settingsExifWifiOnlyTitle": "Processa l'EXIF només a través de WiFi",
-	"@settingsExifWifiOnlyTitle": {
-		"description": "Whether to only process EXIF data when connected to a Wi-Fi network"
-	},
-	"settingsExifWifiOnlyFalseSubtitle": "Es poden aplicar càrrecs",
-	"@settingsExifWifiOnlyFalseSubtitle": {
-		"description": "Shown when users allow processing exif data over any network"
 	},
 	"settingsMemoriesTitle": "Memories",
 	"@settingsMemoriesTitle": {

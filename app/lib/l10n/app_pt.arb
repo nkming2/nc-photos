@@ -16,10 +16,6 @@
 	"@zoomTooltip": {
 		"description": "Tooltip of the zoom button"
 	},
-	"refreshMenuLabel": "Atualizar",
-	"@refreshMenuLabel": {
-		"description": "Label of the refresh entry in menu"
-	},
 	"settingsMenuLabel": "Configurações",
 	"@settingsMenuLabel": {
 		"description": "Label of the settings entry in menu"
@@ -59,15 +55,6 @@
 	"@archiveTooltip": {
 		"description": "Archive selected items"
 	},
-	"archiveSelectedProcessingNotification": "{count, plural, =1{Arquivando 1 item} other{Arquivando {count} itens}}",
-	"@archiveSelectedProcessingNotification": {
-		"description": "Archiving the selected items",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
 	"archiveSelectedSuccessNotification": "Todos os itens foram arquivados com sucesso",
 	"@archiveSelectedSuccessNotification": {
 		"description": "Archived all selected items successfully"
@@ -85,15 +72,6 @@
 	"@unarchiveTooltip": {
 		"description": "Unarchive selected items"
 	},
-	"unarchiveSelectedProcessingNotification": "{count, plural, =1{Desarquivando 1 item} other{Desarquivando {count} itens}}",
-	"@unarchiveSelectedProcessingNotification": {
-		"description": "Unarchiving selected items",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
 	"unarchiveSelectedSuccessNotification": "Todos os itens foram desarquivados com sucesso",
 	"@unarchiveSelectedSuccessNotification": {
 		"description": "Unarchived all selected items successfully"
@@ -110,10 +88,6 @@
 	"deleteTooltip": "Apagar",
 	"@deleteTooltip": {
 		"description": "Delete selected items"
-	},
-	"deleteProcessingNotification": "Apagando item",
-	"@deleteProcessingNotification": {
-		"description": "Inform user that the item is being deleted"
 	},
 	"deleteSuccessNotification": "Item apagado com sucesso",
 	"@deleteSuccessNotification": {
@@ -269,14 +243,6 @@
 	"settingsExifSupportTrueSubtitle": "Requer consumo de dados elevado",
 	"@settingsExifSupportTrueSubtitle": {
 		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
-	},
-	"settingsExifWifiOnlyTitle": "Processar EXIF somente pelo Wi-Fi",
-	"@settingsExifWifiOnlyTitle": {
-		"description": "Whether to only process EXIF data when connected to a Wi-Fi network"
-	},
-	"settingsExifWifiOnlyFalseSubtitle": "Pode consumir dados móveis",
-	"@settingsExifWifiOnlyFalseSubtitle": {
-		"description": "Shown when users allow processing exif data over any network"
 	},
 	"settingsMemoriesTitle": "Memórias",
 	"@settingsMemoriesTitle": {
@@ -436,10 +402,6 @@
 	"enableButtonLabel": "HABILITADO",
 	"@enableButtonLabel": {
 		"description": "Label of the enable button"
-	},
-	"exifSupportDetails": "Ativar o suporte ao EXIF vai disponibilizar vários metadados como data de captura, modelo da câmera etc. Para ler estes metadados, um consumo de dados de internet extra é necessário para acessar a imagem em tamanho original. O aplicativo só baixa quando conectado ao Wi-Fi.",
-	"@exifSupportDetails": {
-		"description": "Detailed description of the exif support feature"
 	},
 	"captureLogDetails": "Para reportar bugs:\n\n1. Ative essa configuração\n2. Reproduza o problema\n3. Desative essa configuração\n4. Procure por nc-photos.log na pasta de download\n\n*Se o bug fizer que o app trave, nenhum log será gravado. Nesse caso, por gentileza contacte o desenvolvedor do app para instruções adicionais",
 	"@captureLogDetails": {
@@ -714,10 +676,6 @@
 	"metadataTaskProcessingNotification": "Processando metadados das imagens em segundo plano",
 	"@metadataTaskProcessingNotification": {
 		"description": "Shown when the app is reading image metadata"
-	},
-	"metadataTaskPauseNoWiFiNotification": "Esperando por conexão Wi-Fi",
-	"@metadataTaskPauseNoWiFiNotification": {
-		"description": "Shown when the app has paused reading image metadata"
 	},
 	"configButtonLabel": "CONFIGURAÇÃO",
 	"useAsAlbumCoverTooltip": "Use como capa de álbum",

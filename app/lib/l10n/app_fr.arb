@@ -16,10 +16,6 @@
 	"@zoomTooltip": {
 		"description": "Tooltip of the zoom button"
 	},
-	"refreshMenuLabel": "Rafraîchir",
-	"@refreshMenuLabel": {
-		"description": "Label of the refresh entry in menu"
-	},
 	"settingsMenuLabel": "Paramètres",
 	"@settingsMenuLabel": {
 		"description": "Label of the settings entry in menu"
@@ -59,15 +55,6 @@
 	"@archiveTooltip": {
 		"description": "Archive selected items"
 	},
-	"archiveSelectedProcessingNotification": "{count, plural, =1{Archivage de 1 élément} other{Archivage de {count} éléments}}",
-	"@archiveSelectedProcessingNotification": {
-		"description": "Archiving the selected items",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
 	"archiveSelectedSuccessNotification": "Tous les éléments ont été archivés avec succès",
 	"@archiveSelectedSuccessNotification": {
 		"description": "Archived all selected items successfully"
@@ -85,15 +72,6 @@
 	"@unarchiveTooltip": {
 		"description": "Unarchive selected items"
 	},
-	"unarchiveSelectedProcessingNotification": "{count, plural, =1{Désarchivage de 1 élément} other{Désarchivage de {count} éléments}}",
-	"@unarchiveSelectedProcessingNotification": {
-		"description": "Unarchiving selected items",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
 	"unarchiveSelectedSuccessNotification": "Tous les éléments ont été désarchivés avec succès",
 	"@unarchiveSelectedSuccessNotification": {
 		"description": "Unarchived all selected items successfully"
@@ -110,10 +88,6 @@
 	"deleteTooltip": "Supprimer",
 	"@deleteTooltip": {
 		"description": "Delete selected items"
-	},
-	"deleteProcessingNotification": "Suppression de l'élément",
-	"@deleteProcessingNotification": {
-		"description": "Inform user that the item is being deleted"
 	},
 	"deleteSuccessNotification": "Élément supprimé avec succès",
 	"@deleteSuccessNotification": {
@@ -273,14 +247,6 @@
 	"settingsExifSupportTrueSubtitle": "Demande une utilisation plus intense du réseau",
 	"@settingsExifSupportTrueSubtitle": {
 		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
-	},
-	"settingsExifWifiOnlyTitle": "Ne traîter les fichier EXIF que lorsque connecté au Wifi",
-	"@settingsExifWifiOnlyTitle": {
-		"description": "Whether to only process EXIF data when connected to a Wi-Fi network"
-	},
-	"settingsExifWifiOnlyFalseSubtitle": "Des frais supplémentaires peuvent s'appliquer",
-	"@settingsExifWifiOnlyFalseSubtitle": {
-		"description": "Shown when users allow processing exif data over any network"
 	},
 	"settingsMemoriesTitle": "Souvenirs",
 	"@settingsMemoriesTitle": {
@@ -444,10 +410,6 @@
 	"enableButtonLabel": "ACTIVER",
 	"@enableButtonLabel": {
 		"description": "Label of the enable button"
-	},
-	"exifSupportDetails": "L'activation de la prise en charge EXIF ​​rendra diverses métadonnées disponibles, telles que la date de prise de vue, le modèle de l'appareil photo, etc. Afin de lire ces métadonnées, une utilisation supplémentaire du réseau est requise pour télécharger l'image originale en taille réelle. L'application ne commencera à télécharger qu'une fois connectée à un réseau Wi-Fi",
-	"@exifSupportDetails": {
-		"description": "Detailed description of the exif support feature"
 	},
 	"captureLogDetails": "Pour prendre des logs pour un rapport de bug :\n\n1. Activez ce paramètre\n2. Reproduisez le problème\n3. Désactivez ce paramètre\n4. Recherchez nc-photos.log dans le dossier de téléchargement\n\n*Si le problème provoque le blocage de l'application, aucun log ne peut être capturé. Dans ce cas, veuillez contacter le développeur pour plus d'instructions",
 	"@captureLogDetails": {
@@ -722,10 +684,6 @@
 	"metadataTaskProcessingNotification": "Traitement des métadonnées de l'image en arrière-plan",
 	"@metadataTaskProcessingNotification": {
 		"description": "Shown when the app is reading image metadata"
-	},
-	"metadataTaskPauseNoWiFiNotification": "En attente du Wi-Fi",
-	"@metadataTaskPauseNoWiFiNotification": {
-		"description": "Shown when the app has paused reading image metadata"
 	},
 	"configButtonLabel": "CONFIGURER",
 	"useAsAlbumCoverTooltip": "Utiliser comme couverture d'album",
@@ -1540,10 +1498,6 @@
 		"description": "Server-side albums that are available in Nextcloud 25+"
 	},
 	"createCollectionDialogNextcloudAlbumDescription2": "Créez un album sur votre serveur, accessible avec n'importe quelle application",
-	"alternativeSignIn": "Connectez-vous plutôt avec votre nom d'utilisateur et votre mot de passe",
-	"@alternativeSignIn": {
-		"description": "Sign in using username and password instead of the recommended Nextcloud login flow"
-	},
 	"livePhotoTooltip": "Photo en direct",
 	"dragAndDropRearrangeButtons": "Faites un glisser-déposer pour réorganiser les boutons",
 	"@dragAndDropRearrangeButtons": {

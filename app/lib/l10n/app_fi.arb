@@ -16,10 +16,6 @@
 	"@zoomTooltip": {
 		"description": "Tooltip of the zoom button"
 	},
-	"refreshMenuLabel": "Päivitä",
-	"@refreshMenuLabel": {
-		"description": "Label of the refresh entry in menu"
-	},
 	"settingsMenuLabel": "Asetukset",
 	"@settingsMenuLabel": {
 		"description": "Label of the settings entry in menu"
@@ -59,15 +55,6 @@
 	"@archiveTooltip": {
 		"description": "Archive selected items"
 	},
-	"archiveSelectedProcessingNotification": "{count, plural, =1{Arkistoi 1 kohdetta} other{Arkistoi {count} kohdetta}}",
-	"@archiveSelectedProcessingNotification": {
-		"description": "Archiving the selected items",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
 	"archiveSelectedSuccessNotification": "Kaikki valitut kohteet arkistoitu",
 	"@archiveSelectedSuccessNotification": {
 		"description": "Archived all selected items successfully"
@@ -85,15 +72,6 @@
 	"@unarchiveTooltip": {
 		"description": "Unarchive selected items"
 	},
-	"unarchiveSelectedProcessingNotification": "{count, plural, =1{ 1 kohteen arkistointia perutaan} other{{count} kohteen arkistointia perutaan}}",
-	"@unarchiveSelectedProcessingNotification": {
-		"description": "Unarchiving selected items",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
 	"unarchiveSelectedSuccessNotification": "Kaikkien kohteiden arkistointi peruttu",
 	"@unarchiveSelectedSuccessNotification": {
 		"description": "Unarchived all selected items successfully"
@@ -110,10 +88,6 @@
 	"deleteTooltip": "Poista",
 	"@deleteTooltip": {
 		"description": "Delete selected items"
-	},
-	"deleteProcessingNotification": "Poistetaan kohdetta",
-	"@deleteProcessingNotification": {
-		"description": "Inform user that the item is being deleted"
 	},
 	"deleteSuccessNotification": "Kohde poistettu",
 	"@deleteSuccessNotification": {
@@ -273,14 +247,6 @@
 	"settingsExifSupportTrueSubtitle": "Vaatii ylimääräistä verkon käyttöä",
 	"@settingsExifSupportTrueSubtitle": {
 		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
-	},
-	"settingsExifWifiOnlyTitle": "Prosessoi tiedostoja vain kun WIFI-yhteys on käytettävissä",
-	"@settingsExifWifiOnlyTitle": {
-		"description": "Whether to only process EXIF data when connected to a Wi-Fi network"
-	},
-	"settingsExifWifiOnlyFalseSubtitle": "Toimenpiteestä voi aiheutua data-maksuja",
-	"@settingsExifWifiOnlyFalseSubtitle": {
-		"description": "Shown when users allow processing exif data over any network"
 	},
 	"settingsMemoriesTitle": "Muistot",
 	"@settingsMemoriesTitle": {
@@ -444,10 +410,6 @@
 	"enableButtonLabel": "OTA KÄYTTÖÖN",
 	"@enableButtonLabel": {
 		"description": "Label of the enable button"
-	},
-	"exifSupportDetails": "EXIF-tuen käyttöönotto tuo metadatasta lisätietoa kuten, kuvauspäivämäärä, kameramalli jne. Jotta sovellus voi lukea metadataa, käyttää se enemmän verkkoa täysikokoisten kuvien lataamista varten. Sovellus lataa ainoastaan Wi-Fi verkossa.",
-	"@exifSupportDetails": {
-		"description": "Detailed description of the exif support feature"
 	},
 	"captureLogDetails": "Lokitietojen tallenusta varten:\n\n1. Ota tämä asetus käyttöön\n2. Toista ongelma\n3. Poista tämä asetus käytöstä\n4. Etsi nc-photos.log -tiedosto latauskansiosta\n\n*Mikäli ongelma kaataa sovelluksen, lokitiedostoja ei pystytä tallentamaan. Tässä tapauksessa ota yhteyttä kehittäjään lisätietoja varten.",
 	"@captureLogDetails": {
@@ -722,10 +684,6 @@
 	"metadataTaskProcessingNotification": "Prosessoidaan kuvien metadataa taustalla",
 	"@metadataTaskProcessingNotification": {
 		"description": "Shown when the app is reading image metadata"
-	},
-	"metadataTaskPauseNoWiFiNotification": "Odotetaan WiFi:ä",
-	"@metadataTaskPauseNoWiFiNotification": {
-		"description": "Shown when the app has paused reading image metadata"
 	},
 	"configButtonLabel": "ASETUS",
 	"useAsAlbumCoverTooltip": "Use as album cover",

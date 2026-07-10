@@ -16,10 +16,6 @@
 	"@zoomTooltip": {
 		"description": "Tooltip of the zoom button"
 	},
-	"refreshMenuLabel": "重新整理",
-	"@refreshMenuLabel": {
-		"description": "Label of the refresh entry in menu"
-	},
 	"settingsMenuLabel": "設定",
 	"@settingsMenuLabel": {
 		"description": "Label of the settings entry in menu"
@@ -59,15 +55,6 @@
 	"@archiveTooltip": {
 		"description": "Archive selected items"
 	},
-	"archiveSelectedProcessingNotification": "{count, plural, other{正在封存 {count} 個項目}}",
-	"@archiveSelectedProcessingNotification": {
-		"description": "Archiving the selected items",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
 	"archiveSelectedSuccessNotification": "成功封存所有項目",
 	"@archiveSelectedSuccessNotification": {
 		"description": "Archived all selected items successfully"
@@ -85,15 +72,6 @@
 	"@unarchiveTooltip": {
 		"description": "Unarchive selected items"
 	},
-	"unarchiveSelectedProcessingNotification": "{count, plural, other{正在取消封存 {count} 個項目}}",
-	"@unarchiveSelectedProcessingNotification": {
-		"description": "Unarchiving selected items",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
 	"unarchiveSelectedSuccessNotification": "成功取消封存所有項目",
 	"@unarchiveSelectedSuccessNotification": {
 		"description": "Unarchived all selected items successfully"
@@ -110,10 +88,6 @@
 	"deleteTooltip": "刪除",
 	"@deleteTooltip": {
 		"description": "Delete selected items"
-	},
-	"deleteProcessingNotification": "正在刪除",
-	"@deleteProcessingNotification": {
-		"description": "Inform user that the item is being deleted"
 	},
 	"deleteSuccessNotification": "成功刪除",
 	"@deleteSuccessNotification": {
@@ -348,10 +322,6 @@
 	"enableButtonLabel": "啟用",
 	"@enableButtonLabel": {
 		"description": "Label of the enable button"
-	},
-	"exifSupportDetails": "啟用 EXIF 支援功能將使 App 可以讀取相片中的中繼資料 (metadata)，例如拍照日期、相機型號等等，而為了讀取這些資料，App 需要額外的網絡用量從伺服器下載完整的檔案。App 只會在裝置連接 WiFi 網絡的時候才會下載。",
-	"@exifSupportDetails": {
-		"description": "Detailed description of the exif support feature"
 	},
 	"captureLogDetails": "如需記錄事件日誌以匯報問題:\n\n1. 啟用本設定\n2. 重現一次你遇到的問題\n3. 禁用本設定\n4. 在裝置的下載資料夾尋找 nc-photos.log 檔案\n\n*此功能不支援使 App 強制關閉的問題，如遇此種情況，請直接聯絡開發者",
 	"@captureLogDetails": {
@@ -618,10 +588,6 @@
 	"metadataTaskProcessingNotification": "正在背景讀取相片的中繼資料",
 	"@metadataTaskProcessingNotification": {
 		"description": "Shown when the app is reading image metadata"
-	},
-	"metadataTaskPauseNoWiFiNotification": "正在等候 WiFi 網絡",
-	"@metadataTaskPauseNoWiFiNotification": {
-		"description": "Shown when the app has paused reading image metadata"
 	},
 	"configButtonLabel": "設定",
 	"useAsAlbumCoverTooltip": "設為相簿封面",

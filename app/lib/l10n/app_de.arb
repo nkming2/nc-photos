@@ -16,10 +16,6 @@
 	"@zoomTooltip": {
 		"description": "Tooltip of the zoom button"
 	},
-	"refreshMenuLabel": "Aktualisieren",
-	"@refreshMenuLabel": {
-		"description": "Label of the refresh entry in menu"
-	},
 	"settingsMenuLabel": "Einstellungen",
 	"@settingsMenuLabel": {
 		"description": "Label of the settings entry in menu"
@@ -59,15 +55,6 @@
 	"@archiveTooltip": {
 		"description": "Archive selected items"
 	},
-	"archiveSelectedProcessingNotification": "{count, plural, =1{Archiviere 1 Element} other{Archiviere {count} Elemente}}",
-	"@archiveSelectedProcessingNotification": {
-		"description": "Archiving the selected items",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
 	"archiveSelectedSuccessNotification": "Alle Elemente wurden erfolgreich archiviert",
 	"@archiveSelectedSuccessNotification": {
 		"description": "Archived all selected items successfully"
@@ -85,15 +72,6 @@
 	"@unarchiveTooltip": {
 		"description": "Unarchive selected items"
 	},
-	"unarchiveSelectedProcessingNotification": "{count, plural, =1{1 Element dearchivieren} other{{count} Element dearchivieren}}",
-	"@unarchiveSelectedProcessingNotification": {
-		"description": "Unarchiving selected items",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
 	"unarchiveSelectedSuccessNotification": "Alle Elemente erfolgreich dearchiviert",
 	"@unarchiveSelectedSuccessNotification": {
 		"description": "Unarchived all selected items successfully"
@@ -110,10 +88,6 @@
 	"deleteTooltip": "Löschen",
 	"@deleteTooltip": {
 		"description": "Delete selected items"
-	},
-	"deleteProcessingNotification": "Lösche Element",
-	"@deleteProcessingNotification": {
-		"description": "Inform user that the item is being deleted"
 	},
 	"deleteSuccessNotification": "Element erfolgreich gelöscht",
 	"@deleteSuccessNotification": {
@@ -273,14 +247,6 @@
 	"settingsExifSupportTrueSubtitle": "Erfordert zusätzliche Netzwerknutzung",
 	"@settingsExifSupportTrueSubtitle": {
 		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
-	},
-	"settingsExifWifiOnlyTitle": "EXIF nur über WLAN verarbeiten",
-	"@settingsExifWifiOnlyTitle": {
-		"description": "Whether to only process EXIF data when connected to a Wi-Fi network"
-	},
-	"settingsExifWifiOnlyFalseSubtitle": "Es können Datengebühren anfallen",
-	"@settingsExifWifiOnlyFalseSubtitle": {
-		"description": "Shown when users allow processing exif data over any network"
 	},
 	"settingsMemoriesTitle": "Erinnerungen",
 	"@settingsMemoriesTitle": {
@@ -444,10 +410,6 @@
 	"enableButtonLabel": "AKTIVIEREN",
 	"@enableButtonLabel": {
 		"description": "Label of the enable button"
-	},
-	"exifSupportDetails": "Durch Aktivieren der EXIF-Unterstützung werden verschiedene Metadaten wie Aufnahmedatum, Kameramodell usw. verfügbar gemacht. Um diese Metadaten zu lesen, ist eine zusätzliche Netzwerknutzung erforderlich, um das Originalbild in voller Größe herunterzuladen. Die App wird nur herunterladen, wenn sie mit einem Wi-Fi-Netzwerk verbunden ist",
-	"@exifSupportDetails": {
-		"description": "Detailed description of the exif support feature"
 	},
 	"captureLogDetails": "So erstellen Sie Protokolle für einen Fehlerbericht:\n\n1. Aktivieren Sie diese Einstellung\n2. Reproduzieren Sie das Problem\n3. Deaktivieren Sie diese Einstellung\n4. Suchen Sie im Download-Ordner nach nc-photos.log\n\n*Wenn das Problem zum Absturz der App führt, konnten keine Protokolle erfasst werden. In diesem Fall wenden Sie sich bitte an den Entwickler, um weitere Anweisungen zu erhalten",
 	"@captureLogDetails": {
@@ -722,10 +684,6 @@
 	"metadataTaskProcessingNotification": "Bildmetadaten im Hintergrund verarbeiten",
 	"@metadataTaskProcessingNotification": {
 		"description": "Shown when the app is reading image metadata"
-	},
-	"metadataTaskPauseNoWiFiNotification": "Warten auf WLAN",
-	"@metadataTaskPauseNoWiFiNotification": {
-		"description": "Shown when the app has paused reading image metadata"
 	},
 	"configButtonLabel": "KONFIGURATION",
 	"useAsAlbumCoverTooltip": "Als Albumcover verwenden",
@@ -1513,10 +1471,6 @@
 	"mapBrowserSetDefaultDateRangeButton": "Als Standardwert setzen",
 	"todayText": "Heute",
 	"settingsCollectionsCustomizeNavigationBarTitle": "Navigationsleiste anpassen",
-	"alternativeSignIn": "Stattdessen mit Nutzername und Passwort anmelden",
-	"@alternativeSignIn": {
-		"description": "Sign in using username and password instead of the recommended Nextcloud login flow"
-	},
 	"dragAndDropRearrangeButtons": "Ziehen um Buttons neu anzuordnen",
 	"@dragAndDropRearrangeButtons": {
 		"description": "Instruction to customize buttons layout"

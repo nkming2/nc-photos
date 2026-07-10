@@ -16,10 +16,6 @@
 	"@zoomTooltip": {
 		"description": "Tooltip of the zoom button"
 	},
-	"refreshMenuLabel": "Aggiorna",
-	"@refreshMenuLabel": {
-		"description": "Label of the refresh entry in menu"
-	},
 	"settingsMenuLabel": "Impostazioni",
 	"@settingsMenuLabel": {
 		"description": "Label of the settings entry in menu"
@@ -59,15 +55,6 @@
 	"@archiveTooltip": {
 		"description": "Archive selected items"
 	},
-	"archiveSelectedProcessingNotification": "{count, plural, one{Archiviando 1 elemento} other {Archiviando {count} elementi}}",
-	"@archiveSelectedProcessingNotification": {
-		"description": "Archiving the selected items",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
 	"archiveSelectedSuccessNotification": "Tutti gli elementi sono stati archiviati con successo",
 	"@archiveSelectedSuccessNotification": {
 		"description": "Archived all selected items successfully"
@@ -85,15 +72,6 @@
 	"@unarchiveTooltip": {
 		"description": "Unarchive selected items"
 	},
-	"unarchiveSelectedProcessingNotification": "{count, plural, one {1 elemento ripristinato} other {{count} elementi ripristinati}}",
-	"@unarchiveSelectedProcessingNotification": {
-		"description": "Unarchiving selected items",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
 	"unarchiveSelectedSuccessNotification": "Tutti gli elementi sono stati rimossi dall'archivio con successo",
 	"@unarchiveSelectedSuccessNotification": {
 		"description": "Unarchived all selected items successfully"
@@ -110,10 +88,6 @@
 	"deleteTooltip": "Elimina",
 	"@deleteTooltip": {
 		"description": "Delete selected items"
-	},
-	"deleteProcessingNotification": "Eliminazione elemento in corso",
-	"@deleteProcessingNotification": {
-		"description": "Inform user that the item is being deleted"
 	},
 	"deleteSuccessNotification": "Elemento cancellato correttamente",
 	"@deleteSuccessNotification": {
@@ -274,14 +248,6 @@
 	"@settingsExifSupportTrueSubtitle": {
 		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
 	},
-	"settingsExifWifiOnlyTitle": "Processa EXIF solo attraverso Wi-Fi",
-	"@settingsExifWifiOnlyTitle": {
-		"description": "Whether to only process EXIF data when connected to a Wi-Fi network"
-	},
-	"settingsExifWifiOnlyFalseSubtitle": "Potrebbero essere applicati costi relativi al traffico dati",
-	"@settingsExifWifiOnlyFalseSubtitle": {
-		"description": "Shown when users allow processing exif data over any network"
-	},
 	"settingsMemoriesTitle": "Ricordi",
 	"@settingsMemoriesTitle": {
 		"description": "Memory albums contain photos taken in a specific time range in the past"
@@ -440,10 +406,6 @@
 	"enableButtonLabel": "ABILITA",
 	"@enableButtonLabel": {
 		"description": "Label of the enable button"
-	},
-	"exifSupportDetails": "Abilitare il supporto EXIF renderà disponibili vari metadati come la data dello scatto, il modello della macchinetta fotografica, ecc... Per leggere questi metadati verranno utilizzato maggiori dati per scaricare la foto a piena scala. L'app comincerà a scaricare solo quando connessa a una rete Wi-Fi",
-	"@exifSupportDetails": {
-		"description": "Detailed description of the exif support feature"
 	},
 	"captureLogDetails": "Per registrare un log per riportare un bug:\n\n1. Abilita questa opzione\n2. Riproduci il problema\n3. Disabilita questa opzione\n4. Cerca il file nc-photos.log nella cartella Download\n\n* Non sarà generaro alcun log se il problema causa il crash dell'app. In questo caso contatta gli sviluppatori per avere ulteriori istruzioni",
 	"@captureLogDetails": {
@@ -718,10 +680,6 @@
 	"metadataTaskProcessingNotification": "Processando i metadati delle immagini in background",
 	"@metadataTaskProcessingNotification": {
 		"description": "Shown when the app is reading image metadata"
-	},
-	"metadataTaskPauseNoWiFiNotification": "In attesa di Wi-Fi",
-	"@metadataTaskPauseNoWiFiNotification": {
-		"description": "Shown when the app has paused reading image metadata"
 	},
 	"configButtonLabel": "CONFIGURAZIONE",
 	"useAsAlbumCoverTooltip": "Usa come copertina dell'album",

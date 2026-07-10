@@ -16,10 +16,6 @@
 	"@zoomTooltip": {
 		"description": "Tooltip of the zoom button"
 	},
-	"refreshMenuLabel": "Ανανέωση",
-	"@refreshMenuLabel": {
-		"description": "Label of the refresh entry in menu"
-	},
 	"settingsMenuLabel": "Ρυθμίσεις",
 	"@settingsMenuLabel": {
 		"description": "Label of the settings entry in menu"
@@ -59,15 +55,6 @@
 	"@archiveTooltip": {
 		"description": "Archive selected items"
 	},
-	"archiveSelectedProcessingNotification": "{count, plural, =1{Αρχειοθέτηση 1 αντικειμένου} other{Αρχειοθέτηση {count} αντικειμένων}}",
-	"@archiveSelectedProcessingNotification": {
-		"description": "Archiving the selected items",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
 	"archiveSelectedSuccessNotification": "Επιτυχής αρχειοθέτηση όλων των αντικειμένων",
 	"@archiveSelectedSuccessNotification": {
 		"description": "Archived all selected items successfully"
@@ -85,15 +72,6 @@
 	"@unarchiveTooltip": {
 		"description": "Unarchive selected items"
 	},
-	"unarchiveSelectedProcessingNotification": "{count, plural, =1{Αποαρχειοθέτηση 1 αντικειμένου} other{Αποαρχειοθέτηση {count} αντικειμένων}}",
-	"@unarchiveSelectedProcessingNotification": {
-		"description": "Unarchiving selected items",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
 	"unarchiveSelectedSuccessNotification": "Επιτυχής αποαρχειοθέτηση όλων των αντικειμένων",
 	"@unarchiveSelectedSuccessNotification": {
 		"description": "Unarchived all selected items successfully"
@@ -110,10 +88,6 @@
 	"deleteTooltip": "Διαγραφή",
 	"@deleteTooltip": {
 		"description": "Delete selected items"
-	},
-	"deleteProcessingNotification": "Διαγραφή αντικειμένου",
-	"@deleteProcessingNotification": {
-		"description": "Inform user that the item is being deleted"
 	},
 	"deleteSuccessNotification": "Επιτυχής διαγραφή αντικειμένου",
 	"@deleteSuccessNotification": {
@@ -354,10 +328,6 @@
 	"enableButtonLabel": "ΕΝΕΡΓΟΠΟΙΗΣΗ",
 	"@enableButtonLabel": {
 		"description": "Label of the enable button"
-	},
-	"exifSupportDetails": "Ενεργοποιώντας την υποστήριξη EXIF διάφορα μεταδεδομένα όπως ημερομηνία λήψης, μοντέλο κάμερας θα γίνουν διαθέσιμα. Για την ανάγνωση αυτών των μεταδεδομένων, απαιτείται επιπλέον χρήση δικτύου για τη λήψη της αρχικής εικόνας πλήρους μεγέθους. Η εφαρμογή θα ξεκινήσει τη λήψη μόνο όταν είναι συνδεδεμένη σε δίκτυο Wi-Fi",
-	"@exifSupportDetails": {
-		"description": "Detailed description of the exif support feature"
 	},
 	"captureLogDetails": "Για τη λήψη αρχείων καταγραφής για μια αναφορά σφαλμάτων:\n\n1. Ενεργοποιήστε αυτήν τη ρύθμιση\n2. Αναπαράγετε το πρόβλημα\n3. Απενεργοποιήστε αυτήν τη ρύθμιση\n4. Αναζητήστε το nc-photos.log στο φάκελο λήψης\n\n*Εάν το πρόβλημα προκαλεί τη διακοπή λειτουργίας της εφαρμογής, δεν είναι δυνατή η λήψη αρχείων καταγραφής. Σε αυτήν την περίπτωση, επικοινωνήστε με τον προγραμματιστή για περαιτέρω οδηγίες",
 	"@captureLogDetails": {
@@ -632,10 +602,6 @@
 	"metadataTaskProcessingNotification": "Επεξεργασία μεταδεδομένων εικόνας στο παρασκήνιο",
 	"@metadataTaskProcessingNotification": {
 		"description": "Shown when the app is reading image metadata"
-	},
-	"metadataTaskPauseNoWiFiNotification": "Αναμονή για WiFi",
-	"@metadataTaskPauseNoWiFiNotification": {
-		"description": "Shown when the app has paused reading image metadata"
 	},
 	"configButtonLabel": "ΔΙΑΜΟΡΦΩΣΗ",
 	"useAsAlbumCoverTooltip": "Χρήση ως εξώφυλλο άλμπουμ",

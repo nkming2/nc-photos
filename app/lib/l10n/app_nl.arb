@@ -16,10 +16,6 @@
 	"@zoomTooltip": {
 		"description": "Tooltip of the zoom button"
 	},
-	"refreshMenuLabel": "Ververs",
-	"@refreshMenuLabel": {
-		"description": "Label of the refresh entry in menu"
-	},
 	"settingsMenuLabel": "Instellingen",
 	"@settingsMenuLabel": {
 		"description": "Label of the settings entry in menu"
@@ -40,10 +36,6 @@
 	"archiveTooltip": "Archief",
 	"@archiveTooltip": {
 		"description": "Archive selected items"
-	},
-	"deleteProcessingNotification": "Verwijder item",
-	"@deleteProcessingNotification": {
-		"description": "Inform user that the item is being deleted"
 	},
 	"deleteSuccessNotification": "Item succesvol verwijderd",
 	"@deleteSuccessNotification": {

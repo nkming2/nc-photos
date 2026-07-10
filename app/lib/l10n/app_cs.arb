@@ -16,10 +16,6 @@
 	"@zoomTooltip": {
 		"description": "Tooltip of the zoom button"
 	},
-	"refreshMenuLabel": "Obnovit",
-	"@refreshMenuLabel": {
-		"description": "Label of the refresh entry in menu"
-	},
 	"settingsMenuLabel": "Nastavení",
 	"@settingsMenuLabel": {
 		"description": "Label of the settings entry in menu"
@@ -59,15 +55,6 @@
 	"@archiveTooltip": {
 		"description": "Archive selected items"
 	},
-	"archiveSelectedProcessingNotification": "{count, plural, =1{Archivace 1 položky} other{Archivace {count} položek}}",
-	"@archiveSelectedProcessingNotification": {
-		"description": "Archiving the selected items",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
 	"archiveSelectedSuccessNotification": "Všechny položky úspěšně archivovány",
 	"@archiveSelectedSuccessNotification": {
 		"description": "Archived all selected items successfully"
@@ -85,15 +72,6 @@
 	"@unarchiveTooltip": {
 		"description": "Unarchive selected items"
 	},
-	"unarchiveSelectedProcessingNotification": "{count, plural, =1{Rušení archivace 1 položky} other{Rušení archivace {count} položek}}",
-	"@unarchiveSelectedProcessingNotification": {
-		"description": "Unarchiving selected items",
-		"placeholders": {
-			"count": {
-				"example": "1"
-			}
-		}
-	},
 	"unarchiveSelectedSuccessNotification": "Všechny položky úspěšně odebrány z archivu",
 	"@unarchiveSelectedSuccessNotification": {
 		"description": "Unarchived all selected items successfully"
@@ -110,10 +88,6 @@
 	"deleteTooltip": "Odstranit",
 	"@deleteTooltip": {
 		"description": "Delete selected items"
-	},
-	"deleteProcessingNotification": "Mazání položky",
-	"@deleteProcessingNotification": {
-		"description": "Inform user that the item is being deleted"
 	},
 	"deleteSuccessNotification": "Položka úspěšně odstraněna",
 	"@deleteSuccessNotification": {
@@ -273,14 +247,6 @@
 	"settingsExifSupportTrueSubtitle": "Bude používat více dat",
 	"@settingsExifSupportTrueSubtitle": {
 		"description": "Subtitle of the EXIF support setting when the value is true. The goal is to warn user about the possible side effects of enabling this setting"
-	},
-	"settingsExifWifiOnlyTitle": "Zpracovávat EXIF pouze přes Wi-Fi",
-	"@settingsExifWifiOnlyTitle": {
-		"description": "Whether to only process EXIF data when connected to a Wi-Fi network"
-	},
-	"settingsExifWifiOnlyFalseSubtitle": "Mohou být účtovány poplatky za přenos dat",
-	"@settingsExifWifiOnlyFalseSubtitle": {
-		"description": "Shown when users allow processing exif data over any network"
 	},
 	"settingsMemoriesTitle": "Vzpomínky",
 	"@settingsMemoriesTitle": {
@@ -444,10 +410,6 @@
 	"enableButtonLabel": "POVOLIT",
 	"@enableButtonLabel": {
 		"description": "Label of the enable button"
-	},
-	"exifSupportDetails": "Povolením podpory EXIF se zpřístupní různá metadata, jako je datum pořízení, model fotoaparátu atd. Aby bylo možné tato metadata přečíst, je nutné dodatečné využití sítě ke stažení původního snímku v plné velikosti. Aplikace začne stahovat pouze po připojení k síti Wi-Fi",
-	"@exifSupportDetails": {
-		"description": "Detailed description of the exif support feature"
 	},
 	"captureLogDetails": "Pořízení záznamů pro hlášení chyby:\n\n1. Povolte toto nastavení\n2. Reprodukujte problém\n3. Zakažte toto nastavení\n4. Vyhledejte soubor nc-photos.log ve složce stahování\n\n*Pokud problém způsobí pád aplikace, nelze pořídit žádné protokoly. V takovém případě se obraťte na vývojáře, který vám poskytne další pokyny",
 	"@captureLogDetails": {
@@ -722,10 +684,6 @@
 	"metadataTaskProcessingNotification": "Zpracovávání metadat obrázků na pozadí",
 	"@metadataTaskProcessingNotification": {
 		"description": "Shown when the app is reading image metadata"
-	},
-	"metadataTaskPauseNoWiFiNotification": "Čekání na Wi-Fi",
-	"@metadataTaskPauseNoWiFiNotification": {
-		"description": "Shown when the app has paused reading image metadata"
 	},
 	"configButtonLabel": "NASTAVENÍ",
 	"useAsAlbumCoverTooltip": "Použít jako obal alba",
@@ -1540,10 +1498,6 @@
 		"description": "Server-side albums that are available in Nextcloud 25+"
 	},
 	"createCollectionDialogNextcloudAlbumDescription2": "Vytvořte album na svém serveru, které bude dostupné s jakoukoli aplikací",
-	"alternativeSignIn": "Místo toho se přihlásit jménem a heslem",
-	"@alternativeSignIn": {
-		"description": "Sign in using username and password instead of the recommended Nextcloud login flow"
-	},
 	"livePhotoTooltip": "Živá fotka",
 	"dragAndDropRearrangeButtons": "Přesuňte tlačítka pro změnu jejich pořadí",
 	"@dragAndDropRearrangeButtons": {
