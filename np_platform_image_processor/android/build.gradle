@@ -46,7 +46,7 @@ android {
     buildTypes {
         all {
             ndk.abiFilters.clear()
-            ndk.abiFilters.addAll(["armeabi-v7a", "arm64-v8a"])
+            ndk.abiFilters.addAll(["arm64-v8a"])
         }
    		release {
    			minifyEnabled false

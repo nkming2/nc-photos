@@ -60,7 +60,7 @@ android {
     buildTypes {
         all {
             ndk.abiFilters.clear()
-            ndk.abiFilters.addAll(["armeabi-v7a", "arm64-v8a"])
+            ndk.abiFilters.addAll(["arm64-v8a"])
         }
         release {
             signingConfig signingConfigs.release
@@ -84,15 +84,6 @@ android {
         dev {
             dimension "version"
             applicationIdSuffix ".dev"
-        }
-    }
-
-    splits {
-        abi {
-            enable true
-            reset()
-            include "armeabi-v7a", "arm64-v8a"
-            universalApk true
         }
     }
 
