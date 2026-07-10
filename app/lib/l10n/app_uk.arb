@@ -1416,7 +1416,7 @@
     "@gpsPlaceText": {
         "description": "The estimated place where a photo was taken at. The place could be a town, a city, an administrative region, or a country.",
         "placeholders": {
-            "place": []
+            "place": {}
         }
     },
     "gpsPlaceAboutDialogTitle": "Про місце",
