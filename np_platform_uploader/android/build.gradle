@@ -65,13 +65,15 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17
-    }
-
     dependencies {
         implementation 'com.nkming.nc_photos.np_android_core:np_android_core'
         // we use the libjxl binaries from this package
         implementation 'io.github.awxkee:jxl-coder:2.5.2'
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
     }
 }
