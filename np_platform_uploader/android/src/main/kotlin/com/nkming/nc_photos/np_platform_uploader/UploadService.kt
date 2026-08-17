@@ -64,8 +64,17 @@ internal class UploadService : Service(), CoroutineScope by MainScope() {
     override fun onCreate() {
         logI(TAG, "[onCreate] Service created")
         super.onCreate()
-        wakeLock.acquire()
         createNotificationChannel()
+        try {
+            ServiceCompat.startForeground(
+                this, K.FG_SERVICE_NOTIFICATION_ID, buildNotification(),
+                FOREGROUND_SERVICE_TYPE_DATA_SYNC
+            )
+        } catch (e: Throwable) {
+            // ???
+            logE(TAG, "[onCreate] Failed while startForeground", e)
+        }
+        wakeLock.acquire()
         cleanUp()
     }
 
@@ -91,18 +100,6 @@ internal class UploadService : Service(), CoroutineScope by MainScope() {
                 }
             }
             return START_STICKY
-        }
-        if (!isForeground) {
-            try {
-                ServiceCompat.startForeground(
-                    this, K.FG_SERVICE_NOTIFICATION_ID, buildNotification(),
-                    FOREGROUND_SERVICE_TYPE_DATA_SYNC
-                )
-                isForeground = true
-            } catch (e: Throwable) {
-                // ???
-                logE(TAG, "[onStartCommand] Failed while startForeground", e)
-            }
         }
         doWork(intent)
         return START_STICKY
