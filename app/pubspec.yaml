@@ -31,7 +31,7 @@ dependencies:
   android_intent_plus:
     git:
       url: https://github.com/nc-photos/plus_plugins.git
-      ref: android_intent_plus-v3.1.1-nc-photos-2
+      ref: android_intent_plus-v5.3.1-nc-photos-1
       path: packages/android_intent_plus
   battery_plus: ^6.2.2
   bloc_concurrency: ^0.2.5
@@ -54,7 +54,7 @@ dependencies:
       path: copy_with
       ref: copy_with-3.0.0
   crypto: ^3.0.3
-  devicelocale: ^0.7.1
+  devicelocale: ^0.9.1
   device_info_plus: ^10.1.2
   draggable_scrollbar:
     git:
@@ -78,7 +78,7 @@ dependencies:
   flutter_bloc: ^8.1.5
   flutter_cache_manager: any
   flutter_colorpicker: ^1.1.0
-  flutter_displaymode: ^0.6.0
+  flutter_displaymode: ^0.7.0
   flutter_isolate: ^2.0.4
   flutter_local_notifications: ^21.0.0
   flutter_secure_storage: ^9.2.2
@@ -192,7 +192,7 @@ dependencies:
   video_player_platform_interface:
   # later versions broken with flutter 3.22, do not upgrade
   visibility_detector: 0.3.3
-  wakelock_plus: ^1.1.1
+  wakelock_plus: ^1.5.2
   woozy_search: ^2.0.3
   workmanager:
     git:
