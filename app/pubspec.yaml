@@ -18,8 +18,8 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.91.1+91010
 
 environment:
-  sdk: ">=3.10.0"
-  flutter: ">=3.38.0"
+  sdk: ">=3.11.0"
+  flutter: ">=3.41.0"
 
 dependencies:
   flutter:
@@ -31,7 +31,7 @@ dependencies:
   android_intent_plus:
     git:
       url: https://github.com/nc-photos/plus_plugins.git
-      ref: android_intent_plus-v3.1.1-nc-photos-2
+      ref: android_intent_plus-v5.3.1-nc-photos-1
       path: packages/android_intent_plus
   battery_plus: ^6.2.2
   bloc_concurrency: ^0.2.5
@@ -54,7 +54,7 @@ dependencies:
       path: copy_with
       ref: copy_with-3.0.0
   crypto: ^3.0.3
-  devicelocale: ^0.7.1
+  devicelocale: ^0.9.1
   device_info_plus: ^10.1.2
   draggable_scrollbar:
     git:
@@ -69,7 +69,7 @@ dependencies:
   equatable: ^2.0.5
   event_bus: ^2.0.0
   flex_seed_scheme: ^3.0.0
-  fluttertoast: ^8.2.5
+  fluttertoast: ^9.1.0
   flutter_background_service:
     git:
       url: https://github.com/nc-photos/flutter_background_service.git
@@ -78,7 +78,7 @@ dependencies:
   flutter_bloc: ^8.1.5
   flutter_cache_manager: any
   flutter_colorpicker: ^1.1.0
-  flutter_displaymode: ^0.6.0
+  flutter_displaymode: ^0.7.0
   flutter_isolate: ^2.0.4
   flutter_local_notifications: ^21.0.0
   flutter_secure_storage: ^9.2.2
@@ -86,7 +86,7 @@ dependencies:
     git:
       url: https://github.com/nc-photos/flutter_staggered_grid_view.git
       ref: v0.4.0-nc-photos-2
-  flutter_typeahead: ^5.2.0
+  flutter_typeahead: ^6.0.0
   google_maps_flutter: 2.5.3
   http: ^1.1.2
   image: ^4.8.0
@@ -106,7 +106,7 @@ dependencies:
   memory_info: ^0.0.4
   mime: ^1.0.5
   mutex: ^3.1.0
-  native_device_orientation: ^2.0.3
+  native_device_orientation: ^2.1.1
   nc_photos_plugin:
     path: ../plugin
   np_api:
@@ -174,7 +174,7 @@ dependencies:
   permission_handler: ^12.0.1
   provider: any
   rxdart: ^0.27.7
-  screen_brightness:  ^1.0.1
+  screen_brightness:  ^2.1.0
   shared_preferences: ^2.2.3
   shared_preferences_platform_interface: any
   sliver_tools: ^0.2.12
@@ -192,7 +192,7 @@ dependencies:
   video_player_platform_interface:
   # later versions broken with flutter 3.22, do not upgrade
   visibility_detector: 0.3.3
-  wakelock_plus: ^1.1.1
+  wakelock_plus: ^1.5.2
   woozy_search: ^2.0.3
   workmanager:
     git:
