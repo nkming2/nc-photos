@@ -69,7 +69,7 @@ dependencies:
   equatable: ^2.0.5
   event_bus: ^2.0.0
   flex_seed_scheme: ^3.0.0
-  fluttertoast: ^8.2.5
+  fluttertoast: ^9.1.0
   flutter_background_service:
     git:
       url: https://github.com/nc-photos/flutter_background_service.git
@@ -86,7 +86,7 @@ dependencies:
     git:
       url: https://github.com/nc-photos/flutter_staggered_grid_view.git
       ref: v0.4.0-nc-photos-2
-  flutter_typeahead: ^5.2.0
+  flutter_typeahead: ^6.0.0
   google_maps_flutter: 2.5.3
   http: ^1.1.2
   image: ^4.8.0
@@ -106,7 +106,7 @@ dependencies:
   memory_info: ^0.0.4
   mime: ^1.0.5
   mutex: ^3.1.0
-  native_device_orientation: ^2.0.3
+  native_device_orientation: ^2.1.1
   nc_photos_plugin:
     path: ../plugin
   np_api:
@@ -174,7 +174,7 @@ dependencies:
   permission_handler: ^12.0.1
   provider: any
   rxdart: ^0.27.7
-  screen_brightness:  ^1.0.1
+  screen_brightness:  ^2.1.0
   shared_preferences: ^2.2.3
   shared_preferences_platform_interface: any
   sliver_tools: ^0.2.12
