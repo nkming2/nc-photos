@@ -43,6 +43,7 @@
 #include "gpupixel/filter/box_blur_filter.h"
 #include "gpupixel/filter/box_high_pass_filter.h"
 #include "gpupixel/filter/brightness_filter.h"
+#include "gpupixel/filter/brush_filter.h"
 #include "gpupixel/filter/canny_edge_detection_filter.h"
 #include "gpupixel/filter/color_invert_filter.h"
 #include "gpupixel/filter/color_matrix_filter.h"

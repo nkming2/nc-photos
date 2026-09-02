@@ -2,6 +2,7 @@
 #include "edit.h"
 #include "edit/black_point.h"
 #include "edit/brightness.h"
+#include "edit/brush.h"
 #include "edit/contrast.h"
 #include "edit/crop.h"
 #include "edit/face_reshape.h"
@@ -69,11 +70,11 @@ parseEdits(const nlohmann::json &json) {
   unique_ptr<np_image_editor::edit::GpupixelComposite> gpupixel;
   for (const auto &e : json) {
     const auto type = e["type"].get<string>();
-    if (type == "blackPoint" || type == "brightness" || type == "contrast" ||
-        type == "faceReshape" || type == "halftone" || type == "pixelation" ||
-        type == "posterization" || type == "saturation" || type == "sketch" ||
-        type == "tint" || type == "toon" || type == "warmth" ||
-        type == "whitePoint") {
+    if (type == "blackPoint" || type == "brightness" || type == "brush" ||
+        type == "contrast" || type == "faceReshape" || type == "halftone" ||
+        type == "pixelation" || type == "posterization" ||
+        type == "saturation" || type == "sketch" || type == "tint" ||
+        type == "toon" || type == "warmth" || type == "whitePoint") {
       if (!gpupixel) {
         gpupixel = make_unique<np_image_editor::edit::GpupixelComposite>();
       }
@@ -85,6 +86,18 @@ parseEdits(const nlohmann::json &json) {
         const auto weight = e["weight"].get<float>();
         gpupixel->pushBack(
             make_unique<np_image_editor::edit::Brightness>(weight));
+      } else if (type == "brush") {
+        vector<np_image_editor::edit::Brush::Stroke> strokes;
+        for (const auto &s : e["strokes"]) {
+          np_image_editor::edit::Brush::Stroke stroke;
+          stroke.points = s["points"].get<vector<float>>();
+          stroke.radius = s["radius"].get<float>();
+          const auto c = s["color"].get<vector<float>>();
+          stroke.color = {c[0], c[1], c[2], c[3]};
+          strokes.push_back(std::move(stroke));
+        }
+        gpupixel->pushBack(
+            make_unique<np_image_editor::edit::Brush>(std::move(strokes)));
       } else if (type == "contrast") {
         const auto weight = e["weight"].get<float>();
         gpupixel->pushBack(

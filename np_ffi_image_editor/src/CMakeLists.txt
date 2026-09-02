@@ -20,6 +20,7 @@ add_library(np_ffi_image_editor SHARED
   "np_ffi_image_editor.cpp"
   "edit/black_point.cpp"
   "edit/brightness.cpp"
+  "edit/brush.cpp"
   "edit/contrast.cpp"
   "edit/crop.cpp"
   "edit/face_reshape.cpp"
