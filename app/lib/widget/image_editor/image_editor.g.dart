@@ -18,7 +18,9 @@ abstract class $_StateCopyWithWorker {
     Rgba8Image? dst,
     List<PixelArguments>? pixelFilters,
     List<TransformArguments>? transformFilters,
-    TransformArguments? cropFilter,
+    CropArguments? cropFilter,
+    MarkupArguments? markupFilter,
+    Set<int>? appliedStrokeIds,
     bool? isApplyingFilters,
     Rgba8Image? postTransformSrc,
     List<image_editor.FaceDetectorResult>? faceLandmarks,
@@ -49,6 +51,8 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
     dynamic pixelFilters,
     dynamic transformFilters,
     dynamic cropFilter = copyWithNull,
+    dynamic markupFilter,
+    dynamic appliedStrokeIds,
     dynamic isApplyingFilters,
     dynamic postTransformSrc = copyWithNull,
     dynamic faceLandmarks = copyWithNull,
@@ -76,7 +80,9 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
           that.transformFilters,
       cropFilter: cropFilter == copyWithNull
           ? that.cropFilter
-          : cropFilter as TransformArguments?,
+          : cropFilter as CropArguments?,
+      markupFilter: markupFilter as MarkupArguments? ?? that.markupFilter,
+      appliedStrokeIds: appliedStrokeIds as Set<int>? ?? that.appliedStrokeIds,
       isApplyingFilters: isApplyingFilters as bool? ?? that.isApplyingFilters,
       postTransformSrc: postTransformSrc == copyWithNull
           ? that.postTransformSrc
@@ -134,7 +140,7 @@ extension $_StateCopyWith on _State {
 extension _$_StateToString on _State {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_State {src: $src, dst: $dst, pixelFilters: [length: ${pixelFilters.length}], transformFilters: [length: ${transformFilters.length}], cropFilter: $cropFilter, isApplyingFilters: $isApplyingFilters, postTransformSrc: $postTransformSrc, faceLandmarks: ${faceLandmarks == null ? null : "[length: ${faceLandmarks!.length}]"}, selectedFaces: [length: ${selectedFaces.length}], hasSelectedFaceReset: $hasSelectedFaceReset, shouldNotifySelectFace: $shouldNotifySelectFace, activeTool: ${activeTool.name}, isCropMode: $isCropMode, isFaceSelectionMode: $isFaceSelectionMode, faceSelectorImageSize: $faceSelectorImageSize, quitRequest: $quitRequest, saveState: ${saveState == null ? null : "${saveState!.name}"}, downloadProgress: ${downloadProgress.toStringAsFixed(3)}, savedFile: ${savedFile == null ? null : "${savedFile!.path}"}, error: $error, initError: $initError, saveError: $saveError}";
+    return "_State {src: $src, dst: $dst, pixelFilters: [length: ${pixelFilters.length}], transformFilters: [length: ${transformFilters.length}], cropFilter: $cropFilter, markupFilter: $markupFilter, appliedStrokeIds: {length: ${appliedStrokeIds.length}}, isApplyingFilters: $isApplyingFilters, postTransformSrc: $postTransformSrc, faceLandmarks: ${faceLandmarks == null ? null : "[length: ${faceLandmarks!.length}]"}, selectedFaces: [length: ${selectedFaces.length}], hasSelectedFaceReset: $hasSelectedFaceReset, shouldNotifySelectFace: $shouldNotifySelectFace, activeTool: ${activeTool.name}, isCropMode: $isCropMode, isFaceSelectionMode: $isFaceSelectionMode, faceSelectorImageSize: $faceSelectorImageSize, quitRequest: $quitRequest, saveState: ${saveState == null ? null : "${saveState!.name}"}, downloadProgress: ${downloadProgress.toStringAsFixed(3)}, savedFile: ${savedFile == null ? null : "${savedFile!.path}"}, error: $error, initError: $initError, saveError: $saveError}";
   }
 }
 
@@ -215,10 +221,52 @@ extension _$_FaceFilterValueChangedToString on _FaceFilterValueChanged {
   }
 }
 
+extension _$_AddBrushStrokeToString on _AddBrushStroke {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_AddBrushStroke {value: [length: ${value.length}]}";
+  }
+}
+
+extension _$_ClearBrushStrokesToString on _ClearBrushStrokes {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_ClearBrushStrokes {}";
+  }
+}
+
+extension _$_UndoBrushStrokeToString on _UndoBrushStroke {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_UndoBrushStroke {}";
+  }
+}
+
+extension _$_SetBrushColorToString on _SetBrushColor {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_SetBrushColor {value: $value}";
+  }
+}
+
+extension _$_SetBrushRadiusToString on _SetBrushRadius {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_SetBrushRadius {value: ${value.toStringAsFixed(3)}}";
+  }
+}
+
+extension _$_SetAppliedStrokeIdsToString on _SetAppliedStrokeIds {
+  String _$toString() {
+    // ignore: unnecessary_string_interpolations
+    return "_SetAppliedStrokeIds {value: {length: ${value.length}}}";
+  }
+}
+
 extension _$_SetDstToString on _SetDst {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_SetDst {value: $value}";
+    return "_SetDst {value: $value, appliedStrokeIds: {length: ${appliedStrokeIds.length}}}";
   }
 }
 

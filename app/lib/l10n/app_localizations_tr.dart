@@ -1345,6 +1345,15 @@ class AppLocalizationsTr extends AppLocalizations {
       'Görüntü dönüştürme ayarları yapıldıktan sonra seçilen yüzler silinir';
 
   @override
+  String get imageEditToolbarMarkupLabel => 'Markup';
+
+  @override
+  String get imageEditMarkupUndo => 'Undo';
+
+  @override
+  String get imageEditBrushRadius => 'Radius';
+
+  @override
   String get imageEditOpenErrorMessage => 'Dosya açılırken bir hata oluştu';
 
   @override

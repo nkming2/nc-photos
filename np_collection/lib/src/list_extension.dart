@@ -111,5 +111,7 @@ extension ListExtension<T> on List<T> {
   List<T> removedFirstWhere(bool Function(T element) test) =>
       toList()..removeFirstWhere(test);
 
+  List<T> removedLast() => toList()..removeLast();
+
   List<T> inserted(int index, T element) => toList()..insert(index, element);
 }

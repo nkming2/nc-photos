@@ -1329,6 +1329,9 @@
 	"@imageEditResetSelectedFaceMessage": {
 		"description": "Changing the image transformation will affect the result of face detection. This message is used to notify user to select the faces again afterwards"
 	},
+	"imageEditToolbarMarkupLabel": "Markup",
+	"imageEditMarkupUndo": "Undo",
+	"imageEditBrushRadius": "Radius",
 	"imageEditOpenErrorMessage": "Unable to open file",
 	"@imageEditOpenErrorMessage": {
 		"description": "Shown when app failed to open the image for editing"

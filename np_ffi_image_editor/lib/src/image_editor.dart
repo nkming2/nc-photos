@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:ffi';
 import 'dart:io';
 import 'dart:isolate';
+import 'dart:math';
+import 'dart:ui';
 
 import 'package:ffi/ffi.dart';
 import 'package:np_common/type.dart';
@@ -41,6 +43,38 @@ class BrightnessEdit implements Edit {
   JsonObj toJson() => {"type": "brightness", "weight": weight};
 
   final double weight;
+}
+
+class BrushEditStroke {
+  const BrushEditStroke({
+    required this.points,
+    required this.radius,
+    required this.color,
+  });
+
+  final List<Point<double>> points;
+  final double radius;
+  final Color color;
+}
+
+class BrushEdit implements Edit {
+  const BrushEdit({required this.strokes});
+
+  @override
+  JsonObj toJson() => {
+    "type": "brush",
+    "strokes": strokes
+        .map(
+          (s) => {
+            "points": s.points.expand((e) => [e.x, e.y]).toList(),
+            "radius": s.radius,
+            "color": [s.color.r, s.color.g, s.color.b, s.color.a],
+          },
+        )
+        .toList(),
+  };
+
+  final List<BrushEditStroke> strokes;
 }
 
 class ContrastEdit implements Edit {

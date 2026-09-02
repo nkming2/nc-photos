@@ -2369,6 +2369,24 @@ abstract class AppLocalizations {
   /// **'Selected faces are cleared after adjusting image transformation settings'**
   String get imageEditResetSelectedFaceMessage;
 
+  /// No description provided for @imageEditToolbarMarkupLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Markup'**
+  String get imageEditToolbarMarkupLabel;
+
+  /// No description provided for @imageEditMarkupUndo.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get imageEditMarkupUndo;
+
+  /// No description provided for @imageEditBrushRadius.
+  ///
+  /// In en, this message translates to:
+  /// **'Radius'**
+  String get imageEditBrushRadius;
+
   /// Shown when app failed to open the image for editing
   ///
   /// In en, this message translates to:

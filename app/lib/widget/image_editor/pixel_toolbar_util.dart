@@ -40,6 +40,7 @@ class PixelToolSlider extends StatelessWidget {
     required this.max,
     required this.initialValue,
     this.onChangeEnd,
+    this.isShowMinMax = true,
   });
 
   @override
@@ -53,19 +54,21 @@ class PixelToolSlider extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Stack(
               children: [
-                Align(
-                  alignment: AlignmentDirectional.centerStart,
-                  child: Text(min.toStringAsFixedTruncated(1)),
-                ),
-                if (min < 0 && max > 0)
+                if (isShowMinMax)
+                  Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: Text(min.toStringAsFixedTruncated(1)),
+                  ),
+                if (isShowMinMax && min < 0 && max > 0)
                   const Align(
                     alignment: AlignmentDirectional.center,
                     child: Text("0"),
                   ),
-                Align(
-                  alignment: AlignmentDirectional.centerEnd,
-                  child: Text(max.toStringAsFixedTruncated(1)),
-                ),
+                if (isShowMinMax)
+                  Align(
+                    alignment: AlignmentDirectional.centerEnd,
+                    child: Text(max.toStringAsFixedTruncated(1)),
+                  ),
               ],
             ),
           ),
@@ -84,4 +87,5 @@ class PixelToolSlider extends StatelessWidget {
   final double max;
   final double initialValue;
   final ValueChanged<double>? onChangeEnd;
+  final bool isShowMinMax;
 }

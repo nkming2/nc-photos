@@ -18,6 +18,15 @@ class _IeBloc extends Bloc<_Event, _State> with BlocLogger {
     on<_SetFaceLandmarks>(_onSetFaceLandmarks);
     on<_ToggleFaceSelection>(_onToggleFaceSelection);
     on<_FaceFilterValueChanged>(_onFaceFilterValueChanged);
+
+    // markup
+    on<_AddBrushStroke>(_onAddBrushStroke);
+    on<_ClearBrushStrokes>(_onClearBrushStrokes);
+    on<_UndoBrushStroke>(_onUndoBrushStroke);
+    on<_SetBrushColor>(_onSetBrushColor);
+    on<_SetBrushRadius>(_onSetBrushRadius);
+    on<_SetAppliedStrokeIds>(_onSetAppliedStrokeIds);
+
     on<_SetDst>(_onSetDst);
     on<_SetIsApplyingFilters>((ev, emit) {
       _log.info(ev);
@@ -137,6 +146,13 @@ class _IeBloc extends Bloc<_Event, _State> with BlocLogger {
     emit(
       state.copyWith(
         cropFilter: ev.value,
+        markupFilter: state.markupFilter.copyWith(
+          strokes: _remapStrokesForCrop(
+            state.markupFilter.strokes,
+            oldCropFilter: state.cropFilter,
+            newCropFilter: ev.value,
+          ),
+        ),
         // modifying transformation filters resets face detection
         faceLandmarks: null,
         selectedFaces: const [],
@@ -179,9 +195,83 @@ class _IeBloc extends Bloc<_Event, _State> with BlocLogger {
     }
   }
 
+  void _onAddBrushStroke(_AddBrushStroke ev, _Emitter emit) {
+    _log.info(ev);
+    emit(
+      state.copyWith(
+        markupFilter: state.markupFilter.copyWith(
+          strokes: [
+            ...state.markupFilter.strokes,
+            BrushStroke(
+              id: _brushStrokeToken++,
+              points: ev.value,
+              radius: state.markupFilter.radius,
+              color: state.markupFilter.color,
+            ),
+          ],
+        ),
+      ),
+    );
+    _updatePreview();
+  }
+
+  void _onClearBrushStrokes(_ClearBrushStrokes ev, _Emitter emit) {
+    _log.info(ev);
+    emit(
+      state.copyWith(
+        markupFilter: state.markupFilter.copyWith(strokes: const []),
+      ),
+    );
+    _updatePreview();
+  }
+
+  void _onUndoBrushStroke(_UndoBrushStroke ev, _Emitter emit) {
+    _log.info(ev);
+    if (state.markupFilter.strokes.isEmpty) {
+      return;
+    }
+    emit(
+      state.copyWith(
+        markupFilter: state.markupFilter.copyWith(
+          strokes: state.markupFilter.strokes.removedLast(),
+        ),
+      ),
+    );
+    _updatePreview();
+  }
+
+  void _onSetBrushColor(_SetBrushColor ev, _Emitter emit) {
+    _log.info(ev);
+    emit(
+      state.copyWith(
+        markupFilter: state.markupFilter.copyWith(color: ev.value),
+      ),
+    );
+    _updatePreview();
+  }
+
+  void _onSetBrushRadius(_SetBrushRadius ev, _Emitter emit) {
+    _log.info(ev);
+    emit(
+      state.copyWith(
+        markupFilter: state.markupFilter.copyWith(radius: ev.value),
+      ),
+    );
+    _updatePreview();
+  }
+
   void _onSetDst(_SetDst ev, _Emitter emit) {
     _log.info(ev);
     emit(state.copyWith(dst: ev.value));
+    // prevent the stroke blink
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      add(_SetAppliedStrokeIds(ev.appliedStrokeIds));
+    });
+  }
+
+  void _onSetAppliedStrokeIds(_SetAppliedStrokeIds ev, _Emitter emit) {
+    _log.info(ev);
+    emit(state.copyWith(appliedStrokeIds: ev.value));
   }
 
   Future<void> _onSave(_Save ev, _Emitter emit) async {
@@ -222,6 +312,7 @@ class _IeBloc extends Bloc<_Event, _State> with BlocLogger {
           pixelFilters: pixelFilters,
           transformFilters: state.transformFilters,
           cropFilter: state.cropFilter,
+          markupFilter: state.markupFilter,
         );
         emit(state.copyWith(saveState: _SaveState.save));
         await _persistResult(jpegFile);
@@ -266,13 +357,15 @@ class _IeBloc extends Bloc<_Event, _State> with BlocLogger {
       add(const _SetIsApplyingFilters(true));
       try {
         final pixelFilters = await _preparePixelFilters();
+        final markupFilter = state.markupFilter;
         final result = await _applyFilters(
           state.src!,
           pixelFilters: pixelFilters,
           transformFilters: state.transformFilters,
           cropFilter: state.cropFilter,
+          markupFilter: markupFilter,
         );
-        add(_SetDst(result));
+        add(_SetDst(result, markupFilter.strokes.map((s) => s.id).toSet()));
       } finally {
         add(const _SetIsApplyingFilters(false));
       }
@@ -292,6 +385,7 @@ class _IeBloc extends Bloc<_Event, _State> with BlocLogger {
             pixelFilters: [],
             transformFilters: state.transformFilters,
             cropFilter: state.cropFilter,
+            markupFilter: null,
           );
           isTransofrmed = true;
         }
@@ -320,6 +414,7 @@ class _IeBloc extends Bloc<_Event, _State> with BlocLogger {
     required List<image_editor.Edit> pixelFilters,
     required List<TransformArguments> transformFilters,
     required TransformArguments? cropFilter,
+    required MarkupArguments? markupFilter,
     bool useIsolate = true,
   }) async {
     Future<Rgba8Image> _do() async {
@@ -327,6 +422,7 @@ class _IeBloc extends Bloc<_Event, _State> with BlocLogger {
         cropFilter?.toEdit(),
         ...transformFilters.map((f) => f.toEdit()),
         ...pixelFilters,
+        markupFilter?.toEdit(),
       ].nonNulls.toList();
       if (edits.isNotEmpty) {
         return await image_editor.edit(src, edits);
@@ -349,6 +445,7 @@ class _IeBloc extends Bloc<_Event, _State> with BlocLogger {
     required List<image_editor.Edit> pixelFilters,
     required List<TransformArguments> transformFilters,
     required TransformArguments? cropFilter,
+    required MarkupArguments? markupFilter,
   }) async {
     await Isolate.run(() async {
       final result = await _applyFilters(
@@ -356,6 +453,7 @@ class _IeBloc extends Bloc<_Event, _State> with BlocLogger {
         pixelFilters: pixelFilters,
         transformFilters: transformFilters,
         cropFilter: cropFilter,
+        markupFilter: markupFilter,
         // already in isolate
         useIsolate: false,
       );
@@ -422,6 +520,52 @@ class _IeBloc extends Bloc<_Event, _State> with BlocLogger {
     });
   }
 
+  // Both radius and coords are normalized to the image size. Since crop would
+  // change the image size, we need to remap them
+  static List<BrushStroke> _remapStrokesForCrop(
+    List<BrushStroke> strokes, {
+    required CropArguments? oldCropFilter,
+    required CropArguments? newCropFilter,
+  }) {
+    if (strokes.isEmpty) {
+      return strokes;
+    }
+    final from =
+        oldCropFilter?.let(
+          (e) => Rect.fromLTRB(e.left, e.top, e.right, e.bottom),
+        ) ??
+        const Rect.fromLTRB(0, 0, 1, 1);
+    final to =
+        newCropFilter?.let(
+          (e) => Rect.fromLTRB(e.left, e.top, e.right, e.bottom),
+        ) ??
+        const Rect.fromLTRB(0, 0, 1, 1);
+    if (from == to) {
+      return strokes;
+    }
+    final radiusScale = from.width / to.width;
+    return strokes
+        .map(
+          (s) => BrushStroke(
+            id: s.id,
+            points: s.points
+                .map((p) => _remapPointForCrop(p, from, to))
+                .toList(),
+            radius: s.radius * radiusScale,
+            color: s.color,
+          ),
+        )
+        .toList();
+  }
+
+  static Point<double> _remapPointForCrop(Point<double> p, Rect from, Rect to) {
+    final srcX = from.left + p.x * from.width;
+    final srcY = from.top + p.y * from.height;
+    final newX = to.width == 0 ? 0.0 : (srcX - to.left) / to.width;
+    final newY = to.height == 0 ? 0.0 : (srcY - to.top) / to.height;
+    return Point(newX, newY);
+  }
+
   final Account account;
   final FileRepo fileRepo;
   final PrefController prefController;
@@ -430,6 +574,8 @@ class _IeBloc extends Bloc<_Event, _State> with BlocLogger {
   var _processorToken = 0;
   final _processorTokenMutex = Mutex();
   final _processorMutex = Mutex();
+
+  var _brushStrokeToken = 0;
 
   var _isHandlingError = false;
 

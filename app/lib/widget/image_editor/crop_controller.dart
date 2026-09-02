@@ -10,6 +10,21 @@ import 'package:np_ui/np_ui.dart';
 
 part 'crop_controller.g.dart';
 
+class CropArguments implements TransformArguments {
+  const CropArguments(this.top, this.left, this.bottom, this.right);
+
+  @override
+  image_editor.Edit toEdit() => image_editor.CropEdit(top, left, bottom, right);
+
+  @override
+  TransformToolType getToolType() => TransformToolType.crop;
+
+  final double top;
+  final double left;
+  final double bottom;
+  final double right;
+}
+
 /// Crop editor
 ///
 /// This widget only work when width == device width!
@@ -35,8 +50,8 @@ class CropController extends StatelessWidget {
   }
 
   final Rgba8Image image;
-  final TransformArguments? initialState;
-  final ValueChanged<TransformArguments>? onCropChanged;
+  final CropArguments? initialState;
+  final ValueChanged<CropArguments>? onCropChanged;
 }
 
 class _WrappedCropController extends StatefulWidget {
@@ -50,8 +65,8 @@ class _WrappedCropController extends StatefulWidget {
   State<StatefulWidget> createState() => _WrappedCropControllerState();
 
   final Rgba8Image image;
-  final TransformArguments? initialState;
-  final ValueChanged<TransformArguments>? onCropChanged;
+  final CropArguments? initialState;
+  final ValueChanged<CropArguments>? onCropChanged;
 }
 
 @npLog
@@ -60,7 +75,7 @@ class _WrappedCropControllerState extends State<_WrappedCropController> {
   initState() {
     super.initState();
     if (widget.initialState?.getToolType() == TransformToolType.crop) {
-      _initialState = widget.initialState as _CropArguments;
+      _initialState = widget.initialState as CropArguments;
     }
   }
 
@@ -388,15 +403,15 @@ class _WrappedCropControllerState extends State<_WrappedCropController> {
     }
   }
 
-  _CropArguments _getCropArgs() {
+  CropArguments _getCropArgs() {
     final topPercent = _top / _size!.height;
     final leftPercent = _left / _size!.width;
     final bottomPercent = (_size!.height - _bottom) / _size!.height;
     final rightPercent = (_size!.width - _right) / _size!.width;
-    return _CropArguments(topPercent, leftPercent, bottomPercent, rightPercent);
+    return CropArguments(topPercent, leftPercent, bottomPercent, rightPercent);
   }
 
-  void _restoreCropArgs(_CropArguments args) {
+  void _restoreCropArgs(CropArguments args) {
     _top = args.top * _size!.height;
     _left = args.left * _size!.width;
     _bottom = _size!.height - args.bottom * _size!.height;
@@ -419,7 +434,7 @@ class _WrappedCropControllerState extends State<_WrappedCropController> {
     _right = 0;
   }
 
-  _CropArguments? _initialState;
+  CropArguments? _initialState;
   bool _isInitialRestored = false;
   Size? _size;
   double _offsetY = 0;
@@ -515,19 +530,4 @@ class _Drain {
   bool get isAvailable => _drain != 0;
 
   double _drain = 0;
-}
-
-class _CropArguments implements TransformArguments {
-  const _CropArguments(this.top, this.left, this.bottom, this.right);
-
-  @override
-  image_editor.Edit toEdit() => image_editor.CropEdit(top, left, bottom, right);
-
-  @override
-  getToolType() => TransformToolType.crop;
-
-  final double top;
-  final double left;
-  final double bottom;
-  final double right;
 }

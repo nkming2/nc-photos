@@ -45,6 +45,17 @@ class _ToolBar extends StatelessWidget {
                 },
               ),
             ),
+            _BlocSelector(
+              selector: (state) => state.activeTool,
+              builder: (context, activeTool) => _ToolButton(
+                icon: Icons.brush_outlined,
+                label: L10n.global().imageEditToolbarMarkupLabel,
+                isSelected: activeTool == _ToolType.markup,
+                onPressed: () {
+                  context.addEvent(const _SetActiveTool(_ToolType.markup));
+                },
+              ),
+            ),
             const SizedBox(width: 16),
           ],
         ),

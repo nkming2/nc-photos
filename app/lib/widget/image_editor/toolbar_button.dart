@@ -15,11 +15,12 @@ class ToolbarButton extends StatelessWidget {
     required this.onPressed,
     this.isSelected = false,
     this.activationOrder,
+    this.foregroundColorBuilder,
   });
 
   @override
-  build(BuildContext context) {
-    final Color backgroundColor, foregroundColor;
+  Widget build(BuildContext context) {
+    Color backgroundColor, foregroundColor;
     if (isSelected) {
       backgroundColor = Theme.of(context).colorScheme.secondaryContainer;
       foregroundColor = Theme.of(context).colorScheme.onSecondaryContainer;
@@ -31,6 +32,9 @@ class ToolbarButton extends StatelessWidget {
         backgroundColor = Theme.of(context).colorScheme.secondaryContainer;
         foregroundColor = M3.of(context).filterChip.disabled.labelText;
       }
+    }
+    if (foregroundColorBuilder != null) {
+      foregroundColor = foregroundColorBuilder!(isSelected, isActivated);
     }
     return InkWell(
       onTap: onPressed,
@@ -97,4 +101,6 @@ class ToolbarButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final bool isSelected;
   final int? activationOrder;
+  final Color Function(bool isSelected, bool isActivated)?
+  foregroundColorBuilder;
 }

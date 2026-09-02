@@ -1349,6 +1349,15 @@ class AppLocalizationsCs extends AppLocalizations {
       'Selected faces are cleared after adjusting image transformation settings';
 
   @override
+  String get imageEditToolbarMarkupLabel => 'Markup';
+
+  @override
+  String get imageEditMarkupUndo => 'Undo';
+
+  @override
+  String get imageEditBrushRadius => 'Radius';
+
+  @override
   String get imageEditOpenErrorMessage => 'Unable to open file';
 
   @override

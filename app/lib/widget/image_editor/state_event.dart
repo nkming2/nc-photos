@@ -1,6 +1,6 @@
 part of 'image_editor.dart';
 
-enum _ToolType { color, effect, transform }
+enum _ToolType { color, effect, transform, markup }
 
 enum _SaveState { init, download, process, save }
 
@@ -13,6 +13,8 @@ class _State {
     required this.pixelFilters,
     required this.transformFilters,
     this.cropFilter,
+    required this.markupFilter,
+    required this.appliedStrokeIds,
     required this.isApplyingFilters,
     this.postTransformSrc,
     this.faceLandmarks,
@@ -36,6 +38,8 @@ class _State {
     return const _State(
       pixelFilters: [],
       transformFilters: [],
+      markupFilter: MarkupArguments(strokes: []),
+      appliedStrokeIds: {},
       isApplyingFilters: false,
       selectedFaces: [],
       shouldNotifySelectFace: false,
@@ -52,14 +56,17 @@ class _State {
   bool get isModified =>
       cropFilter != null ||
       transformFilters.isNotEmpty ||
-      pixelFilters.isNotEmpty;
+      pixelFilters.isNotEmpty ||
+      markupFilter.strokes.isNotEmpty;
 
   final Rgba8Image? src;
   final Rgba8Image? dst;
 
   final List<PixelArguments> pixelFilters;
   final List<TransformArguments> transformFilters;
-  final TransformArguments? cropFilter;
+  final CropArguments? cropFilter;
+  final MarkupArguments markupFilter;
+  final Set<int> appliedStrokeIds;
   final bool isApplyingFilters;
 
   // image used for face detection
@@ -162,7 +169,7 @@ class _SetCropFilter implements _Event {
   @override
   String toString() => _$toString();
 
-  final TransformArguments? value;
+  final CropArguments? value;
 }
 
 @toString
@@ -195,13 +202,70 @@ class _FaceFilterValueChanged implements _Event {
 }
 
 @toString
+class _AddBrushStroke implements _Event {
+  const _AddBrushStroke(this.value);
+
+  @override
+  String toString() => _$toString();
+
+  final List<Point<double>> value;
+}
+
+@toString
+class _ClearBrushStrokes implements _Event {
+  const _ClearBrushStrokes();
+
+  @override
+  String toString() => _$toString();
+}
+
+@toString
+class _UndoBrushStroke implements _Event {
+  const _UndoBrushStroke();
+
+  @override
+  String toString() => _$toString();
+}
+
+@toString
+class _SetBrushColor implements _Event {
+  const _SetBrushColor(this.value);
+
+  @override
+  String toString() => _$toString();
+
+  final Color value;
+}
+
+@toString
+class _SetBrushRadius implements _Event {
+  const _SetBrushRadius(this.value);
+
+  @override
+  String toString() => _$toString();
+
+  final double value;
+}
+
+@toString
+class _SetAppliedStrokeIds implements _Event {
+  const _SetAppliedStrokeIds(this.value);
+
+  @override
+  String toString() => _$toString();
+
+  final Set<int> value;
+}
+
+@toString
 class _SetDst implements _Event {
-  const _SetDst(this.value);
+  const _SetDst(this.value, this.appliedStrokeIds);
 
   @override
   String toString() => _$toString();
 
   final Rgba8Image value;
+  final Set<int> appliedStrokeIds;
 }
 
 @toString

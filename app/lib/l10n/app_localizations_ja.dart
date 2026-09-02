@@ -1288,6 +1288,15 @@ class AppLocalizationsJa extends AppLocalizations {
       '画像の変形設定を調整した後、選択した顔はクリアされます。お手数ですが、もう一度選択してください';
 
   @override
+  String get imageEditToolbarMarkupLabel => 'Markup';
+
+  @override
+  String get imageEditMarkupUndo => 'Undo';
+
+  @override
+  String get imageEditBrushRadius => 'Radius';
+
+  @override
   String get imageEditOpenErrorMessage => '写真を読み込むことができません';
 
   @override

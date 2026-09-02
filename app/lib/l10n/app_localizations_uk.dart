@@ -1347,6 +1347,15 @@ class AppLocalizationsUk extends AppLocalizations {
       'Вибрані обличчя видаляються після коригування налаштувань трансформації зображення';
 
   @override
+  String get imageEditToolbarMarkupLabel => 'Markup';
+
+  @override
+  String get imageEditMarkupUndo => 'Undo';
+
+  @override
+  String get imageEditBrushRadius => 'Radius';
+
+  @override
   String get imageEditOpenErrorMessage => 'Не вдалося відкрити файл';
 
   @override

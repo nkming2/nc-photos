@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io' as io;
 import 'dart:isolate';
+import 'dart:math';
 
 import 'package:clock/clock.dart';
 import 'package:copy_with/copy_with.dart';
@@ -36,10 +37,13 @@ import 'package:nc_photos/widget/handler/permission_handler.dart';
 import 'package:nc_photos/widget/image_editor/color_toolbar.dart';
 import 'package:nc_photos/widget/image_editor/crop_controller.dart';
 import 'package:nc_photos/widget/image_editor/effect_toolbar/effect_toolbar.dart';
+import 'package:nc_photos/widget/image_editor/markup_toolbar.dart';
+import 'package:nc_photos/widget/image_editor/markup_toolbar_util.dart';
 import 'package:nc_photos/widget/image_editor/pixel_toolbar_util.dart';
 import 'package:nc_photos/widget/image_editor/transform_toolbar.dart';
 import 'package:nc_photos/widget/image_editor_persist_option_dialog.dart';
 import 'package:nc_photos/widget/local_result_viewer/local_result_viewer.dart';
+import 'package:np_collection/np_collection.dart';
 import 'package:np_common/exception.dart';
 import 'package:np_common/object_util.dart';
 import 'package:np_common/unique.dart';
@@ -53,6 +57,7 @@ import 'package:to_string/to_string.dart';
 
 part 'app_bar.dart';
 part 'bloc.dart';
+part 'markup_canvas.dart';
 part 'face_selector.dart';
 part 'image_editor.g.dart';
 part 'save_dialog.dart';
@@ -316,7 +321,8 @@ class _Body extends StatelessWidget {
                   previous.src != current.src ||
                   previous.dst != current.dst ||
                   previous.isCropMode != current.isCropMode ||
-                  previous.isFaceSelectionMode != current.isFaceSelectionMode,
+                  previous.isFaceSelectionMode != current.isFaceSelectionMode ||
+                  previous.activeTool != current.activeTool,
               builder: (context, state) {
                 if (state.src == null) {
                   return const SizedBox.shrink();
@@ -332,6 +338,8 @@ class _Body extends StatelessWidget {
                   );
                 } else if (state.isFaceSelectionMode) {
                   return const _FaceSelector();
+                } else if (state.activeTool == _ToolType.markup) {
+                  return const _MarkupCanvas();
                 } else {
                   return Image(
                     image: (state.dst ?? state.src!).let(
@@ -379,6 +387,29 @@ class _Body extends StatelessWidget {
                 onCropToolDeactivated: () {
                   context.addEvent(const _SetCropFilter(null));
                 },
+              ),
+              _ToolType.markup => _BlocSelector<MarkupArguments>(
+                selector: (state) => state.markupFilter,
+                builder: (context, markupFilter) => MarkupToolbar(
+                  initialMarkup: markupFilter,
+                  strokes: markupFilter.strokes,
+                  onColorChanged: (color) {
+                    if (color != markupFilter.color) {
+                      context.addEvent(_SetBrushColor(color));
+                    }
+                  },
+                  onRadiusChanged: (radius) {
+                    if (radius != markupFilter.radius) {
+                      context.addEvent(_SetBrushRadius(radius));
+                    }
+                  },
+                  onClearPressed: () {
+                    context.addEvent(const _ClearBrushStrokes());
+                  },
+                  onUndoPressed: () {
+                    context.addEvent(const _UndoBrushStroke());
+                  },
+                ),
               ),
             },
           ),
