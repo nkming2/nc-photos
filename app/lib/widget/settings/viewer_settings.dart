@@ -212,13 +212,13 @@ class _BrightnessDialogState extends State<_BrightnessDialog> {
   @override
   void initState() {
     super.initState();
-    ScreenBrightness().setScreenBrightness(widget.initialValue);
+    ScreenBrightness().setApplicationScreenBrightness(widget.initialValue);
     _value = widget.initialValue;
   }
 
   @override
   void dispose() {
-    ScreenBrightness().resetScreenBrightness();
+    ScreenBrightness().resetApplicationScreenBrightness();
     super.dispose();
   }
 
@@ -243,7 +243,9 @@ class _BrightnessDialogState extends State<_BrightnessDialog> {
                   onChangeEnd: (value) async {
                     _value = value;
                     try {
-                      await ScreenBrightness().setScreenBrightness(value);
+                      await ScreenBrightness().setApplicationScreenBrightness(
+                        value,
+                      );
                     } catch (e, stackTrace) {
                       _log.severe(
                         "Failed while setScreenBrightness",
