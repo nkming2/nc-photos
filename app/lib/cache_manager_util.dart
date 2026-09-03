@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 // ignore: implementation_imports
 import 'package:flutter_cache_manager/src/cache_store.dart';
+import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 import 'package:nc_photos/account.dart';
 import 'package:nc_photos/jxl_util.dart';
@@ -59,7 +60,7 @@ class ThumbnailCacheManager {
       key,
       stalePeriod: const Duration(days: 30),
       maxNrOfCacheObjects: 50000,
-      fileService: HttpFileService(httpClient: getHttpClient()),
+      fileService: _MyHttpFileService(),
     ),
   );
 }
@@ -77,7 +78,7 @@ class LargeImageCacheManager {
       key,
       stalePeriod: const Duration(days: 30),
       maxNrOfCacheObjects: 1000,
-      fileService: HttpFileService(httpClient: getHttpClient()),
+      fileService: _MyHttpFileService(),
     ),
   );
 }
@@ -89,7 +90,7 @@ class OriginalImageCacheManager {
       key,
       stalePeriod: const Duration(days: 30),
       maxNrOfCacheObjects: 1000,
-      fileService: HttpFileService(httpClient: getHttpClient()),
+      fileService: _MyHttpFileService(),
     ),
   );
 }
@@ -105,7 +106,7 @@ class CoverCacheManager {
       key,
       stalePeriod: const Duration(days: 30),
       maxNrOfCacheObjects: 300,
-      fileService: HttpFileService(httpClient: getHttpClient()),
+      fileService: _MyHttpFileService(),
     ),
   );
 }
@@ -118,7 +119,7 @@ class JxlCacheManager {
       key,
       stalePeriod: const Duration(days: 30),
       maxNrOfCacheObjects: 1000,
-      fileService: HttpFileService(httpClient: getHttpClient()),
+      fileService: _MyHttpFileService(),
     ),
   );
 }
@@ -131,7 +132,7 @@ class JxlThumbnailCacheManager {
       key,
       stalePeriod: const Duration(days: 90),
       maxNrOfCacheObjects: 75000,
-      fileService: HttpFileService(httpClient: getHttpClient()),
+      fileService: _MyHttpFileService(),
       cacheFileTransformer: (url, key, cacheFile) async {
         await _replaceWithJpegThumbnail(cacheFile);
       },
@@ -220,6 +221,27 @@ Future<FileInfo?> getFileFromCache(
 ) async {
   final cacheManager = getCacheManager(CachedNetworkImageType.largeImage, mime);
   return await cacheManager.getFileFromCache(imageUrl);
+}
+
+// modified from HttpFileService
+class _MyHttpFileService extends FileService {
+  _MyHttpFileService();
+
+  @override
+  Future<FileServiceResponse> get(
+    String url, {
+    Map<String, String>? headers,
+  }) async {
+    final httpResponse = await sendHttpRequest(() {
+      final req = http.Request("GET", Uri.parse(url));
+      if (headers != null) {
+        req.headers.addAll(headers);
+      }
+      return req;
+    });
+
+    return HttpGetResponse(httpResponse);
+  }
 }
 
 SizeInt _boundingBoxFor(CachedNetworkImageType type) => switch (type) {

@@ -53,6 +53,7 @@ class _Bloc extends Bloc<_Event, _State>
         ),
       );
     } catch (e, stackTrace) {
+      _log.severe("[_onLogin] Failed", e, stackTrace);
       emit(state.copyWith(error: (error: e, stackTrace: stackTrace)));
     }
   }

@@ -62,8 +62,9 @@ class _Download extends itf.Download {
       final fileWrite = file.openWrite();
       try {
         final uri = Uri.parse(url);
-        final req = http.Request("GET", uri)..headers.addAll(headers ?? {});
-        final response = await getHttpClient().send(req);
+        final response = await sendHttpRequest(
+          () => http.Request("GET", uri)..headers.addAll(headers ?? {}),
+        );
         bool isEnd = false;
         Object? error;
         final size = response.contentLength;

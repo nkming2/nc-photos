@@ -67,31 +67,35 @@ class Api {
 
     final http.Response response;
     if (bodyBytes != null && onSendProgress != null) {
-      final req = http.StreamedRequest(method, url);
-      setHeader(req);
-      req.contentLength = bodyBytes.length;
-      const chunkSize = 32 * 1024;
-      var sent = 0;
-      for (var i = 0; i < bodyBytes.length; i += chunkSize) {
-        final end = (i + chunkSize).clamp(0, bodyBytes.length);
-        req.sink.add(bodyBytes.sublist(i, end));
-        sent = end;
-        onSendProgress(sent / bodyBytes.length);
-      }
-      unawaited(req.sink.close());
       response = await http.Response.fromStream(
-        await getHttpClient().send(req),
+        await sendHttpRequest(() {
+          final req = http.StreamedRequest(method, url);
+          setHeader(req);
+          req.contentLength = bodyBytes.length;
+          const chunkSize = 32 * 1024;
+          var sent = 0;
+          for (var i = 0; i < bodyBytes.length; i += chunkSize) {
+            final end = (i + chunkSize).clamp(0, bodyBytes.length);
+            req.sink.add(bodyBytes.sublist(i, end));
+            sent = end;
+            onSendProgress(sent / bodyBytes.length);
+          }
+          unawaited(req.sink.close());
+          return req;
+        }),
       );
     } else {
-      final req = http.Request(method, url);
-      setHeader(req);
-      if (body != null) {
-        req.body = body;
-      } else if (bodyBytes != null) {
-        req.bodyBytes = bodyBytes;
-      }
       response = await http.Response.fromStream(
-        await getHttpClient().send(req),
+        await sendHttpRequest(() {
+          final req = http.Request(method, url);
+          setHeader(req);
+          if (body != null) {
+            req.body = body;
+          } else if (bodyBytes != null) {
+            req.bodyBytes = bodyBytes;
+          }
+          return req;
+        }),
       );
     }
     if (!isHttpStatusGood(response.statusCode)) {
