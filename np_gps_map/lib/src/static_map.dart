@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:np_gps_map/src/native/google_gps_map.dart'
-    if (dart.library.html) 'package:np_gps_map/src/web/google_gps_map.dart';
-import 'package:np_gps_map/src/osm_gps_map.dart';
+import 'package:np_gps_map/src/static_map/google.dart';
+import 'package:np_gps_map/src/static_map/osm.dart';
 import 'package:np_gps_map/src/type.dart';
 import 'package:np_gps_map/src/util.dart';
 import 'package:np_platform_util/np_platform_util.dart';
@@ -18,9 +17,9 @@ class StaticMap extends StatelessWidget {
   Widget build(BuildContext context) {
     if (providerHint == GpsMapProvider.osm ||
         (getRawPlatform() == NpPlatform.android && !isNewGMapsRenderer())) {
-      return OsmGpsMap(location: location, onTap: onTap);
+      return OsmStaticMap(location: location, onTap: onTap);
     } else {
-      return GoogleGpsMap(location: location, onTap: onTap);
+      return GoogleStaticMap(location: location, onTap: onTap);
     }
   }
 

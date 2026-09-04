@@ -3,8 +3,8 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:np_gps_map/src/type.dart';
 
-class OsmGpsMap extends StatelessWidget {
-  const OsmGpsMap({super.key, required this.location, this.onTap});
+class OsmStaticMap extends StatelessWidget {
+  const OsmStaticMap({super.key, required this.location, this.onTap});
 
   @override
   Widget build(BuildContext context) {
