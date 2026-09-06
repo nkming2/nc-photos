@@ -1734,6 +1734,17 @@ class AppLocalizationsPt extends AppLocalizations {
       'Tap on screen to add or remove points of interest';
 
   @override
+  String get postCrashReportDialogText =>
+      'The app crashed during the previous run. Sending the log to the developer could help to diagnose the issue. Do you wish to export the log?';
+
+  @override
+  String get postCrashReportSubmitDialogText =>
+      'Log saved, please report the issue to the developer on GitHub or via email with the log file attached. Thank you.';
+
+  @override
+  String get postCrashReportSubmitEmailButton => 'Email';
+
+  @override
   String get errorUnauthenticated =>
       'Acesso não autenticado. Por favor faça login novamente se o problema persistir';
 

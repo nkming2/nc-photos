@@ -523,6 +523,54 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.0"
+  flutter_file_manager_android:
+    dependency: transitive
+    description:
+      name: flutter_file_manager_android
+      sha256: d3dd615fb786e45bc1bb7857ac3ac98d8c6ecd73f5ea6910e2e1c71b4ab9f2e4
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
+  flutter_file_manager_ios:
+    dependency: transitive
+    description:
+      name: flutter_file_manager_ios
+      sha256: "27113ea24199c6109b55687e052a952b2612af347503187d90b5a1b9ccbf266a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
+  flutter_file_manager_macos:
+    dependency: transitive
+    description:
+      name: flutter_file_manager_macos
+      sha256: "1d1b13b9c060bfa00cdeff877386c5e3c6b5a19b3f3314fdd83d454015e93496"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
+  flutter_file_manager_platform_interface:
+    dependency: transitive
+    description:
+      name: flutter_file_manager_platform_interface
+      sha256: "7a0b81a429ff81e02305a1876d101b832161887420b861b27a9f118f0de4b5df"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.1"
+  flutter_file_manager_web:
+    dependency: transitive
+    description:
+      name: flutter_file_manager_web
+      sha256: b1be154e2d48da92bf19fea74e7f18f1a531a33885d751f91ca40092477176a9
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.0"
+  flutter_file_saver:
+    dependency: "direct main"
+    description:
+      name: flutter_file_saver
+      sha256: ef7dc306dcce6c3258fee51baed523693ce11b3fa8ee51a435c512195623f63d
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.9.0"
   flutter_isolate:
     dependency: "direct main"
     description:
@@ -1070,10 +1118,10 @@ packages:
     dependency: "direct main"
     description:
       name: mime
-      sha256: "801fd0b26f14a4a58ccb09d5892c3fbdeff209594300a542492cf13fba9d247a"
+      sha256: bd47de35f07e27267e69c8c8b22edf9473bfee170a60d60fcc93730c5144b7f6
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.6"
+    version: "2.1.0"
   mocktail:
     dependency: transitive
     description:
@@ -1275,6 +1323,13 @@ packages:
       relative: true
     source: path
     version: "1.0.0"
+  np_platform_exit_info:
+    dependency: "direct main"
+    description:
+      path: "../np_platform_exit_info"
+      relative: true
+    source: path
+    version: "0.0.1"
   np_platform_image_format_jxl:
     dependency: "direct main"
     description:

@@ -1658,6 +1658,17 @@ class AppLocalizationsJa extends AppLocalizations {
       'タップでポイントを指定し、写真の一部を切り取ります。指定したポイントをもう一度タップすると消えます';
 
   @override
+  String get postCrashReportDialogText =>
+      'The app crashed during the previous run. Sending the log to the developer could help to diagnose the issue. Do you wish to export the log?';
+
+  @override
+  String get postCrashReportSubmitDialogText =>
+      'Log saved, please report the issue to the developer on GitHub or via email with the log file attached. Thank you.';
+
+  @override
+  String get postCrashReportSubmitEmailButton => 'Email';
+
+  @override
   String get errorUnauthenticated => '認証されていないアクセスです。問題が解決しない場合は、再度サインインしてください';
 
   @override

@@ -79,6 +79,7 @@ dependencies:
   flutter_cache_manager: any
   flutter_colorpicker: ^1.1.0
   flutter_displaymode: ^0.7.0
+  flutter_file_saver: ^0.9.0
   flutter_isolate: ^2.0.4
   flutter_local_notifications: ^21.0.0
   flutter_secure_storage: ^9.2.2
@@ -104,7 +105,7 @@ dependencies:
   local_auth: ^2.2.0
   logging: ^1.2.0
   memory_info: ^0.0.4
-  mime: ^1.0.5
+  mime: ^2.1.0
   mutex: ^3.1.0
   native_device_orientation: ^2.1.1
   nc_photos_plugin:
@@ -141,6 +142,8 @@ dependencies:
     path: ../np_login_flow
   np_math:
     path: ../np_math
+  np_platform_exit_info:
+    path: ../np_platform_exit_info
   np_platform_image_format_jxl:
     path: ../np_platform_image_format_jxl
   np_platform_image_processor:

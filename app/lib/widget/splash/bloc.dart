@@ -25,6 +25,7 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
       _initNotification(),
       _initFirstRun(),
       _migrateApp(emit),
+      _handleCrash(emit),
     ]);
     emit(state.copyWith(isDone: true));
   }
@@ -83,6 +84,30 @@ class _Bloc extends Bloc<_Event, _State> with BlocLogger {
       emit(state.copyWith(changelogFromVersion: lastVersion));
     } else {
       _changelogCompleter.complete();
+    }
+  }
+
+  Future<void> _handleCrash(_Emitter emit) async {
+    try {
+      final exitInfo = await ExitInfo.getExifInfo();
+      // exitInfo = ExitInfoResult(
+      //   description: "test",
+      //   pss: 0,
+      //   reason: ExitInfoReason.crash,
+      //   rss: 0,
+      //   status: 0,
+      //   time: DateTime.now(),
+      // );
+      if (exitInfo == null) {
+        return;
+      }
+      if (exitInfo.reason == ExitInfoReason.crash ||
+          exitInfo.reason == ExitInfoReason.crashNative) {
+        _log.warning("[_handleCrash] App crashed in the prev run: $exitInfo");
+        emit(state.copyWith(exitInfo: exitInfo));
+      }
+    } catch (e, stackTrace) {
+      _log.shout("[_handleCrash] Failed while getExifInfo", e, stackTrace);
     }
   }
 

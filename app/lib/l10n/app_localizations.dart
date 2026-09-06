@@ -3059,6 +3059,24 @@ abstract class AppLocalizations {
   /// **'Tap on screen to add or remove points of interest'**
   String get imageSegmentPickerInstruction;
 
+  /// No description provided for @postCrashReportDialogText.
+  ///
+  /// In en, this message translates to:
+  /// **'The app crashed during the previous run. Sending the log to the developer could help to diagnose the issue. Do you wish to export the log?'**
+  String get postCrashReportDialogText;
+
+  /// No description provided for @postCrashReportSubmitDialogText.
+  ///
+  /// In en, this message translates to:
+  /// **'Log saved, please report the issue to the developer on GitHub or via email with the log file attached. Thank you.'**
+  String get postCrashReportSubmitDialogText;
+
+  /// No description provided for @postCrashReportSubmitEmailButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get postCrashReportSubmitEmailButton;
+
   /// Error message when server responds with HTTP401
   ///
   /// In en, this message translates to:

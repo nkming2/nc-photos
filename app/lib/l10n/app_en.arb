@@ -1667,6 +1667,9 @@
 	"imageSegmentPicker6PointLimit": "Only up to 6 points are allowed",
 	"imageSegmentPickerInitFailedText": "Failed to initialize",
 	"imageSegmentPickerInstruction": "Tap on screen to add or remove points of interest",
+	"postCrashReportDialogText": "The app crashed during the previous run. Sending the log to the developer could help to diagnose the issue. Do you wish to export the log?",
+	"postCrashReportSubmitDialogText": "Log saved, please report the issue to the developer on GitHub or via email with the log file attached. Thank you.",
+	"postCrashReportSubmitEmailButton": "Email",
 
 	"errorUnauthenticated": "Unauthenticated access. Please sign-in again if the problem continues",
 	"@errorUnauthenticated": {

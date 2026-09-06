@@ -348,6 +348,9 @@
     "imageSegmentPicker6PointLimit",
     "imageSegmentPickerInitFailedText",
     "imageSegmentPickerInstruction",
+    "postCrashReportDialogText",
+    "postCrashReportSubmitDialogText",
+    "postCrashReportSubmitEmailButton",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -442,6 +445,9 @@
     "imageSegmentPicker6PointLimit",
     "imageSegmentPickerInitFailedText",
     "imageSegmentPickerInstruction",
+    "postCrashReportDialogText",
+    "postCrashReportSubmitDialogText",
+    "postCrashReportSubmitEmailButton",
     "errorServerNoCert"
   ],
 
@@ -540,6 +546,9 @@
     "imageSegmentPicker6PointLimit",
     "imageSegmentPickerInitFailedText",
     "imageSegmentPickerInstruction",
+    "postCrashReportDialogText",
+    "postCrashReportSubmitDialogText",
+    "postCrashReportSubmitEmailButton",
     "errorServerNoCert"
   ],
 
@@ -783,6 +792,9 @@
     "imageSegmentPicker6PointLimit",
     "imageSegmentPickerInitFailedText",
     "imageSegmentPickerInstruction",
+    "postCrashReportDialogText",
+    "postCrashReportSubmitDialogText",
+    "postCrashReportSubmitEmailButton",
     "errorServerNoCert"
   ],
 
@@ -869,6 +881,9 @@
     "imageSegmentPicker6PointLimit",
     "imageSegmentPickerInitFailedText",
     "imageSegmentPickerInstruction",
+    "postCrashReportDialogText",
+    "postCrashReportSubmitDialogText",
+    "postCrashReportSubmitEmailButton",
     "errorServerNoCert"
   ],
 
@@ -1008,6 +1023,9 @@
     "imageSegmentPicker6PointLimit",
     "imageSegmentPickerInitFailedText",
     "imageSegmentPickerInstruction",
+    "postCrashReportDialogText",
+    "postCrashReportSubmitDialogText",
+    "postCrashReportSubmitEmailButton",
     "errorServerNoCert"
   ],
 
@@ -1094,6 +1112,9 @@
     "imageSegmentPicker6PointLimit",
     "imageSegmentPickerInitFailedText",
     "imageSegmentPickerInstruction",
+    "postCrashReportDialogText",
+    "postCrashReportSubmitDialogText",
+    "postCrashReportSubmitEmailButton",
     "errorServerNoCert"
   ],
 
@@ -1238,13 +1259,19 @@
     "imageSegmentPicker6PointLimit",
     "imageSegmentPickerInitFailedText",
     "imageSegmentPickerInstruction",
+    "postCrashReportDialogText",
+    "postCrashReportSubmitDialogText",
+    "postCrashReportSubmitEmailButton",
     "errorServerNoCert"
   ],
 
   "ja": [
     "imageEditToolbarMarkupLabel",
     "imageEditMarkupUndo",
-    "imageEditBrushRadius"
+    "imageEditBrushRadius",
+    "postCrashReportDialogText",
+    "postCrashReportSubmitDialogText",
+    "postCrashReportSubmitEmailButton"
   ],
 
   "nl": [
@@ -1708,6 +1735,9 @@
     "imageSegmentPicker6PointLimit",
     "imageSegmentPickerInitFailedText",
     "imageSegmentPickerInstruction",
+    "postCrashReportDialogText",
+    "postCrashReportSubmitDialogText",
+    "postCrashReportSubmitEmailButton",
     "errorUnauthenticated",
     "errorDisconnected",
     "errorLocked",
@@ -1859,6 +1889,9 @@
     "imageSegmentPicker6PointLimit",
     "imageSegmentPickerInitFailedText",
     "imageSegmentPickerInstruction",
+    "postCrashReportDialogText",
+    "postCrashReportSubmitDialogText",
+    "postCrashReportSubmitEmailButton",
     "errorServerNoCert"
   ],
 
@@ -2016,6 +2049,9 @@
     "imageSegmentPicker6PointLimit",
     "imageSegmentPickerInitFailedText",
     "imageSegmentPickerInstruction",
+    "postCrashReportDialogText",
+    "postCrashReportSubmitDialogText",
+    "postCrashReportSubmitEmailButton",
     "errorServerNoCert"
   ],
 
@@ -2155,6 +2191,9 @@
     "imageSegmentPicker6PointLimit",
     "imageSegmentPickerInitFailedText",
     "imageSegmentPickerInstruction",
+    "postCrashReportDialogText",
+    "postCrashReportSubmitDialogText",
+    "postCrashReportSubmitEmailButton",
     "errorServerNoCert"
   ],
 
@@ -2241,6 +2280,9 @@
     "imageSegmentPicker6PointLimit",
     "imageSegmentPickerInitFailedText",
     "imageSegmentPickerInstruction",
+    "postCrashReportDialogText",
+    "postCrashReportSubmitDialogText",
+    "postCrashReportSubmitEmailButton",
     "errorServerNoCert"
   ],
 
@@ -2260,7 +2302,10 @@
     "imageEnhancerResultSuccessfulNotifContent",
     "imageSegmentPicker6PointLimit",
     "imageSegmentPickerInitFailedText",
-    "imageSegmentPickerInstruction"
+    "imageSegmentPickerInstruction",
+    "postCrashReportDialogText",
+    "postCrashReportSubmitDialogText",
+    "postCrashReportSubmitEmailButton"
   ],
 
   "uk": [
@@ -2279,7 +2324,10 @@
     "imageEnhancerResultSuccessfulNotifContent",
     "imageSegmentPicker6PointLimit",
     "imageSegmentPickerInitFailedText",
-    "imageSegmentPickerInstruction"
+    "imageSegmentPickerInstruction",
+    "postCrashReportDialogText",
+    "postCrashReportSubmitDialogText",
+    "postCrashReportSubmitEmailButton"
   ],
 
   "zh": [
@@ -2449,6 +2497,9 @@
     "imageSegmentPicker6PointLimit",
     "imageSegmentPickerInitFailedText",
     "imageSegmentPickerInstruction",
+    "postCrashReportDialogText",
+    "postCrashReportSubmitDialogText",
+    "postCrashReportSubmitEmailButton",
     "errorServerNoCert"
   ],
 
@@ -2705,6 +2756,9 @@
     "imageSegmentPicker6PointLimit",
     "imageSegmentPickerInitFailedText",
     "imageSegmentPickerInstruction",
+    "postCrashReportDialogText",
+    "postCrashReportSubmitDialogText",
+    "postCrashReportSubmitEmailButton",
     "errorServerNoCert"
   ]
 }

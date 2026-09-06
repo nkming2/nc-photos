@@ -18,6 +18,7 @@ abstract class $_StateCopyWithWorker {
     double? upgradeProgress,
     String? upgradeText,
     bool? isDone,
+    ExitInfoResult? exitInfo,
   });
 }
 
@@ -30,6 +31,7 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
     dynamic upgradeProgress = copyWithNull,
     dynamic upgradeText = copyWithNull,
     dynamic isDone,
+    dynamic exitInfo = copyWithNull,
   }) {
     return _State(
       changelogFromVersion: changelogFromVersion == copyWithNull
@@ -42,6 +44,9 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
           ? that.upgradeText
           : upgradeText as String?,
       isDone: isDone as bool? ?? that.isDone,
+      exitInfo: exitInfo == copyWithNull
+          ? that.exitInfo
+          : exitInfo as ExitInfoResult?,
     );
   }
 
@@ -78,7 +83,7 @@ extension _$_BlocNpLog on _Bloc {
 extension _$_StateToString on _State {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_State {changelogFromVersion: $changelogFromVersion, upgradeProgress: ${upgradeProgress == null ? null : "${upgradeProgress!.toStringAsFixed(3)}"}, upgradeText: $upgradeText, isDone: $isDone}";
+    return "_State {changelogFromVersion: $changelogFromVersion, upgradeProgress: ${upgradeProgress == null ? null : "${upgradeProgress!.toStringAsFixed(3)}"}, upgradeText: $upgradeText, isDone: $isDone, exitInfo: $exitInfo}";
   }
 }
 

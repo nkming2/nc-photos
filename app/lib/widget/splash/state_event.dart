@@ -8,6 +8,7 @@ class _State {
     this.upgradeProgress,
     this.upgradeText,
     required this.isDone,
+    this.exitInfo,
   });
 
   factory _State.init() => const _State(isDone: false);
@@ -19,6 +20,8 @@ class _State {
   final double? upgradeProgress;
   final String? upgradeText;
   final bool isDone;
+
+  final ExitInfoResult? exitInfo;
 }
 
 abstract class _Event {}
