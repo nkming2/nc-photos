@@ -1706,5 +1706,11 @@
 	"imageEnhancerResultSuccessfulNotifContent": "タップして編集結果を表示",
 	"imageSegmentPicker6PointLimit": "ポイントは6つまで指定できます",
 	"imageSegmentPickerInitFailedText": "初期化に失敗しました",
-	"imageSegmentPickerInstruction": "タップでポイントを指定し、写真の一部を切り取ります。指定したポイントをもう一度タップすると消えます"
+	"imageSegmentPickerInstruction": "タップでポイントを指定し、写真の一部を切り取ります。指定したポイントをもう一度タップすると消えます",
+	"imageEditToolbarMarkupLabel": "マークアップ",
+	"imageEditMarkupUndo": "取り消し",
+	"imageEditBrushRadius": "サイズ",
+	"postCrashReportDialogText": "このアプリがクラッシュし、再起動しました。ログを開発者と共有すると、不具合の特定や修正に役立ちます。ログをエクスポートしますか？",
+	"postCrashReportSubmitDialogText": "ログをエクスポートしました。お手数ですが、GitHubかメールでこのログと共に不具合報告を提出してください。よろしくお願いします。",
+	"postCrashReportSubmitEmailButton": "メール"
 }

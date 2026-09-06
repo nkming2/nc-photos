@@ -1288,13 +1288,13 @@ class AppLocalizationsJa extends AppLocalizations {
       '画像の変形設定を調整した後、選択した顔はクリアされます。お手数ですが、もう一度選択してください';
 
   @override
-  String get imageEditToolbarMarkupLabel => 'Markup';
+  String get imageEditToolbarMarkupLabel => 'マークアップ';
 
   @override
-  String get imageEditMarkupUndo => 'Undo';
+  String get imageEditMarkupUndo => '取り消し';
 
   @override
-  String get imageEditBrushRadius => 'Radius';
+  String get imageEditBrushRadius => 'サイズ';
 
   @override
   String get imageEditOpenErrorMessage => '写真を読み込むことができません';
@@ -1659,14 +1659,14 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get postCrashReportDialogText =>
-      'The app crashed during the previous run. Sending the log to the developer could help to diagnose the issue. Do you wish to export the log?';
+      'このアプリがクラッシュし、再起動しました。ログを開発者と共有すると、不具合の特定や修正に役立ちます。ログをエクスポートしますか？';
 
   @override
   String get postCrashReportSubmitDialogText =>
-      'Log saved, please report the issue to the developer on GitHub or via email with the log file attached. Thank you.';
+      'ログをエクスポートしました。お手数ですが、GitHubかメールでこのログと共に不具合報告を提出してください。よろしくお願いします。';
 
   @override
-  String get postCrashReportSubmitEmailButton => 'Email';
+  String get postCrashReportSubmitEmailButton => 'メール';
 
   @override
   String get errorUnauthenticated => '認証されていないアクセスです。問題が解決しない場合は、再度サインインしてください';

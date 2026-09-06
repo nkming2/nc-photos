@@ -1265,15 +1265,6 @@
     "errorServerNoCert"
   ],
 
-  "ja": [
-    "imageEditToolbarMarkupLabel",
-    "imageEditMarkupUndo",
-    "imageEditBrushRadius",
-    "postCrashReportDialogText",
-    "postCrashReportSubmitDialogText",
-    "postCrashReportSubmitEmailButton"
-  ],
-
   "nl": [
     "deleteSelectedProcessingNotification",
     "deleteSelectedFailureNotification",
