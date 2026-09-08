@@ -48,6 +48,7 @@ class NetworkRectThumbnailState extends State<NetworkRectThumbnail> {
         imageUrl: widget.imageUrl,
         mime: widget.mime,
         account: widget.account,
+        filterQuality: FilterQuality.medium,
         imageBuilder: (_, child, imageProvider) {
           if (widget.onDominantColor != null) {
             final currentTheme = Theme.of(context);

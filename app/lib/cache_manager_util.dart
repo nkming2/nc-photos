@@ -159,6 +159,7 @@ class CachedNetworkImageBuilder {
     this.fit,
     this.imageBuilder,
     this.errorWidget,
+    this.filterQuality = FilterQuality.high,
   });
 
   Widget build() {
@@ -171,7 +172,7 @@ class CachedNetworkImageBuilder {
         "Authorization": AuthUtil.fromAccount(account).toHeaderValue(),
       },
       fadeInDuration: const Duration(),
-      filterQuality: FilterQuality.high,
+      filterQuality: filterQuality,
       imageRenderMethodForWeb: ImageRenderMethodForWeb.HttpGet,
       imageBuilder: imageBuilder,
       errorWidget: errorWidget,
@@ -194,6 +195,7 @@ class CachedNetworkImageBuilder {
   final BoxFit? fit;
   final ImageWidgetBuilder? imageBuilder;
   final LoadingErrorWidgetBuilder? errorWidget;
+  final FilterQuality filterQuality;
 }
 
 CacheManager getCacheManager(CachedNetworkImageType type, String? mime) {
