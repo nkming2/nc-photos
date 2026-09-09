@@ -12,11 +12,13 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Size
 import androidx.core.database.getLongOrNull
+import androidx.core.graphics.scale
 import androidx.core.net.toUri
 import com.nkming.nc_photos.np_android_core.MediaStoreUtil
 import com.nkming.nc_photos.np_android_core.PermissionException
 import com.nkming.nc_photos.np_android_core.PermissionUtil
 import com.nkming.nc_photos.np_android_core.UriUtil
+import com.nkming.nc_photos.np_android_core.aspectRatio
 import com.nkming.nc_photos.np_android_core.logE
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
@@ -170,9 +172,7 @@ private class PigeonApiImpl : MyHostApi, ActivityAware, PluginRegistry.ActivityR
                                     Instant.ofEpochMilli(time), ZoneId.systemDefault()
                                 ).truncatedTo(ChronoUnit.DAYS)
                                 thisDateStr = String.format(
-                                    Locale.US,
-                                    "%04d%02d%02d",
-                                    thisDate.get(ChronoField.YEAR),
+                                    Locale.US, "%04d%02d%02d", thisDate.get(ChronoField.YEAR),
                                     thisDate.get(ChronoField.MONTH_OF_YEAR),
                                     thisDate.get(ChronoField.DAY_OF_MONTH)
                                 )
@@ -422,9 +422,15 @@ private class PigeonApiImpl : MyHostApi, ActivityAware, PluginRegistry.ActivityR
         launch(Dispatchers.IO) {
             try {
                 val uri = platformIdentifier.toUri()
-                val bitmap = context!!.contentResolver.loadThumbnail(
+                var bitmap = context!!.contentResolver.loadThumbnail(
                     uri, Size(width.toInt(), height.toInt()), null
                 )
+                if (bitmap.width > width && bitmap.height > height) {
+                    bitmap = bitmap.scale(
+                        minOf(width.toInt(), (height * bitmap.aspectRatio()).toInt()),
+                        minOf(height.toInt(), (width / bitmap.aspectRatio()).toInt())
+                    )
+                }
                 val bytes = ByteArrayOutputStream().use {
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 82, it)
                     it.toByteArray()
