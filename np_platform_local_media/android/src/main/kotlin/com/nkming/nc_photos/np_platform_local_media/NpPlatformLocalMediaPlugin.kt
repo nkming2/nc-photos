@@ -422,19 +422,22 @@ private class PigeonApiImpl : MyHostApi, ActivityAware, PluginRegistry.ActivityR
         launch(Dispatchers.IO) {
             try {
                 val uri = platformIdentifier.toUri()
-                var bitmap = context!!.contentResolver.loadThumbnail(
+                val original = context!!.contentResolver.loadThumbnail(
                     uri, Size(width.toInt(), height.toInt()), null
                 )
+                var bitmap = original
                 if (bitmap.width > width && bitmap.height > height) {
                     bitmap = bitmap.scale(
                         minOf(width.toInt(), (height * bitmap.aspectRatio()).toInt()),
                         minOf(height.toInt(), (width / bitmap.aspectRatio()).toInt())
                     )
+                    original.recycle()
                 }
                 val bytes = ByteArrayOutputStream().use {
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 82, it)
                     it.toByteArray()
                 }
+                bitmap.recycle()
                 callback(Result.success(bytes))
             } catch (e: FileNotFoundException) {
                 callback(Result.failure(FlutterError("fileNotFoundException", e.message, null)))
