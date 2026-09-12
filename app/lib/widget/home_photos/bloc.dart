@@ -152,25 +152,6 @@ class _Bloc extends Bloc<_Event, _State>
       stream
           .distinct(
             (previous, next) =>
-                previous.transformedItems == next.transformedItems,
-          )
-          .listen((event) {
-            _visibleDatesFinder.setTransformedItems(event.transformedItems);
-          }),
-    );
-    _subscriptions.add(
-      stream
-          .distinct(
-            (previous, next) => previous.sectionLayouts == next.sectionLayouts,
-          )
-          .listen((event) {
-            _visibleDatesFinder.setSectionLayouts(event.sectionLayouts);
-          }),
-    );
-    _subscriptions.add(
-      stream
-          .distinct(
-            (previous, next) =>
                 previous.viewHeight == next.viewHeight &&
                 previous.itemPerRow == next.itemPerRow &&
                 previous.itemSize == next.itemSize,
@@ -972,6 +953,10 @@ class _Bloc extends Bloc<_Event, _State>
       );
     }
     emit(newState);
+    _visibleDatesFinder.setSectionLayouts(
+      transformedItems: state.transformedItems,
+      sectionLayouts: result.sectionLayouts,
+    );
   }
 
   final DiContainer _c;

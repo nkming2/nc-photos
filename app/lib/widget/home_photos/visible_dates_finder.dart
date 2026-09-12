@@ -10,12 +10,12 @@ class _VisibleDatesFinder {
 
   Stream<Date?> get bestLatestVisibleDate => _bestDateStreamController.stream;
 
-  void setTransformedItems(List<List<_Item>> transformedItems) {
+  void setSectionLayouts({
+    required List<List<_Item>> transformedItems,
+    required List<_SectionLayout> sectionLayouts,
+  }) {
+    // both need to be set together to prevent them out-syncing
     _transformedItems = transformedItems;
-    _update();
-  }
-
-  void setSectionLayouts(List<_SectionLayout> sectionLayouts) {
     _sectionLayouts = sectionLayouts;
     _update();
   }
