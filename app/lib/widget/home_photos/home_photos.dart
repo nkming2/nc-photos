@@ -72,6 +72,7 @@ import 'package:np_common/unique.dart';
 import 'package:np_datetime/np_datetime.dart';
 import 'package:np_log/np_log.dart';
 import 'package:np_ui/np_ui.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:to_string/to_string.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -79,10 +80,12 @@ part 'app_bar.dart';
 part 'bloc.dart';
 part 'delete_dialog.dart';
 part 'home_photos.g.dart';
+part 'layout_summarizer.dart';
 part 'minimap_view.dart';
 part 'state_event.dart';
 part 'type.dart';
 part 'view.dart';
+part 'visible_dates_finder.dart';
 
 class HomePhotos2BackToTopEvent {
   const HomePhotos2BackToTopEvent();
@@ -114,6 +117,7 @@ class HomePhotos2 extends StatelessWidget {
               context,
             ).timelineDraggableThumbSize,
             dateHeight: AppDimension.of(context).timelineDateItemHeight,
+            obstructedViewTop: _getAppBarExtent(context),
           ),
         ),
         BlocProvider(
@@ -405,10 +409,13 @@ class _BodyState extends State<_Body> {
   void initState() {
     super.initState();
     _onBackToTopListener.begin();
+    _scrollController.addListener(_onScroll);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _updateScrollOffset());
   }
 
   @override
   void dispose() {
+    _scrollController.removeListener(_onScroll);
     _onBackToTopListener.end();
     super.dispose();
   }
@@ -606,6 +613,30 @@ class _BodyState extends State<_Body> {
     _scrollController.jumpTo(0);
   }
 
+  void _onScroll() {
+    if (_isScrollUpdateScheduled) {
+      return;
+    }
+    _isScrollUpdateScheduled = true;
+    // cap update to once per frame
+    WidgetsBinding.instance.addPostFrameCallback((_) => _updateScrollOffset());
+  }
+
+  void _updateScrollOffset() {
+    _isScrollUpdateScheduled = false;
+    if (!mounted) {
+      return;
+    }
+    final hasMemoryCollection =
+        context.state.isEnableMemoryCollection &&
+        context.state.memoryCollections.isNotEmpty;
+    final contentOffset =
+        _scrollController.offset -
+        _getAppBarExtent(context) -
+        (hasMemoryCollection ? _MemoryCollectionItemView.height : 0);
+    context.addEvent(_SetScrollOffset(contentOffset));
+  }
+
   /// Return the estimated scroll extent of the custom scroll view, or null
   double? _getScrollViewExtent({
     required BuildContext context,
@@ -648,10 +679,8 @@ class _BodyState extends State<_Body> {
     }
   }
 
-  double _getAppBarExtent(BuildContext context) =>
-      MediaQuery.of(context).padding.top + kToolbarHeight;
-
   final _scrollController = ScrollController();
+  var _isScrollUpdateScheduled = false;
 
   late final _onBackToTopListener = AppEventListener<HomePhotos2BackToTopEvent>(
     _onBackToTop,
@@ -669,6 +698,9 @@ extension on BuildContext {
   _State get state => bloc.state;
   void addEvent(_Event event) => bloc.add(event);
 }
+
+double _getAppBarExtent(BuildContext context) =>
+    MediaQuery.of(context).padding.top + kToolbarHeight;
 
 @npLog
 // ignore: camel_case_types

@@ -9,7 +9,6 @@ class _State {
     required this.isLoading,
     required this.transformedItems,
     required this.selectedItems,
-    required this.visibleDateItems,
     required this.visibleDates,
     this.dateBarContent,
     required this.queriedDates,
@@ -27,6 +26,7 @@ class _State {
     this.itemPerRow,
     this.itemSize,
     required this.isScrolling,
+    required this.sectionLayouts,
     this.minimapItems,
     required this.minimapYRatio,
     this.appBarPosition,
@@ -56,7 +56,6 @@ class _State {
     isLoading: false,
     transformedItems: const [],
     selectedItems: const {},
-    visibleDateItems: const {},
     visibleDates: const {},
     queriedDates: const {},
     mergedCounts: const {},
@@ -66,6 +65,7 @@ class _State {
     zoom: zoom,
     finger: 0,
     isScrolling: false,
+    sectionLayouts: const [],
     minimapYRatio: 1,
     isDragging: false,
     hasMissingVideoPreview: false,
@@ -90,7 +90,6 @@ class _State {
   final bool isLoading;
   final List<List<_Item>> transformedItems;
   final Set<_Item> selectedItems;
-  final Set<_VisibleDate> visibleDateItems;
   final Set<Date> visibleDates;
   final Date? dateBarContent;
   final Set<Date> queriedDates;
@@ -112,6 +111,8 @@ class _State {
   final int? itemPerRow;
   final double? itemSize;
   final bool isScrolling;
+
+  final List<_SectionLayout> sectionLayouts;
   final List<_MinimapItem>? minimapItems;
   final double minimapYRatio;
   final Offset? appBarPosition;
@@ -312,26 +313,6 @@ class _SetFileUploadResult implements _Event {
 }
 
 @toString
-class _AddVisibleDate implements _Event {
-  const _AddVisibleDate(this.date);
-
-  @override
-  String toString() => _$toString();
-
-  final _VisibleDate date;
-}
-
-@toString
-class _RemoveVisibleDate implements _Event {
-  const _RemoveVisibleDate(this.date);
-
-  @override
-  String toString() => _$toString();
-
-  final _VisibleDate date;
-}
-
-@toString
 class _SetSyncProgress implements _Event {
   const _SetSyncProgress(this.progress);
 
@@ -404,6 +385,16 @@ class _SetIsDragging implements _Event {
 }
 
 @toString
+class _SetScrollOffset implements _Event {
+  const _SetScrollOffset(this.value);
+
+  @override
+  String toString() => _$toString();
+
+  final double value;
+}
+
+@toString
 class _SetLayoutConstraint implements _Event {
   const _SetLayoutConstraint(
     this.viewWidth,
@@ -417,22 +408,6 @@ class _SetLayoutConstraint implements _Event {
   final double viewWidth;
   final double viewHeight;
   final double viewOverlayPadding;
-}
-
-@toString
-class _TransformMinimap implements _Event {
-  const _TransformMinimap();
-
-  @override
-  String toString() => _$toString();
-}
-
-@toString
-class _UpdateDateBar implements _Event {
-  const _UpdateDateBar();
-
-  @override
-  String toString() => _$toString();
 }
 
 @toString
@@ -485,6 +460,26 @@ class _TripMissingVideoPreview implements _Event {
 
   @override
   String toString() => _$toString();
+}
+
+@toString
+class _SetVisibleDates implements _Event {
+  const _SetVisibleDates(this.value);
+
+  @override
+  String toString() => _$toString();
+
+  final Set<Date>? value;
+}
+
+@toString
+class _SetDateBar implements _Event {
+  const _SetDateBar(this.value);
+
+  @override
+  String toString() => _$toString();
+
+  final Date? value;
 }
 
 @toString

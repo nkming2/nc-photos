@@ -20,7 +20,6 @@ class _ContentList extends StatelessWidget {
         return _ContentListBody(
           itemPerRow: measurement.itemPerRow,
           itemSize: measurement.itemSize,
-          isNeedVisibilityInfo: true,
         );
       },
     );
@@ -54,7 +53,6 @@ class _ScalingList extends StatelessWidget {
         return _ContentListBody(
           itemPerRow: measurement.itemPerRow,
           itemSize: measurement.itemSize,
-          isNeedVisibilityInfo: false,
         );
       },
     );
@@ -63,11 +61,7 @@ class _ScalingList extends StatelessWidget {
 
 @npLog
 class _ContentListBody extends StatelessWidget {
-  const _ContentListBody({
-    required this.itemPerRow,
-    required this.itemSize,
-    required this.isNeedVisibilityInfo,
-  });
+  const _ContentListBody({required this.itemPerRow, required this.itemSize});
 
   @override
   Widget build(BuildContext context) {
@@ -90,18 +84,8 @@ class _ContentListBody extends StatelessWidget {
               selectedItems: state.selectedItems,
               sectionHeaderBuilder: (context, section, item) =>
                   item.buildWidget(context),
-              itemBuilder: (context, section, index, item) {
-                final w = item.buildWidget(context);
-                if (isNeedVisibilityInfo) {
-                  return _ContentListItemView(
-                    key: Key("${_log.fullName}.${item.id}"),
-                    item: item,
-                    child: w,
-                  );
-                } else {
-                  return w;
-                }
-              },
+              itemBuilder: (context, section, index, item) =>
+                  item.buildWidget(context),
               extentOptimizer: SelectableSectionListExtentOptimizer(
                 itemPerRow: itemPerRow,
                 titleExtentBuilder: (_) =>
@@ -125,75 +109,6 @@ class _ContentListBody extends StatelessWidget {
 
   final int itemPerRow;
   final double itemSize;
-  final bool isNeedVisibilityInfo;
-}
-
-class _ContentListItemView extends StatefulWidget {
-  const _ContentListItemView({
-    required super.key,
-    required this.item,
-    required this.child,
-  });
-
-  @override
-  State<StatefulWidget> createState() => _ContentListItemViewState();
-
-  final _Item item;
-  final Widget child;
-}
-
-class _ContentListItemViewState extends State<_ContentListItemView> {
-  @override
-  void initState() {
-    super.initState();
-    bloc = context.bloc;
-  }
-
-  @override
-  void dispose() {
-    final date = _getDate();
-    if (date != null) {
-      bloc.add(_RemoveVisibleDate(_VisibleDate(widget.item.id, date)));
-    }
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return VisibilityDetector(
-      key: Key("${widget.key}.detector"),
-      onVisibilityChanged: (info) {
-        if (context.mounted) {
-          final date = _getDate();
-          if (date != null) {
-            if (info.visibleFraction >= 0.2) {
-              context.addEvent(
-                _AddVisibleDate(_VisibleDate(widget.item.id, date)),
-              );
-            } else {
-              context.addEvent(
-                _RemoveVisibleDate(_VisibleDate(widget.item.id, date)),
-              );
-            }
-          }
-        }
-      },
-      child: widget.child,
-    );
-  }
-
-  Date? _getDate() {
-    final item = widget.item;
-    Date? date;
-    if (item is _FileItem) {
-      date = item.file.dateTime.toLocal().toDate();
-    } else if (item is _SummaryFileItem) {
-      date = item.date;
-    }
-    return date;
-  }
-
-  late final _Bloc bloc;
 }
 
 class _MemoryCollectionList extends StatelessWidget {

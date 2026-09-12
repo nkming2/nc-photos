@@ -138,15 +138,3 @@ class _MinimapPadding extends StatelessWidget {
 
   final Widget child;
 }
-
-class _MinimapItem {
-  const _MinimapItem({
-    required this.date,
-    required this.logicalY,
-    required this.logicalHeight,
-  });
-
-  final Date date;
-  final double logicalY;
-  final double logicalHeight;
-}

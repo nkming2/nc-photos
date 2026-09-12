@@ -18,6 +18,7 @@ class _Bloc extends Bloc<_Event, _State>
     required this.bottomAppBarHeight,
     required this.draggableThumbSize,
     required this.dateHeight,
+    required this.obstructedViewTop,
   }) : super(
          _State.init(
            zoom: prefController.homePhotosZoomLevelValue,
@@ -45,9 +46,6 @@ class _Bloc extends Bloc<_Event, _State>
     on<_UploadRequestResult>(_onUploadRequestResult);
     on<_SetFileUploadResult>(_onSetFileUploadResult);
 
-    on<_AddVisibleDate>(_onAddVisibleDate);
-    on<_RemoveVisibleDate>(_onRemoveVisibleDate);
-
     on<_SetSyncProgress>(_onSetSyncProgress);
 
     on<_StartScaling>(_onStartScaling);
@@ -60,9 +58,8 @@ class _Bloc extends Bloc<_Event, _State>
     on<_SetIsDragging>((ev, emit) {
       emit(state.copyWith(isDragging: ev.value));
     });
+    on<_SetScrollOffset>(_onSetScrollOffset);
     on<_SetLayoutConstraint>(_onSetLayoutConstraint);
-    on<_TransformMinimap>(_onTransformMinimap);
-    on<_UpdateDateBar>(_onUpdateDateBar);
     on<_SetAppBarPosition>((ev, emit) {
       emit(state.copyWith(appBarPosition: ev.value));
     });
@@ -73,6 +70,9 @@ class _Bloc extends Bloc<_Event, _State>
     on<_UpdateMemories>(_onUpdateMemories);
 
     on<_TripMissingVideoPreview>(_onTripMissingVideoPreview);
+
+    on<_SetVisibleDates>(_onSetVisibleDates);
+    on<_SetDateBar>(_onSetDateBar);
 
     on<_SetError>(_onSetError);
     on<_ShowRemoteOnlyWarning>((ev, emit) {
@@ -86,20 +86,6 @@ class _Bloc extends Bloc<_Event, _State>
       accountPrefController.isEnableMemoryAlbumChange.listen((event) {
         add(_SetEnableMemoryCollection(event));
       }),
-    );
-    _subscriptions.add(
-      stream
-          .distinct(
-            (previous, next) =>
-                previous.anyFilesSummary == next.anyFilesSummary &&
-                previous.viewHeight == next.viewHeight &&
-                previous.itemPerRow == next.itemPerRow &&
-                previous.itemSize == next.itemSize &&
-                mapEquals(previous.mergedCounts, next.mergedCounts),
-          )
-          .listen((event) {
-            add(const _TransformMinimap());
-          }),
     );
     _subscriptions.add(
       stream
@@ -126,17 +112,6 @@ class _Bloc extends Bloc<_Event, _State>
           )
           .listen((event) {
             _onVisibleDatesUpdated();
-          }),
-    );
-    _subscriptions.add(
-      stream
-          .distinct(
-            (previous, next) =>
-                setEquals(previous.visibleDates, next.visibleDates) &&
-                previous.isDragging == next.isDragging,
-          )
-          .listen((event) {
-            add(const _UpdateDateBar());
           }),
     );
     _subscriptions.add(
@@ -173,6 +148,51 @@ class _Bloc extends Bloc<_Event, _State>
             add(const _SelectionModeUpdated());
           }),
     );
+    _subscriptions.add(
+      stream
+          .distinct(
+            (previous, next) =>
+                previous.transformedItems == next.transformedItems,
+          )
+          .listen((event) {
+            _visibleDatesFinder.setTransformedItems(event.transformedItems);
+          }),
+    );
+    _subscriptions.add(
+      stream
+          .distinct(
+            (previous, next) => previous.sectionLayouts == next.sectionLayouts,
+          )
+          .listen((event) {
+            _visibleDatesFinder.setSectionLayouts(event.sectionLayouts);
+          }),
+    );
+    _subscriptions.add(
+      stream
+          .distinct(
+            (previous, next) =>
+                previous.viewHeight == next.viewHeight &&
+                previous.itemPerRow == next.itemPerRow &&
+                previous.itemSize == next.itemSize,
+          )
+          .listen((event) {
+            _visibleDatesFinder.setLayoutConstraint(
+              viewHeight: event.viewHeight!,
+              itemPerRow: event.itemPerRow!,
+              itemSize: event.itemSize!,
+            );
+          }),
+    );
+    _subscriptions.add(
+      _visibleDatesFinder.stream.listen((event) {
+        add(_SetVisibleDates(event));
+      }),
+    );
+    _subscriptions.add(
+      _visibleDatesFinder.bestLatestVisibleDate.listen((event) {
+        add(_SetDateBar(event));
+      }),
+    );
   }
 
   @override
@@ -192,7 +212,7 @@ class _Bloc extends Bloc<_Event, _State>
     currentState = currentState as _State;
     nextState = nextState as _State;
     return currentState.scale == nextState.scale &&
-        currentState.visibleDateItems == nextState.visibleDateItems &&
+        currentState.visibleDates == nextState.visibleDates &&
         currentState.syncProgress == nextState.syncProgress &&
         currentState.dateBarContent == nextState.dateBarContent &&
         currentState.appBarPosition == nextState.appBarPosition &&
@@ -292,6 +312,7 @@ class _Bloc extends Bloc<_Event, _State>
         queriedDates: ev.dates,
       ),
     );
+    _updateLayoutSummary(emit);
     // update with the new queriedDates
     _requestMoreFiles();
   }
@@ -557,32 +578,6 @@ class _Bloc extends Bloc<_Event, _State>
     emit(state.copyWith(uploadingFiles: newUploadingFiles));
   }
 
-  void _onAddVisibleDate(_AddVisibleDate ev, Emitter<_State> emit) {
-    // _log.info(ev);
-    if (state.visibleDateItems.contains(ev.date)) {
-      return;
-    }
-    emit(
-      state.copyWith(
-        visibleDateItems: state.visibleDateItems.added(ev.date),
-        visibleDates: state.visibleDateItems.map((e) => e.date).toSet(),
-      ),
-    );
-  }
-
-  void _onRemoveVisibleDate(_RemoveVisibleDate ev, Emitter<_State> emit) {
-    // _log.info(ev);
-    if (!state.visibleDateItems.contains(ev.date)) {
-      return;
-    }
-    emit(
-      state.copyWith(
-        visibleDateItems: state.visibleDateItems.removed(ev.date),
-        visibleDates: state.visibleDateItems.map((e) => e.date).toSet(),
-      ),
-    );
-  }
-
   void _onSetSyncProgress(_SetSyncProgress ev, Emitter<_State> emit) {
     _log.info(ev);
     emit(state.copyWith(syncProgress: ev.progress));
@@ -626,6 +621,12 @@ class _Bloc extends Bloc<_Event, _State>
     emit(state.copyWith(isScrolling: false));
   }
 
+  void _onSetScrollOffset(_SetScrollOffset ev, Emitter<_State> emit) {
+    // _log.info(ev);
+    _scrollOffset = ev.value;
+    _visibleDatesFinder.setScrollOffset(ev.value);
+  }
+
   void _onSetScale(_SetScale ev, Emitter<_State> emit) {
     // _log.info(ev);
     emit(state.copyWith(scale: ev.scale));
@@ -655,97 +656,7 @@ class _Bloc extends Bloc<_Event, _State>
         itemSize: measurement.itemSize,
       ),
     );
-  }
-
-  Future<void> _onTransformMinimap(
-    _TransformMinimap ev,
-    Emitter<_State> emit,
-  ) async {
-    _log.info(ev);
-    if (state.itemSize == null ||
-        state.itemPerRow == null ||
-        state.viewHeight == null ||
-        state.viewOverlayPadding == null) {
-      _log.warning("[_onTransformMinimap] Layout measurements not ready");
-      return;
-    }
-    // valid content height, this is also the minimap height
-    final contentHeight = state.viewHeight! - state.viewOverlayPadding!;
-    final maker = prefController.homePhotosZoomLevelValue >= 0
-        ? _makeMinimapItems
-        : _makeMonthGroupMinimapItems;
-    final summary = SplayTreeMap<Date, int>((a, b) => b.compareTo(a));
-    for (final e in state.anyFilesSummary.items.entries) {
-      summary[e.key] = e.value;
-    }
-    for (final e in state.mergedCounts.entries) {
-      summary[e.key] = max((summary[e.key] ?? 0) - e.value, 0);
-    }
-    final minimapItems = maker(
-      filesSummary: summary,
-      itemSize: state.itemSize!,
-      itemPerRow: state.itemPerRow!,
-      viewHeight: contentHeight,
-    );
-    var totalHeight =
-        minimapItems.map((e) => e.logicalHeight).sum + bottomAppBarHeight;
-    if (state.isEnableMemoryCollection && state.memoryCollections.isNotEmpty) {
-      totalHeight += _MemoryCollectionItemView.height;
-    }
-    final ratio =
-        (contentHeight - draggableThumbSize) / (totalHeight - contentHeight);
-    _log.info(
-      "[_onTransformMinimap] content height: $contentHeight, logical height: $totalHeight",
-    );
-    emit(state.copyWith(minimapItems: minimapItems, minimapYRatio: ratio));
-  }
-
-  void _onUpdateDateBar(_UpdateDateBar ev, _Emitter emit) {
-    // _log.info(ev);
-    if (state.itemPerRow == null || state.visibleDates.isEmpty) {
-      return;
-    }
-    final Map<Date, int> groups;
-    final Date date;
-    var count = 0;
-    var visibleCount = 0;
-    if (prefController.homePhotosZoomLevelValue >= 0) {
-      groups = state.visibleDateItems.groupFoldBy<Date, int>(
-        (e) => e.date,
-        (previous, element) => (previous ?? 0) + 1,
-      );
-      final firstDate = groups.keys.sortedBySelf().lastOrNull;
-      if (firstDate == null) {
-        emit(state.copyWith(dateBarContent: null));
-        return;
-      }
-      count = state.anyFilesSummary.items[firstDate] ?? 0;
-      visibleCount = groups[firstDate] ?? 0;
-      date = firstDate;
-    } else {
-      groups = state.visibleDateItems.groupFoldBy<Date, int>(
-        (e) => e.date.copyWith(day: 1),
-        (previous, element) => (previous ?? 0) + 1,
-      );
-      final firstMonth = groups.keys.sortedBySelf().lastOrNull;
-      if (firstMonth == null) {
-        emit(state.copyWith(dateBarContent: null));
-        return;
-      }
-      for (final e in state.anyFilesSummary.items.entries) {
-        if (e.key >= firstMonth && e.key < firstMonth.add(month: 1)) {
-          count += e.value;
-        }
-      }
-      visibleCount = groups[firstMonth] ?? 0;
-      date = firstMonth;
-    }
-    if ((count > state.itemPerRow! * 2 && count > visibleCount) ||
-        state.isDragging) {
-      emit(state.copyWith(dateBarContent: date));
-    } else {
-      emit(state.copyWith(dateBarContent: null));
-    }
+    _updateLayoutSummary(emit);
   }
 
   void _onSetEnableMemoryCollection(
@@ -772,8 +683,8 @@ class _Bloc extends Bloc<_Event, _State>
           itemSize: measurement.itemSize,
         ),
       );
+      _updateLayoutSummary(emit);
     }
-    add(const _TransformMinimap());
   }
 
   void _onUpdateDateTimeGroup(_UpdateDateTimeGroup ev, Emitter<_State> emit) {
@@ -791,7 +702,6 @@ class _Bloc extends Bloc<_Event, _State>
       );
     }
     _transformItems(state.anyFiles, state.mergedCounts, state.anyFilesSummary);
-    add(const _TransformMinimap());
   }
 
   Future<void> _onUpdateMemories(
@@ -862,6 +772,30 @@ class _Bloc extends Bloc<_Event, _State>
     if (!state.hasMissingVideoPreview) {
       emit(state.copyWith(hasMissingVideoPreview: true));
     }
+  }
+
+  void _onSetVisibleDates(_SetVisibleDates ev, _Emitter emit) {
+    if (!setEquals(state.visibleDates, ev.value)) {
+      _log.info(ev);
+      emit(state.copyWith(visibleDates: ev.value));
+    }
+  }
+
+  void _onSetDateBar(_SetDateBar ev, _Emitter emit) {
+    if (state.itemPerRow == null || _scrollOffset <= 0 || ev.value == null) {
+      if (state.dateBarContent != null) {
+        emit(state.copyWith(dateBarContent: null));
+      }
+      return;
+    }
+    if (state.dateBarContent == ev.value) {
+      return;
+    }
+    _log.info(ev);
+    final date = prefController.homePhotosZoomLevelValue >= 0
+        ? ev.value
+        : ev.value!.copyWith(day: 1);
+    emit(state.copyWith(dateBarContent: date));
   }
 
   void _onSetError(_SetError ev, Emitter<_State> emit) {
@@ -1004,116 +938,40 @@ class _Bloc extends Bloc<_Event, _State>
     }
   }
 
-  List<_MinimapItem> _makeMonthGroupMinimapItems({
-    required Map<Date, int> filesSummary,
-    required double itemSize,
-    required int itemPerRow,
-    required double viewHeight,
-  }) {
-    _log.info(
-      "[_makeMonthGroupMinimapItems] itemSize: $itemSize, itemPerRow: $itemPerRow, viewHeight: $viewHeight",
+  void _updateLayoutSummary(_Emitter emit) {
+    if (state.itemSize == null || state.itemPerRow == null) {
+      return;
+    }
+    final summarizer = _LayoutSummarizer();
+    final result = summarizer.summarize(
+      transformedItems: state.transformedItems,
+      isSectionGroupedByMonth: prefController.homePhotosZoomLevelValue < 0,
+      itemSize: state.itemSize!,
+      itemPerRow: state.itemPerRow!,
+      dateHeight: dateHeight,
     );
-    double position = 0;
-    Date? currentMonth;
-    double currentMonthY = 0;
-    var currentMonthCount = 0;
-    final results = <_MinimapItem>[];
-    for (final e in filesSummary.entries) {
-      final thisMonth = Date(e.key.year, e.key.month);
-      if (currentMonth != thisMonth) {
-        if (currentMonth != null) {
-          final h = _getLogicalHeightByItemCount(
-            itemCount: currentMonthCount,
-            rowHeight: itemSize,
-            itemPerRow: itemPerRow,
-            dateHeight: dateHeight,
-          );
-          results.add(
-            _MinimapItem(
-              date: currentMonth,
-              logicalY: currentMonthY,
-              logicalHeight: h,
-            ),
-          );
-          position += h;
-        }
-        currentMonth = thisMonth;
-        currentMonthY = position;
-        currentMonthCount = e.value;
-      } else {
-        currentMonthCount += e.value;
+    var newState = state.copyWith(sectionLayouts: result.sectionLayouts);
+    if (state.viewHeight != null && state.viewOverlayPadding != null) {
+      // valid content height, this is also the minimap height
+      final contentHeight = state.viewHeight! - state.viewOverlayPadding!;
+      var totalHeight =
+          result.minimapItems.map((e) => e.logicalHeight).sum +
+          bottomAppBarHeight;
+      if (state.isEnableMemoryCollection &&
+          state.memoryCollections.isNotEmpty) {
+        totalHeight += _MemoryCollectionItemView.height;
       }
-    }
-    // add the last month
-    if (currentMonth != null) {
-      final h = _getLogicalHeightByItemCount(
-        itemCount: currentMonthCount,
-        rowHeight: itemSize,
-        itemPerRow: itemPerRow,
-        dateHeight: dateHeight,
+      final ratio =
+          (contentHeight - draggableThumbSize) / (totalHeight - contentHeight);
+      _log.info(
+        "[_updateLayoutSummary] content height: $contentHeight, logical height: $totalHeight",
       );
-      results.add(
-        _MinimapItem(
-          date: currentMonth,
-          logicalY: currentMonthY,
-          logicalHeight: h,
-        ),
+      newState = newState.copyWith(
+        minimapItems: result.minimapItems,
+        minimapYRatio: ratio,
       );
     }
-    return results;
-  }
-
-  List<_MinimapItem> _makeMinimapItems({
-    required Map<Date, int> filesSummary,
-    required double itemSize,
-    required int itemPerRow,
-    required double viewHeight,
-  }) {
-    _log.info(
-      "[_makeMinimapItems] itemSize: $itemSize, itemPerRow: $itemPerRow, viewHeight: $viewHeight",
-    );
-    double position = 0;
-    Date? currentMonth;
-    double currentMonthY = 0;
-    double currentMonthHeight = 0;
-    final results = <_MinimapItem>[];
-    for (final e in filesSummary.entries) {
-      final thisMonth = Date(e.key.year, e.key.month);
-      final h = _getLogicalHeightByItemCount(
-        itemCount: e.value,
-        rowHeight: itemSize,
-        itemPerRow: itemPerRow,
-        dateHeight: dateHeight,
-      );
-      if (currentMonth != thisMonth) {
-        if (currentMonth != null) {
-          results.add(
-            _MinimapItem(
-              date: currentMonth,
-              logicalY: currentMonthY,
-              logicalHeight: currentMonthHeight,
-            ),
-          );
-        }
-        currentMonth = thisMonth;
-        currentMonthY = position;
-        currentMonthHeight = h;
-      } else {
-        currentMonthHeight += h;
-      }
-      position += h;
-    }
-    // add the last month
-    if (currentMonth != null) {
-      results.add(
-        _MinimapItem(
-          date: currentMonth,
-          logicalY: currentMonthY,
-          logicalHeight: currentMonthHeight,
-        ),
-      );
-    }
-    return results;
+    emit(newState);
   }
 
   final DiContainer _c;
@@ -1130,6 +988,7 @@ class _Bloc extends Bloc<_Event, _State>
   final double bottomAppBarHeight;
   final double draggableThumbSize;
   final double dateHeight;
+  final double obstructedViewTop;
 
   final _itemTransformerQueue =
       ComputeQueue<_ItemTransformerArgument, _ItemTransformerResult>();
@@ -1139,15 +998,12 @@ class _Bloc extends Bloc<_Event, _State>
   var _isQueryingFiles = false;
   Timer? _filesQueryTimer;
   final _queryCount = <Date, int>{};
-}
 
-double _getLogicalHeightByItemCount({
-  required int itemCount,
-  required double rowHeight,
-  required int itemPerRow,
-  required double dateHeight,
-}) {
-  return dateHeight + (itemCount / itemPerRow).ceil() * rowHeight;
+  late final _visibleDatesFinder = _VisibleDatesFinder(
+    dateHeight: dateHeight,
+    obstructedViewTop: obstructedViewTop,
+  );
+  double _scrollOffset = 0;
 }
 
 _ItemTransformerResult _buildItem(_ItemTransformerArgument arg) {

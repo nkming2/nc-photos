@@ -191,26 +191,6 @@ class _ItemTransformerResult {
   final Set<Date> dates;
 }
 
-@toString
-class _VisibleDate implements Comparable<_VisibleDate> {
-  const _VisibleDate(this.id, this.date);
-
-  @override
-  bool operator ==(Object other) => other is _VisibleDate && id == other.id;
-
-  @override
-  int compareTo(_VisibleDate other) => id.compareTo(other.id);
-
-  @override
-  int get hashCode => id.hashCode;
-
-  @override
-  String toString() => _$toString();
-
-  final String id;
-  final Date date;
-}
-
 enum _SelectionMenuOption { archive, delete, download }
 
 @toString
