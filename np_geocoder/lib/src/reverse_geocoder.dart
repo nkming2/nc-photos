@@ -154,12 +154,6 @@ class ReverseGeocoder {
       FROM names
       WHERE geonameId IN (${ids.nonNulls.join(", ")});
       """;
-    var nameMap = <int, Map<String, String>>{};
-    for (final r in _db.select(nameSql)) {
-      nameMap[r.columnAt(0)] ??= <String, String>{};
-      nameMap[r.columnAt(0)]![r.columnAt(1)] = r.columnAt(2);
-    }
-
     // lang: names
     final city = <String, String>{};
     final admin1 = <String, String>{};
