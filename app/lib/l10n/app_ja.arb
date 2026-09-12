@@ -220,7 +220,7 @@
 	"@rootPickerListEmptyNotification": {
 		"description": "Error when user pressing confirm without picking any folders"
 	},
-	"setupWidgetTitle": "始める",
+	"setupWidgetTitle": "はじめに",
 	"@setupWidgetTitle": {
 		"description": "Title of the introductory widget"
 	},

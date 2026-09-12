@@ -202,7 +202,7 @@ class AppLocalizationsJa extends AppLocalizations {
       '少なくとも1つのフォルダを選択するか、スキップを押してすべてを含めてください。';
 
   @override
-  String get setupWidgetTitle => '始める';
+  String get setupWidgetTitle => 'はじめに';
 
   @override
   String get setupSettingsModifyLaterHint => '後で設定で変更できます';
