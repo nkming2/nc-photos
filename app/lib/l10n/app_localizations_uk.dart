@@ -516,13 +516,6 @@ class AppLocalizationsUk extends AppLocalizations {
       'Керування довіреними сертифікатами';
 
   @override
-  String get settingsUseNewHttpEngine => 'Використовувати новий HTTP-рушій';
-
-  @override
-  String get settingsUseNewHttpEngineDescription =>
-      'Новий HTTP-рушій на основі Chromium із підтримкою сучасних стандартів, зокрема HTTP/2 і HTTP/3 (QUIC).  Обмеження: Самопідписані сертифікати більше не можна керувати через застосунок. Щоб вони працювали, потрібно імпортувати сертифікати вашого центру сертифікації (CA) до системного сховища довірених сертифікатів.  * Для використання HTTP/2 і HTTP/3 потрібне з’єднання HTTPS';
-
-  @override
   String get settingsAboutSectionTitle => 'Про застосунок';
 
   @override
@@ -546,10 +539,6 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get settingsTranslatorTitle => 'Перекладач';
-
-  @override
-  String get settingsRestartNeededDialog =>
-      'Будь ласка, перезавантажте додаток, щоб застосувати зміни';
 
   @override
   String get writePreferenceFailureNotification =>

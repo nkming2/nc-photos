@@ -512,13 +512,6 @@ class AppLocalizationsTr extends AppLocalizations {
       'Güvenilen Sertifikaları Yönet';
 
   @override
-  String get settingsUseNewHttpEngine => 'Yeni HTTP işleyiciyi kullan';
-
-  @override
-  String get settingsUseNewHttpEngineDescription =>
-      'HTTP/2* ve HTTP/3 QUIC* gibi yeni HTTP standartlarını destekleyen Chromium tabanlı HTTP işleyicisi.\n\nLimitler:\nKendinden imzalı sertifikalar tarafımızca yönetilemez. CA sertifikalarınızı çalışmaları için sistem güven deposuna içe aktarmanız gerekir.\n\n* HTTP/2 ve HTTP/3 için HTTPS gereklidir';
-
-  @override
   String get settingsAboutSectionTitle => 'Hakkında';
 
   @override
@@ -542,10 +535,6 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get settingsTranslatorTitle => 'Çeviren';
-
-  @override
-  String get settingsRestartNeededDialog =>
-      'Değişiklikleri uygulamak için lütfen uygulamayı yeniden başlatın';
 
   @override
   String get writePreferenceFailureNotification =>

@@ -4,26 +4,18 @@ part of 'expert_settings.dart';
 @toString
 class _State {
   const _State({
-    required this.isNewHttpEngine,
     required this.isViewerUseOriginalImage,
     this.lastSuccessful,
     this.error,
   });
 
-  factory _State.init({
-    required bool isNewHttpEngine,
-    required bool isViewerUseOriginalImage,
-  }) {
-    return _State(
-      isNewHttpEngine: isNewHttpEngine,
-      isViewerUseOriginalImage: isViewerUseOriginalImage,
-    );
+  factory _State.init({required bool isViewerUseOriginalImage}) {
+    return _State(isViewerUseOriginalImage: isViewerUseOriginalImage);
   }
 
   @override
   String toString() => _$toString();
 
-  final bool isNewHttpEngine;
   final bool isViewerUseOriginalImage;
   final _Event? lastSuccessful;
 
@@ -57,16 +49,6 @@ class _ClearCacheDatabase implements _Event {
 
   @override
   String toString() => _$toString();
-}
-
-@toString
-class _SetNewHttpEngine implements _Event {
-  const _SetNewHttpEngine(this.value);
-
-  @override
-  String toString() => _$toString();
-
-  final bool value;
 }
 
 @toString

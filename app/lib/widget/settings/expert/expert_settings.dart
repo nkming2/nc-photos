@@ -77,27 +77,6 @@ class _WrappedExpertSettingsState extends State<_WrappedExpertSettings>
               }
             },
           ),
-          _BlocListenerT<bool>(
-            selector: (state) => state.isNewHttpEngine,
-            listener: (context, isNewHttpEngine) {
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  content: Text(L10n.global().settingsRestartNeededDialog),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(
-                        MaterialLocalizations.of(context).closeButtonLabel,
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
           _BlocListener(
             listenWhen: (previous, current) => previous.error != current.error,
             listener: (context, state) {
@@ -151,26 +130,6 @@ class _WrappedExpertSettingsState extends State<_WrappedExpertSettings>
                   },
                 ),
                 _BlocSelector<bool>(
-                  selector: (state) => state.isNewHttpEngine,
-                  builder: (context, isNewHttpEngine) => CheckboxListTile(
-                    title: Text(L10n.global().settingsUseNewHttpEngine),
-                    value: isNewHttpEngine,
-                    onChanged: (value) async {
-                      if (value == true) {
-                        final result = await showDialog<bool>(
-                          context: context,
-                          builder: (context) => const _NewHttpEngineDialog(),
-                        );
-                        if (context.mounted && result == true) {
-                          context.addEvent(const _SetNewHttpEngine(true));
-                        }
-                      } else {
-                        context.addEvent(const _SetNewHttpEngine(false));
-                      }
-                    },
-                  ),
-                ),
-                _BlocSelector<bool>(
                   selector: (state) => state.isViewerUseOriginalImage,
                   builder: (_, state) {
                     return SwitchListTile(
@@ -194,35 +153,9 @@ class _WrappedExpertSettingsState extends State<_WrappedExpertSettings>
   }
 }
 
-class _NewHttpEngineDialog extends StatelessWidget {
-  const _NewHttpEngineDialog();
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text(L10n.global().settingsUseNewHttpEngine),
-      content: Text(L10n.global().settingsUseNewHttpEngineDescription),
-      actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop(false);
-          },
-          child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
-        ),
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop(true);
-          },
-          child: Text(L10n.global().enableButtonLabel),
-        ),
-      ],
-    );
-  }
-}
-
 // typedef _BlocBuilder = BlocBuilder<_Bloc, _State>;
 typedef _BlocListener = BlocListener<_Bloc, _State>;
-typedef _BlocListenerT<T> = BlocListenerT<_Bloc, _State, T>;
+// typedef _BlocListenerT<T> = BlocListenerT<_Bloc, _State, T>;
 typedef _BlocSelector<T> = BlocSelector<_Bloc, _State, T>;
 typedef _Emitter = Emitter<_State>;
 

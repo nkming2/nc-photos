@@ -514,13 +514,6 @@ class AppLocalizationsEs extends AppLocalizations {
       'Administrar certificados de confianza';
 
   @override
-  String get settingsUseNewHttpEngine => 'Usar nuevo motor HTTP';
-
-  @override
-  String get settingsUseNewHttpEngineDescription =>
-      'El nuevo motor HTTP basado en Chromium, soporta nuevos estándares como HTTP/2* y HTTP/3 QUIC*.\n\nLimitaciones:\nYa no podemos administrar los certificados autofirmados. Debes importar tus certificados CA al almacén de confianza del sistema para que funcionen.\n\n* HTTPS requerido para HTTP/2 y HTTP/3 QUIC*.';
-
-  @override
   String get settingsAboutSectionTitle => 'Acerca de';
 
   @override
@@ -544,10 +537,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get settingsTranslatorTitle => 'Traductor';
-
-  @override
-  String get settingsRestartNeededDialog =>
-      'Por favor reinicia la aplicación para aplicar los cambios';
 
   @override
   String get writePreferenceFailureNotification =>

@@ -9,14 +9,12 @@ class _Bloc extends Bloc<_Event, _State>
   _Bloc({required this.db, required this.prefController})
     : super(
         _State.init(
-          isNewHttpEngine: prefController.isNewHttpEngineValue,
           isViewerUseOriginalImage:
               prefController.isViewerUseOriginalImageValue,
         ),
       ) {
     on<_Init>(_onInit);
     on<_ClearCacheDatabase>(_onClearCacheDatabase);
-    on<_SetNewHttpEngine>(_onSetNewHttpEngine);
     on<_SetViewerUseOriginalImage>(_onSetViewerUseOriginalImage);
     on<_SetError>((ev, emit) {
       _log.info(ev);
@@ -35,11 +33,6 @@ class _Bloc extends Bloc<_Event, _State>
   Future<void> _onInit(_Init ev, _Emitter emit) async {
     _log.info(ev);
     await Future.wait([
-      forEach(
-        emit,
-        prefController.isNewHttpEngineChange,
-        onData: (data) => state.copyWith(isNewHttpEngine: data),
-      ),
       forEach(
         emit,
         prefController.isViewerUseOriginalImageChange,
@@ -65,11 +58,6 @@ class _Bloc extends Bloc<_Event, _State>
       _log.shout("[_onClearCacheDatabase] Uncaught exception", e, stackTrace);
       emit(state.copyWith(error: ExceptionEvent(e, stackTrace)));
     }
-  }
-
-  void _onSetNewHttpEngine(_SetNewHttpEngine ev, _Emitter emit) {
-    _log.info(ev);
-    prefController.setNewHttpEngine(ev.value);
   }
 
   void _onSetViewerUseOriginalImage(

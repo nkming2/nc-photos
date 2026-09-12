@@ -518,13 +518,6 @@ class AppLocalizationsCs extends AppLocalizations {
       'Spravovat důvěryhodné certifikáty';
 
   @override
-  String get settingsUseNewHttpEngine => 'Použít nový engine HTTP';
-
-  @override
-  String get settingsUseNewHttpEngineDescription =>
-      'Nový engine HTTP je založený na projektu Chromium a podporuje standardy jako HTTP/2* a HTTP/3 QUIC*.\n\nOmezení:\nCertifikáty podepsané samy sebou již nemohou být spravovány námi. Aby vaše certifikáty CA fungovaly, musíte je importovat do systémového pověřeného úložiště.\n\n* Pro HTTP/2 a HTTP/3 je vyžadováno HTTPS';
-
-  @override
   String get settingsAboutSectionTitle => 'O aplikaci';
 
   @override
@@ -548,10 +541,6 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get settingsTranslatorTitle => 'Překladatel';
-
-  @override
-  String get settingsRestartNeededDialog =>
-      'Restartujte aplikaci pro použití změn';
 
   @override
   String get writePreferenceFailureNotification =>

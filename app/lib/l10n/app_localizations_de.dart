@@ -516,13 +516,6 @@ class AppLocalizationsDe extends AppLocalizations {
       'Verwalte vertrauenswürdige Zertifikate';
 
   @override
-  String get settingsUseNewHttpEngine => 'Verwende das neue HTTP Engine';
-
-  @override
-  String get settingsUseNewHttpEngineDescription =>
-      'Neuer HTTP-Engine basierend auf Chromium, der neue Standards wie HTTP/2* und HTTP/3 QUIC* unterstützt.\n\nEinschränkungen: \nSelbstsignierte Zertifikate können von uns nicht mehr verwaltet werden. Sie müssen Ihre CA-Zertifikate in den Systemvertrauensspeicher importieren, damit sie funktionieren.\n\n* HTTPS ist erforderlich für HTTP/2 und HTTP/3.';
-
-  @override
   String get settingsAboutSectionTitle => 'Über';
 
   @override
@@ -546,10 +539,6 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get settingsTranslatorTitle => 'Übersetzer';
-
-  @override
-  String get settingsRestartNeededDialog =>
-      'Bitte App neu starten um die Änderungen anzuwenden';
 
   @override
   String get writePreferenceFailureNotification =>

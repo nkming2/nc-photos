@@ -917,18 +917,6 @@ abstract class AppLocalizations {
   /// **'Manage trusted certificates'**
   String get settingsManageTrustedCertificateTitle;
 
-  /// No description provided for @settingsUseNewHttpEngine.
-  ///
-  /// In en, this message translates to:
-  /// **'Use new HTTP engine'**
-  String get settingsUseNewHttpEngine;
-
-  /// No description provided for @settingsUseNewHttpEngineDescription.
-  ///
-  /// In en, this message translates to:
-  /// **'New HTTP engine based on Chromium, supporting new standards like HTTP/2* and HTTP/3 QUIC*.\n\nLimitations:\nSelf-signed certs can no longer be managed by us. You must import your CA certs to the system trust store for them to work.\n\n* HTTPS is required for HTTP/2 and HTTP/3'**
-  String get settingsUseNewHttpEngineDescription;
-
   /// Title of the about section in settings widget
   ///
   /// In en, this message translates to:
@@ -976,12 +964,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Translator'**
   String get settingsTranslatorTitle;
-
-  /// No description provided for @settingsRestartNeededDialog.
-  ///
-  /// In en, this message translates to:
-  /// **'Please restart the app to apply changes'**
-  String get settingsRestartNeededDialog;
 
   /// Inform user that the preference file cannot be modified
   ///

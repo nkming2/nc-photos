@@ -170,12 +170,6 @@ class PrefController {
         defaultValue: null,
       );
 
-  Future<bool> setNewHttpEngine(bool value) => _set<bool>(
-    controller: _isNewHttpEngineController,
-    setter: (pref, value) => pref.setNewHttpEngine(value),
-    value: value,
-  );
-
   Future<bool> setFirstRunTime(DateTime? value) => _setOrRemove<DateTime>(
     controller: _firstRunTimeController,
     setter: (pref, value) => pref.setFirstRunTime(value.millisecondsSinceEpoch),
@@ -452,10 +446,6 @@ class PrefController {
         .getMapBrowserPrevPosition()
         ?.let(tryJsonDecode)
         ?.let(_tryMapCoordFromJson),
-  );
-  @npSubjectAccessor
-  late final _isNewHttpEngineController = BehaviorSubject.seeded(
-    pref.isNewHttpEngine() ?? false,
   );
   @npSubjectAccessor
   late final _firstRunTimeController = BehaviorSubject.seeded(

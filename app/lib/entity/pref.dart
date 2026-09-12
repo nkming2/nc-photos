@@ -120,6 +120,7 @@ enum PrefKey implements PrefKeyInterface {
   protectedPageAuthPassword,
   dontShowVideoPreviewHint,
   mapBrowserPrevPosition,
+  @Deprecated("unused")
   isNewHttpEngine,
   mapDefaultRangeType,
   mapDefaultCustomRange,
@@ -185,6 +186,7 @@ enum PrefKey implements PrefKeyInterface {
       PrefKey.protectedPageAuthPassword => "protectedPageAuthPassword",
       PrefKey.dontShowVideoPreviewHint => "dontShowVideoPreviewHint",
       PrefKey.mapBrowserPrevPosition => "mapBrowserPrevPosition",
+      // ignore: deprecated_member_use_from_same_package
       PrefKey.isNewHttpEngine => "isNewHttpEngine",
       PrefKey.mapDefaultRangeType => "mapDefaultRangeType",
       PrefKey.mapDefaultCustomRange => "mapDefaultCustomRange",

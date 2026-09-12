@@ -73,10 +73,7 @@ enum InitIsolateType {
 Future<void> _initImageEnhancerTask() async {
   initLog();
   await _initPref();
-  await initHttp(
-    appVersion: k.versionStr,
-    isNewHttpEngine: Pref().isNewHttpEngine() ?? false,
-  );
+  await initHttp(appVersion: k.versionStr);
   await initLocalNotification();
 }
 
@@ -98,10 +95,7 @@ Future<void> init(InitIsolateType isolateType) async {
   if (features.isSupportSelfSignedCert) {
     await _initSelfSignedCertManager();
   }
-  await initHttp(
-    appVersion: k.versionStr,
-    isNewHttpEngine: Pref().isNewHttpEngine() ?? false,
-  );
+  await initHttp(appVersion: k.versionStr);
   await _initDiContainer(isolateType);
   _initVisibilityDetector();
   initGpsMap();

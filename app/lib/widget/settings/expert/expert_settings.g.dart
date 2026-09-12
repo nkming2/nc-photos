@@ -14,7 +14,6 @@ part of 'expert_settings.dart';
 
 abstract class $_StateCopyWithWorker {
   _State call({
-    bool? isNewHttpEngine,
     bool? isViewerUseOriginalImage,
     _Event? lastSuccessful,
     ExceptionEvent? error,
@@ -26,13 +25,11 @@ class _$_StateCopyWithWorkerImpl implements $_StateCopyWithWorker {
 
   @override
   _State call({
-    dynamic isNewHttpEngine,
     dynamic isViewerUseOriginalImage,
     dynamic lastSuccessful = copyWithNull,
     dynamic error = copyWithNull,
   }) {
     return _State(
-      isNewHttpEngine: isNewHttpEngine as bool? ?? that.isNewHttpEngine,
       isViewerUseOriginalImage:
           isViewerUseOriginalImage as bool? ?? that.isViewerUseOriginalImage,
       lastSuccessful: lastSuccessful == copyWithNull
@@ -77,7 +74,7 @@ extension _$_BlocNpLog on _Bloc {
 extension _$_StateToString on _State {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
-    return "_State {isNewHttpEngine: $isNewHttpEngine, isViewerUseOriginalImage: $isViewerUseOriginalImage, lastSuccessful: $lastSuccessful, error: $error}";
+    return "_State {isViewerUseOriginalImage: $isViewerUseOriginalImage, lastSuccessful: $lastSuccessful, error: $error}";
   }
 }
 
@@ -99,13 +96,6 @@ extension _$_ClearCacheDatabaseToString on _ClearCacheDatabase {
   String _$toString() {
     // ignore: unnecessary_string_interpolations
     return "_ClearCacheDatabase {}";
-  }
-}
-
-extension _$_SetNewHttpEngineToString on _SetNewHttpEngine {
-  String _$toString() {
-    // ignore: unnecessary_string_interpolations
-    return "_SetNewHttpEngine {value: $value}";
   }
 }
 

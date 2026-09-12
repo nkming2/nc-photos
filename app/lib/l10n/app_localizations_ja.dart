@@ -486,13 +486,6 @@ class AppLocalizationsJa extends AppLocalizations {
   String get settingsManageTrustedCertificateTitle => '信頼済み証明書の管理';
 
   @override
-  String get settingsUseNewHttpEngine => '新しいHTTPエンジンを使用';
-
-  @override
-  String get settingsUseNewHttpEngineDescription =>
-      'Chromiumベースの新しいHTTPエンジンで、HTTP/2*やHTTP/3 QUIC*などの新しい標準をサポートします。\n\n制限事項:\n自己署名証明書は管理できなくなりました。動作させるには、CA証明書をシステムの信頼ストアにインポートする必要があります。\n\n* HTTP/2およびHTTP/3にはHTTPSが必要です';
-
-  @override
   String get settingsAboutSectionTitle => 'アプリ情報';
 
   @override
@@ -516,9 +509,6 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get settingsTranslatorTitle => '翻訳者';
-
-  @override
-  String get settingsRestartNeededDialog => '変更を適用するにはアプリを再起動してください';
 
   @override
   String get writePreferenceFailureNotification => '設定に失敗しました';

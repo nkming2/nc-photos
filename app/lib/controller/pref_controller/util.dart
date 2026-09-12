@@ -111,9 +111,6 @@ extension on Pref {
     }
   }
 
-  Future<bool> setNewHttpEngine(bool value) =>
-      provider.setBool(PrefKey.isNewHttpEngine, value);
-
   int? getFirstRunTime() => provider.getInt(PrefKey.firstRunTime);
   Future<bool> setFirstRunTime(int? value) {
     if (value == null) {

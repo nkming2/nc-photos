@@ -508,13 +508,6 @@ class AppLocalizationsRu extends AppLocalizations {
       'Manage trusted certificates';
 
   @override
-  String get settingsUseNewHttpEngine => 'Use new HTTP engine';
-
-  @override
-  String get settingsUseNewHttpEngineDescription =>
-      'New HTTP engine based on Chromium, supporting new standards like HTTP/2* and HTTP/3 QUIC*.\n\nLimitations:\nSelf-signed certs can no longer be managed by us. You must import your CA certs to the system trust store for them to work.\n\n* HTTPS is required for HTTP/2 and HTTP/3';
-
-  @override
   String get settingsAboutSectionTitle => 'О программе';
 
   @override
@@ -538,10 +531,6 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get settingsTranslatorTitle => 'Переводчик';
-
-  @override
-  String get settingsRestartNeededDialog =>
-      'Please restart the app to apply changes';
 
   @override
   String get writePreferenceFailureNotification =>

@@ -12,10 +12,7 @@ import 'http_stub.dart'
 
 String getAppUserAgent() => _userAgent;
 
-Future<void> initHttp({
-  required String appVersion,
-  required bool isNewHttpEngine,
-}) async {
+Future<void> initHttp({required String appVersion}) async {
   _userAgent = "nc-photos $appVersion";
   if (getRawPlatform() == NpPlatform.android) {
     try {
