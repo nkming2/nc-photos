@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:isolate';
 import 'dart:math' as math;
 
 import 'package:collection/collection.dart';
@@ -126,7 +127,7 @@ class ReverseGeocoder {
   Future<void> _doInit(FutureOr<CommonDatabase> Function() dbBuilder) async {
     final s = Stopwatch()..start();
     _db = await dbBuilder();
-    _searchTree = _buildSearchTree(_db);
+    _searchTree = await _buildSearchTree(_db);
     _log.info("[_doInit] Elapsed time: ${s.elapsedMilliseconds}ms");
   }
 
@@ -206,13 +207,17 @@ Future<CommonDatabase> _openDatabase() async {
   return openRawSqliteDbFromAsset();
 }
 
-KDTree _buildSearchTree(CommonDatabase db) {
+Future<KDTree> _buildSearchTree(CommonDatabase db) async {
   final results = db.select("SELECT latitude, longitude FROM cities;");
-  return KDTree(
-    results.map((e) => {"t": e.columnAt(0), "g": e.columnAt(1)}).toList(),
-    _kdTreeDistance,
-    ["t", "g"],
-  );
+  final tree = await Isolate.run(() {
+    return KDTree(
+      results.map((e) => {"t": e.columnAt(0), "g": e.columnAt(1)}).toList(),
+      null,
+      ["t", "g"],
+    );
+  });
+  tree.metric = _kdTreeDistance;
+  return tree;
 }
 
 int _kdTreeDistance(Map a, Map b) {
