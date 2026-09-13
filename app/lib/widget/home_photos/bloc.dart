@@ -157,11 +157,15 @@ class _Bloc extends Bloc<_Event, _State>
                 previous.itemSize == next.itemSize,
           )
           .listen((event) {
-            _visibleDatesFinder.setLayoutConstraint(
-              viewHeight: event.viewHeight!,
-              itemPerRow: event.itemPerRow!,
-              itemSize: event.itemSize!,
-            );
+            if (event.viewHeight != null &&
+                event.itemPerRow != null &&
+                event.itemSize != null) {
+              _visibleDatesFinder.setLayoutConstraint(
+                viewHeight: event.viewHeight!,
+                itemPerRow: event.itemPerRow!,
+                itemSize: event.itemSize!,
+              );
+            }
           }),
     );
     _subscriptions.add(
